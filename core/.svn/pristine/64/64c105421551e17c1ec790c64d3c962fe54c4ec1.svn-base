@@ -1,0 +1,207 @@
+<?php
+
+class AdminTickerController extends Controller {
+
+    
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            
+            array('allow',
+                'actions' => array(
+                    'index'
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * TICKER ACTIONS
+     * This section contains everything required for the ticker section of the admin
+     * 
+     * 
+     */
+    public function actionIndex() {
+        
+        if(isset($_POST['status']))
+        {
+            $status = $_POST['status'];
+        }
+        else
+        {
+            $status = Utility::getDefaultStatus(TICKER_FILTERS_EXTENDED_LABELS);
+        }
+        
+        //$status = isset($_POST['status']) ? $_POST['status'] : 'new';
+        $question = ($_POST['question'] == '') ? 0 : $_POST['question'];        
+        $failedLanguage = ($_POST['failedLanguage'] == 'on') ? 1 : 0;
+        
+        $curQuestions = eQuestion::model()->current()->findAll();
+        foreach($curQuestions as $questions){
+            $inQuestions[] = $questions->id;
+        }
+        $attributes = (is_numeric($question))
+            ? ($question > 0)
+                ? Array('question_id'=>$question)
+                : Array('question_id'=>$inQuestions)
+            : Array('question_id'=>'is null');
+        
+        $tickers = (is_numeric($question))
+            ? ($question > 0)
+                ? eTicker::model()->{$status}()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->recent()->findAllByAttributes($attributes)
+                : eTicker::model()->{$status}()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->recent()->findAllByAttributes($attributes)                                
+            : eTicker::model()->{$status}()->isEntity()->with('tickerDestinations', 'tickerRuns')->recent()->findAllByAttributes();        
+        if($failedLanguage){
+            foreach($tickers as $i=>$ticker){
+                if($ticker['clean']['result']){
+                    unset($tickers[$i]);
+                }
+            }
+        }
+        
+        $tickerRuns = Array();
+        $entities = eEntity::model()->findAll(); 
+        foreach($entities as $entity){
+            $entityList[$entity->id] = $entity->name;
+        }
+        $entity = new eEntity();        
+        $entityTicker = new eTicker();        
+        
+        $questions = Utility::resultToKeyValue(eQuestion::model()->current()->findAll(), 'id', 'question');
+        
+        if(ADMIN_TICKER_ENTITY)
+        {
+            $questions['entity'] = 'Entity Tickers';
+        }
+        
+        $statuses = TickerUtility::getStatuses();
+                
+        if ($status == 'accepted') {
+            foreach ($tickers as $ticker) {
+                $tickerRuns[] = new eTickerRun;
+            }
+        }
+        
+        if (isset($_POST['eTicker'])) {
+            if(isset($_POST['eTicker']['entity']) && is_numeric($_POST['eEntity']['name'])){
+                $entityTicker->attributes = $_POST['eTicker']['entity'];
+                $entityTicker->type = 'ticker';
+                if ($entityTicker->validate()) {
+                    $entityTicker->entity_id = $_POST['eEntity']['name'];
+                    $entityTicker->status = 'accepted';
+                    $entityTicker->type = 'entity';
+                    $entityTicker->arbitrator_id = Yii::app()->user->getId();
+                    $entityTicker->save();
+                    Yii::app()->user->setFlash('success', "Ticker Added!");
+                } else {
+                    Yii::app()->user->setFlash('error', "Unable to Add Ticker!");
+                }                
+            }
+            foreach ($tickers as $i => $ticker) {
+                if (isset($_POST['eTicker'][$i])) {
+                    $tickerStatus = $ticker->status;
+                    $ticker->attributes = $_POST['eTicker'][$i];
+                    
+                    if($_POST['eTicker'][$i]['status'] == ''){
+                        $ticker->status = $tickerStatus;
+                    }
+                    else
+                    {
+                        if(TICKER_FILTERS_EXTENDED)
+                        {
+                            $ticker->extendedStatus = Utility::updateExtendedStatus($status, $_POST['eTicker'][$i]['status'], $ticker);
+                        }
+                    }
+                    
+                    $ticker->arbitrator_id = Yii::app()->user->getId();
+                    if(isset($_POST['question_'.$ticker->id])){
+                        $ticker->question_id = $_POST['question_'.$ticker->id];
+                    }
+                    if ($ticker->validate()) {
+                        $ticker->save();
+                    }
+                }
+                if ($_POST['eTicker'][$i]['status'] == 'denied' || $_POST['eTicker'][$i]['stop'] == 1) {
+                    $runRecords = eTickerRun::model()->findAllByAttributes(Array('ticker_id' => $tickers[$i]['id'], 'stopped' => 0), 'web_runs > web_ran || mobile_runs > mobile_ran || tv_runs > tv_ran');
+                    foreach ($runRecords as $runRecord) {
+                        $runRecord->stopped = 1;
+                        $runRecord->user_id = Yii::app()->user->getId();
+                        $runRecord->save();
+                    }
+                }
+            }
+        }
+        if (isset($_POST['eTickerRun'])) {
+            foreach ($tickerRuns as $i => $tickerRun) {
+                if (isset($_POST['eTickerRun'][$i])) {
+                    $tickerRun->attributes = $_POST['eTickerRun'][$i];
+                    $tickerRun->ticker_id = $tickers[$i]->id;
+                    $tickerRun->user_id = Yii::app()->user->getId();
+                    if ($tickerRun->web_runs + $tickerRun->mobile_runs + $tickerRun->tv_runs > 0 && $tickerRun->validate()) {
+                        $tickerRun->save(false);
+                    }
+                }
+            }
+        }
+        //This is called again because the view will refresh and we need to load only the tickers that match the current criteria.
+        $tickers = (is_numeric($question))
+            ? ($question > 0)
+                ? eTicker::model()->{$status}()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->recent()->findAllByAttributes($attributes)
+                : eTicker::model()->{$status}()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->recent()->findAllByAttributes($attributes)                
+            : eTicker::model()->{$status}()->isEntity()->with('tickerDestinations', 'tickerRuns')->recent()->findAllByAttributes();
+        foreach($tickers as $i=>$ticker){
+            if(VIDEO_FILTERS_EXTENDED)//current status should not be accepted or denied.
+                $ticker->status='new';
+            if($failedLanguage){
+                if($ticker['clean']['result']){
+                    unset($tickers[$i]);
+                }
+            }
+        }       
+        $tickerRuns = Array();
+        if ($status == 'accepted') {
+            foreach ($tickers as $ticker) {
+                $tickerRuns[] = new eTickerRun;
+            }
+        }
+        $this->render('index', array(
+            'question' => $question,
+            'questions' => $questions,
+            'statuses' => $statuses,
+            'status' => $status,
+            'entity' => $entity,
+            'entities'=> $entityList,
+            'entityTicker' => $entityTicker,
+            'tickers' => $tickers,
+            'tickerRuns' => $tickerRuns
+        ));
+    }
+    
+    
+}

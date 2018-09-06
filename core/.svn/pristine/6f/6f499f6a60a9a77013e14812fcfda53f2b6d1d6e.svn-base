@@ -1,0 +1,44 @@
+<?php
+
+class PreviewController extends Controller {
+
+    public $layout = false;
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+    }
+    
+    public function actionQuestionTicker($id = 0) {
+        $question = eQuestion::model()->findByPK($id);
+        $tickers = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id), Array('order'=>'ifnull(ordinal, "1000"), ordinal ASC'));
+        $entity_tickers = eTicker::model()->findAllByAttributes(Array('status'=>'accepted', 'type'=>'entity'));
+        
+        $combined_tickers = Array();
+        
+        $i = 1;
+        foreach($tickers as $key => $value)
+        {
+            $combined_tickers[] = $value;
+            
+            foreach($entity_tickers as $key => $evalue)
+            {
+                if($i%$evalue->frequency == 0)
+                {
+                    $combined_tickers[] = $evalue;
+                }
+            }
+            
+            $i++;
+        }
+        
+        $this->render('index', 
+                array(
+                    'question'=>$question,
+                    'tickers'=>$combined_tickers,
+                )
+        );
+    }
+}

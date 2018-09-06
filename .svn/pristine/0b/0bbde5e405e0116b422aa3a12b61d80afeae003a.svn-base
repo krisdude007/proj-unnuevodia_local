@@ -1,0 +1,390 @@
+<?php
+
+// uncomment the following to define a path alias
+// Yii::setPathOfAlias('local','path/to/local-folder');
+// This is the main Web application configuration. Any writable
+// CWebApplication properties can be configured here.
+// left this for backwards compatibility
+require('constants.php');
+
+$config = require_once "env_manager.php";
+$config_array = array(
+    'import' => array(
+        'client.models.*',
+        'client.components.*',
+    ),
+    //'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name' => 'Unnuevodia',
+    'timeZone' => 'America/New_York',
+    // preloading 'log' component
+    'language' => 'es',
+    'preload' => array('log'),
+    // application components
+    'components' => array(
+         'messages' => array(
+            'basePath' => 'protected/messages',
+            'onMissingTranslation' => array('MissingTranslation', 'handler'),
+        ),
+        'user' => array(
+            // enable cookie-based authentication
+            'allowAutoLogin' => true,
+            'loginUrl' => array('login'),
+            'class' => 'WebUser',
+            'autoUpdateFlash' => false,
+        ),
+        'request' => array(
+            'csrfTokenName' => 'CSRF_TOKEN',
+            'enableCsrfValidation' => false,
+            'enableCookieValidation' => true,
+            'class' => 'HttpRequest',
+        //'class' => 'application.components.GHttpRequest',
+        ),
+        // uncomment the following to enable URLs in path-format
+        'urlManager' => array(
+            'showScriptName' => false,
+            'urlFormat' => 'path',
+            'rules' => array(
+                'thanks' => '/video/thanks',
+                'help' => '/user/help',
+                'capture' => '/video/capture',
+                'process/<id:\d+>' => '/video/process',
+                'register' => '/user/register',
+                'login' => '/user/login',
+                'logout' => '/user/logout',
+                'forgot/<key:\w+>' => '/user/forgot',
+                'forgot' => '/user/forgot',
+                'videos' => '/video/index',
+                'videos/<order:\w+>' => '/video/index',
+                'videoupload/<id:\d+>' => '/video/videoupload',
+                'play/<view_key:\w+>' => '/video/play',
+                'images' => '/image/index',
+                'images/<order:\w+>' => '/image/index',
+                'viewimage/<view_key:\w+>' => '/image/view',
+                'vote/<id:\d+>' => '/poll/index',
+                'vote' => '/poll/index',
+                'you' => '/user/index',
+                'terms' => '/user/termsoverlay',
+                'privacy' => '/user/privacyoverlay',
+                'youtooterms' => '/user/youtooterms',
+                'youtooprivacy' => '/user/youtooprivacy',
+                'mobilePrivacy' => '/user/mobilePrivacy',
+                'mobileTerms' => '/user/mobileTerms',
+                'you/<order:recent|views|rating>' => '/user/index',
+                'you/<action:\w+>' => '/user/<action>',
+                'record/<id:\d+>' => '/video/record',
+                'record' => '/video/record',
+                'upload/<id:\d+>' => '/image/upload',
+                'upload' => '/image/upload',
+                'questions' => '/question/index',
+                'avatar' => '/user/userphoto',
+                'ticker' => '/ticker/index',
+                'user' => '/user',
+                'user/<id:\d+>' => '/user/view',
+                'user/video/<id:\d+>' => '/user/video',
+                'user/image/<id:\d+>' => '/user/image',
+                'user/video/<id:\d+>/<order:\w+>' => '/user/video',
+                'user/image/<id:\d+>/<order:\w+>' => '/user/image',
+                'user/<id:\d+>/<order:\w+>' => '/user/view',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ),
+        ),
+        'db' => array(
+            'connectionString' => "mysql:host={$config->db_host};dbname={$config->db_name}",
+            'schemaCachingDuration' => 3600,
+            'emulatePrepare' => true,
+            'username' => $config->db_user,
+            'password' => $config->db_pass,
+            'charset' => 'utf8',
+        ),
+        'cache' => array(
+            'class' => 'system.caching.CMemCache',
+            'servers' => array(
+                array(
+                    'host' => $config->memcached_host,
+                    'port' => $config->memcached_port
+                ),
+            ),
+        ),
+        'errorHandler' => array(
+            // use 'site/error' action to display errors
+            'errorAction' => 'site/error',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            ),
+        ),
+        'twitter' => array(
+            'active' => true,
+            'advancedFilters' => false,
+            'class' => 'ext.yiitwitteroauth.YiiTwitter',
+            'consumer_key' => '6fNUrCW1PLdV71tepHv75A',
+            'consumer_secret' => 'rVJAdP3AlkwRGS01Iku6BJ5gkGgTzFPDPKpsE3VYYE',
+            'callback' => 'http://' . $_SERVER['HTTP_HOST'] . '/twitterConnect',
+            'streamFile' => $_SERVER['DOCUMENT_ROOT'] . '/twitter.txt',
+            'adminAccessToken' => '41820310-dHGfn6n1HSw2wAsop13t7mOMgq4wGtfWEB3z6Q3lw',
+            'adminTokenSecret' => 'AXU4z2aTcoOBD9J47b0FC6ttkjuYSqw3pjLjB2z3dYhBj',
+            'filterLatitude' => '37.09024',
+            'filterLongitide' => '-95.712891',
+            'renderTwitterMetaTags'=>false,
+        ),
+        'facebook' => array(
+            'appNamespace' => 'unnuevodia_youtoo',
+            'pageId' => '430827127022450',
+            'class' => 'ext.yii-facebook-opengraph.SFacebook',
+            'appId' => '661638177209195', // needed for JS SDK, Social Plugins and PHP SDK
+            'secret' => '3e8e6baf5d5c497a05cdf525d468a4b2', // needed for the PHP SDK
+            'fileUpload' => true, // needed to support API POST requests which send files
+            //'trustForwarded'=>false, // trust HTTP_X_FORWARDED_* headers ?
+            //'locale'=>'en_US', // override locale setting (defaults to en_US)
+            //'jsSdk'=>true, // don't include JS SDK
+            //'async'=>true, // load JS SDK asynchronously
+            //'jsCallback'=>false, // declare if you are going to be inserting any JS callbacks to the async JS SDK loader
+            //'status'=>true, // JS SDK - check login status
+            //'cookie'=>true, // JS SDK - enable cookies to allow the server to access the session
+            //'oauth'=>true,  // JS SDK - enable OAuth 2.0
+            //'xfbml'=>true,  // JS SDK - parse XFBML / html5 Social Plugins
+            //'frictionlessRequests'=>true, // JS SDK - enable frictionless requests for request dialogs
+            //'html5'=>true,  // use html5 Social Plugins instead of XFBML
+            'ogTags' => array(// set default OG tags
+                'title' => 'Unnuevodia',
+                'description' => 'Initech',
+                'image' => 'http://' . $_SERVER['HTTP_HOST'] . '/images/logo.png',
+            ),
+        ),
+        // access with Yii::app()->Paypal->apiUsername
+        'Paypal' => array(
+            'active' => false,
+            'class' => 'application.components.Paypal',
+            'apiUsername' => 'kyrie42-facilitator_api1.gmail.com',
+            'apiPassword' => '1364840459',
+            'apiSignature' => 'AiPC9BjkCyDFQXbSkoZcgqH3hpacAMim7FhqR5hEznOFh8CIior9BSdJ',
+            'apiLive' => false,
+            'returnUrl' => 'paypal/confirm/', //regardless of url management component
+            'cancelUrl' => 'paypal/cancel/', //regardless of url management component
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'session' => array('durationOffset' => 60 * 5,
+            'duration' => 86400),
+        'email' => array(
+            'title' => 'Telemundo Unnuevodia',
+            'mailto' => 'greg.stringer@gmail.com',
+            'showEmailAssistanceLink' => true,
+        ),
+        'useMobileTheme' => false,
+        'enableYtFunctionality' => false,
+        'showUserCountry' => false,
+        'noCsrfValidationRoutes' => array('api/importVideoYt', 'facebook/index'),
+        'facebook' => array(
+            'pageID' => '430827127022450',
+        ),
+        /* moved to twitter extension/component
+          'twitter' => array(
+          'consumerKey'=>'RChO1lBGkJvQTZhOgjbw8A',
+          'consumerSecret'=>'NLD9sTbY1YLWz7SbvSNvQ80RTRBfoRGvAluYYJZy8',
+          'adminAccessToken' =>'1967328594-hg0MWwc1GtYkdnfQUyOnrruBx3gDrzRCRWRpydB',
+          'adminTokenSecret' =>'HnyF8uzVKxU1I6iR55iHOCjTtrCYOiasYXkMATPmE',
+          'streamFile'=>$_SERVER['DOCUMENT_ROOT'].'/twitter.txt',
+          ),
+         * *
+         */
+        'client' => $subdomain,
+        'maxActiveQuestions' => 3,
+        'perPage' => 50,
+        'vine' => array(
+            'username' => 'greg.stringer@gmail.com',
+            'password' => 'i!ur@ss4o',
+            'url' => 'https://api.vineapp.com',
+            'ext' => '.mp4',
+        ),
+        'keek' => array(
+            'username' => 'greg.stringer@gmail.com',
+            'password' => 'g33m4n',
+            'url' => 'https://www.keek.com',
+            'url2' => 'https://keek-a.akamaihd.net/keek/video/{VIDEO_ID}/flv',
+            'ext' => '.flv',
+        ),
+        'brightcove' => array(
+            'playerID' => '2929404779001',
+            'playerKey' => 'AQ~~,AAABqrGtIvE~,QfeoOVnmCtWkqkvPSP8vkpR8r-f6WBvi',
+        ),
+        /*
+         * FTP
+         */
+        'ftp' => array(
+            'server' => 'asperaftp.youtoo.com',
+            'port' => 33001,
+            'secure' => true,
+            'passive' => true,
+            'user' => 'telemundo_ftp',
+            'pass' => '2REZki2M6Qv7AZCWFVToP2igPYmVV9BmXzxXFh38prNo7NCn8p',
+            'uploadPath' => '/',
+            'uploadPathMxf' => '/',
+            'sendVideoXML' => true,
+            'sendImageXML' => true,
+        ),
+        'reporting' => array(
+            'showTwitterAmplifyStats' => false,
+            'showImageStats' => false,
+        ),
+        'ticker' => array(
+            'allowCreateAsEntity' => false,
+            'sleepTime' => 10,
+            'breakingTweets' => false,
+            'defaultHashtag' => '',
+            'defaultEndTime' => time() + 60 * 60 * 24 * 365 * 10,
+            'useExtendedFilters' => true,
+            'extendedFilterLabels' => array(array('new' => 'New Web', 'accepted' => 'Accepted Web'),
+            array('newtv' => 'New TV', 'acceptedtv' => 'Accepted TV')),
+            'superAdminExtendedFilterLabels' => array('denied' => 'Denied Web', 'deniedtv' => 'Denied TV'),
+        ),
+        'video' => array(
+            'watermark' => '/webassets/images/watermark.png',
+            'watermarkLocation' => 'topRight',
+            'duration' => 20,
+            'fps' => 30,
+            'imageExt' => '.png',
+            'preExt' => '.flv',
+            'postExt' => '.mp4',
+            'flipExt' => '.mov',
+            'allowMovUploadToNetwork' => true,
+            'allowMxfUploadToNetwork' => false,
+            'acceptedFileTypes' => 'mov,m4v,mp4',
+            'maxUploadFileSize' => 1024 * 1024 * 30,
+            'allowCustomFileNameToNetwork' => true,
+            'useEvalForCustomFileName' => true,
+            'customFileNamePrefix' => 'UND' . date('m') . date('d'),
+            'customFileNameExt' => '.mov',
+            'customFileNameFormat' => "{INCREMENTED_VALUE};",
+            'defaultHashtag' => '',
+            'defaultEndTime' => time() + 365 * 60 * 60 * 24,
+            'useExtendedFilters' => true,
+            'extendedFilterLabels' => (array(array('new' => 'New Web', 'accepted' => 'Accepted Web'),
+            array('newtv' => 'New TV', 'acceptedtv' => 'Accepted TV'))),
+            'superAdminExtendedFilterLabels' => array('denied' => 'Denied Web', 'deniedtv' => 'Denied TV', 'all' => 'All'),
+            'allow3rdPartyImport' => false,
+            'allowImportVine' => false,
+            'allowImportKeek' => false,
+            'allowImportInstagram' => false,
+            'adminAllowUpload' => false,
+            'adminAllowAdUpload' => false,
+            'adminAllowAmplify' => false,
+            'autoFtpBasedOnStatus' => false,
+            'autoFtpStatuses' => array('accepted'),
+        ),
+        'features' => array(
+            "HAS_VIDEO",
+            "HAS_IMAGE",
+            "HAS_USER",
+            "HAS_AUDIT",
+            "HAS_DAILY_REPORT",
+            "HAS_QUESTION_REPORT",
+            "HAS_REPORT",
+            "HAS_LANGUAGE",
+            "HAS_SOCIALSEARCH",
+            //"HAS_SOCIALSTREAM",
+            "HAS_QUESTION_VIDEO",
+            "HAS_QUESTION_TICKER",
+            "HAS_VOTING",
+            "HAS_TICKER",
+            "HAS_CONTACT",
+            //"HAS_ENTITY",
+            "HAS_TRAINING"
+        ),
+        'ffmpeg' => array(
+            'concatParams' => '-q:v 1 -async 1  -r 30 -b:v 2M -bt 4M -vcodec libx264 -preset placebo -g 1 -s 1920:1080 -s 1920x1080 -movflags +faststart -acodec libfdk_aac -ac 2 -ar 48000 -ab 192k -bufsize 10k',
+            'tvParams' => '  -y -i {FILE_INPUT} -s 1920:1080 -vcodec mjpeg -b 20M -s 1920x1080 -r 30000/1001 -acodec pcm_s16le -ar 48000 -y -b:v 10k -bufsize 10k {FILE_OUTPUT}',
+        ),
+        'videoAdmin' => array(
+            'perPage' => 12,
+            'indicatorThreshold' => array(
+                'min' => 0.2,
+                'max' => 0.5,
+            ),
+        ),
+        'image' => array(
+            'acceptedFileTypes' => 'gif,png,jpg,jpeg',
+            'maxUploadFileSize' => 1024 * 1024 * 5,
+            'allowCustomFileNameToNetwork' => true,
+            'useEvalForCustomFileName' => false,
+            'customFileNamePrefix' => 'UND' . date('m') . date('d'),
+            'customFileNameFormat' => "{INCREMENTED_VALUE};",
+            'autoApprove' => false,
+            'autoApproveAvatar' => true,
+            'useExtendedFilters' => false,
+            'extendedFilterLabels' => array(array('new' => 'New Web', 'accepted' => 'Accepted Web'),
+            array('newtv' => 'New TV', 'acceptedtv' => 'Accepted TV')),
+            'superAdminExtendedFilterLabels' => array('denied' => 'Denied Web', 'deniedtv' => 'Denied TV', 'all' => 'All'),
+        ),
+        'imageAdmin' => array(
+            'perPage' => 12,
+        ),
+        'training' => array(
+            'showManual' => true, //ADMIN_USER_MANUAL
+        ),
+        'analytics' => array(
+            'username' => 'lee4youtoo@gmail.com',
+            'password' => 'Dallas1101',
+            'projectId' => '72166659',
+            'startDate' => '2013-11-14',
+        ),
+        'mobileAPI' => array(
+            'sessionTimeoutSecs' => 60 * 60,
+        ),
+        'user' => array(
+            'extendedPermissions' => array("new" => "Producer Web", "newtv" => "Producer TV"),),
+        'statusBit' => array(
+            'new' => 128,
+            'accepted' => 64,
+            'denied' => 32,
+            'newTv' => 16,
+            'acceptedTv' => 8,
+            'deniedTv' => 4,
+            'acceptedSuperAdmin1' => 2,
+            'acceptedSuperAdmin2' => 1,),
+        'flashMessage' => array(
+            'loginSuccess' => 'Hola',
+            'loginError' => 'Nombre de usuario o contraseña no válidos.',
+            'profileUpdateSuccess' => 'Perfil de usuario actualizada.',
+            'avatarUpdateSuccess' => 'Imagen de perfil del usuario actualizada.',
+            'passwordUpdateSuccess' => 'Tu contraseña ha sido exitosamente actualizada',
+            'avatarUpdateError' => 'No se puede actualizar Avatar.',
+            'registrationSuccess' => 'Has registrado correctamente. Revise su correo electrónico para recibir la confirmación.',
+            'tickerSuccess' => 'Ticker añadido!',
+            'tickerError' => 'No se puede añadir ticker!',
+            'tickerInactive' => 'Incapaz de salvar ticker.',
+            'resetPasswordSuccess' => '<h2>Gracias por enviar una solicitud</h2>Un correo electrónico será enviado en breve con las instrucciones sobre cómo restablecer su contraseña.',
+            'resetPasswordError' => 'No se pudo enviar un mensaje de restablecimiento de.',
+            'imageUploadSuccess' => 'Foto subido correctamente.',
+            'videoUploadSuccess' => 'Video uploaded successfully.',
+            'invalidFiletype' => 'Invalid file type.',
+        ),
+        'custom_params' => array(
+            'client_support_email' => 'youtootechsupport@youtootech.com',//CLIENT_SUPPORT_EMAIL
+            'toggle_preview_ticker' => false,
+            'youtoo_peoplemercials_or_famespots' => true,
+            'video_post_file_ext_mxf' => true,
+            'invalid_file_size' => 'Invalid File Size',
+            'invalid_file_type' => 'Invalid File Type',
+            'customSettingForArabic' => false,
+        ),
+    ),
+);
+
+if (isset($developer)) {
+    //$config_array['components']['db']['enableProfiling'] = true;
+    //$config_array['components']['db']['enableParamLogging'] = true;
+    $config_array['components']['log']['routes'][] = array('class' => 'CWebLogRoute', 'levels' => 'error, warning');
+    $config_array['components']['log']['routes'][] = array('class' => 'CProfileLogRoute');
+}
+return $config_array;
+

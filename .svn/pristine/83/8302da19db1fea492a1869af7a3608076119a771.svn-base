@@ -1,0 +1,12 @@
+<div class="link">
+    <div onclick="window.location='<?php echo Yii::app()->createUrl('site/terms'); ?>'"><a href="<?php echo Yii::app()->createUrl('site/terms'); ?>" style="font-size: 14px; color: darkgrey;" >Términos de Presentación de Telemundo</a></div>
+    <hr></hr>
+    <div onclick="window.location='<?php echo Yii::app()->createUrl('site/privacy'); ?>'"><a href="<?php echo Yii::app()->createUrl('site/privacy'); ?>" style="font-size: 14px; color: darkgrey;" >Política de Privacidad de Telemundo</a></div>
+<!--    <hr></hr>
+    <div onclick="window.location='<?php //echo Yii::app()->createUrl('site/terms'); ?>'"><a href="<?php //echo Yii::app()->createUrl('site/termsyoutoo'); ?>" style="font-size: 14px;" >Términos de Presentación de Youtoo Technologies, LLC</a></div>
+    <hr></hr>
+    <div onclick="window.location='<?php //echo Yii::app()->createUrl('site/privacy'); ?>'"><a href="<?php //echo Yii::app()->createUrl('site/privacyyoutoo'); ?>" style="font-size: 14px;" >Política de Privacidad de Youtoo Technologies, LLC</a></div>-->
+    <hr></hr>
+    <div onclick="window.location='<?php echo Yii::app()->createUrl('site/patents'); ?>'"><a href="<?php echo Yii::app()->createUrl('site/patents'); ?>" style="font-size: 14px; color: darkgrey;" >Youtoo Technologies, LLC Patentes</a></div>
+    <hr></hr>
+</div>

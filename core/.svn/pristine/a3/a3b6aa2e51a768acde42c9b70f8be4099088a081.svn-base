@@ -1,0 +1,19 @@
+.flashes{
+    text-align:center;    
+    font-size:14px;
+}
+.flash-error{
+    padding:3px 0px 3px 0px;    
+    background:#F00;
+    color:#FFF;
+}
+.flash-success{
+    padding:3px 0px 3px 0px;        
+    background:#0F0;
+    color:#000;
+}
+.flash-message{
+    padding:3px 0px 3px 0px;    
+    background:#FF0;
+    color:#000;
+}

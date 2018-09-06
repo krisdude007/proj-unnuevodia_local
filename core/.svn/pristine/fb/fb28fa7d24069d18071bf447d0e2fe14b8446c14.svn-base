@@ -1,0 +1,322 @@
+var lineGrapher = function(elementId, model ,dataSource, startDate, endDate, scope, pollId){
+    if(typeof(dataSource) == 'undefined'){
+        alert('no data source defined!');
+        return false;
+    }
+    $("#"+elementId).html('<img src="/core/webassets/images/spinner.gif" width="100" style="display: block;margin:0px auto;">');
+    var request = $.ajax({
+      url: '/adminReport/'+dataSource,
+      type: 'POST',
+      data:({
+          pollId: pollId,
+          scope: scope,
+          model: model,
+          'startDate': startDate,
+          'endDate': endDate,
+          'CSRF_TOKEN': getCsrfToken()
+      }),
+      success: function(data){
+        $("#"+elementId).html('');
+        //console.log(data);
+        var obj = $.parseJSON(data);
+        var seriesColors = JSON.parse(obj.seriesColors);
+        //console.log(obj);
+        yArr = new Array();
+        if(obj.yMax < 10){
+            for(var i=0;i<obj.yMax+3;i++){
+                yArr.push(i);
+            }
+        }
+        var dataArr = Array();
+        var dataLabels = Array();
+        var t = 0
+        $.each(obj.data,function(i,e){
+            var total = 0;
+            dataArr[t]=Array();
+            $.each(e,function(ii,ee){
+                dateArr = Array();
+                dateArr.push(ii);
+                dateArr.push(ee);
+                dataArr[t].push(dateArr);
+                total += parseInt(ee);
+            })
+            t++;
+            dataLabels.push(i.toUpperCase() + ' ' + commaSeparateNumber(total));
+        })
+        //console.log(dataLabels);
+        for (i=0;i<dataLabels.length;i++){
+            dataLabels[i] = dataLabels[i].toUpperCase();
+        }
+        //console.log(dataArr);
+        var plot1 = $.jqplot(elementId, dataArr, {
+            title:{text: ''
+            },
+            seriesColors: seriesColors,
+            axes:{
+              xaxis:{
+                renderer:$.jqplot.DateAxisRenderer,
+                tickOptions:{
+                  textColor:'#000',
+                  formatString:'%b&nbsp;%#d'
+                }
+              },
+              yaxis:{
+                ticks:(obj.yMax < 10) ? yArr : '',
+                min:0,
+                renderer:$.jqplot.LogAxisRenderer,
+                tickOptions:{
+                    textColor:'#000',
+                    labelPosition: 'middle',
+                    angle:-30,formatString:"%'d"
+                },
+                tickRenderer:$.jqplot.CanvasAxisTickRenderer,
+                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                labelOptions:{
+                    textColor:'#000'
+                    //fontFamily:'Helvetica',
+                    //fontSize: '14pt'
+                }
+              }
+            },
+            highlighter: {
+              show: true,
+              sizeAdjust: 7.5
+            },
+           seriesDefaults: {
+                rendererOptions: {
+                    //smooth: true
+                }
+            }
+                ,legend: {
+                    renderer: $.jqplot.EnhancedLegendRenderer,
+                    show:true,
+                    location: 'e',
+                    placement:'outside',
+                    labels:dataLabels
+                }
+            ,cursor: {
+              show: false
+            },
+            series:[
+                    {
+                      // Change our line width and use a diamond shaped marker.
+                        lineWidth:2,
+                        highlighter: {
+                            show: true,
+                            tooltipContentEditor: function (str, seriesIndex, pointIndex, plot) {
+                                var html = '<div class="jqplot-highlighter-tooltip-web">' + str + '</div>';
+                                return html;
+                            }
+                        }
+                      //, markerOptions: { style:'dimaond', size:12 }
+                    }
+                    ,
+                    {
+                      // Change our line width and use a diamond shaped marker.
+                        lineWidth:2,
+                        highlighter: {
+                            show: true,
+                            tooltipContentEditor: function (str, seriesIndex, pointIndex, plot) {
+                                var html = '<div class="jqplot-highlighter-tooltip-facebook">' + str + '</div>';
+                                return html;
+                            }
+                        }
+                      //, markerOptions: { style:'dimaond', size:12 }
+                    }
+                    ,
+                    {
+                      // Change our line width and use a diamond shaped marker.
+                        lineWidth:2,
+                        highlighter: {
+                            show: true,
+                            tooltipContentEditor: function (str, seriesIndex, pointIndex, plot) {
+                                var html = '<div class="jqplot-highlighter-tooltip-twitter">' + str + '</div>';
+                                return html;
+                            }
+                        }
+                      //, markerOptions: { style:'dimaond', size:12 }
+                    }
+                    ,
+                    {
+                      // Change our line width and use a diamond shaped marker.
+                        lineWidth:2,
+                        highlighter: {
+                            show: true,
+                            tooltipContentEditor: function (str, seriesIndex, pointIndex, plot) {
+                                var html = '<div class="jqplot-highlighter-tooltip-mobile">' + str + '</div>';
+                                return html;
+                            }
+                        }
+                      //, markerOptions: { style:'dimaond', size:12 }
+                    }
+                    ,
+                    {
+                      // Change our line width and use a diamond shaped marker.
+                        lineWidth:2,
+                        highlighter: {
+                            show: true,
+                            tooltipContentEditor: function (str, seriesIndex, pointIndex, plot) {
+                                var html = '<div class="jqplot-highlighter-tooltip-total">' + str + '</div>';
+                                return html;
+                            }
+                        }
+                      //, markerOptions: { style:'dimaond', size:12 }
+                    }
+
+            ]
+        });
+        if(obj.deselectTotal){
+            $(".jqplot-table-legend-label:contains('TOTAL')").parent().children()[0].childNodes[0].childNodes[1].click();
+        }
+      }
+    });
+    return false
+}
+
+var pieGrapher = function(elementId, model ,dataSource, startDate, endDate, scope){
+    if(typeof(dataSource) == 'undefined'){
+        alert('no data source defined!');
+        return false;
+    }
+    $("#"+elementId).html('<img src="/core/webassets/images/spinner.gif" width="100" style="display: block;margin:0px auto;">');
+    var request = $.ajax({
+      url: '/adminReport/'+dataSource,
+      type: 'POST',
+      data:({
+            scope: scope,
+            model: model,
+            'startDate': startDate,
+            'endDate': endDate,
+            'CSRF_TOKEN': getCsrfToken()
+      }),
+      success: function(data){
+       $("#"+elementId).html('');
+        var obj = $.parseJSON(data);
+        var max = obj.yMax;
+        var seriesColors = JSON.parse(obj.seriesColors);
+        var dataArr = Array();
+        var dataLabels = Array();
+        var t = 0
+        $.each(obj.data,function(i,e){
+            dataArr[t]=Array(i, parseInt(e));
+            dataLabels.push(i.toUpperCase() + ' ' + e);
+            t++;
+        })
+        //console.log(dataLabels);
+        //console.log(dataArr);
+        $("#"+elementId).jqplot([dataArr], {
+            title:{
+                text:'',
+                show:false,
+                textColor : '#000'
+            },
+            animate: !$.jqplot.use_excanvas,
+            seriesDefaults:{
+                rendererOptions:{ varyBarColor : true },
+                renderer:$.jqplot.DonutRenderer,
+                    rendererOptions: {
+                      showDataLabels: true
+                        , innerDiameter: 80
+                        , dataLabels: 'value'
+                    }
+            },
+            seriesColors: seriesColors,
+                legend:{
+                    show:true,
+                    location:'e',
+                    labels:dataLabels
+                },
+                axesDefaults: {
+                    showTicks: false,
+                    min:0,
+                    max:max
+                }
+        });
+      }
+    });
+    return false
+}
+
+var barGrapher = function(elementId, model ,dataSource, startDate, endDate, scope){
+    if(typeof(dataSource) == 'undefined'){
+        alert('no data source defined!');
+        return false;
+    }
+    $("#"+elementId).html('<img src="/core/webassets/images/spinner.gif" width="100" style="display: block;margin:0px auto;">');
+    var request = $.ajax({
+      url: '/adminReport/'+dataSource,
+      type: 'POST',
+      data:({
+            scope: scope,
+            model: model,
+            'startDate': startDate,
+            'endDate': endDate,
+            'CSRF_TOKEN': getCsrfToken()
+      }),
+      success: function(data){
+        $("#"+elementId).html('');
+        var obj = $.parseJSON(data);
+        var seriesColors = JSON.parse(obj.seriesColors);
+        yArr = new Array();
+        if(obj.yMax < 10){
+            for(var i=0;i<obj.yMax+3;i++){
+                yArr.push(i);
+            }
+        }
+        var max = obj.yMax;
+        var dataArr = Array();
+        var dataLabels = Array();
+        var t = 0
+        $.each(obj.data,function(i,e){
+            dataArr[t]=Array(i, parseInt(e));
+            dataLabels.push(commaSeparateNumber(parseInt(e)));
+            t++;
+        })
+//        console.log(dataLabels);
+//        console.log(dataArr);
+        $("#"+elementId).jqplot([dataArr], {
+            title:{
+                text:'',
+                show:false,
+                textColor : '#000'
+            },
+            animate: !$.jqplot.use_excanvas,
+            seriesDefaults:{
+                rendererOptions:{ varyBarColor : true },
+                renderer:$.jqplot.BarRenderer
+
+            },
+            seriesColors: seriesColors,
+                    series:[{
+                        pointLabels:{
+                            show: true,
+                            labels:dataLabels
+                        }
+                    }],
+                    axesDefaults: {
+                    min:0,
+                    max:max
+                },
+
+                axes:{
+                    xaxis:{
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        tickOptions:{textColor : '#000'},
+                        pad:200
+                    },
+                    yaxis:{
+                        ticks:(obj.yMax < 10) ? yArr : '',
+                        //label:'Cosine',
+                        //labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                        tickOptions:{
+                            textColor : '#000',
+                            formatString:"%'d"
+                        }
+                    }
+                }
+
+        });
+      }
+    });
+    return false
+}

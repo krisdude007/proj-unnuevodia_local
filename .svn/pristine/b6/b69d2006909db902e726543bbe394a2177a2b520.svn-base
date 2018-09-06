@@ -1,0 +1,61 @@
+<div id="content">
+  <div>
+    <div style="width:70%;float:left;margin-top:5px;position:relative;height:275px">
+
+      <div style="float:left; clear:both;margin-top:80px; margin-left:80px; margin-bottom:40px;"></div>
+
+
+      <div style="float:left; clear:both; margin-left:84px; margin-top:15px;">
+
+        <div style="margin-bottom:30px; text-align: left; font-family: Arial; font-size:16px">
+          <h1>Photo Upload</h1>
+          Please select an image to upload. Images must be either .gif, .jpg or .png format.
+
+
+
+
+
+          <?php
+          /* @var $image Image */
+          /* @var $form CActiveForm */
+          ?>
+          <div class="form">
+            <?php
+            $form = $this->beginWidget('CActiveForm', array(
+                'id' => 'image-upload-form',
+                'enableAjaxValidation' => true,
+                'htmlOptions' => array('enctype' => 'multipart/form-data'),
+                    ));
+            ?>
+            <?php echo $form->errorSummary(array($image)); ?>
+
+            <div class="clearfix" style="padding-top:20px;">
+              
+            </div>
+            <div class="clearfix">
+              <div class="row">
+                <?php echo $form->fileField($image, 'image'); ?>
+                <?php echo $form->error($image, 'image'); ?>
+              </div>        
+            </div>        
+            <div class="clearfix">
+              <div class="row buttons" style="float:left;margin-top:12px;margin-right:7px;">
+                <?php echo CHtml::submitButton(''); ?>
+              </div>
+            </div>    
+            <?php $this->endWidget(); ?>
+
+          </div><!-- form -->
+
+
+
+
+
+
+
+        </div>                                           
+      </div>
+
+    </div>
+  </div>
+</div>

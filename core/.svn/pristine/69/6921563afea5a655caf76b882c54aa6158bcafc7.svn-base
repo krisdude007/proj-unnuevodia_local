@@ -1,0 +1,316 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery.gritter.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/chosen.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery.tagsinput.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/bootstrap-toggle-buttons.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/DT_bootstrap.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery-ui-1.10.0.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/ui.daterangepicker.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminReport/index.css');
+
+// page specific js
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.blockui.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/chosen.jquery.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.modal.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.rating.pack.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.rating.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.tagsinput.min.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.toggle.buttons.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/daterangepicker.jQuery.js', CClientScript::POS_END);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminReport/index.js', CClientScript::POS_END);
+?>
+
+<?php $this->renderPartial('/admin/_csrfToken', array()); ?>
+<div id="filterDate" style="display: none;"><?php echo($filterDate); ?></div>
+<div id="daysBack" style="display: none;"><?php echo($daysBack); ?></div>
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/reports-image.png">Reports</h2>
+    </div>
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <div class="fab-row-fluid">
+            <?php $this->renderPartial('_dateFilterLinks', array('daysBack' => $daysBack)); ?>
+            <div style="clear:both;height:10px;"></div>
+            <div class="fab-reports-container">
+                <?php
+                if ($settings['report_show_users']): ?>
+                <div class="fab-row-fluid fab-third">
+                    <div class="fab-portlet fab-box fab-grey">
+                        <div class="fab-portlet-title">
+                            <h4>Users</h4>
+                        </div>
+                        <div class="fab-portlet-body">
+                            <?php
+                            $rows = Array(
+                                'Total' => number_format($usersTotal),
+                                'Web' => number_format($usersWeb),
+                                'Facebook' => number_format($usersFacebook),
+                                'Mobile' => number_format($usersMobile),
+                                'Twitter' => number_format($usersTwitter),
+                            );
+                            $links = Array(
+                                'total_user',
+                                'web_user',
+                                'facebook_user',
+                                'mobile_user',
+                                'twitter_user',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif;
+                if ($settings['report_show_tickers']): ?>
+                <div class="fab-row-fluid fab-third">
+                    <div class="fab-portlet fab-box fab-yellow">
+                        <div class="fab-portlet-title">
+                            <h4>Tickers</h4>
+                        </div>
+                        <div class="fab-portlet-body">
+                            <?php                    
+                            $rows = Array(
+                                'Total Received' => number_format($tickerTotalCount),
+                                'From Web' => number_format($tickerWebCount),
+                                'From Facebook' => number_format($tickerFacebookCount),
+                                'From Twitter' => number_format($tickerTwitterCount),
+                                'From Mobile' => number_format($tickerMobileCount),
+                            );
+                            $links = Array(
+                                'total_ticker',
+                                'web_ticker',
+                                'facebook_ticker',
+                                'twitter_ticker',
+                                'mobile_ticker',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif;
+                if ($settings['report_show_social']): ?>
+                <div class="fab-row-fluid fab-third">
+                    <div id="socialSearchBlocker">
+                        Pending<br /><br />discovery<br /><br />discussion
+                    </div>
+                    <div class="fab-portlet fab-box fab-green">
+                        <div class="fab-portlet-title">
+                            <h4>Social Searches</h4>
+                        </div>
+                        <div class="fab-portlet-body">
+                            <?php
+                            $rows = Array(
+                                'Total Received' => number_format($socialReceivedTotalCount),
+                                'From Facebook' => number_format($socialFacebookCount),
+                                'From Twitter' => number_format($socialTwitterCount),
+                            );
+                            $links = Array(
+                                'total_socialReceived',
+                                'facebook_socialRecevied',
+                                'twitter_socialRecevied',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            $rows = Array(
+                                'Total Published' => number_format($socialPublishedTotalCount),
+                                'To Web' => number_format($socialToWebCount),
+                                'To Facebook' => number_format($socialToFacebookCount),
+                                'To TV' => number_format($socialToTvCount),
+                            );
+                            $links = Array(
+                                'total_socialPublished',
+                                'toweb_socialPublished',
+                                'tofacebook_socialPublished',
+                                'totv_socialPublished',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif;
+                if ($settings['report_show_analytics']): ?>
+                <div class="fab-row-fluid fab-third" style="border:1px solid #ff9900">
+                    <div id="analyticBlocker">
+                        Tracking<br /><br />code<br /><br />pending
+                    </div>
+                    <?php //echo is_null($analyticsData) ? "" : "";?>
+                    <div class="fab-portlet fab-box" style="background-color:#ff9900;">
+                        <div class="fab-portlet-title">
+                            <h4>Analytics</h4>
+                        </div>
+                        <div style="background-color:white; padding-top:4px;">
+                            <div id="startDateHidden" style="display:none;"></div>
+                            <div id="endDateHidden" style="display:none;"></div>
+                            <table>
+                                <tbody>
+                                    <tr class="columnHeaderBg">
+                                        <td align="center" width="50%" id="startDateShown">
+                                            From: <?php echo date("M d Y", strtotime($analyticsData->startDate)); ?>
+                                        </td>
+                                        <td align="center" width="50%" id="endDateShown">
+                                            To: <?php echo date("M d Y", strtotime($analyticsData->endDate)); ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <button id="GAdateRange">Choose a Date</button>
+                                            <button id="gaButton" style="display:none; float:right;">Get Analytics</button>
+                                            <div id="gaLoader"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="gaResults" class="fab-portlet-body">
+                            <?php
+                            $rows = Array(
+                                'Total Visits' => number_format($analyticsData->visits),
+                                'Unique Visitors' => number_format($analyticsData->uniqueVisitors),
+                                'Pageviews' => number_format($analyticsData->pageviews),
+                                'Pages Per Visit' => $analyticsData->pagesPerVisit,
+                                'Avg. Visit Duration' => $analyticsData->avgTimeOnSite,
+                                'Bounce Rate' => $analyticsData->bounceRate."%",
+                                '% New Visits' => $analyticsData->percentNew."%",
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows));
+                            unset($rows);
+                            $rows['By Browser'] = '';
+                            foreach($analyticsData->browsers as $browser => $visits){
+                                  $rows[$browser] = $visits.'&nbsp;-&nbsp;'.round(($visits / $analyticsData->browsersTotal) * 100, 2).'%';
+                            }
+                            $this->renderPartial('_reportTableToggle', array('id' => 'gaBrowserData', 'rows' => $rows));
+
+                            unset($rows);
+                            $rows['By OS'] = '';
+                            foreach($analyticsData->os as $os => $visits){
+                                  $rows[$os] = $visits.'&nbsp;-&nbsp;'.round(($visits / $analyticsData->osTotal) * 100, 2).'%';
+                            }
+                            $this->renderPartial('_reportTableToggle', array('id' => 'gaOsData', 'rows' => $rows));
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix" style="margin-bottom:20px;"></div>
+                <?php endif;
+                if ($settings['report_show_videos']): ?>
+                <div class="fab-row-fluid fab-third">
+                    <div class="fab-portlet fab-box fab-red">
+                        <div class="fab-portlet-title">
+                            <h4>Videos</h4>
+                        </div>
+                        <div class="fab-portlet-body">
+                            <?php
+                            $rows = Array(
+                                'Total Recorded' => number_format($videoTotalCount),
+                                'Web' => number_format($videoWebCount),
+                                'Facebook' => number_format($videoFacebookCount),
+                                'Mobile' => number_format($videoMobileCount),
+                                'Vine' => number_format($videoVineCount),
+                            );
+                            $links = Array(
+                                'total_video',
+                                'web_video',
+                                'facebook_video',
+                                'mobile_video',
+                                'vine_video',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            $rows = Array(
+                                'By Filter' => "",
+                                'Accepted' => number_format($videoAcceptedCount),
+                                'Not Accepted' => number_format($videoNewCount),
+                                'Deleted' => number_format($videoDeniedCount),
+                            );
+                            $links = Array(
+                                '',
+                                'total_videoAccepted',
+                                'total_videoNew',
+                                'total_videoDenied',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            ?>
+<!--                            <table class="fab-a-blue">
+                                <tbody>
+                                    <tr class="fab-a-last subtitle2">
+                                        <td style="width:80%">By Filter</td>
+                                        <td style="width:20%" align="right"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:80%">Accepted</td>
+                                        <td style="width:20%" align="right"><a href="/adminVideo/index"><?php echo($videoAcceptedCount); ?></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:80%">Not Accepted</td>
+                                        <td style="width:20%" align="right"><a href="/adminVideo/index"><?php echo($videoNewCount); ?></a></td>
+                                    </tr>
+                                    <tr class="fab-a-last">
+                                        <td style="width:80%">Deleted</td>
+                                        <td style="width:20%" align="right"><a href="/adminVideo/index"><?php echo($videoDeniedCount); ?></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>-->
+                        </div>
+                    </div>
+                </div>
+                <?php endif;
+                if ($settings['report_show_votes']): ?>
+                <div class="fab-row-fluid fab-third">
+                    <div class="fab-portlet fab-box fab-purple">
+                        <div class="fab-portlet-title">
+                            <h4>Votes</h4>
+                        </div>
+                        <div class="fab-portlet-body">
+                            <?php
+                            $rows = Array(
+                                'Total Votes' => number_format($responseTotalCount),
+                                'Web' => number_format($responseWebCount),
+                                'Facebook' => number_format($responseFaceboookCount),
+                                'Mobile' => number_format($responseMobileCount),
+                                'Twitter' => number_format($responseTwitterCount),
+                                //'Text' => number_format($responseTextCount),
+                            );
+                            $links = Array(
+                                'total_pollResponse',
+                                'web_pollResponse',
+                                'facebook_pollResponse',
+                                'twitter_pollResponse',
+                                'mobile_pollResponse',
+                                //'text_poll',
+                            );
+                            $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => '', 'rows' => $rows, 'links' => $links));
+                            ?>
+                            <?php if(sizeof($questions) > 0): ?>
+                            <div class="fab-controls fab-purple-select">
+                                <select id="votingQuestion" class="fab-chosen" tabindex="1" style="width:100%">
+                                    <?php
+                                        $i = 0;
+                                        foreach($questions as $question){
+                                            echo $i = 0 ? '<option selected="selected" value="'.$question->id.'">' : '<option value="'.$question->id.'">';
+                                            echo $question->id.". ".$question->question;
+                                            echo '</option>';
+                                            $i++;
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <?php endif; ?>
+                            <div id="questionResultsWrap">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div> <!--container-->
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->

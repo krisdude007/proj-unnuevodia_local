@@ -1,0 +1,158 @@
+	
+
+<?php if ($image == null): ?>
+    Unable to find image with id <?php echo $id; ?>
+<?php else: ?>
+    <?php
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminImage/imageModal.js', CClientScript::POS_END);
+    ?>
+    <div class="fab-lightbox-images">
+        <div class="fab-row-fluid">
+            <div class="fab-detail-videos fab-left">
+                <div class="fab-details-myslider">
+                    <section class="slider" style="margin-left: 30px;">
+                        <h1><?php echo CHtml::encode($image->title); ?></h1>
+
+                        <div class="fab-myslider">
+                            <ul class="slides">
+                                <li>
+                                    <img id="modalImage" alt="image" src="<?php echo Yii::app()->request->baseUrl; ?>/<?php echo basename(Yii::app()->params['paths']['image']); ?>/<?php echo $image->filename; ?>">
+                                </li>
+
+                            </ul>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <div class="fab-clear"></div>
+        </div>
+        <div class="fab-clear"  style="height:1px;margin-top: 20px;"></div>
+        <div class="fab-lightbox-description">
+            <div class="fab-accordion_list">
+                <div class="fab-accordion_head fab-question-black">
+                    <div class="fab-lightbox-margin">
+                        <p align="center" style="margin-bottom:5px;font-size:12px"><b>||||||||||||||||||||||||||||||||||||||||||||</b></p>
+                        <p id="fab-question-content">
+                            <b>Description:</b> <?php echo $image->description; ?>
+                        </p>
+
+
+                    </div>
+                    <div style="clear:right"></div>
+                </div>
+                <div class="fab-accordion_body">
+                    <div id="fab-video-filter-form">
+                        <form name="video-form">
+                            <div class="fab-form-left">
+
+                                <div id="modalTabs">
+                                    <ul>
+                                        <li><a href="#tab-tag">Tag</a></li>
+                                        <li><a href="#tab-share">Share</a></li>
+                                    </ul>
+                                    <div id="tab-tag">
+                                        <div class="fab-box fab-left" style="margin-left:0px">
+                                            <!--
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-page"  class="fab-select-type">
+                                                    <option>-dramatic-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-block"  class="fab-select-type">
+                                                    <option>-scary-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-type" class="fab-select-type">
+                                                    <option>-funny-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            -->
+                                        </div>
+
+                                        <div class="fab-clear" style="height:4px;"></div>
+                                        <?php $form = $this->beginWidget('CActiveForm', array('id' => 'tag-form',));?>   
+                                        <?php echo $form->textField($tagModel, 'title', array('id' => 'imageTags')); ?>
+                                        <?php echo $form->error($tagModel, 'title'); ?>
+                                        <?php echo CHtml::button('Save Tags', array('id' => 'saveTagTrigger', 'class' => 'fab-filter')); ?>
+                                        <?php $this->endWidget(); ?>
+
+                                        <div class="fab-clear"></div>
+                                    </div>
+
+                                   
+                                    <div id="tab-share">
+                                        <div>
+                                        <?php echo CHtml::textField('message','', array('style'=>'width:500px', 'placeholder'=>'Text to share with photo' )); ?>
+                                        </div>
+                                        <div class="fab-pull-left" style="width: 50%;">
+                                            <a href="#" id="clientShareTwitterModalTrigger" rev="<?php echo($id); ?>" style="color: #FFF">
+                                                <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/twitter-transparent.png" />
+                                                Post to Twitter
+                                            </a>
+                                        </div>
+                                        <div class="fab-pull-left" style="width: 50%;">
+                                            <a href="#" id="clientShareFacebookModalTrigger" rev="<?php echo($id); ?>" style="color: #FFF">
+                                                <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/facebook-transparent.png" /> 
+                                                Post to Facebook
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                
+                            </div>
+
+
+                            <div class="fab-form-right">
+                                <div class="fab-left">
+                                    <div class="fab-grey-line" style="margin-top:5px;margin-bottom:5px"></div>
+                                    <p><b>Name:</b> <?php echo CHtml::encode($image->user->last_name); ?>, <?php echo CHtml::encode($image->user->first_name); ?></p>
+                                    <p><b>User ID:</b> <?php echo CHtml::encode($image->user->first_name); ?><?php echo CHtml::encode($image->user->last_name); ?></p>
+                                    <p><b>Views:</b> <?php echo $image->views; ?></p>
+                                    <div class="fab-grey-line"></div>
+                                    <div style="margin-top:5px">
+                                        <div class="fab-ratings fab-left">
+                                            <span class="star-rating-control"><div class="rating-cancel" style="display: block;"><a title="Cancel Rating"></a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div></span><input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                        </div>
+                                        <div class="fab-right">
+                                            <a href="mailto:<?php echo $image->user->username; ?>"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/mail.png"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="fab-clear"></div>
+                                    <div class="fab-grey-line" style="margin-top:5px;"></div>
+                                    <div class="fab-left" style="margin-top:3px; margin-bottom: 20px;"> 
+                                        <button id="fab-modal-accept-button"  value="<?php echo $image->status; ?>" class="fab-accept-button" onclick="updateImageStatus('accepted', '<?php echo $currentStatus; ?>', <?php echo $image->id; ?>); return false;">Accept</button>
+                                        <button id="fab-modal-deny-button" value="<?php echo $image->status; ?>" class="fab-deny-button" onclick="updateImageStatus('denied', '<?php echo $currentStatus; ?>', <?php echo $image->id; ?>); return false;">Deny</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+
+
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div id="imageId" style="display: none;"><?php echo $id; ?></div>
+<?php endif; ?>

@@ -1,0 +1,46 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerCssFile(Yii::app()->request->baseurl . '//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css');
+$cs->registerCss('body','body{width: 720px; height: 58px}');
+$cs->registerCssFile(Yii::app()->request->baseurl . '/core/webassets/css/preview/preview.css');
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/preview/preview.js', CClientScript::POS_END);
+
+$cs->registerScript('graph', "getGraphDataForTV({$activePoll->id});setInterval('getGraphDataForTV({$activePoll->id})',3000);", CClientScript::POS_READY);
+?>
+
+<div id="voteDetail" style="text-align: center; background-color: #0030a8">
+    <?php if (!is_null($activePoll)): ?>
+            <div style="padding: 5px;">
+<!--                <div style="font-size: 30px;color: #007a38;padding: 5px;">
+                    <?php if (strtotime($activePoll->end_time) <= time()): ?>
+                        إغلاق التصويت
+                    <?php else: ?>
+                        صوت الآن
+                    <?php endif; ?>
+                </div>-->
+                <div style="font-size:18px;color: #ffffff">
+                    <?php echo $activePoll->question; ?>
+                </div>
+            </div>
+            <div class="afterVote row" <?php echo (strtotime($activePoll->end_time) <= time()) ? '' : 'style="display:inline-block;"'; ?>>
+                <div class="text-center" style="display:inline-block;">
+                    <?php foreach ($activePoll->pollAnswers as $answer): ?>
+                        <span class='col-sm-9 vote_div' style="width:160px">
+                            <div class='vote_label' >
+                                <span class='pull-left percent'>0%</span>
+                                <span class='pull-right'><?php echo $answer->answer; ?></span>
+                            </div>
+                            <div class="progress">
+                                <span class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"  >
+                                </span>
+                            </div>
+                        </span> <?php endforeach; ?>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class='row text-center'>
+                <h1>No Polls Open!</h1>
+            </div>
+        <?php endif; ?>
+    </div>
+

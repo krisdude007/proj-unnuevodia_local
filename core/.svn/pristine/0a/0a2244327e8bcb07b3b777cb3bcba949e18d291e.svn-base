@@ -1,0 +1,84 @@
+<?php
+
+class AdminCampaignController extends Controller {
+
+    public $user; 
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            //'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array('index', 'create','package'),
+                'expression' => 'Yii::app()->user->isAdmin()',
+            ),
+             
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+    
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    public function actionIndex()
+    {
+        $facebook_user =Yii::app()->facebook->getUser();
+        $this->render('index');
+    }
+    
+    public function actionCreate()
+    {
+        if( isset($_POST['submit_step1']) && Yii::app()->request->getParam('submit_step1') == 'step1') {
+            $campaign = new eCampaign;
+            if(isset($_POST['eCampaign'])) {
+                $campaign->attributes = $_POST['eCampaign'];
+                if($campaign->save()) {
+                    $this->redirect(array('package','id'=>$campaign->id));
+                }
+            }
+            $this->render('create_step2', array(
+                'campaign'=>$campaign,
+            ));
+        } else {
+            $this->render('create_step1');
+        }  
+    }
+    
+    public function actionPackage($id)
+    {
+        $campaign = $this->loadModel($id);
+        $plan = Yii::app()->request->getParam('plan');
+        if(isset($_GET['plan']) && in_array($plan, array('b','c'))) {
+            $campaign->package = strtoupper($plan);
+            if($campaign->save()) {
+                Yii::app()->user->setFlash('success', 'You successfully upgraded to package '. strtoupper($plan));
+            }   
+        }
+        $this->render('package', array(
+            'campaign'=>$campaign,
+        ));
+    }
+    
+    
+    public function loadModel($id)
+	{
+		$model=eCampaign::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+	
+	
+}

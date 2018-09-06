@@ -1,0 +1,83 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerCssFile(Yii::app()->request->baseurl . '//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css');
+if (Yii::app()->name == 'Un Nuevo Dia') {
+    $cs->registerCss('body', 'body{width: 1920px; height: 1080px; margin:0 auto; font-family: hnbc; background-repeat: no-repeat; background-image:url("/webassets/images/poll/UND_OrangeSplash_fade.png")}');
+} else {
+    $cs->registerCss('body', 'body{width: 720px; height: 58px;}');
+}
+$cs->registerCssFile(Yii::app()->request->baseurl . '/core/webassets/css/preview/preview.css');
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/preview/preview.js', CClientScript::POS_END);
+
+$cs->registerScript('graph', "getGraphDataForTV({$activePoll->id});setInterval('getGraphDataForTV({$activePoll->id})',3000);", CClientScript::POS_READY);
+?>
+<?php if (Yii::app()->params['custom_params']['customSettingForArabic'] === true): ?>
+    <?php if (Yii::app()->name == 'BBEIRUT'): ?>
+        <img src ="/webassets/images/home/bg_alphaVoting.png" style="width: 720px;">
+        <div id="voteDetail" style="text-align: center;position: absolute; top: -10px; left: 30px">
+        <?php endif; ?>
+        <?php if (Yii::app()->name == 'ALRISALA'): ?>
+            <div id="voteDetail" class="<?php echo 'slider' . Yii::app()->name ?>" style="text-align: center;">
+            <?php endif; ?>
+            <?php if (Yii::app()->name == 'YAHALA'): ?>
+                <div id="voteDetail" class="<?php echo 'slider' . Yii::app()->name ?>" style="text-align: center;">
+                <?php endif; ?>
+                <?php if (Yii::app()->name == 'FEESAMEEM'): ?>
+                    <div id="voteDetail" class="<?php echo 'slider' . Yii::app()->name ?>" style="text-align: center;">
+                    <?php endif; ?>
+                    <?php if (Yii::app()->name == 'KOORA'): ?>
+                        <div id="voteDetail" class="<?php echo 'slider' . Yii::app()->name ?>" style="text-align: center;">
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <?php if (!is_null($activePoll)): ?>
+                        <div style="width: 1920px; margin-top: 90px; position: relative; left: 350px;">
+                                <div style="padding: 5px;">
+                                    <div style="font-size: 85px;color: #ffffff;padding: 5px;">
+                                    <?php if (strtotime($activePoll->end_time) <= time()): ?>
+                                                                    Voting Closed!
+                                    <?php else: ?>
+                                                                    Today's Poll
+                                    <?php endif; ?>
+                                                    </div>
+                                    <?php if (Yii::app()->name == 'FEESAMEEM'): ?>
+                                        <div style="font-size:18px;color: #000000">
+                                            <?php echo $activePoll->question; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div style="font-size:50px;color: #000000; margin-left: 20px">
+                                            <?php echo $activePoll->question; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if (Yii::app()->name == 'Un Nuevo Dia'): ?>
+                                    <div class="afterVote row" <?php echo (strtotime($activePoll->end_time) <= time()) ? '' : 'style="margin:0 auto;padding-left: 50px"'; ?>>
+                                    <?php else: ?>
+                                        <div class="afterVote row" <?php echo (strtotime($activePoll->end_time) <= time()) ? '' : 'style="display:inline-block;margin:0 auto;width: 720px;"'; ?>>
+                                        <?php endif; ?>
+                                        <div class="text-center" style="display:inline-block;">
+                                            <?php foreach ($activePoll->pollAnswers as $answer): ?>
+                                                <span class='vote_div'>
+                                                    <?php if (Yii::app()->name == 'FEESAMEEM'): ?>
+                                                        <div class='vote_label' style='color: #000000'>
+                                                        <?php else: ?>
+                                                            <div class='vote_label' style="background-color: rgba(0,0,0, 0.0); width: 350px">
+                                                            <?php endif; ?>
+                                                            <div class='pull-right percent' style='color: white; font-size: 25px; position: relative; top:22px;left: 115px;'>0%</div>
+                                                            <div class='pull-left' style="text-transform: uppercase; font-size: 25px;  position: relative; top:25px;right: 25px;"><?php echo $answer->answer; ?></div>
+                                                        </div>
+                                                        <div class="progress" style='background-color: rgba(0,0,0, 0.0); box-shadow: none'>
+                                                            <span class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"  >
+                                                            </span><div class='vote_label' style="background-color: rgba(0,0,0, 0.0);">
+
+                                                            </div>
+                                                        </div>
+                                                </span> <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <div class='row text-center'>
+                                        <h1>No Polls Open!</h1>
+                                    </div>
+                                <?php endif; ?>
+                    </div>
+

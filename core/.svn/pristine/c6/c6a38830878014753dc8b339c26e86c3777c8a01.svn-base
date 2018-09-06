@@ -1,0 +1,423 @@
+<?php
+
+class AdminController extends Controller {
+
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array('login','index'),
+                'expression' => '(Yii::app()->user->isGuest || !Yii::app()->user->isAdmin())',
+            ),
+            array('allow',
+                'actions' => array(
+                    'index',
+                    'uploadmanual',
+                    'error',
+                    'login',
+                    'logout',
+                    'faq',
+                    'contact',
+                    'setting',
+                    'saveSetting',
+                    'training',
+                    'loadNotificationUrl',
+                    'ajaxClientShareFacebook',
+                    'ajaxClientShareTwitter',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+
+    public function actionIndex() {
+        //Stubbing out some basic rules for authentication.
+        //User has not identified their client
+
+
+        if (!Yii::getPathOfAlias('client')) {
+            $this->redirect('/admin/login');
+        }
+        //User has not logged in
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/admin/login');
+        }
+        //User is not an admin
+        if (!Yii::app()->user->isAdmin()) {
+            $this->redirect('/admin/login');
+        }
+        //User is admin and logged in
+        if (Yii::app()->user->isAdmin()) {
+            $this->redirect('/admin');
+        }
+        $this->render('index',array(
+        ));
+    }
+
+    /**
+     *
+     *
+     * NOTIFICATION ACTIONS
+     * This section contains everything required for admin notifications
+     *
+     *
+     */
+    public function actionLoadNotificationUrl($id) {
+        $notification = eNotification::model()->orderDesc()->findByPk($id);
+
+        if(!is_null($notification)) {
+            $url = $notification->url;
+            $notification->delete();
+            $this->redirect($url);
+        }
+    }
+
+    /**
+     *
+     *
+     * LOGIN ACTIONS
+     * This section contains everything required for the login section of the admin
+     *
+     *
+     */
+    public function actionLogin() {
+        $this->layout = '//layouts/admin_login';
+        $dashboardUrl = '/adminDashboard/index';
+
+        if (!Yii::app()->user->isGuest && Yii::app()->user->isAdmin()) {
+            $this->redirect($dashboardUrl);
+        }
+        $user = new eUser;
+        $user->setScenario('login');
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-login-form') {
+            echo CActiveForm::validate($user);
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUser'])) {
+            $user->attributes = $_POST['eUser'];
+
+            if ($user->validate()) {
+                if (UserUtility::login($user, true)) {
+                    AuditUtility::save($this, $_REQUEST);
+                    $this->redirect($dashboardUrl);
+                }
+            }
+        }
+        $this->render('login', array('model' => $user));
+    }
+
+    public function actionLogout() {
+        $this->layout = '//layouts/admin_login';
+        if (!Yii::app()->user->isGuest) {
+            UserUtility::logout();
+        }
+        $this->redirect('/admin/login');
+    }
+
+    /**
+     *
+     *
+     * ERROR ACTIONS
+     * This section contains everything required for the error section of the admin
+     *
+     *
+     */
+    public function actionError() {
+        if ($error = Yii::app()->errorHandler->error)
+            $this->render('error', $error);
+    }
+
+    /**
+     *
+     *
+     * FAQ ACTIONS
+     * This section contains everything required for the faq section of the admin
+     *
+     *
+     */
+    public function actionFaq() {
+        $this->render('faq', array(
+        ));
+    }
+
+    /**
+     *
+     *
+     * CONTACT ACTIONS
+     * This section contains everything required for the contact section of the admin
+     *
+     *
+     */
+    public function actionContact() {
+        $criteria = new CDBCriteria;
+        $criteria->condition = "id between 9 and 13";
+        $contacts = eContactInformation::model()->findAll($criteria);
+        if(!empty($_POST)){
+            foreach($contacts as $contact){
+                if(isset($_POST['ContactInformation'][$contact->id]['value'])){
+                    $contact->value = $_POST['ContactInformation'][$contact->id]['value'];
+                }
+                $contact->save();
+            }
+        }
+
+        $this->render('contact', array(
+            'contacts' => $contacts,
+        ));
+    }
+
+    /**
+     *
+     *
+     * SETTING ACTIONS
+     * This section contains everything required for the settings section of the admin
+     *
+     *
+     */
+    public function actionSetting() {
+        $settings = eAppSetting::model()->findAll();
+        $this->render('setting', array(
+            'settings' => $settings,
+        ));
+    }
+
+    public function actionSaveSetting() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $setting = eAppSetting::model()->findByAttributes(Array('id'=>$id));
+        $clientSetting = eAppSettingClient::model()->findByPK($id);
+        if(is_null($clientSetting)){
+            $clientSetting = new eAppSettingClient();
+            $clientSetting->attributes = $setting->attributes;
+            $clientSetting->id = $setting->id;
+            $clientSetting->save();
+        }
+        $clientSetting->value = $value;
+        if ($clientSetting->save()) {
+            echo 'true';
+        } else {
+            echo 'false';
+        }
+    }
+
+    /**
+     *
+     *
+     * TRAINING ACTIONS
+     * This section contains everything required for the training section of the admin
+     *
+     *
+     */
+    public function actionTraining() {
+
+        $formUploadManualModel = new FormManualUpload;
+
+        $this->render('training', array(
+            'formUploadManualModel' => $formUploadManualModel,
+        ));
+    }
+
+
+    public function actionUploadManual() {
+        $formUploadManualModel = new FormManualUpload;
+        $trainingUrl = '/admin/training';
+
+        if (isset($_POST['FormManualUpload'])) {
+            $formUploadManualModel->attributes = $_POST['FormManualUpload'];
+            $formUploadManualModel->uploadfile = CUploadedFile::getInstance($formUploadManualModel, 'uploadfile');
+
+            if ($formUploadManualModel->validate()) {
+                $filename = 'admin_user_manual';
+                $fileExtension = $formUploadManualModel->uploadfile->extensionName;
+                $fileSave = $_SERVER['DOCUMENT_ROOT']. '/manuals/' . $filename . '.' . $fileExtension;
+
+                $formUploadManualModel->uploadfile->saveAs($fileSave);
+            }
+
+                Yii::app()->user->setFlash('success', 'Manual upload complete.');
+                $this->redirect($trainingUrl);
+
+            } else {
+
+                $error = $formUploadManualModel->getErrors();
+                $error = $error['uploadfile'];
+                Yii::app()->user->setFlash('error', $error[0]);
+            }
+            $this->redirect($trainingUrl);
+        }
+
+            /**
+     *
+     *
+     * SHARING ACTIONS
+     * This section contains everything required for the sharing section of the admin
+     *
+     *
+     */
+    public function actionAjaxClientShareFacebook() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $destination = eDestination::model()->findByAttributes(Array('destination' => 'facebook'));
+        switch ($type) {
+            case 'question':
+                $question = eQuestion::model()->findByPK($id);
+                $post = array(
+                    'message' => $question->question,
+                    'link' => $this->createAbsoluteUrl('/record'),
+                );
+                $dest = new eQuestionDestination;
+                $dest->question_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'ticker':
+                $ticker = eTicker::model()->with('user')->findByPK($id);
+                $username = ($ticker->type == 'social') ? ($ticker->source == 'facebook') ? FacebookUtility::getUsernameFromID($ticker->source_user_id) : TwitterUtility::getUsernameFromID($ticker->source_user_id) : $ticker['user']->username;
+                $post = array(
+                    'message' => "{$username} says: " . $ticker->ticker,
+                    'link' => $this->createAbsoluteUrl('/'),
+                );
+                $dest = new eTickerDestination;
+                $dest->ticker_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'video':
+                $video = eVideo::model()->findByPK($id);
+                $username = $video['user']->username;
+                $post = array(
+                    'message' => empty($message) ? "Check out this video by {$username}! " : $message.' ',
+                    'link' => $this->createAbsoluteUrl('/play/'.$video->view_key),
+                    'picture' => isset($_SERVER['HTTPS']) ? 'https://' : 'http://'. $_SERVER['HTTP_HOST'] . '/uservideos/' . $video->filename . '.png',
+
+                );
+                $dest = new eVideoDestination;
+                $dest->video_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'image':
+                $image = eImage::model()->findByPK($id);
+                $username = $image['user']->username;
+                $post = array(
+                    'message' => empty($message) ? "Check out this image by {$username}! " : $message.' ',
+                    'link' => $this->createAbsoluteUrl('/viewimage/'.$image->view_key),
+                );
+                $dest = new eImageDestination;
+                $dest->image_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+
+            default;
+                break;
+        }
+        if (!empty($post)) {
+            $response = FacebookUtility::shareAs('client', $post);
+            if (!$response['result']) {
+                $dest->response = $response['error'];
+            } else {
+                $dest->response = $response['response']['id'];
+            }
+            $dest->save();
+            if($dest->response == $response['response']['id']){
+                echo 'success';
+            } else {
+                echo $dest->response;
+            }
+        }
+    }
+
+
+    public function actionAjaxClientShareTwitter() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $destination = eDestination::model()->findByAttributes(Array('destination' => 'twitter'));
+        $text = "";
+        switch ($type) {
+            case 'question':
+                $question = eQuestion::model()->findByPK($id);
+                $text = $question->question.' #'.$question->hashtag;
+                $dest = new eQuestionDestination;
+                $dest->question_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'ticker':
+                $ticker = eTicker::model()->with('user')->findByPK($id);
+                $username = ($ticker->type == 'social') ? ($ticker->source == 'facebook') ? FacebookUtility::getUsernameFromID($ticker->source_user_id) : TwitterUtility::getUsernameFromID($ticker->source_user_id) : $ticker['user']->username;
+                $text = "{$username} says: " . $ticker->ticker;
+                $dest = new eTickerDestination;
+                $dest->ticker_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'video':
+                $video = eVideo::model()->with('user')->findByPK($id);
+                $username = $video['user']->username;
+                $text = empty($message) ? "Check out this video by {$username}! " : $message.' ';
+                $text .= $this->createAbsoluteUrl('/play/' . $video->view_key);
+                $dest = new eVideoDestination;
+                $dest->video_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            case 'image':
+                $image = eImage::model()->with('user')->findByPK($id);
+                $username = $image['user']->username;
+                $text = empty($message) ? "Check out this image by {$username}! " : $message.' ';
+                $text .= $this->createAbsoluteUrl('/viewimage/' . $image->view_key);
+                $dest = new eImageDestination;
+                $dest->image_id = $id;
+                $dest->user_id = Yii::app()->user->getId();
+                $dest->destination_id = $destination->id;
+                break;
+            default;
+                break;
+        }
+        if (!empty($text)) {
+            $response = TwitterUtility::tweetAs('client', $text);
+            if (isset($response->errors) && sizeof($response->errors) > 0) {
+                foreach ($response->errors as $i => $error) {
+                    $dest->response .= $error->message;
+                }
+                $dest->save();
+                echo $dest->response;
+            } else {
+                $dest->response = $response->id_str;
+                $dest->save();
+                echo 'success';
+            }
+        }
+    }
+
+}

@@ -1,0 +1,86 @@
+
+$(document).ready(function () {
+    $("button").click(function(e){
+        e.preventDefault();
+        //window.location.href='reports-detail.html';
+    });
+    
+    $("#votingQuestion").change(getQuestionResults);
+    
+    function getQuestionResults(event){
+        $("#questionResultsWrap").html('');
+        var request = $.ajax({
+            url:"/adminReport/ajaxSelectedQuestion",
+            type:'POST',
+            data:({
+                date: $('#filterDate').html(),
+                pollId: $( "#votingQuestion" ).val(),
+                YII_CSRF_TOKEN: getCsrfToken()
+            }),
+            success: function(data){
+                $("#questionResultsWrap").html(data);
+            },
+            error: function(data){
+                console.log('Unable to get question results.');
+            }
+        });
+    }
+    getQuestionResults();
+//    var reportCells = $('.fab-portlet-body > table > tbody > tr > td:odd');
+//    for(var i=0; i<reportCells.length; i++){
+//        $(reportCells[i]).css('text-align','right');
+//    }
+    
+    function parseDates(){
+    var dates = new Array();
+    var startDate = document.getElementById("startDateHidden").innerHTML;
+    var endDate = document.getElementById("endDateHidden").innerHTML;
+        if(dates.length == 1){
+            var startDate = $.trim(dates[0]);
+            var endDate = $.trim(dates[0]);
+        }
+        if(dates.length == 2){
+            var startDate = $.trim(dates[0]);
+            var endDate = $.trim(dates[1]);
+        }
+        if(dates.length > 2){
+            alert("Improper date format!\nExample: yyyy-mm-dd / yyyy-mm-dd");
+            throw "stop execution";
+        }else{
+            return [startDate, endDate];
+        }
+    }
+    
+    if($(window.parent.document).find('iframe').size()){
+            var inframe = true;
+    }
+    var xy = $('#GAdateRange').position();
+    $('#GAdateRange').daterangepicker({
+           posX: xy.left,
+           posY: xy.top + 36,
+           onOpen:function(){ if(inframe){ $(window.parent.document).find('iframe:eq(0)').width(700).height('35em');} }, 
+           onClose: function(){ if(inframe){ $(window.parent.document).find('iframe:eq(0)').width('100%').height('5em');} }
+    });
+    $("#gaButton").click(function(){
+        $("#gaGraph").html('');
+        $("#gaResults").html('');
+        $("#gaLoader").html('<center><img src="/core/webassets/images/spinner.gif" width="40" height="40" style="margin-top:7px;"></center>');
+        var dates = parseDates();
+        var request = $.ajax({
+            url:"/adminReport/ajaxAnalytics",
+            type:'POST',
+            data:({
+                start_date:dates[0],
+                end_date:dates[1],
+                YII_CSRF_TOKEN: getCsrfToken()
+            }),
+            success: function(data){
+                $("#gaResults").html(data);
+                $("#gaLoader").html('');
+            },
+            error: function(data){
+                console.log('Unable to update analytics.');
+            }
+        });
+    });
+});

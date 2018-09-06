@@ -1,0 +1,311 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+$cs->registerCoreScript('jquery.ui', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/_admin.js');
+$cs->registerCssFile('/core/webassets/css/jquery-ui-1.10.0.css');
+$cs->registerCssFile('/core/webassets/css/_flashes.css');
+$cs->registerScriptFile('/core/webassets/js/jquery.tools.min.js', CClientScript::POS_END);
+Yii::app()->facebook->initJs($output); // this initializes the Facebook JS SDK on all pages
+?>
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> 
+<![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> 
+<![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> 
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+    <head>
+        <meta charset="utf-8"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/metro.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/font-awesome.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/style.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/fab-style.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/style_responsive.css" rel="stylesheet"/>
+        <link href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/css/style_default.css" rel="stylesheet" id="style_color"/>
+
+        <title>Youtoo Technologies - <?php echo $this->pageTitle; ?></title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <meta content="" name="description"/>
+        <meta content="" name="author"/>
+        <style>
+            html, body, #fullheight {
+                min-height: 100% !important;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <!-- END HEAD -->
+    <!-- BEGIN BODY -->
+    <body class="fab-fixed-top">
+        <!-- BEGIN HEADER -->
+        <div style="background-image:url('/core/webassets/images/big-nav-expanded.jpg');height: 100%; width:107px; position:fixed; z-index:-1"></div>
+        <div class="fab-header fav-navbar fab-navbar-inverse fab-navbar-fixed-top">
+            <!-- BEGIN TOP NAVIGATION BAR -->
+            <div class="fab-navbar-inner">
+                <div class="fab-container-fluid">
+                    <!-- BEGIN LOGO -->
+                    <div id="fab-logo" class="fab-left">
+                        <a href="#" title="<?php echo SITE_NAME; ?>">
+                            <img src="<?php echo Yii::app()->request->baseUrl; ?>/webassets/images/logo.png" alt="<?php echo SITE_NAME; ?>" style="height: 33px; width: 100px;">
+                        </a>
+                    </div>
+                    <!-- END LOGO -->
+                    <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                    <a href="javascript:;" class="fab-btn-navbar fab-collapsed" data-toggle="collapse" data-target=".fab-nav-collapse">
+                        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/menu-toggler.png" alt=""/>
+                    </a>
+                    <!-- END RESPONSIVE MENU TOGGLER -->
+                    <!-- BEGIN TOP NAVIGATION MENU -->
+                    <ul class="fab-nav fab-pull-right">
+                        <!-- BEGIN search DROPDOWN -->
+
+                        <!--
+                        <li class="fab-dropdown" id="fab-search_bar">
+                            <a href="#" class="fab-dropdown-toggle" data-toggle="dropdown">
+                                <div class="fab-search-dropdown"></div>
+                            </a>
+                            <ul class="fab-dropdown-menu fab-tasks">
+                                <li>
+                                    <div class="fab-top8">
+                                        <form>
+                                            <input type="text" class="fab-search-input" placeholder="Search..."/>
+                                            <input type="submit" class="fab-seach-submit" value=""/>
+                                        </form>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </li>
+                        -->
+
+                        <?php if (count($this->notification) > 0): ?>
+                            <audio><source src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/audio/notification.mp3" type="audio/mpeg"></audio>
+                            <li id="fab-header_notification_bar" class="fab-dropdown">
+                                <a data-toggle="dropdown" class="fab-dropdown-toggle" href="#">
+                                    <span id="notificationCount" style="left: 3px; position: relative; top: -9px; font-weight: bold; color: #fff;"><?php echo count($this->notification); ?></span>
+                                    <div class="fab-notifications"></div>
+                                </a>
+                                
+                                <ul class="fab-dropdown-menu fab-extended fab-notification">
+                                    <?php foreach ($this->notification as $notification) : ?>
+                                        <li>
+                                            <a href="/admin/loadNotificationUrl/<?php echo $notification->id; ?>">
+                                                <div style="font-weight: bold;">&raquo; <?php echo CHtml::encode($notification->message); ?></div>
+                                                <div class="fab-time"><?php echo DateTimeUtility::niceTime(strtotime($notification->created_on)); ?></div>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                
+                            </li>
+                        <?php endif; ?>
+
+                        <!-- BEGIN USER LOGIN DROPDOWN -->
+                        <li class="fab-dropdown fab-user" style="top: 6px;">
+                            <a href="#" class="fab-dropdown-toggle" data-toggle="dropdown">
+                                <!--<img style="width: 30px; height: 30px;" alt="<?php echo $this->user->first_name; ?> <?php echo $this->user->last_name; ?>" src="<?php echo UserUtility::getAvatar($this->user); ?>"/>-->
+                                <span class="fab-username"><?php echo $this->user->first_name; ?> <?php echo $this->user->last_name; ?></span>
+                                <i class="icon-angle-down"></i>
+                            </a>
+                            <ul class="fab-dropdown-menu">
+                                <li><?php echo CHtml::link('<i class="icon-user"></i> Settings', '/admin/setting', array()); ?></li>
+                                <li class="fab-divider"></li>
+                                <li><?php echo CHtml::link('<i class="icon-key"></i> Logout', '/admin/logout', array()); ?></li>
+                            </ul>
+                        </li>
+                        <!-- END USER LOGIN DROPDOWN -->
+                    </ul>
+                    <!-- END TOP NAVIGATION MENU -->
+                </div>
+            </div>
+            <!-- END TOP NAVIGATION BAR -->
+        </div>
+        <!-- END HEADER -->
+        <!-- BEGIN CONTAINER -->
+        <div class="fab-page-container fab-row-fluid">
+
+            <!-- BEGIN SIDEBAR -->
+            <div class="fab-page-sidebar fab-nav-collapse fab-collapse">
+                <!--start navigation -->
+                <div id="fab-nav-collapsed" class="fab-large">
+                    <ul id="fab-collapsed">
+                        <li class="fab-first"><?php echo CHtml::link('<div id="fab-back-collapsed"></div>', '#', array()); ?></li>
+                        <li class="fab-dashboard"><?php echo CHtml::link('<div id="fab-dashboard-collapsed"><p class="fab-text">Dashboard</p></div>', '/admin/dashboard', array()); ?></li>
+                        <?php if(ADMIN_VIDEO_TAB): ?>
+                        <li class="fab-video"><?php echo CHtml::link('<div id="fab-video-collapsed"><p class="fab-text">Video Admin</p></div>', '/admin/video', array()); ?></li>
+                        <?php endif; ?>
+                        <?php if(ADMIN_IMAGE_TAB): ?>
+                        <li class="fab-image"><?php echo CHtml::link('<div id="fab-image-collapsed"><p class="fab-text">Image Admin</p></div>', '/admin/image', array()); ?></li>
+                        <?php endif; ?>
+                        <?php 
+                        $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+                        if (strpos($url,'zee') !== false):
+                        ?>
+                        <li class="fab-ticker"><?php echo CHtml::link('<div id="fab-ticker-collapsed"><p class="fab-text">Contestant Admin</p></div>', '/admin/entity', array()); ?></li>
+                        <?php else: ?>
+                        <li class="fab-ticker"><?php echo CHtml::link('<div id="fab-ticker-collapsed"><p class="fab-text">Advetiser Admin</p></div>', '/admin/entity', array()); ?></li>
+                        <?php endif; ?>
+                        <li class="fab-ticker"><?php echo CHtml::link('<div id="fab-ticker-collapsed"><p class="fab-text">Ticker Admin</p></div>', '/admin/ticker', array()); ?></li>                        
+                        <li class="fab-voting"><?php echo CHtml::link('<div id="fab-voting-collapsed"><p class="fab-text">Voting Admin</p></div>', '/admin/voting', array()); ?></li>
+                        <li class="fab-videoquestion"><?php echo CHtml::link('<div id="fab-videoquestion-collapsed"><p class="fab-text">Question Editor</p></div>', '/admin/question', array()); ?></li>
+                        <li class="fab-socialsearch"><?php echo CHtml::link('<div id="fab-socialsearch-collapsed"><p class="fab-text">Social Search</p></div>', '/admin/socialsearch', array()); ?></li>
+                        <li class="fab-socialstream"><?php echo CHtml::link('<div id="fab-socialstream-collapsed"><p class="fab-text">Social Stream</p></div>', '/admin/socialstream', array()); ?></li>
+                        <li class="fab-language"><?php echo CHtml::link('<div id="fab-language-collapsed"><p class="fab-text">Language Filter</p></div>', '/admin/language', array()); ?></li> 
+                        <li class="fab-reports"><?php echo CHtml::link('<div id="fab-reports-collapsed"><p class="fab-text">Prem. Reports</p></div>', '/admin/report', array()); ?></li>
+                        <li class="fab-dailyreports"><?php echo CHtml::link('<div id="fab-dailyreports-collapsed"><p class="fab-text">Daily Reports</p></div>', '/adminReport/weeklyReport', array()); ?></li>
+
+                        <?php if (Yii::app()->user->isSuperAdmin()): ?>
+                        <li class="fab-audit"><?php echo CHtml::link('<div id="fab-audit-collapsed"><p class="fab-text">Audit Trail</p></div>', '/admin/audit', array()); ?></li>                                                
+                        <li class="fab-user"><?php echo CHtml::link('<div id="fab-user-collapsed"><p class="fab-text">User Admin</p></div>', '/admin/user', array()); ?></li>
+                        <?php endif ?>
+
+                        <li class="fab-training"><?php echo CHtml::link('<div id="fab-training-collapsed"><p class="fab-text">Training</p></div>', '/admin/training', array()); ?></li>
+                        <li class="fab-faq"><?php echo CHtml::link('<div id="fab-faq-collapsed"><p class="fab-text">FAQ</p></div>', '/admin/faq', array()); ?></li>
+                        <li class="fab-settings"><?php echo CHtml::link('<div id="fab-settings-collapsed"><p class="fab-text">Settings</p></div>', '/admin/setting', array()); ?></li>
+                        <li class="fab-contact"><?php echo CHtml::link('<div id="fab-contact-collapsed"><p class="fab-text">Contact</p></div>', '/admin/contact', array()); ?></li>
+                    </ul>
+                </div>
+
+
+                <!-- BEGIN SIDEBAR MENU -->
+                <ul id="fab-small-menu">
+                    <li>
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                        <div class="fab-sidebar-toggler fab-hidden-phone"></div>
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                    </li>
+                    <li class="fab-start fab-active ">
+                        <a href="index.html">
+                            <span class="fab-title">Dashboard</span>
+                            <span class="fab-selected"></span>
+                        </a>
+                    </li>
+                    <li class="fab-has-sub ">
+                        <a href="javascript:;">
+                            <span class="fab-title">Video Admin</span>
+                            <span class="fab-arrow "></span>
+                        </a>
+                        <ul class="fab-sub">
+                            <li><a href="video.html">Video Admin</a></li>
+                        </ul>
+                    </li>
+                    <li class="fab-has-sub ">
+                        <a href="javascript:;">
+                            <span class="fab-title">Ticker Admin</span>
+                            <span class="fab-arrow "></span>
+                        </a>
+                        <ul class="fab-sub">
+                            <li><a href="ticker.html">Ticker Admin</a></li>
+                        </ul>
+                    </li>
+                    <li class="fab-has-sub ">
+                        <a href="javascript:;">
+                            <span class="fab-title">Voting</span>
+                            <span class="fab-arrow "></span>
+                        </a>
+                        <ul class="fab-sub">
+                            <li><a href="voting.html">Voting</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="social.html">
+                            <span class="fab-title">Social</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="moderate.html">
+                            <span class="fab-title">Moderate</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reports.html">
+                            <span class="fab-title">Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="faqs.html">
+                            <span class="fab-title">FAQ's</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="contact.html">
+                            <span class="fab-title">Contact</span>
+                        </a>
+                    </li>
+                    <li class="fab-has-sub ">
+                        <a href="javascript:;">
+                            <span class="fab-title">Settings</span>
+                            <span class="fab-arrow "></span>
+                        </a>
+                        <ul class="fab-sub">
+                            <li><a href="settings.html">Settings</a></li>
+                            <li><a href="#">User Profile</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Search Results</a></li>
+                            <li><a href="#">Invoice</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <!-- END SIDEBAR MENU -->
+
+                <!-- END SIDEBAR -->
+
+                <!--end navigation -->
+            </div>
+            <div class="fab-clear"></div>
+            <!-- BEGIN PAGE -->
+            <?php echo $content; ?>
+            <!-- END PAGE -->
+        </div>
+
+        <!-- END CONTAINER -->
+        <!-- BEGIN FOOTER -->
+        <div class="fab-footer">
+            <div id="fab-footer-logo" class="fab-left">
+                <a href="#" title="Youtoo"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/footer-logo.png" width="" alt="Azteca"></a>
+            </div>
+            <div class="fab-right">
+                <ul id="fab-footer-nav">
+                    <li><a href="#">home</a></li>
+                    <li><a href="#">about us</a></li>
+                    <li><a href="#">faq</a></li>
+                    <li><a href="#">policy</a></li>
+                    <li><a href="#">contact us</a></li>
+                    <li><a href="#">site map</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- END FOOTER -->
+        <!-- BEGIN JAVASCRIPTS -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/js/excanvas.js"></script>
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/js/respond.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/js/_global.js"></script>
+        <!-- END JAVASCRIPTS -->
+        <div style="display: none;" id="numNotifications"><?php echo count($this->notification);?></div>
+        <div style="display: none;" id="sessionDuration"><?php echo SESSION_DURATION;?></div>
+        <div style="display: none;" id="sessionDurationOffset"><?php echo SESSION_DURATION_OFFSET;?></div>
+        <div style="display: none;" id="sessionDurationOverlay">
+            <div id="sessionDurationOverlayContent">
+                <h2 style="font-size: 18px;">Warning</h2>
+                <hr/>
+                <div style="font-size: 14px;">Due to inactivity, your session will expire in a few moments.</div>
+                <div style="margin-top: 20px;">
+                    <button id="sessionRefresh">Continue this session</button>
+                    <button id="sessionExpire">Retire this session</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- END BODY -->
+</html>

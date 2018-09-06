@@ -1,0 +1,81 @@
+<?php
+/* @var $this UserController */
+/* @var $user User */
+/* @var $userEmail UserEmail */
+/* @var $form CActiveForm */
+?>
+
+<div class="form3">
+
+    <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'user-profile-form',
+            'enableAjaxValidation' => true,
+            'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        ));
+    ?>
+    <?php echo $form->errorSummary(Array($user, $userEmail)); ?>
+
+    <table class="userProfileForm" style="float:left;">
+        <tr>
+            <td>first name</td>
+        </tr>
+        <tr class="spaceUnder">
+            <td>
+                <?php echo $form->textField($user, 'first_name'); ?>
+                <?php echo $form->error($user, 'first_name'); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td>last name</td>
+        </tr>
+        <tr class="spaceUnder">
+            <td>
+                <?php echo $form->textField($user, 'last_name'); ?>
+                <?php echo $form->error($user, 'last_name'); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td>email</td>
+        </tr>
+        <tr class="spaceUnder">
+            <td>
+                <?php echo $form->textField($userEmail, 'email'); ?>
+                <?php echo $form->error($userEmail, 'email'); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td>birthdate<br />
+        </tr>
+        <tr class="spaceUnder">
+            <td>
+                <?php echo $form->dropDownList($user, 'birthMonth',  DateTimeUtility::monthsOfYear()); ?>
+                <?php echo $form->dropDownList($user, 'birthDay', DateTimeUtility::daysOfMonth()); ?>
+                <?php echo $form->dropDownList($user, 'birthYear',  DateTimeUtility::yearsOfCentury()); ?>
+                <?php echo $form->error($user, 'birthday'); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td>gender</td>
+        </tr>
+        <tr>
+            <td>
+                <?php
+                    $gender = array('M' => 'Male', 'F' => 'Female');
+                    echo $form->radioButtonList($user, 'gender', $gender, array('separator' => ' '));
+                ?>
+                <?php echo $form->error($user, 'gender'); ?>
+            </td>
+
+            <td>
+                <?php echo CHtml::submitButton('submit'); ?>
+            </td>
+        </tr>
+    </table>
+
+    <?php $this->endWidget(); ?>
+</div>

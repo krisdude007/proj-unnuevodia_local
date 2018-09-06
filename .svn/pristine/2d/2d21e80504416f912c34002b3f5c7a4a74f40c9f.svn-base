@@ -1,0 +1,48 @@
+<?php
+/* @var $this UserController */
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile(Yii::app()->request->baseurl.'/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+
+?>
+<div id="content">
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+        <div class="verticalRule">
+        </div>
+        <div class="youContent" style="text-align: left;">
+            <h1>GET CONNECTED</h1>
+            <div class="textBox" style="height: 116px; background-color: #d7d7d7; padding:20px;">
+                <h4 style="margin-bottom:20px;">Click below to connect socially with Twitter and Facebook.</h4>
+                <div class="twitter" style="float:left;">
+                    <a href="#" id="tw_conn" rel="<?php echo (!empty($user->userTwitters[0]->id)) ? '1' : '0'; ?>">
+                        <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/twitter.png" />
+                    </a>
+                    <span id="twitter_user">                            
+                        <?php if (!empty($user->userTwitters[0]->id)): ?>
+                            <a style="color:white" href="http://www.twitter.com/<?php echo $twuser->screen_name; ?>" target="_blank"><?php echo $twuser->screen_name; ?></a>
+                        <?php else: ?>
+                            Connect.
+                        <?php endif; ?>
+                    </span>
+                </div>
+                <div class="facebook" style="float:left;margin-left: 40px;">
+                    <a href="#" id="fb_conn" rel="<?php echo (!empty($user->userFacebooks[0]->id)) ? '1' : '0'; ?>">
+                        <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/facebook.png" />
+                    </a>                                
+                    <span id="facebook_user">
+                        <?php if (!empty($user->userFacebooks[0]->id)): ?>
+                            <a style="color:white" href="<?php echo $facebook['link']; ?>" target="_blank"><?php echo $facebook['name']; ?></a>
+                        <?php else: ?>
+                            Connect.
+                        <?php endif; ?>
+                    </span>                                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

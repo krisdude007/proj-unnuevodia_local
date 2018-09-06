@@ -1,0 +1,173 @@
+<?php
+
+class eVideo extends Video {
+    
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+        
+    public function filterByDate($filterDate) {
+        return DateTimeUtility::filterByDate($this, $filterDate);
+    }
+        
+    public function filterByWeek($filterDate) {
+        return DateTimeUtility::filterByWeek($this, $filterDate);
+    }
+
+    public function orderBy($id, $order) {
+        if (is_null($id)) {
+            $sql = '
+                select view_key,v.user_id,thumbnail,title,v.created_on,first_name,last_name,COUNT(vv.id) AS views, AVG(vr.rating) as rating
+                    from video v
+                    LEFT JOIN user u ON u.id = v.user_id
+                    LEFT JOIN video_rating vr on vr.video_id = v.id
+                    LEFT JOIN video_view vv on vv.video_id = v.id
+                    where status = "accepted"
+                    group by v.id                            
+            ';
+        } else {
+            $sql = '
+                select view_key,v.user_id,thumbnail,title,v.created_on,first_name,last_name,COUNT(vv.id) AS views, AVG(vr.rating) as rating
+                    from video v
+                    LEFT JOIN user u ON u.id = v.user_id
+                    LEFT JOIN video_rating vr on vr.video_id = v.id
+                    LEFT JOIN video_view vv on vv.video_id = v.id
+                    where status = "accepted"
+                    and v.user_id = "%d"
+                    group by v.id                            
+            ';
+            $sql = sprintf($sql, $id);
+        }
+        switch ($order) {
+            case 'views':
+                $sql .= 'order by views desc';
+                $videos = Yii::app()->db->createCommand($sql)->queryAll(true);
+                $videos = json_decode(json_encode($videos));
+                break;
+            case 'rating':
+                $sql .= 'order by rating desc';
+                $videos = Yii::app()->db->createCommand($sql)->queryAll(true);
+                $videos = json_decode(json_encode($videos));
+                break;
+            default:
+                break;
+        }
+        return $videos;
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('question_id, source', 'required'),
+            array('title', 'required', 'on' => 'update'),
+            array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'insert'),
+            array('updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'update'),
+            array('status', 'default', 'value' => 'new', 'on' => 'insert'),
+            array('filename, thumbnail', 'required', 'on' => 'insert'),
+            array('filename, thumbnail', 'unique'),
+            array('view_key', 'default', 'value' => md5(uniqid('', true)), 'on' => 'insert'),
+            array('user_id, watermarked, question_id, to_youtube, to_facebook, to_twitter, arbitrator_id', 'numerical', 'integerOnly' => true),
+            array('filename, thumbnail, title, description, view_key, source, source_content_id, source_user_id', 'length', 'max'=>255),
+            array('status', 'length', 'max' => 8),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, user_id, question_id, title, description, view_key, source, watermarked, to_youtube, to_facebook, to_twitter, arbitrator_id, status, status_date, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+    
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'brightcoves' => array(self::HAS_MANY, 'eBrightcove', 'video_id'),
+            'arbitrator' => array(self::BELONGS_TO, 'User', 'arbitrator_id'),            
+            'user' => array(self::BELONGS_TO, 'eUser', 'user_id'),
+            'question' => array(self::BELONGS_TO, 'eQuestion', 'question_id'),
+            'videoDestinations' => array(self::HAS_MANY, 'eVideoDestination', 'video_id'),
+            'videoRatings' => array(self::HAS_MANY, 'eVideoRating', 'video_id'),
+            'videoViews' => array(self::HAS_MANY, 'eVideoView', 'video_id'),
+            'rating' => array(self::STAT, 'eVideoRating', 'video_id', 'select' => 'ROUND(AVG(rating))', 'group' => 'video_id'),
+            'views' => array(self::STAT, 'eVideoView', 'video_id', 'select' => 'COUNT(id)', 'group' => 'video_id'),
+            'tagVideos' => array(self::HAS_MANY, 'eTagVideo', 'video_id')
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {    
+        return CMap::mergeArray(parent::attributeLabels(),array(
+            'to_youtube' => 'Youtube',
+            'to_facebook' => 'Facebook',
+            'to_twitter' => 'Twitter',
+        ));
+    }
+
+    public function scopes() {
+        return array(
+            'recent' => array('order' => '`t`.`id` desc'),
+            'byViews' => array('order' => '`t`.views desc'),
+            'rating' => array('order' => '`t`.rating desc'),
+            'new' => array('condition' => '`t`.status="new"'),
+            'accepted' => array('condition' => '`t`.status="accepted"'),
+            'denied' => array('condition' => '`t`.status="denied"'),
+            'processed' => array('condition' => '`t`.processed=1'),
+        );
+    }
+    
+    public function afterSave() {
+        if($this->status == 'accepted'){
+            if($this->to_twitter == 1){
+                $destination = eDestination::model()->findByAttributes(Array('destination'=>'twitter'));
+                $sent = eVideoDestination::model()->findByAttributes(Array('video_id'=>$this->id,'user_id'=>$this->user_id,'destination_id'=>$destination->id));                    
+                if(is_null($sent)){
+                    $text = "Check out my new video! ";
+                    $text .= Yii::app()->createAbsoluteUrl('/play/' . $this->view_key);
+                    $dest = new eVideoDestination;
+                    $dest->video_id = $this->id;
+                    $dest->user_id = $this->user_id;
+                    $dest->destination_id = $destination->id;
+                    $response = TwitterUtility::tweetAs($this->user_id, $text);
+                    if (sizeof($response->errors) > 0) {
+                        foreach ($response->errors as $i => $error) {
+                            $dest->response .= $error->message;
+                        }
+                    } else {
+                        $dest->response = $response->id_str;
+                    }
+                    $dest->save();
+                }
+            }
+            if($this->to_facebook == 1){
+                $destination = eDestination::model()->findByAttributes(Array('destination'=>'facebook'));
+                $sent = eVideoDestination::model()->findByAttributes(Array('video_id'=>$this->id,'user_id'=>$this->user_id,'destination_id'=>$destination->id));                                
+                if(is_null($sent)){
+                    $post = array(
+                        'message' => "Check out my new video!",
+                        'link' => Yii::app()->createAbsoluteUrl('/play/'.$this->view_key),
+                    );
+                    $dest = new eVideoDestination;
+                    $dest->video_id = $this->id;
+                    $dest->user_id = $this->user_id;
+                    $dest->destination_id = $destination->id;
+                    $response = FacebookUtility::shareAs($this->user_id, $post);
+                    if (!$response['result']) {
+                        $dest->response = $response['error'];
+                    } else {
+                        $dest->response = $response['response']['id'];
+                    }
+                    $dest->save();
+                }                
+            }       
+        }
+        return true;
+    }
+    
+}

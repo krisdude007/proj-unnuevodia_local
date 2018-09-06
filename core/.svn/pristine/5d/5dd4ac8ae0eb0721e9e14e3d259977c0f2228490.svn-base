@@ -1,0 +1,173 @@
+<?php
+
+// uncomment the following to define a path alias
+// Yii::setPathOfAlias('local','path/to/local-folder');
+// This is the main Web application configuration. Any writable
+// CWebApplication properties can be configured here.
+require('constants.php');
+list($tld, $host, $subdomain, $developer) = array_reverse(explode(".", $_SERVER["HTTP_HOST"]));
+if (isset($developer)) {
+    ini_set('display_errors', true);
+    ini_set('display_startup_errors', 1);
+    error_reporting(-1);
+    defined('YII_DEBUG') or define('YII_DEBUG', true);
+    defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', true);
+    defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER', true);
+    defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
+}
+return array(
+    'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
+    'name' => 'My Web Application',
+    // preloading 'log' component
+    'preload' => array('log'),
+    // autoloading model and component classes
+    'import' => array(
+        'application.models.*',
+        'application.components.*',
+        'application.components.utilities.*',
+        'core.vendor.getid3.*',
+    ),
+    'modules' => array(
+    // uncomment the following to enable the Gii tool
+//        'gii' => array(
+//            'class' => 'system.gii.GiiModule',
+//            'password' => 'g111tup',
+//            // If removed, Gii defaults to localhost only. Edit carefully to taste.
+//            'ipFilters' => array('*'),
+//        ),
+    ),
+    // application components
+    'components' => array(
+        'user' => array(
+            // enable cookie-based authentication
+            'allowAutoLogin' => true,
+            'loginUrl' => array('admin/login'),
+            'class' => 'WebUser',
+            'autoUpdateFlash' => false,
+        ),
+        'request' => array(
+            'csrfTokenName' => 'CSRF_TOKEN',
+            'enableCsrfValidation' => false,
+            'enableCookieValidation' => true,
+            'class' => 'HttpRequest',
+        //'class' => 'application.components.GHttpRequest',
+        ),
+        // uncomment the following to enable URLs in path-format
+        'urlManager' => array(
+            'showScriptName' => false,
+            'urlFormat' => 'path',
+            'rules' => array(
+                'admin/' => 'adminDashboard/index',
+                'admin/dashboard' => 'adminDashboard/index',
+                'admin/video' => 'adminVideo/index',
+                'admin/image' => 'adminImage/index',
+                'admin/ticker' => 'adminTicker/index',
+                'adminTicker/tickerModalHistory' => 'adminTicker/tickerModalHistory',
+                'admin/voting' => 'adminVoting/index',
+                'admin/question' => 'adminQuestion/index',
+                'admin/socialsearch' => 'adminSocialSearch/index',
+                'admin/socialstream' => 'adminSocialStream/index',
+                'admin/language' => 'adminLanguage/index',
+                'admin/report' => 'adminReport/index',
+                'admin/audit' => 'adminAudit/audit',
+                'admin/user/<id:\d+>' => 'adminUser/index',
+                'admin/user' => 'adminUser/index',
+                'admin/entity/<id:\d+>' => 'adminEntity/index',
+                'admin/entity' => 'adminEntity/index',
+                'XML/voting/<id:\d+>' => 'XML/voting',
+                'twittercard/<key:\w+>' => 'video/twittercard',
+                // mobile api
+                'mobile/users' => 'mobile/users',
+                'mobile/users/login' => 'mobile/login',
+                'mobile/users/logout' => 'mobile/logout',
+                'mobile/users/recover' => 'mobile/recover',
+                'mobile/users/<user_id:\d+>' => 'mobile/users',
+                'mobile/users/<user_id:\d+>/videos' => 'mobile/videos',
+                'mobile/users/<user_id:\d+>/videos/limit/<limit:\d+>' => 'mobile/videos',
+                'mobile/users/<user_id:\d+>/videos/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/videos',
+                'mobile/users/<user_id:\d+>/images' => 'mobile/images',
+                'mobile/users/<user_id:\d+>/images/limit/<limit:\d+>' => 'mobile/images',
+                'mobile/users/<user_id:\d+>/images/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/images',
+                'mobile/videos' => 'mobile/videos',
+                'mobile/videos/<id:\d+>' => 'mobile/videos',
+                'mobile/videos/limit/<limit:\d+>' => 'mobile/videos',
+                'mobile/videos/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/videos',
+                'mobile/images' => 'mobile/images',
+                'mobile/images/<id:\d+>' => 'mobile/images',
+                'mobile/images/limit/<limit:\d+>' => 'mobile/images',
+                'mobile/images/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/images',
+                'mobile/images/avatar' => 'mobile/avatar',
+                'mobile/topics' => 'mobile/topics',
+                'mobile/topics/type/<type:\w+>' => 'mobile/topics',
+                'mobile/topics/type/<type:\w+>/limit/<limit:\d+>' => 'mobile/topics',
+                'mobile/topics/type/<type:\w+>/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/topics',
+                'mobile/topics/<topic_id:\d+>' => 'mobile/topics',
+                'mobile/topics/<topic_id:\d+>/limit/<limit:\d+>' => 'mobile/topics',
+                'mobile/topics/<topic_id:\d+>/limit/<limit:\d+>/offset/<offset:\d+>' => 'mobile/topics',
+                'mobile/polls' => 'mobile/polls',
+                'mobile/staticcontent/<type:\w+>' => 'mobile/staticcontent'
+            ),
+        ),
+        'db' => array(
+            'connectionString' => 'mysql:host=localhost;dbname=ytt',
+            'emulatePrepare' => true,
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+            'schemaCachingDuration' => 3600,
+        //'enableProfiling'=>true,
+        //'enableParamLogging'=>true,
+        ),
+        /*
+          'cache' => array (
+          'class' => 'system.caching.CMemCache',
+          'servers'=>array(
+          array(
+          'host'=>SHARED_MEMCACHE_SERVER_IP,
+          'port'=>SHARED_MEMCACHE_SERVER_PORT,
+          ),
+          ),
+          ),
+         *
+         */
+        'errorHandler' => array(
+            // use 'site/error' action to display errors
+            'errorAction' => 'admin/error',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                //'class'=>'CProfileLogRoute',
+                //'levels'=>'profile',
+                //'categories'=>'system.db.*, application',
+                //'enabled'=>true,
+                ),
+            // uncomment the following to show log messages on web pages
+            //
+            //  array(
+            //  'class'=>'CWebLogRoute',
+            //  ),
+            ),
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'instagram_client_id' => 'bba059eb293c48aabdcd5f9d3558acd7',
+        'error_invalid_type' => 'Invalid file type',
+        'image_upload_filetype' => 'jpg, jpeg, png, gif',
+        'default_video_type' => 'mp4',
+        'video_share_text'=> 'Video uploaded via admin uploader.',
+        'twitter_share_text'=> 'Video uploaded via admin uploader',
+        'invalid_file_type' => 'Invalid file type. Only .mov files can be uploaded',
+        'invalid_file_size' => 'The file is too large to be uploaded. Maximum is 100 Mb',
+        'terms_of_service' => 'You must accept the conditions for using our service',
+        'fb_post' => 'Check out my new video!',
+        'video_encode_error' => 'Unable to encode video',
+        'video_insertrecord_error' => 'Unable to insert record',
+        'checkout_newimage' => 'Check out my new image! ',
+    ),
+);

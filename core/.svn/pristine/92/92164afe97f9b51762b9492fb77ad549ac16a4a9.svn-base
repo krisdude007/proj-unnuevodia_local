@@ -1,0 +1,52 @@
+<?php
+
+define('WOWZA_IP','192.168.2.17');
+define('WOWZA_CLIENT_IP','204.75.13.118');
+define('WOWZA_USER','srini');
+define('WOWZA_PASSWORD','Clear01');
+define('WOWZA_PATH','/home/srini/content/');
+
+// system directories
+define('PATH_USER_VIDEOS', '/uservideos');
+define('PATH_USER_IMAGES', '/userimages');
+
+// video related
+define('VIDEO_IMAGE_FILE_EXT', '.png');
+define('VIDEO_PRE_FILE_EXT', '.flv');
+define('VIDEO_POST_FILE_EXT', '.mp4');
+define('VIDEO_FFMPEG_PATH', '/usr/local/bin/ffmpeg');
+define('VIDEO_FFPROBE_PATH', '/usr/local/bin/ffprobe');
+
+define('VIDEO_IMPORT_VINE_USERNAME', 'greg.stringer@gmail.com');
+define('VIDEO_IMPORT_VINE_PASSWORD', 'i!ur@ss4o');
+define('VIDEO_IMPORT_VINE_API_URL', 'https://api.vineapp.com');
+define('VIDEO_IMPORT_VINE_FILE_EXT', '.mp4');
+
+define('ANALYTICS_USER','lee4youtoo@gmail.com');
+define('ANALYTICS_PASSWORD','Dallas1101');
+
+// whether or not to auto approve avatars and/or images when they are uploaded
+define('IMAGE_AUTO_APPROVE_AVATAR', true);
+define('IMAGE_AUTO_APPROVE', false);
+
+define('YOUTOO_SUPPORT_EMAIL','support@youtoo.com');
+define('YOUTOO_SUPPORT_PHONE','855.448.8377');
+define('YOUTOO_CRITICAL_EMAIL','criticalsupport@youtoo.com');
+define('YOUTOO_FIRST_CONTACT','Danny Ohman 310.770.5018');
+define('YOUTOO_SECOND_CONTACT','Mark Harwell 214.444.7119');
+define('YOUTOO_THIRD_CONTACT','Ryland Reed 817.262.8865');
+
+define('DATABASE_HOST','192.168.2.16');
+define('DATABASE_PREFIX','ytt_');
+define('DATABASE_USER','yii');
+define('DATABASE_PASSWORD','Dallas11');
+
+// COMMAND LINE CONSTANTS
+define('DOTS_LICENSE_KEY', 'WS22-FSV1-OUI2');
+define('DOTS_WSDL_URL', 'http://ws.serviceobjects.com/gce/GeoCensus.asmx?WSDL');
+
+// THIS FLAG WILL ALLOW US TO SWITCH BETWEEN 
+// NATIVE YTT FUNCTIONALITY SUCH AS SPOT FILLER
+define('ENABLE_YOUTOO_FUNCTIONALITY',  true);
+
+?>

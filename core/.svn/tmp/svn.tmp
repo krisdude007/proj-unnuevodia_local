@@ -1,0 +1,204 @@
+	
+
+<?php if ($video == null): ?>
+    Unable to find video with id <?php echo $id; ?>
+<?php else: ?>
+    <?php
+    Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminVideo/videoModal.js', CClientScript::POS_END);
+    ?>
+    <div class="fab-lightbox-videos">
+        <div class="fab-row-fluid">
+            <div class="fab-detail-videos fab-left">
+                <div class="fab-details-myslider">
+                    <section class="slider" style="margin-left: 30px;">
+                        <h1><?php echo CHtml::encode($video->title); ?></h1>
+
+                        <div class="fab-myslider">
+                            <ul class="slides">
+                                <li>
+                                    <div style="background:#8c8b8b">
+                                        <div class="player" id="player">
+                                            <?php
+                                            $player = (isset($video->brightcove_id)) ? '/admin/_brightcovePlayer' : '/admin/_fallbackPlayer';
+                                            $this->renderPartial($player, array(
+                                                'video' => $video,
+                                                    )
+                                            );
+                                            ?>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <div class="fab-clear"></div>
+        </div>
+        <div class="fab-clear"  style="height:1px;margin-top: 20px;"></div>
+        <div class="fab-lightbox-question">
+            <div class="fab-accordion_list">
+                <div class="fab-accordion_head fab-question-black">
+                    <div class="fab-lightbox-margin">
+                        <p align="center" style="margin-bottom:5px;font-size:12px"><b>||||||||||||||||||||||||||||||||||||||||||||</b></p>
+                        <p id="fab-question-content">
+                            <b>Question:</b> <?php echo $video->question->question; ?>
+                        </p>
+
+
+                    </div>
+                    <div style="clear:right"></div>
+                </div>
+                <div class="fab-accordion_body">
+                    <div id="fab-video-filter-form">
+                        <form name="video-form">
+                            <div class="fab-form-left">
+
+                                <div id="modalTabs">
+                                    <ul>
+                                        <li><a href="#tab-tag">Tag</a></li>
+                                        <li><a href="#tab-thumbnail" id="tabThumbnailTrigger">Thumbnail</a></li>
+                                        <li><a href="#tab-share">Share</a></li>
+                                        <li><a href="#tab-audio">Audio</a></li>
+                                        <li><a href="#tab-download">Download</a></li>
+                                        <li><a href="#tab-history">History</a></li>
+                                        <li><a href="#tab-language">Language</a></li>
+
+                                    </ul>
+                                    <div id="tab-tag">
+                                        <div class="fab-box fab-left" style="margin-left:0px">
+                                            <!--
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-page"  class="fab-select-type">
+                                                    <option>-dramatic-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-block"  class="fab-select-type">
+                                                    <option>-scary-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            <div class="fab-grey-sel fab-left">
+                                                <select name="choose-type" class="fab-select-type">
+                                                    <option>-funny-</option>
+                                                    <option>Some</option>
+                                                </select>
+                                            </div>
+                                            -->
+                                        </div>
+
+                                        <div class="fab-clear" style="height:4px;"></div>
+                                        <?php
+                                        $form = $this->beginWidget('CActiveForm', array(
+                                            'id' => 'tag-form',
+                                                //'enableAjaxValidation' => true,
+                                                //'enableClientValidation' => true,
+                                                //'clientOptions' => array(
+                                                //    'validateOnSubmit' => true,
+                                                //),
+                                                ));
+                                        ?>   
+
+                                        <?php echo $form->textField($tagModel, 'title', array('id' => 'videoTags')); ?>
+                                        <?php echo $form->error($tagModel, 'title'); ?>
+                                        <?php echo CHtml::button('Save Tags', array('id' => 'saveTagTrigger', 'class' => 'fab-filter')); ?>
+                                        <?php $this->endWidget(); ?>
+
+                                        <div class="fab-clear"></div>
+                                    </div>
+
+                                    <div id="tab-thumbnail">
+                                        
+                                    </div>
+
+                                    <div id="tab-share">
+                                        <?php echo $form->textField($tagModel, 'title', array('id' => 'videoTags', 'style'=>'width:500px', 'placeholder'=>'Text to share with video' )); ?>
+                                        <?php echo $form->error($tagModel, 'title'); ?>
+                                        <div class="fab-pull-left" style="width: 50%;">
+                                                <a href="#" id="clientShareTwitterModalTrigger" style="color: #FFF">
+                                                <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/twitter-transparent.png" />
+                                                Post to Twitter
+                                            </a>
+                                        </div>
+                                        <div class="fab-pull-left" style="width: 50%;">
+                                            <a href="#" id="clientShareFacebookModalTrigger" style="color: #FFF">
+                                                <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/facebook-transparent.png" /> 
+                                                Post to Facebook
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div id="tab-audio">
+                                        <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                                    </div>
+
+                                    
+                                    <div id="tab-download">
+                                        <button id="fab-modal-download-button" value="<?php echo $id;?>" class="fab-download-button">Download Video</button>
+                                    </div>
+
+                                    <div id="tab-history">
+                                        <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                                    </div>
+
+                                    <div id="tab-language">
+                                        <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                                    </div>
+
+                                </div>
+
+
+                                
+                            </div>
+
+
+                            <div class="fab-form-right">
+                                <div class="fab-left">
+                                    <div class="fab-grey-line" style="margin-top:5px;margin-bottom:5px"></div>
+                                    <p><b>Name:</b> <?php echo CHtml::encode($video->user->last_name); ?>, <?php echo CHtml::encode($video->user->first_name); ?></p>
+                                    <p><b>User ID:</b> <?php echo CHtml::encode($video->user->first_name); ?><?php echo CHtml::encode($video->user->last_name); ?></p>
+                                    <p><b>Views:</b> <?php echo $video->views; ?></p>
+                                    <p><b>Been on TV:</b> 0</p>
+                                    <div class="fab-grey-line"></div>
+                                    <div style="margin-top:5px">
+                                        <div class="fab-ratings fab-left">
+                                            <span class="star-rating-control"><div class="rating-cancel" style="display: block;"><a title="Cancel Rating"></a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div><div role="text" aria-label="" class="star-rating rater-0 star star-rating-applied star-rating-live"><a title="on">on</a></div></span><input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                            <input name="star1" type="radio" class="star star-rating-applied" style="display: none;">
+                                        </div>
+                                        <div class="fab-right">
+                                            <a href="mailto:<?php echo $video->user->username; ?>"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/mail.png"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="fab-clear"></div>
+                                    <div class="fab-grey-line" style="margin-top:5px;"></div>
+                                    <div class="fab-left" style="margin-top:3px; margin-bottom: 20px;"> 
+                                        <button id="fab-modal-accept-button"  value="<?php echo $video->status; ?>" class="fab-accept-button" onclick="updateVideoStatus('accepted', '<?php echo $currentStatus; ?>', <?php echo $video->id; ?>); return false;">Accept</button>
+                                        <button id="fab-modal-deny-button" value="<?php echo $video->status; ?>" class="fab-deny-button" onclick="updateVideoStatus('denied', '<?php echo $currentStatus; ?>', <?php echo $video->id; ?>); return false;">Deny</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+
+
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div id="videoId" style="display: none;"><?php echo $id; ?></div>
+<?php endif; ?>

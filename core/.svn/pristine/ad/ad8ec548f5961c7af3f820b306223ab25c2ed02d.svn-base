@@ -1,0 +1,147 @@
+<?php
+
+/**
+ * This is the model class for table "network_show_schedule".
+ *
+ * The followings are the available columns in table 'network_show_schedule':
+ * @property integer $id
+ * @property integer $network_show_id
+ * @property integer $video_id
+ * @property integer $user_id
+ * @property string $spot_type
+ * @property integer $spot_number
+ * @property string $spot_length
+ * @property integer $spot_available
+ * @property integer $spot_order
+ * @property string $spot_filename
+ * @property string $show_on
+ * @property string $spot_on
+ * @property string $submitted_on
+ * @property string $airs_on
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property NetworkShow $networkShow
+ * @property Video $video
+ * @property User $user
+ */
+class NetworkShowSchedule extends ActiveRecordNoTz
+{
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return 'network_show_schedule';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('network_show_id, spot_type, spot_number, spot_length, spot_order, show_on, spot_on, created_on', 'required'),
+            array('network_show_id, video_id, user_id, spot_number, spot_available, spot_order', 'numerical', 'integerOnly'=>true),
+            array('spot_type', 'length', 'max'=>2),
+            array('spot_filename', 'length', 'max'=>255),
+            array('submitted_on, airs_on, updated_on', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, network_show_id, video_id, user_id, spot_type, spot_number, spot_length, spot_available, spot_order, spot_filename, show_on, spot_on, submitted_on, airs_on, created_on, updated_on', 'safe', 'on'=>'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'networkShow' => array(self::BELONGS_TO, 'NetworkShow', 'network_show_id'),
+            'video' => array(self::BELONGS_TO, 'Video', 'video_id'),
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'network_show_id' => 'Network Show',
+            'video_id' => 'Video',
+            'user_id' => 'User',
+            'spot_type' => 'Spot Type',
+            'spot_number' => 'Spot Number',
+            'spot_length' => 'Spot Length',
+            'spot_available' => 'Spot Available',
+            'spot_order' => 'Spot Order',
+            'spot_filename' => 'Spot Filename',
+            'show_on' => 'Show On',
+            'spot_on' => 'Spot On',
+            'submitted_on' => 'Submitted On',
+            'airs_on' => 'Airs On',
+            'created_on' => 'Created On',
+            'updated_on' => 'Updated On',
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search()
+    {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+
+        $criteria->compare('id',$this->id);
+        $criteria->compare('network_show_id',$this->network_show_id);
+        $criteria->compare('video_id',$this->video_id);
+        $criteria->compare('user_id',$this->user_id);
+        $criteria->compare('spot_type',$this->spot_type,true);
+        $criteria->compare('spot_number',$this->spot_number);
+        $criteria->compare('spot_length',$this->spot_length,true);
+        $criteria->compare('spot_available',$this->spot_available);
+        $criteria->compare('spot_order',$this->spot_order);
+        $criteria->compare('spot_filename',$this->spot_filename,true);
+        $criteria->compare('show_on',$this->show_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->show_on)):null);
+        $criteria->compare('spot_on',$this->spot_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->spot_on)):null);
+        $criteria->compare('submitted_on',$this->submitted_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->submitted_on)):null);
+        $criteria->compare('airs_on',$this->airs_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->airs_on)):null);
+        $criteria->compare('created_on',$this->created_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->created_on)):null);
+        $criteria->compare('updated_on',$this->updated_on!==null?gmdate("Y-m-d H:i:s",strtotime($this->updated_on)):null);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return NetworkShowSchedule the static model class
+     */
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+}

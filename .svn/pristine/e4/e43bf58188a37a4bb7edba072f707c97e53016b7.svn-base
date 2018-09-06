@@ -1,0 +1,37 @@
+<?php
+
+class clientAdminImageController extends AdminImageController
+{
+    
+    function init() {
+        parent::init();
+    }
+        
+    public function actionAjaxImageUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $imageId = trim($_POST['imageId']);
+
+        $image = eImage::model()->findByPk($imageId);
+
+        if (!is_null($image)) {
+            $image->status = $status;
+            $image->arbitrator_id = Yii::app()->user->id;
+            $image->status_date = new CDbExpression('NOW()');
+            $image->save();
+            if($image->status == 'accepted'){
+                {
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $image->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $image->view_key;
+                ClientMailUtility::send('photo approve', $email, array('button'=>"<a href='http://{$_SERVER['HTTP_HOST']}/images/recent'><button style='background-color:#f57a24;color:white;font-size:19px;padding:8px;'>VER MÁS FOTOS</button></a>",'link' => "<a href='http://{$_SERVER['HTTP_HOST']}/'>{$_SERVER['HTTP_HOST']}</a>"));
+                }
+            }
+        }
+        
+        else {
+            echo json_encode(array('success' => 'false'));
+        }
+    } 
+}

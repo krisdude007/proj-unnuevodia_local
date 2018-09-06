@@ -1,0 +1,82 @@
+/**
+ * Handlers
+ */
+var modalButtonHandlers = function() {
+  // save tags button
+  $('#saveTagTrigger').click(function() {
+    saveVideoTags($("#videoId").html(), $("#videoTags").val());
+  });
+  
+  // video accept/deny buttons
+  $('#fab-modal-accept-button').click(function() {
+    $('#fab-modal-accept-button').hide();
+    $('#fab-modal-deny-button').show();
+  });
+    
+  $('#fab-modal-deny-button').click(function() {
+    $('#fab-modal-deny-button').hide();
+    $('#fab-modal-accept-button').show();
+  });
+  
+  // download video button
+  $('#fab-modal-download-button').click(function(e) {
+    e.preventDefault();
+    location.href = '/adminVideo/videoDownload/' + $(this).attr('value');
+  });
+}
+
+
+var tabHandlers = function() {
+  $('#modalTabs').tabs();
+  $("#tabThumbnailTrigger").click(function(e) {
+    $("#tab-thumbnail").load("/adminVideo/videoModalThumbnails/"+$("#videoId").html(), function(response, status, xhr) {
+      if (status == "error") {
+        var msg = "Sorry but there was an error loading thumbnails: ";
+        alert(msg + xhr.status + " " + xhr.statusText);
+      }
+    });
+  });
+}
+
+var tagHandlers = function() {
+  //var sampleTags = ['c++', 'java', 'php', 'coldfusion', 'javascript', 'asp', 'ruby', 'python', 'c', 'scala', 'groovy', 'haskell', 'perl', 'erlang', 'apl', 'cobol', 'go', 'lua'];
+  $('#videoTags').tagit({
+    //availableTags: sampleTags
+  });
+}
+
+$(document).ready(function () {
+
+  modalButtonHandlers();
+  tabHandlers();
+  tagHandlers();
+    
+  // have to call this from here in order to reinitialize the 
+  // video status handlers and social handlers previously loaded
+  // in the video page.
+  socialHandlers();
+  videoStatusHandlers();
+});
+
+/**
+ * Takes a video id and list of tags to save
+ */
+function saveVideoTags(videoId, tags){
+
+  var request = $.ajax({
+    url: '/adminVideo/ajaxVideoAddTags',
+    type: 'POST',
+    data:({
+      'tags': tags,
+      'videoId': videoId,
+      'YII_CSRF_TOKEN': getCsrfToken()
+    }),
+    success: function(data){
+      alert('Video  tags saved.');
+    },
+    error: function(data){
+      alert('Unable to save video tags.');
+      return false;
+    }
+  });   
+}

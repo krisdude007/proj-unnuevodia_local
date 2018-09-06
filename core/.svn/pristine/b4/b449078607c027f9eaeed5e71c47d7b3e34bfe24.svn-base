@@ -1,0 +1,25 @@
+<?php
+
+class ReportUtility {
+    public static function cleanLatLng($str) {
+        if (strpos($str, '+') !== false) {
+            $str = str_replace('+', '', $str);
+        }
+        if (strpos($str, '-') !== false) {
+            $str = str_replace('-', '', $str);
+            $str = ltrim($str, 0);
+            $str = '-' . $str;
+        }
+        return $str;
+    }
+    
+    public static function initResults($startDate, $endDate){
+        $resultSet = Array();
+        $date = $startDate;
+        while($date != $endDate){
+            $resultSet[$date] = 0;
+            $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
+        }
+        return $resultSet;
+    }
+}

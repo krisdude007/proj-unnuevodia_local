@@ -1,0 +1,85 @@
+<?php
+
+class clientTickerController extends TickerController {
+
+public function actionIndex($id = 0) {
+        $tickerModel = new eTicker;
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'ticker-form') {
+            echo CActiveForm::validate($tickerModel);
+            Yii::app()->end();
+        }
+        
+        if ($id == 0) {
+            $questions = eQuestion::model()->current()->findAll();
+            foreach ($questions as $q) {
+                $question = $q->question;
+                $id = $q->id;
+            }
+        } else {
+            $questions = eQuestion::model()->findByPK($id);
+            $question = $questions->question;
+        }
+        
+        if (isset($_POST['eTicker'])) {
+            $tickerModel->attributes = $_POST['eTicker'];
+            $tickerModel->type = 'ticker';
+            if ($tickerModel->validate()) {
+                $tickerModel->user_id = Yii::app()->user->getId();
+                $tickerModel->question_id = $id;
+                $tickerModel->to_web = 1;
+                $tickerModel->arbitrator_id = Yii::app()->user->getId();
+                $tickerModel->save();
+                Yii::app()->user->setFlash('success', "Ticker añadido!");                
+                if(PAYPAL_ACTIVE){
+                    $paypal = PaymentUtility::paypal($tickerModel);
+                    if($paypal['response'] == 'success'){
+                        $this->redirect($paypal['url']); 
+                    } else {
+                        var_dump($paypal);
+                        //$this->redirect(Yii::app()->createURL('/thanks'));
+                    }
+                } else {
+                    $this->redirect(Yii::app()->createURL('/ticker'));
+                }                                
+            } else {
+                Yii::app()->user->setFlash('error', "No se puede añadir ticker!");
+            }
+        }
+
+        $tickers = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted'),Array('order'=>'t.created_on DESC'));        
+        $this->render('index', 
+                array(
+                    'question'=>$question,
+                    'question_id'=>$id,
+                    'tickers'=>$tickers,
+                    'tickerModel'=>$tickerModel,
+                )
+        );
+    }
+ 
+ public function actionSave() {
+
+        $this->layout = false;
+
+        if (isset($_POST['eTicker'])) {
+            $this->ticker->attributes = $_POST['eTicker'];
+            $this->ticker->type = 'ticker';
+            $this->ticker->source = 'web';
+            $this->ticker->to_web = '1';
+            $this->ticker->user_id = Yii::app()->user->getId();
+            $this->ticker->arbitrator_id = Yii::app()->user->getId();
+
+            if ($this->ticker->validate()) {
+                Yii::app()->user->setFlash('success', "Ticker añadido!");
+                $this->ticker->save();
+            }
+        } else {
+            Yii::app()->user->setFlash('error', "No se puede añadir ticker.");
+        }
+
+        $this->redirect(Yii::app()->request->urlReferrer);
+    }
+    
+}
+ 
+?>

@@ -1,0 +1,301 @@
+<?php
+
+class eTicker extends Ticker {
+
+    //Virtual attribute for stopping the ticker from running
+    public $stop;
+    //Virtual attribute for checking the language of a ticker
+    public $clean;
+    
+    public $extendedStatus;
+
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        $defaultRules = array(
+            array('ticker','filter','filter'=>array($obj=new CHtmlPurifier(),'purify')),                        
+            array('ticker, type, source', 'required'),
+            array('status', 'default', 'value' => 'new'),
+            array('status_date', 'default', 'value' => new CDbExpression('NOW()')),
+            array('to_facebook, to_twitter, to_web, to_tv, to_mobile', 'default', 'value' => 0),
+            array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'insert'),
+            array('updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'update'),
+            array('user_id, question_id, entity_id, ordinal, frequency, to_facebook, to_twitter, to_web, to_tv, to_mobile, arbitrator_id', 'numerical', 'integerOnly' => true),
+            array('ticker, source, source_content_id, source_user_id', 'length', 'max' => 255),
+            array('type', 'length', 'max' => 6),
+            array('status', 'length', 'max' => 8),
+            array('stopticker', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, user_id, question_id, ticker, type, source, source_content_id, source_user_id, to_facebook, to_twitter, to_web, to_tv, to_mobile, arbitrator_id, status, status_date, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+        
+        $extendedRules = array(
+            //bit value 128 for "new" and 16 for "new_tv"
+            array('statusbit', 'default', 'value' => 144, 'on' => 'insert'),
+            array('extendedStatus', 'safe')
+        );
+        
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            return CMap::mergeArray($defaultRules, $extendedRules);
+        }
+        else
+        {
+            return $defaultRules;
+        }
+    }
+    
+    public function afterFind() {
+        $this->clean = LanguageUtility::filter($this->ticker);
+        
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            $this->extendedStatus = Utility::setExtendedStatus($this);
+        }
+        
+        return true;
+    }
+    
+    public function beforeSave() {
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            $this->statusbit = Utility::setStatusbit($this);
+        }
+        
+        return true;
+    }
+    
+    public function afterSave() {
+        if($this->status == 'accepted'){
+            if($this->to_twitter == 1){
+                $destination = eDestination::model()->findByAttributes(Array('destination'=>'twitter'));
+                $sent = eTickerDestination::model()->findByAttributes(Array('ticker_id'=>$this->id,'user_id'=>$this->user_id,'destination_id'=>$destination->id));                    
+                if(is_null($sent)){
+                    $response = TwitterUtility::tweetAs($this->user_id,$this->ticker);                    
+                    $dest = new eTickerDestination;
+                    $dest->ticker_id = $this->id;
+                    $dest->user_id = $this->user_id;
+                    $dest->destination_id = $destination->id;
+                    if (sizeof($response->errors) > 0) {
+                        foreach ($response->errors as $i => $error) {
+                            $dest->response .= $error->message;
+                        }
+                    } else {
+                        $dest->response = $response->id_str;
+                    }
+                    $dest->save();                             
+                }
+            }
+            if($this->to_facebook == 1){
+                $destination = eDestination::model()->findByAttributes(Array('destination'=>'facebook'));
+                $sent = eTickerDestination::model()->findByAttributes(Array('ticker_id'=>$this->id,'user_id'=>$this->user_id,'destination_id'=>$destination->id));                                
+                if(is_null($sent)){
+                    $post = array(
+                        'message' => $this->ticker,
+                        'link' => Yii::app()->createAbsoluteUrl('/'),
+                    );
+                    $response = FacebookUtility::shareAs($this->user_id,$post);                        
+                    $dest = new eTickerDestination;
+                    $dest->ticker_id = $this->id;
+                    $dest->user_id = $this->user_id;
+                    $dest->destination_id = $destination->id;                    
+                    if (!$response['result']) {
+                        $dest->response = $response['error'];
+                    } else {
+                        $dest->response = $response['response']['id'];
+                    }
+                    $dest->save();                    
+                }                
+            }       
+        }
+        return true;
+    }
+
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+                'user' => array(self::BELONGS_TO, 'eUser', 'user_id'),
+                'question' => array(self::BELONGS_TO, 'eQuestion', 'question_id'),
+                'arbitrator' => array(self::BELONGS_TO, 'eUser', 'arbitrator_id'),
+                'tickerDestinations' => array(self::HAS_MANY, 'eTickerDestination', 'ticker_id'),
+                'tickerRuns' => array(self::HAS_MANY, 'eTickerRun', 'ticker_id'),
+                'tickerStreams' => array(self::HAS_MANY, 'eTickerStream', 'ticker_id'),
+                'entity' => array(self::BELONGS_TO, 'eEntity', 'entity_id'),            
+        );
+    }
+
+    public function attributeLabels() {
+        
+        $defaultLabels = CMap::mergeArray(parent::attributeLabels(), array(
+            'id' => 'ID',
+            'user_id' => 'User',
+            'entity_id' => 'Entity',
+            'question_id' => 'Question',
+            'ordinal' => 'Ordinal',
+            'frequency' => 'Frequency',            
+            'ticker' => 'Ticker',
+            'type' => 'Type',
+            'source' => 'Source',
+            'source_content_id' => 'Source Content',
+            'source_user_id' => 'Source User',
+            'to_facebook' => 'Post To Facebook',
+            'to_twitter' => 'Post To Twitter',
+            'to_web' => 'Post To Web',
+            'to_tv' => 'Post To Tv',
+            'to_mobile' => 'Post To Mobile',
+            'arbitrator_id' => 'Arbitrator',
+            'status' => 'Status',
+            'status_date' => 'Status Date',
+            'created_on' => 'Created On',
+            'updated_on' => 'Updated On',
+        ));
+        
+        $extendedLabels = array(
+            'statusbit' => 'Statusbit',
+            'extendedStatus' => 'ExtendedStatus',
+        );
+        
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            return CMap::mergeArray($defaultLabels, $extendedLabels);
+        }
+        else
+        {
+            return $defaultLabels;
+        }
+    }
+
+    public function scopes() {
+        $defaultScopes1 = array(
+            'recent' => array('order' => '`t`.`id` DESC'),
+            'hasWebRuns' => array('condition' => 'tickerRun.web_runs != 0'),
+            'hasTvRuns' => array('condition' => 'tickerRun.tv_runs != 0'),
+            'hasMobileRuns' => array('condition' => 'tickerRun.mobile_runs != 0'),
+            'hasDestination' => array('condition' => 'tickerDestination.ticker_id is not null'),
+            'hasRuns' => array('condition' => '(tickerRuns.mobile_runs != 0 || tickerRuns.tv_runs != 0 || tickerRuns.web_runs != 0)'),
+            'canRun' => array('condition' => 'tickerRun.ticker_id is not null'),
+            'ticker' => array('condition' => 'type="ticker"'),
+            'social' => array('condition' => 'type="social"'),
+            'toWeb' => array('condition' => 'tickerDestinations.destination_id = (select id from destination where destination = "web")')
+        );
+        
+        $defaultScopes2 = array(
+            'new' => array('condition' => 'status="new"'),
+            'accepted' => array('condition' => 'status="accepted"'),
+            'denied' => array('condition' => 'status="denied"'),
+        );
+        
+        $extendedScopes = array(
+            'new' => array('condition' => "`t`.statusbit & ".STATUS_NEW_I),
+            'accepted' => array('condition' => "`t`.statusbit & ".STATUS_ACCEPTED_I."
+                                               AND (`t`.statusbit & ".STATUS_DENIED_I.") = 0"),
+            'denied' => array('condition' => "`t`.statusbit & ".STATUS_DENIED_I),
+            'newtv' => array('condition' => "`t`.statusbit & ".STATUS_NEW_TV_I),
+            'acceptedtv' => array('condition' => "`t`.statusbit & ".STATUS_ACCEPTED_TV_I."
+                                                 AND `t`.statusbit & ".STATUS_ACCEPTED_SUP1_I."
+                                                 AND `t`.statusbit & ".STATUS_ACCEPTED_SUP2_I."
+                                                 AND (`t`.statusbit & ".STATUS_DENIED_TV_I.") = 0"),
+            'deniedtv' => array('condition' => "`t`.statusbit & ".STATUS_DENIED_TV_I),
+            'newsup1' => array('condition' => "`t`.statusbit & ".STATUS_ACCEPTED_TV_I."
+                                               AND (`t`.statusbit & ".STATUS_DENIED_TV_I.") = 0
+                                               AND (`t`.statusbit & ".STATUS_ACCEPTED_SUP1_I.") = 0"), //(accepted tv) and (not deniedtv) and (not accepted sup1)
+            'newsup2' => array('condition' => "`t`.statusbit & ".STATUS_ACCEPTED_TV_I."
+                                               AND (`t`.statusbit & ".STATUS_DENIED_TV_I.") = 0
+                                               AND (`t`.statusbit & ".STATUS_ACCEPTED_SUP2_I.") = 0"), //(accepted tv) and (not deniedtv) and (not accepted sup2)
+            'statustv' => array('condition' => "`t`.statusbit & ".STATUS_ACCEPTED_TV_I."
+                                               AND ((`t`.statusbit & ".STATUS_ACCEPTED_SUP1_I.") = 0
+                                               OR (`t`.statusbit & ".STATUS_ACCEPTED_SUP2_I.") = 0)"),
+        );
+        
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            return CMap::mergeArray($defaultScopes1, $extendedScopes);
+        }
+        else
+        {
+            return CMap::mergeArray($defaultScopes1, $defaultScopes2);
+        }
+    }
+        
+    public function filterByDates($startDate, $endDate) {
+        return DateTimeUtility::filterByDates($this, $startDate, $endDate);
+    }
+
+    public function filterByTickerDate($filterDate) {
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => 't.created_on>=:filterDate',
+            'params' => array(':filterDate' => $filterDate,),
+        ));
+        return $this;
+    }
+
+    public function filterByDestinationDate($filterDate) {
+        $obj->getDbCriteria()->mergeWith(array(
+            'condition' => 'tickerDestination.created_on>=:filterDate',
+            'params' => array(':filterDate' => $filterDate,),
+        ));
+        return $obj;
+    }
+
+    public function filterByDestination($destinationId) {
+        $this->getDbCriteria()->mergeWith(array(
+            'condition' => 'destination_id=:id',
+            'params' => array(':id' => $destinationId,),
+        ));
+        return $this;
+    }
+
+    public static function searchSocial($terms, $boolean, $filters, $minResults = 100) {
+        if (empty($terms)) {
+            return;
+        }
+        switch ($boolean) {
+            case 'AND':
+                $terms = '"' . $terms . ' ' . $filters . '"';
+                break;
+            case 'OR':
+                $terms = '"' . $terms . '" OR "' . $filters . '"';
+                break;
+            case 'NOT':
+                $terms = '"' . $terms . '" -"' . $filters . '"';
+                break;
+        }
+        $results = TwitterUtility::search($terms);
+        if (isset($results->errors[0]->message)) {
+            $errors['twitter'] = $results->errors[0]->message;
+            $rates['twitter'] = $results->rate_limit_remaining . ' search calls remaining.  Resets ' . $results->rate_limit_reset;
+        } else {
+            $rates['twitter'] = $results->rate_limit_remaining . ' search calls remaining.  Resets ' . DateTimeUtility::niceTime($results->rate_limit_reset);
+            while (count($results->statuses) < $minResults) {
+                $max_id = end($results->statuses)->id;
+                $moreTweets = TwitterUtility::search($terms, $max_id);
+                if (count($moreTweets->statuses) == 0) {
+                    break;
+                }
+                if ($results->statuses != $moreTweets->statuses) {
+                    $results->statuses = array_merge($results->statuses, $moreTweets->statuses);
+                } else {
+                    break;
+                }
+                $rates['twitter'] = $moreTweets->rate_limit_remaining . ' search calls remaining.  Resets ' . DateTimeUtility::niceTime($moreTweets->rate_limit_reset);
+            }
+            foreach ($results->statuses as $k => $v) {
+                $ret[] = TwitterUtility::parseTweet($v);
+            }
+        }
+        $ret['errors'] = $errors;
+        $ret['rates'] = $rates;
+        return $ret;
+    }
+
+    public function streamSocial($position = false) {
+        return(TwitterUtility::getStream($position));
+    }
+
+}

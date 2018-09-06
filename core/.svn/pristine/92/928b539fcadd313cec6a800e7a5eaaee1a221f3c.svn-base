@@ -1,0 +1,6 @@
+$(document).ready(function(){
+    
+    $('#auditTable').dataTable({
+        "aaSorting": [[ 4, "desc" ]]
+    });
+});    

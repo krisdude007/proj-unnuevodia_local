@@ -1,0 +1,18 @@
+<?php
+
+class clientSiteController extends SiteController{
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+    }
+    
+    public function actionIndex()
+    { 
+        $this->render('index', array());   
+    }
+    
+}

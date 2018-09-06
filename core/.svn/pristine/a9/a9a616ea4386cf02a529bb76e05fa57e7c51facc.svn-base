@@ -1,0 +1,166 @@
+<?php
+
+class GameController extends Controller {
+
+    public $activeNavLink = 'play';
+    public $layout = '//layouts/main';
+    //public $layout = 'none';
+    public $user;
+    public $ticker;
+    public $notification;
+
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        }
+    }
+
+    public function actionIndex()
+    {
+
+    }
+
+    public function actionReveal($id)
+    {
+        $layout = false;
+
+        $reveal = eGameReveal::model()->findByPk((int)$id);
+
+        if($reveal)
+        {
+            $this->render('reveal', array(
+                'reveal' => $reveal,
+            ));
+        }
+        else
+        {
+            echo "No game with this ID exists.";
+            exit;
+        }
+    }
+
+    public function actionMultiple($id = NULL)
+    {
+        if($id == NULL)
+        {
+            $game = eGameChoice::model()->multiple()->isActive()->with('gameChoiceAnswers')->find();
+        }
+        else
+        {
+            $game = eGameChoice::model()->multiple()->with('gameChoiceAnswers')->findByPk((int)$id);
+        }
+
+        $response = new eGameChoiceResponse;
+        $isSubmit = false;
+
+        if(isset($_POST['ajax']) && $_POST['ajax'] === 'game-choice-form') {
+            echo CActiveForm::validate($response);
+            Yii::app()->end();
+        }
+
+        if(isset($_POST['eGameChoiceResponse']))
+        {
+            $response->attributes = $_POST['eGameChoiceResponse'];
+            $response->user_id = Yii::app()->user->getId();
+
+            if($response->validate())
+            {
+                $response->save();
+                Yii::app()->user->setFlash('success', "Response Recorded!");
+                $isSubmit = true;
+            }
+            else
+            {
+                Yii::app()->user->setFlash('error', "Errors found!");
+            }
+        }
+
+        if($game)
+        {
+            $this->render('multiple', array(
+                'game' => $game,
+                'response' => $response,
+                'isSubmit' => $isSubmit,
+            ));
+        }
+        else
+        {
+            echo "No game with this ID exists.";
+        }
+    }
+
+    public function actionHotornot($id = NULL)
+    {
+        if($id == NULL)
+        {
+            $game = eGameChoice::model()->hotornot()->isActive()->with('gameChoiceAnswers')->find();
+        }
+        else
+        {
+           $game = eGameChoice::model()->hotornot()->with('gameChoiceAnswers')->findByPk((int)$id);
+        }
+
+        $response = new eGameChoiceResponse;
+        $isSubmit = false;
+
+        if(isset($_POST['ajax']) && $_POST['ajax'] === 'game-choice-form') {
+            echo CActiveForm::validate($response);
+            Yii::app()->end();
+        }
+
+        if(isset($_POST['eGameChoiceResponse']))
+        {
+            $response->attributes = $_POST['eGameChoiceResponse'];
+            $response->user_id = Yii::app()->user->getId();
+
+            if($response->validate())
+            {
+                $response->save();
+                Yii::app()->user->setFlash('success', "Responce Recorded!");
+                $isSubmit = true;
+            }
+            else
+            {
+                Yii::app()->user->setFlash('error', "Errors found!");
+            }
+        }
+
+        if($game)
+        {
+            $this->render('hotornot', array(
+                'game' => $game,
+                'response' => $response,
+                'isSubmit' => $isSubmit,
+            ));
+        }
+        else
+        {
+            echo "No game with this ID exists.";
+        }
+    }
+
+    public function actionAjaxRevealGridGet()
+    {
+        $layout = false;
+
+        $grid_id = $_POST['grid_id'];
+
+        if(isset($grid_id))
+        {
+            $revealGrid = eGameRevealGrid::model()->findAllByAttributes(array('reveal_id' => $grid_id));
+            if($revealGrid);
+            {
+                $rows = array();
+                foreach($revealGrid as $grid) {
+                    $rows[] = $grid->attributes;
+                }
+                echo json_encode($rows);
+            }
+        }
+
+        Yii::app()->end();
+    }
+}

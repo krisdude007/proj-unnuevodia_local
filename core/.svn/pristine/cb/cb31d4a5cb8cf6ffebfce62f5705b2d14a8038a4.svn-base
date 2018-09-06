@@ -1,0 +1,248 @@
+<?php
+
+class AdminCampaignController extends Controller {
+
+    public $user; 
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            //'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array('index', 'create','package','upgrade','delete', 'view','update','createPost', 'changeStatus','deletePost','updatePost'),
+                'expression' => 'Yii::app()->user->isAdmin()',
+            ),
+             
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+    
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    public function actionIndex()
+    {
+        $facebook_user =Yii::app()->facebook->getUser();
+        $campaign = new eCampaign('search');
+		$campaign->unsetAttributes();   
+		if(isset($_GET['eCampaign']))
+			$campaign->attributes=$_GET['eCampaign'];
+        $this->render('index', array(
+            'campaign'=>$campaign
+        ));
+    }
+    
+    public function actionCreate()
+    {
+        $campaign = new eCampaign;
+        if( isset($_POST['submit_step1']) && Yii::app()->request->getPost('submit_step1') == 'step1') {
+            if(isset($_POST['eCampaign'])) {
+                $campaign->attributes = $_POST['eCampaign'];
+                if($campaign->save()) {
+                    $this->redirect(array('package','id'=>$campaign->id));
+                }
+            }
+            $this->render('create_step2', array(
+                'campaign'=>$campaign,
+            ));
+        } else {
+            $this->render('create_step1');
+        }  
+    }
+    
+    public function actionPackage($id)
+    {
+        $campaign = $this->loadModel($id);
+         
+        $this->render('package', array(
+            'campaign'=>$campaign,
+        ));
+    }
+    
+    public function actionView($id)
+    {
+        $campaign = $this->loadModel($id);
+        $campaign_post = new eCampaignPost('search');
+		$campaign_post->unsetAttributes();   
+		if(isset($_GET['eCampaignPost']))
+			$campaign_post->attributes=$_GET['eCampaignPost'];
+        $this->render('view', array(
+            'campaign'=>$campaign, 
+            'campaign_post'=>$campaign_post,
+        ));
+    }
+    
+    public function actionUpdate($id)
+    {
+        $campaign = $this->loadModel($id);
+        if(isset($_POST['eCampaign'])) {
+            $campaign->attributes = $_POST['eCampaign'];
+            if($campaign->save()) {
+                $this->redirect(array('index'));
+            }
+        }
+        $this->render('update', array(
+            'campaign'=>$campaign,
+        ));
+       
+    }   
+     
+    public function actionUpgrade()
+    {
+        $campaign_id = Yii::app()->request->getPost('id'); 
+        if($campaign = $this->loadModel($campaign_id)) {
+            $plan = Yii::app()->request->getPost('plan');
+            if(in_array($plan, array('a','b','c'))) {
+                $campaign->package = strtoupper($plan);
+                if($campaign->save()) {
+                    Yii::app()->user->setFlash('success', 'You successfully switched to package '. strtoupper($plan));
+                    echo json_encode(array('status'=>1));
+                    Yii::app()->end(); 
+                }   
+            }
+        }
+        echo json_encode(array('status'=>0));
+        Yii::app()->end(); 
+        
+    }
+    
+    public function actionCreatePost($id)
+    {
+        $campaign = $this->loadModel($id);
+        $post = new eCampaignPost;
+        $media = new eCampaignMedia;
+        $post->campaign_id = $id;
+         
+        if(isset($_POST['eCampaignPost'])) {
+            $post->attributes = $_POST['eCampaignPost'];
+            $media->attributes = $_POST['eCampaignMedia'];
+            $media->media_file = CUploadedFile::getInstance($media, 'media_file');
+            // Utility::dump($media->media_file,1);
+            $connection = Yii::app()->db;
+            $transaction=$connection->beginTransaction();
+            try
+            {
+                if($media->validate()) {
+                    $media->media_url = 'campaign_'. $id . '_'. $media->media_file->name;
+                    if($media->media_file->saveAs(Yii::app()->params['paths']['video'] . '/'. $media->media_url)) {
+                       $media->save(false);
+                       if($media->media_type == 'video') {
+                            VideoUtility::ffmpegGenerateThumbFromVideo(Yii::app()->params['paths']['video'] . '/'. $media->media_url, Yii::app()->params['paths']['video'] . '/'. $media->media_url.'.png');
+                       }     
+                       $post->media_id = $media->id;
+                       if($post->save()) {
+                           $transaction->commit();
+                           $this->redirect(array('view', 'id'=>$id));
+                       }
+                    } else {
+                       throw new CHttpException(500, 'Can not save media file.');
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+               $transaction->rollback();
+               throw new CHttpException(500, 'Failed to save new post.');
+            }
+        }
+        $this->render('post', array(
+            'campaign'=>$campaign,
+            'post'=>$post,
+            'media'=>$media,
+        ));
+        
+    }
+    
+    public function actionUpdatePost($post_id)
+    {
+        if($post = eCampaignPost::model()->findByPk($post_id)) {
+            $media = $post->media;
+            $media->setScenario('update');
+            if(isset($_POST['eCampaignPost'])) {
+                $post->attributes = $_POST['eCampaignPost'];
+                $media->attributes = $_POST['eCampaignMedia'];
+                $media->media_file = CUploadedFile::getInstance($media, 'media_file');
+                //Utility::dump($media->media_file,1);
+                $connection = Yii::app()->db;
+                $transaction=$connection->beginTransaction();
+                try
+                {
+                    if($media->validate()) {
+                        if($media->media_file) { 
+                            $media->media_url = 'campaign_'. $post->campaign_id . '_'. $media->media_file->name;  
+                            if($media->media_file->saveAs(Yii::app()->params['paths']['video'] . '/'. $media->media_url)) {
+                               if($media->media_type == 'video') {
+                                    VideoUtility::ffmpegGenerateThumbFromVideo(Yii::app()->params['paths']['video'] . '/'. $media->media_url, Yii::app()->params['paths']['video'] . '/'. $media->media_url.'.png');
+                               }   
+                            }
+                        }
+                        $media->save(false);
+                        if($post->save()) {
+                           $transaction->commit();
+                           $this->redirect(array('view', 'id'=>$post->campaign_id));
+                        }
+                    }
+                }
+                catch(Exception $e)
+                {
+                   $transaction->rollback();
+                   throw new CHttpException(500, 'Failed to save new post.');
+                }
+            }
+            $this->render('update_post', array('post'=>$post));
+        } else {
+            throw new CHttpException(404);
+        }
+    }
+    
+    public function actionDelete($id)
+    {
+        $this->loadModel($id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+    }
+    
+    public function actionDeletePost($post_id)
+    {
+        eCampaignPost::model()->findByPk($post_id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+    }
+    
+    public function actionChangeStatus($id)
+    {
+        $model = $this->loadModel($id);
+        $model->status = $model->status ?  0 : 1;
+        $model->save();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+    }
+    
+    public function loadModel($id)
+	{
+		$model=eCampaign::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+	
+	
+}

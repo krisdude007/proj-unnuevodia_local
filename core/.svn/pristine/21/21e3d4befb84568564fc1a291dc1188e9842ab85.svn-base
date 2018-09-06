@@ -1,0 +1,193 @@
+<?php
+
+class MobileController extends Controller {
+
+    public $layout = false;
+    private $outputFormat = 'json'; // json, xml
+    private $token = null;
+
+    public function filters() {
+        return array();
+    }
+
+    /*
+     * Utility methods
+     */
+
+    private function getStatusCodeMessage($status) {
+        // these could be stored in a .ini file and loaded
+        // via parse_ini_file()... however, this will suffice
+        // for an example
+        $codes = Array(
+            200 => 'OK',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            500 => 'Internal Server Error',
+            501 => 'Not Implemented',
+        );
+        return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    private function renderOutput($output = array(), $outputFormat = 'xml') {
+
+        switch($outputFormat) {
+            case 'json':
+                echo $this->renderJson($output);
+                break;
+            case 'xml':
+                echo $this->renderXml($output);
+                break;
+            default:
+                $code = 501;
+                $this->throwException($code, $this->getStatusCodeMessage($code));
+                break;
+        }
+        Yii::app()->end();
+    }
+
+    private function renderXml($output) {
+        
+        header('Content-type: application/xml');
+        $xml = new SimpleXMLElement('<root/>');
+        $output = array_flip($output);
+        array_walk_recursive($output, array($xml, 'addChild'));
+        return $xml->asXML();
+    }
+
+    private function renderJson($output) {
+        header('Content-type: application/json');
+        return CJSON::encode($output);
+    }
+
+    private function throwException($errorCode, $errorMessage) {
+        $this->renderOutput(array('errorCode' => $errorCode, 'errorMessage' => $errorMessage));
+    }
+
+    /*
+     * Authentication
+     * 
+     *  todo - incorporate an API KEY
+     *  todo - incorporate token expiration
+     *  todo - validate the token (strlen, etc) prior to querying the db
+     */
+
+    public function actionLogin() {
+
+        if (isset($_POST['eUser'])) {
+            $user = new eUser;
+            $user->setScenario('login');
+            $user->attributes = $_POST['eUser'];
+
+            if (UserUtility::login($user, false, true)) {
+
+                $userModel = $user->findByAttributes(array('username' => $user->username));
+                AuditUtility::save($this, $_REQUEST, array(), $userModel->id);
+
+                // remove any previous token record that might be associated with this user
+                eUserToken::model()->deleteAllByAttributes(array('user_id' => $userModel->id));
+
+                // generate & store token 
+                $this->token = eUserToken::generateToken();
+                $userToken = new eUserToken();
+                $userToken->user_id = $userModel->id;
+                $userToken->token = $this->token;
+                $userToken->created_on = new CDbExpression('NOW()');
+                $userToken->updated_on = new CDbExpression('NOW()');
+                $userToken->save();
+
+                // return result
+                $output = array('user_id' => $userModel->id,
+                    'user_token' => $this->token);
+
+                $this->renderOutput($output);
+            } else {
+                $code = 401;
+                $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+            }
+        }
+
+        $code = 400;
+        $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+    }
+
+    public function actionLogout() {
+        
+    }
+
+    /*
+     * Call this first in an action when you want to make sure a user is logged in
+     * or in the controller init based on whether or not the user is logged in
+     */
+    private function validateToken() {
+
+        if (!is_null($this->token)) {
+            $tokenModel = eUserToken::model()->findByAttributes(array('token' => $this->token));
+
+            if (!is_null($tokenModel)) {
+
+                // check token updated_at.. expire if beyond x amount of time
+                // token is valid. update token and token timestamp
+                $tokenModel->token = eUserToken::generateToken();
+                $tokenModel->updated_at = new CDbExpression('NOW()');
+                $tokenModel->save();
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /*
+     * Registration
+     */
+
+    public function actionRegister() {
+        
+    }
+
+    /*
+     * Video functionality
+     */
+
+    public function actionVideos($limit = 10) {
+        
+    }
+
+    public function actionVideosByUserId($user_id = null) {
+        
+    }
+
+    public function actionVideoById($id = null) {
+        
+    }
+
+    public function actionVideoUpload() {
+        
+    }
+
+    /*
+     * Photo functionality
+     */
+
+    public function actionPhotos($limit = 10) {
+        
+    }
+
+    public function actionPhotosByUserId($user_id = null) {
+        
+    }
+
+    public function actionPhotoById($id = null) {
+        
+    }
+
+    public function actionPhotoUpload() {
+        
+    }
+
+}

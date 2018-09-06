@@ -1,0 +1,39 @@
+<?php
+class eUserEmail extends UserEmail
+{
+    	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+                    array('email','required'),
+                    array('email','email'),
+                    array('email','unique','on'=>'register,profile,twitter'),
+                    array('user_id, active', 'numerical', 'integerOnly'=>true),
+                    array('email, type', 'length', 'max'=>255),
+                    array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'insert'),
+                    array('updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'update'),
+                    array('active','default','value'=>1,'on'=>'insert'),
+                    array('type','default','value'=>'primary','on'=>'insert'),
+                    // The following rule is used by search().
+                    // Please remove those attributes that should not be searched.
+                    array('id, user_id, email, type, active, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+        
+    public function scopes() {
+        $alias = $this->getTableAlias();
+        return array(
+            'primary' => array('condition' => $alias.'.type = "primary"'),
+            'active' => array('condition' => $alias.'.active = 1'),
+        );
+    }        
+}

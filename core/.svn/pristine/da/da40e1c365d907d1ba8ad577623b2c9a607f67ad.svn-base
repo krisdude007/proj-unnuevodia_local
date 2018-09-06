@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * This is the model class for table "ad_destination".
+ *
+ * The followings are the available columns in table 'ad_destination':
+ * @property integer $id
+ * @property integer $ad_id
+ * @property string $ip
+ * @property string $url
+ * @property string $type
+ * @property string $user_agent
+ * @property string $created_on
+ * @property integer $created_by
+ *
+ * The followings are the available model relations:
+ * @property Ad $ad
+ * @property User $createdBy
+ */
+class AdDestination extends CActiveRecord
+{
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'ad_destination';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('ad_id, ip, url, type, user_agent, created_on', 'required'),
+			array('ad_id, created_by', 'numerical', 'integerOnly'=>true),
+			array('ip', 'length', 'max'=>15),
+			array('url', 'length', 'max'=>1024),
+			array('type', 'length', 'max'=>10),
+			array('user_agent', 'length', 'max'=>255),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, ad_id, ip, url, type, user_agent, created_on, created_by', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'ad' => array(self::BELONGS_TO, 'Ad', 'ad_id'),
+			'createdBy' => array(self::BELONGS_TO, 'User', 'created_by'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID',
+			'ad_id' => 'Ad',
+			'ip' => 'Ip',
+			'url' => 'Url',
+			'type' => 'Type',
+			'user_agent' => 'User Agent',
+			'created_on' => 'Created On',
+			'created_by' => 'Created By',
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('ad_id',$this->ad_id);
+		$criteria->compare('ip',$this->ip,true);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('type',$this->type,true);
+		$criteria->compare('user_agent',$this->user_agent,true);
+		$criteria->compare('created_on',$this->created_on,true);
+		$criteria->compare('created_by',$this->created_by);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return AdDestination the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+}

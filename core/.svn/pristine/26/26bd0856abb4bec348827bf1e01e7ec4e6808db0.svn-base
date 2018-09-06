@@ -1,0 +1,25 @@
+<?php
+
+class Utility {
+    
+    // takes record set and converts it to key value pairs for dropdowns
+    public static function resultToKeyValue($result, $keyColumn, $valueColumn) {
+        
+        $array = array();
+        
+        foreach($result as $r) {
+            $array[$r->$keyColumn] = $r->$valueColumn;
+        }
+        
+        return $array;
+    }        
+    
+    public static function concatFirstLastName($user) {
+        return $user->first_name . ' ' . $user->last_name;
+    }
+    
+    public static function makeLinksFromText($text){
+        return preg_replace('/(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w\/_\.-]*(\?\S+)?)?)?)/','<a target="_blank" href="\\1">\\1</a>',$text);        
+    }
+    
+}

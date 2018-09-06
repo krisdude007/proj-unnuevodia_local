@@ -1,0 +1,29 @@
+<?php
+
+class eUserFacebook extends UserFacebook
+{
+    	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('user_id, facebook_user_id, access_token, expiresIn', 'required'),
+			array('user_id, expiresIn', 'numerical', 'integerOnly'=>true),
+                        array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),
+			array('facebook_user_id', 'length', 'max'=>20),
+			array('access_token', 'length', 'max'=>255),
+			// The following rule is used by search().
+			// Please remove those attributes that should not be searched.
+			array('id, user_id, facebook_user_id, access_token, expiresIn, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+}

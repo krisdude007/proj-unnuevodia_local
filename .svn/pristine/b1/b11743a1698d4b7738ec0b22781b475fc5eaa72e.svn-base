@@ -1,0 +1,75 @@
+<?php
+
+class clientUserController extends UserController {
+
+    public function actionProfile() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userEmail = (is_null($userEmail)) ? new eUserEmail : $userEmail;
+        $userLocation = eUserLocation::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userLocation = (is_null($userLocation)) ? new eUserLocation : $userLocation;
+
+        $userPhone = eUserPhone::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        if (is_null($userPhone)) { $userPhone = new eUserPhone; }
+        $userPhone->setScenario('profile');
+
+        $userTwitter = eUserTwitter::model()->findByAttributes(array('user_id' => $user->id));
+        if ($userTwitter) {
+            $twitterUsername = TwitterUtility::getUsernameFromID($userTwitter->twitter_user_id);
+        }
+
+        $userFacebook = eUserFacebook::model()->findByAttributes(array('user_id' => $user->id));
+        if ($userFacebook) {
+            $facebookUsername = FacebookUtility::getUsernameFromID($userFacebook->facebook_user_id);
+        }
+
+        $user->setScenario('profile');
+        $userEmail->setScenario('profile');
+        $userLocation->setScenario('profile');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profile-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+            //echo CActiveForm::validate(array($user, $userEmail, $userLocation, $userPhone, $userTwitter, $userFacebook));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+            $user->attributes = $_POST['eUser'];
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->username = $_POST['eUserEmail']['email'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->user_id = $user->id;
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $userLocation->user_id = $user->id;
+            $userPhone->attributes = $_POST['eUserPhone'];
+            $userPhone->user_id = $user->id;
+
+            if ($user->validate() && $userEmail->validate() && $userLocation->validate()) {
+                $user->save();
+                $userEmail->save();
+                $userLocation->save();
+                $userPhone->save();
+
+                // We don't Twitter->save() or Facebook->save() directly.
+                // That is handled by the Connections page.
+
+                Yii::app()->user->setFlash('success', "User profile updated.");
+            }
+        }
+
+        $this->render('profile', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+            'userPhone' => $userPhone,
+            'twitterUsername' => $twitterUsername,
+            'facebookUsername' => $facebookUsername,
+        ));
+    }
+}
+
+?>

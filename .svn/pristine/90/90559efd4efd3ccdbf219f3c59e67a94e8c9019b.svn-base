@@ -1,0 +1,33 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScript('flagImage', "
+    setFlag('image');//Better than \$image->tableName(), which can be empty
+    ", CClientScript::POS_READY);
+?>
+<div class="video">
+    <div style="overflow: hidden;">
+        <div class="player videoThumb" id="player">
+            <img class="middleCenter" src="<?php echo Yii::app()->request->baseUrl; ?>/<?php echo basename(Yii::app()->params['paths']['image']); ?>/<?php echo $image->filename; ?>">
+            <?php
+            $fullname = empty(trim($image->user->first_name . " " . $image->user->last_name)) ? "N/A" : trim($image->user->first_name . " " . $image->user->last_name);
+            ?>
+        </div>
+        <div class="fabmob_video-copy-container">
+            <img src="<?php echo UserUtility::getAvatar($image->user); ?>" style="float:left;width:40px;height:40px;border-radius: 20px;margin-right:8px;">
+            <h6 style="float:right;"><?php echo date('M d, Y',  strtotime($image->created_on)); ?></h6>
+            <h5 class="fabmob_video-title"><?php echo $fullname; ?></h5>
+            <h6><?php echo $image->title; ?></h6>
+            <img src="/webassets/mobile/images/Icon_Views.png" style="height:14px;"> <span><?php echo $image->views; ?></span> &nbsp;&nbsp;&nbsp;
+            <img src="/webassets/mobile/images/Icon_Rating.png" style="height:14px;"> <span><?php echo $image->rating; ?></span>
+            <div style="float:right;">
+                <a class="flag" tbl="<?php echo($image->tableName()) ?>" contentId="<?php echo($image->id)  ?>" onclick="popupReport(this);">
+                    <img src="/webassets/mobile/images/icon_flag.png" style="height:14px;"> Flag Image
+                </a>
+            </div>
+        </div>
+        <div class="fabmob_video-copy-container">
+            <p style='font-size: 16px;'>Description</p>
+            <p><?php echo $image->description ?></p>
+        </div>
+    </div>
+</div>

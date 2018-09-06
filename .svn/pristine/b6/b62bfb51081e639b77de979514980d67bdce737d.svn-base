@@ -1,0 +1,19 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery-ui-1.10.0.css');
+Yii::app()->clientScript->registerScriptFile('http://cdn.jquerytools.org/1.2.7/all/jquery.tools.min.js', CClientScript::POS_END);
+?>
+
+<div id="content">
+    <?php
+    $this->renderPartial('/user/_formRegister', array(
+        'user' => $user,
+        'userEmail' => $userEmail,
+        'userLocation' => $userLocation,
+            )
+    );
+    ?>
+</div>

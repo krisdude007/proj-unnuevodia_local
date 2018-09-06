@@ -1,0 +1,44 @@
+
+#datatableScheduler tr.even.selected-row, tr.odd.selected-row {
+    background-color: #ff0000;
+}
+
+#datatableScheduler tbody tr.even:hover, #datatableScheduler tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+#datatableScheduler tbody tr.odd:hover, #datatableScheduler tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
+
+#datatableScheduler tr.even:hover {
+	background-color: #ECFFB3;
+}
+
+#datatableScheduler tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+#datatableScheduler tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+#datatableScheduler tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+#datatableScheduler tr.odd:hover {
+	background-color: #E6FF99;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
+}

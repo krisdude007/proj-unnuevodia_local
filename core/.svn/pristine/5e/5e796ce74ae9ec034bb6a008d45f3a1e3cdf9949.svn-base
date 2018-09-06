@@ -1,0 +1,33 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/jquery-ui-timepicker-addon.css');
+$cs->registerCssFile('/core/webassets/css/jquery-ui-1.10.0.css');
+$cs->registerCssFile('/core/webassets/css/adminReport/index.css');
+?>
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/reports-image.png"><?php echo(ucwords($type)); ?> Question Report</h2>
+    </div>
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <div class="fab-row-fluid">
+            <div style="margin-bottom:10px">
+                <?php $this->widget('CLinkPager', array('pages' => $pages, 'header' => '')); ?>
+            </div>
+            <table class="dtStyle">
+                <tr><th>ID</th><th>Question</th><th>Start Time</th><th>End Time</th><th><?php echo(ucwords($type)); ?> Submissions</th><th><?php echo(ucwords($type)); ?> Accepted</th></tr>
+                <?php
+                $format = '<tr><td>%s</td><td>%s</td><td style="min-width:150px;">%s</td><td style="min-width:150px">%s</td><td>%s</td><td>%s</td></tr>';
+                foreach ($questions as $question) {
+                    echo sprintf($format, $question->id, $question->question, ($question->start_time == '0000-00-00 00:00:00') ? 'Not Set' : date('M jS, Y - H:i:s', strtotime($question->start_time)), ($question->end_time == '0000-00-00 00:00:00') ? 'Not Set' : date('M jS, Y - H:i:s', strtotime($question->end_time)), $question->{$type . "Tally"}, $question->{$type . "AcceptedTally"}
+                    );
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+</div>

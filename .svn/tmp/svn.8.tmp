@@ -1,0 +1,113 @@
+<?php
+
+class clientUserController extends UserController {
+
+    public function actionProfile() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userEmail = (is_null($userEmail)) ? new eUserEmail : $userEmail;
+        $userLocation = eUserLocation::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userLocation = (is_null($userLocation)) ? new eUserLocation : $userLocation;
+
+        $userPhone = eUserPhone::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        if (is_null($userPhone)) { $userPhone = new eUserPhone; }
+        $userPhone->setScenario('profile');
+
+        $userTwitter = eUserTwitter::model()->findByAttributes(array('user_id' => $user->id));
+        if (is_null($userTwitter)) { $userTwitter = new eUserTwitter; }
+        $userTwitter->setScenario('profile');
+
+        $userFacebook = eUserFacebook::model()->findByAttributes(array('user_id' => $user->id));
+        if (is_null($userFacebook)) { $userFacebook = new eUserFacebook; }
+        $userFacebook->setScenario('profile');
+
+        $user->setScenario('profile');
+        $userEmail->setScenario('profile');
+        $userLocation->setScenario('profile');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profile-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+            //echo CActiveForm::validate(array($user, $userEmail, $userLocation, $userPhone, $userTwitter, $userFacebook));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+            $user->attributes = $_POST['eUser'];
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->username = $_POST['eUserEmail']['email'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->user_id = $user->id;
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $userLocation->user_id = $user->id;
+            $userPhone->attributes = $_POST['eUserPhone'];
+            $userPhone->user_id = $user->id;
+            $userTwitter->attributes = $_POST['eUserTwitter'];
+            $userTwitter->user_id = $user->id;
+            $userFacebook->attributes = $_POST['eUserFacebook'];
+            $userFacebook->user_id = $user->id;
+
+            if ($user->validate() && $userEmail->validate() && $userLocation->validate()) {
+                $user->save();
+                $userEmail->save();
+                $userLocation->save();
+                $userPhone->save();
+                //$userTwitter->save(); // XXX TODO
+                //$userFacebook->save(); // XXX TODO
+
+                Yii::app()->user->setFlash('success', "User profile updated.");
+            }
+        }
+
+        $this->render('profile', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+            'userPhone' => $userPhone,
+            'userTwitter' => $userTwitter,
+            'userFacebook' => $userFacebook,
+        ));
+    }
+    
+    public function actionUserPhoto() {
+         if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+         }
+         $user_id = Yii::app()->user->getId();
+         $user = eUser::model()->findByPK($user_id);
+         $image = eUserPhoto::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+         $image = (is_null($image)) ? new eUserPhoto : $image;
+         $image->setScenario('profileimage');
+         if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profileimage-form') {
+            echo CActiveForm::validate(array($image));
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUserPhoto'])) {
+            $image->attributes = $_POST['eUserPhoto'];
+            $image->user_id = $user->id;
+            $image->filename = CUploadedFile::getInstance($image, 'image');
+            if ($image->validate()) {
+                if (!empty($image->filename)) {
+                    if ($image->save()) {
+                        preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+                        $filetype = $matches[0];
+                        $filename = "{$user->id}_". md5($image->filename) . $filetype;
+                        $image->filename->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+                        $image->filename = $filename;
+                        $image->save();
+                    }
+                }
+                Yii::app()->user->setFlash('success', "User profile pic updated.");
+            }
+        }
+         $this->render('userphoto', array(
+             'user' => $user,
+             'image' => $image,
+        ));
+     }
+}
+
+?>

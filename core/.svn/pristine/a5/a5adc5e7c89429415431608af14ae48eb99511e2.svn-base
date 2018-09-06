@@ -1,0 +1,55 @@
+//jQuery.noConflict();
+
+var tabHandlers = function() {
+    $('#videoSchedulerModalTabs').tabs();
+}
+
+var datePickerHandler = function() {
+    // datepickers for datestart datestop on video filters
+    $( "#datepickerVideoSchedulerFilter" ).datepicker({
+        //maxDate: "0"
+        });
+}
+
+$(document).ready(function () {
+    tabHandlers();
+    datePickerHandler();
+  
+  
+    var oTable = $('#datatableScheduler').dataTable({
+        "bProcessing": true,
+        "sScrollY": "185px",
+        "bPaginate": false,
+        "sAjaxSource": '/adminVideo/ajaxVideoGetNetworkShowSchedule?spot_type=FS',
+        "bFilter": false,
+        "bSort": false,
+        "aoColumns": [
+        {
+            "sWidth": "25%"
+        },
+        {
+            "sWidth": "25%"
+        },
+        {
+            "sWidth": "20%"
+        },
+        {
+            "sWidth": "20%"
+        },
+        {
+            "sWidth": "5%"
+        },
+        {
+            "sWidth": "5%"
+        },
+        ]
+    });
+  
+  
+    $("#datatableScheduler tbody tr").live("click", function(event){
+        //$("td.row_selected", oTable.fnGetNodes()).removeClass('row_selected');
+        //$(event.target).parent().find("td").addClass('row_selected');
+        alert('ya');
+    });
+});
+

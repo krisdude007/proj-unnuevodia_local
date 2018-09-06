@@ -1,0 +1,135 @@
+table{
+    border-collapse:collapse;
+}
+#eEntity_name{
+    width:500px;
+}
+#eEntity_link{
+    width:500px;
+}
+#submitEdit,#cancelEdit{
+    float:left;
+}
+#submitEdit{
+    margin:0;
+}
+th {
+    padding:3px;
+    border:1px solid black;
+    color:#000;
+}
+td {
+    padding:3px;
+    border:1px solid black;    
+}
+label{
+    display:inline-block;
+    min-width:105px;
+    font-weight:900;
+}
+#entity{
+    width:500px;
+    margin-left:2px
+}
+a{
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}
+.contestantImg{
+    width: 130px;
+    height: 130px;
+}
+.contestantImg img {
+    width: 100%;
+    height: 100%;
+}
+.grey{color:#999}
+.active{background:#0C0 !important;}
+.active td{background:#0C0 !important;}
+.active a{color:#000 !important;}
+.active td a{color:#000 !important;}    
+.avatar{border:3px solid blue !important}
+.active td td{background:transparent;}
+.active td.sorting_1{background:#0C0 !important}
+.errorMessage{color:red}
+.fab-voting-right{background:#CCC;padding:20px;width:500px}
+.bold{font-weight:900}
+.overlay {
+    display: none;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/webassets/images/shadow.png');
+    z-index: 100;
+}
+.overlayContents{
+    text-align: left;
+    position: relative;
+    top: 100px;
+    width: 1015px;
+    padding: 4px 8px;  
+    margin: 0 auto;
+    background-color: white;
+}
+.grid-view table.items th, .grid-view table.items td {
+    border: 1px rgb(190, 178, 178) solid !important;
+}
+.grid-view table.items td {
+    color: inherit !important;
+}
+td{
+    color: #fff !important;
+}
+.dataTable td a {
+    color: #fff !important;
+}
+#header table a {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+.tFormOverlay{
+    padding: 14px !important;
+}
+.tFormOverlay h2{
+    width: auto !important;
+    margin:  0px !important;
+    height: auto !important;
+    line-height: 200% !important;
+}
+#cover {
+    position:fixed;
+    background-color: #000000;
+    opacity: 0.7;filter:alpha(opacity=70);
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#modal {
+    position:fixed;
+    width:980px;
+    background-color:#fff;
+    /*    background-image:url('/webassets/images/contestant/Popup_background.png');*/
+    font-family:arial,helvetica,sans-serif;
+}
+
+#close {
+    position:absolute;
+    cursor: pointer;
+    top:2px;
+    right:5px;
+    color: #444444;
+}
+
+#content {
+    clear:both;
+    width:100%;
+    /*background:url('/webassets/images/background-02.png');*/
+    text-align:center;
+}

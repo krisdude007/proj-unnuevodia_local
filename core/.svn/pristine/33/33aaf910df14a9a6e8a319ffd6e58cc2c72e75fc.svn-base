@@ -1,0 +1,38 @@
+/* 
+    Document   : _faq
+    Created on : Jun 25, 2013, 9:35:32 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the faq page should take place here.
+*/
+
+.fab-faqs{
+    max-width: 645px;
+    float:left;
+}
+.fab-faqs .fab-span4{
+    width:45%;
+    margin-left:20px!important;
+}
+
+.fab-faqs h2{
+    color:#414141;
+    font-size: 18px;
+    font-weight: bold;
+}
+.fab-faqs p{
+    color:#0b73bc;
+}
+.fab-well h2{
+    color:#414141;
+    font-size: 18px;
+    font-weight: bold;
+}
+.fab-well{
+    float:left;
+    height:auto;
+    margin-left:10px !important;
+}
+.fab-well p{
+    color:#0b73bc;
+}

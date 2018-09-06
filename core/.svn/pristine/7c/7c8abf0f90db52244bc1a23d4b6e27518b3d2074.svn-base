@@ -1,0 +1,383 @@
+
+/* this makes it possible to add next button beside scrollable */
+.scrollable {
+    float:left;
+}
+
+/* prev, next, prevPage and nextPage buttons */
+a.browse {
+    background:url(/media/img/scrollable/arrow/hori_large.png) no-repeat;
+    display:block;
+    width:30px;
+    height:30px;
+    float:left;
+    margin:40px 10px;
+    cursor:pointer;
+    font-size:1px;
+}
+
+/* right */
+a.right { background-position: 0 -30px; clear:right; margin-right: 0px;}
+a.right:hover { background-position:-30px -30px; }
+a.right:active { background-position:-60px -30px; }
+
+
+/* left */
+a.left { margin-left: 0px; }
+a.left:hover  { background-position:-30px 0; }
+a.left:active { background-position:-60px 0; }
+
+/* up and down */
+a.up, a.down  {
+    background:url(/media/img/scrollable/arrow/vert_large.png) no-repeat;
+    float: none;
+    margin: 10px 50px;
+}
+
+/* up */
+a.up:hover { background-position:-30px 0; }
+a.up:active { background-position:-60px 0; }
+
+/* down */
+a.down { background-position: 0 -30px; }
+a.down:hover { background-position:-30px -30px; }
+a.down:active { background-position:-60px -30px; }
+
+
+/* disabled navigational button */
+a.disabled {
+    visibility:hidden !important;
+}
+
+/*
+  root element for the scrollable.
+  when scrolling occurs this element stays still.
+  */
+.scrollable {
+
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+    width: 550px;
+    height:120px;
+
+    /* custom decorations */
+    border:1px solid #ccc;
+    background:url(/media/img/gradient/h300.png) repeat-x;
+}
+
+/*
+   root element for scrollable items. Must be absolutely positioned
+   and it should have a extremely large width to accomodate scrollable
+   items.  it's enough that you set the width and height for the root
+   element and not for this element.
+*/
+.scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position:absolute;
+    clear:both;
+}
+
+.items div {
+    float:left;
+    width:680px;
+}
+
+/* single scrollable item */
+.scrollable img {
+    float:left;
+    margin:20px 5px 20px 21px;
+    background-color:#fff;
+    padding:2px;
+    border:1px solid #ccc;
+    width:100px;
+    height:75px;
+
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+}
+
+/* active item */
+.scrollable .active {
+    border:2px solid #000;
+    position:relative;
+    cursor:default;
+}
+
+
+#modalTabs { 
+    background: transparent; 
+    border: none; 
+    padding: 0px;
+    margin: 0px;
+    width:616px;
+} 
+
+#modalTabs .ui-widget-header { 
+    background: transparent; 
+    border: none; 
+    border-bottom: 1px solid #c0c0c0; 
+    -moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+    border-radius: 0px; 
+    padding: 0px;
+    margin: 0px;
+} 
+
+#modalTabs .ui-tabs-nav .ui-state-default { 
+    background: transparent; 
+    border: none; 
+} 
+
+#modalTabs .ui-tabs-nav .ui-state-active { 
+    /*background: transparent url(img/uiTabsArrow.png) no-repeat bottom center; */
+    border: none; 
+} 
+
+#modalTabs .ui-tabs-nav .ui-state-default a { 
+    color: #c0c0c0; 
+} 
+
+#modalTabs .ui-tabs-nav .ui-state-active a { 
+    color: #000; 
+}
+
+#modalTabs .ui-tabs-nav li { 
+    padding:0px;
+    margin: 0px;
+}
+
+#tab-video, #tab-thumbnail, #tab-share, #tab-audio, #tab-download, #tab-history, #tab-language {
+    color: #fff;
+}
+
+#player {
+    height: 400px;
+}
+
+a.close-modal{top:5px;right:18px;}
+    .fab-lightbox-videos h1{
+    font-size: 20px;
+    color:white;
+    font-weight: bold;
+}
+.fab-lightbox-videos {
+    margin-left:10px;
+}
+.fab-lightbox-videos .flexslider .flex-next {
+    display:block !important;
+    left: 540px !important;
+    top: 40px !important;
+    width:36px !important;
+    background:url('/core/webassets/images/right-arrow-grey.png') no-repeat;
+    height:48px !important;
+    width:36px !important;
+}
+.fab-lightbox-videos .flexslider .flex-prev {
+    display:block !important;
+    left: -41px !important;
+    top: 40px !important;
+    height:48px !important;
+    background:url('/core/webassets/images/left-arrow-grey.png') no-repeat;
+    height:48px !important;
+    width:36px !important;
+}
+.fab-lightbox-videos .flexslider .flex-prev:hover{
+    display:block !important;
+    left: -41px !important;
+    top: 40px !important;
+    height:48px !important;
+    background:url('/core/webassets/images/left-arrow-red.png') no-repeat;
+    height:48px !important;
+    width:36px !important;
+}
+.fab-lightbox-videos .flexslider .flex-next:hover{
+    display:block !important;
+    left: 540px !important;
+    top: 40px !important;
+    width:36px !important;
+    background:url('/core/webassets/images/right-arrow-red.png') no-repeat;
+    height:48px !important;
+    width:36px !important;
+}
+.fab-lightbox-videos .flexslider1 .flex-prev{
+    display:block !important;
+    left:19px !important;
+    top:244px !important;
+    opacity: 1;
+    background:url('/core/webassets/images/left-arrow-grey.png') no-repeat;
+    height:48px !important;
+    width:36px !important;
+}
+
+.fab-lightbox-videos{
+    max-width: 780px !important;
+    opacity: 1;
+}
+
+.fab-filter {
+    background: #9f9f9f;
+}
+
+.fab-lightbox-videos .fab-filter:hover{
+    background:#E02222;
+}
+.fab-lightbox-videos{
+    max-width:780px;
+    margin-left:auto;
+    margin-right: auto;
+}
+.fab-lightbox-videos #fab-video-filter-form{
+    max-width: 778px;
+}
+.fab-lightbox-videos .fab-accordion_head{
+    padding:0px !important;
+}
+.fab-lightbox-margin{
+    max-width:814px;
+    padding-top:10px;
+    /*    padding-bottom:10px;*/
+    /*    height:57px;*/
+    height:auto;
+}
+.lightbox-line{
+    width:102%;
+    margin-left: -10px;
+    border-bottom:1px solid #cccccc;
+}
+.fab-question-black{
+    background:#222222;
+    height:auto;
+    padding:0px;
+
+}
+.fab-lightbox-question{
+    max-width:962px;
+    margin-left:auto;
+    margin-right:auto;
+    background:#3f3f3f;
+}
+.fab-lightbox-question video-filter-form{
+    height:230px;
+}
+.fab-lightbox-question p{
+    font-size: 14px;
+}
+.fab-lightbox-question .fab-tools{
+    height:67px;
+}
+.fab-lightbox-question .fab-tools span{
+    margin-top:23px;
+    margin-right: 20px;
+}
+.fab-lightbox-question #fab-video-filter-form {
+
+    height:auto;
+    margin:0px;
+}
+.fab-lightbox-question .fab-form-left{
+    min-height:165px;
+    margin-top:0px;
+    border:0px;
+    padding:0px;
+    margin: 0px;
+    border-right: 1px solid #cccccc;
+}
+.fab-lightbox-question .fab-filter{
+    width:auto;
+    font-size: 12px;
+    padding-left:10px;
+    padding-right: 10px;
+}
+.fab-lightbox-question .fab-filter.fab-accept{
+    background: none repeat scroll 0 0 #86B752;
+    width: 85px;
+}
+.fab-lightbox-question .fab-filter.fab-deny{
+    background: none repeat scroll 0 0 #E02222;
+    width: 85px;
+}
+.fab-lightbox-question form{
+    margin:0px;
+}
+.fab-lightbox-question .grey-select-small{
+    color:white;
+    background: none repeat scroll 0 0 transparent;
+    -webkit-appearance: none;
+    border:1px solid #000000;
+}
+.fab-lightbox-question #fab-advanced-filtering{
+    width:100%;
+    height:40px;    
+    background:#605f5f;
+    padding-right:3px;
+    margin-left:-3px;
+    border:0px;
+}
+.fab-lightbox-question .fab-form-right{
+    border:0px;
+    width:125px;
+    padding-bottom:0px;
+}
+.fab-lightbox-question .fab-form-right p{
+    color:white;
+    font-size: 12px;
+}
+.fab-lightbox-question .fab-form-left .fab-grey-line{
+    margin-left:-9px;
+    width:103%;
+}
+.fab-lightbox-question .fab-reason{
+    background:transparent;
+    border:0px;
+    -webkit-appearance: none;line-height: 18px;
+    width: 310px;
+    color:white;
+}
+.fab-lightbox-question .fab-select-type{
+    width:125px;
+    background:transparent;
+    border:0px;
+    -webkit-appearance: none;line-height: 18px;
+    color:white;
+}
+.fab-lightbox-question .fab-tags{
+    background:transparent;
+    -webkit-appearance: none;
+    color:#9f9f9f;
+    padding-left:12px !important;
+    padding-top:2px !important;
+    padding-bottom:2px !important;
+    margin-top:4px;
+}
+.fab-lightbox-question .fab-grey-select{
+    margin-top:0px;
+    margin-left:0px;
+    margin-right: 24px;
+}
+.fab-lightbox-text{
+    color:white;
+    font-size: 14px;
+}
+.fab-lightbox-question .fab-ratings{
+    padding-bottom: 0px;
+}
+.fab-lightbox-videos .slider { position: relative; margin-top:20px; }
+.fab-lightbox-videos .fab-lightbox-videos .fab-bottom-carousel{width:1200px;height:160px;background:#585757;margin-top:47px;}
+.fab-lightbox-videos .fab-bottom-carousel #carousel{margin-left:40px;padding-top:29px;width:540px;}
+.fab-lightbox-videos #carousel .slides li{margin-left:2px;}
+
+.fab-lightbox-videos .fab-minimize-screen{
+    width:67px;
+    height:57px;
+    padding-top:34px;
+    padding-left:10px;
+}
+.fab-lightbox-videos .fab-maximize-screen{
+    width:69px;
+    height:57px;
+    padding-top:34px;
+    padding-left:45px;
+}
+#carousel .slides li{margin-left:5px;}

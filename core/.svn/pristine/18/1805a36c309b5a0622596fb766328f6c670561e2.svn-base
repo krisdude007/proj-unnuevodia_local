@@ -1,0 +1,44 @@
+table{
+    border-collapse:collapse;
+}
+#eQuestion_question{
+    width:500px;
+}
+#submitEdit,#cancelEdit{
+    float:left;
+}
+#submitEdit{
+    margin:0;
+}
+th {
+    padding:3px;
+    border:1px solid black;
+    color:#000;
+}
+td {
+    padding:3px;
+    border:1px solid black;
+    color:#FFF;        
+}
+label{
+    display:inline-block;
+    min-width:70px;
+    font-weight:900;
+}
+#question{
+    width:500px;
+    margin-left:2px
+}
+a{
+    color:#FFF;
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}
+.grey{color:#999}
+.active{background:#0C0 !important;}
+.active td{background:#0C0 !important;}
+.active a{color:#000 !important;}
+.active td a{color:#000 !important;}    
+.deleted {background:red !important;}

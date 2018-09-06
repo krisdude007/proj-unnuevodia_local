@@ -1,0 +1,42 @@
+
+<?php if($user->id != Yii::app()->user->id): ?>
+<div class="sidebar">
+    <div style="padding:10px;">
+        <div style="margin-bottom:20px;width:130px;">
+            <a target="_blank" href="<?php echo Yii::app()->request->baseurl;?>/user/<?php echo $user->id; ?>">
+                <img style="margin-left:auto;margin-right:auto;max-width:130px;max-height:135px;display:block" src="<?php echo UserUtility::getAvatar($user); ?>" />
+            </a>
+        </div>
+        <div class="bold" style="margin-bottom:5px;"><?php echo $user->first_name; ?> <?php echo $user->last_name; ?></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/user/<?php echo $user->id; ?>"><?php echo ClientUtility::getNumVideos($user->id);?> Videos</a></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/user/<?php echo $user->id; ?>"><?php echo ClientUtility::getNumImages($user->id);?> Fotos</a></div>
+    </div>
+</div>
+<?php else: ?>
+<div class="sidebar">
+    <div style="padding:10px;">
+        <div style="margin-bottom:10px;width:130px;">
+            <img style="margin-left:auto;margin-right:auto;max-width:130px;max-height:135px;display:block" src="<?php echo UserUtility::getAvatar($user); ?>" />
+        </div>
+        <div id="profileName" class="bold">
+            <?php echo $user->first_name; ?>
+            <?php echo $user->last_name; ?>
+        </div>
+        <ul class="counts">
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumVideos($user->id); ?> videos</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/imageview"><?php echo ClientUtility::getNumImages($user->id); ?> fotos</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumTexts($user->id); ?> tickers</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumVotes($user->id); ?> votos</a></li>
+        </ul>
+        <ul>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Conéctate</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/help">¿Necesitas ayuda?</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/about">Acerca de</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/terms">Términos de uso</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/you/privacy">Política de Privacidad</a></li>
+            <li style="font-size: 13px;"><a href="<?php echo Yii::app()->request->baseurl;?>/you/profile">Configuración de perfil</a></li>
+            <li><a href="<?php echo Yii::app()->request->baseurl;?>/logout">Cerrar la sesión</a></li>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>

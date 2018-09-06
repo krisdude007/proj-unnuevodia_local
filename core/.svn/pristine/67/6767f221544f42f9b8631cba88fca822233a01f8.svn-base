@@ -1,0 +1,104 @@
+<?php
+
+class XMLController extends Controller {
+    
+    function init() {
+        parent::init();
+    }
+    
+    public function actionVoting($id = 0) {
+        $model = ePoll::model()->with('pollAnswers','pollAnswers:tally','tally')->findByPK($id);
+        header("Content-Type: application/xml");
+        $doc = new DOMDocument("1.0", "ISO-8859-1");        
+        $data = $doc->createElement('data');        
+        if(!is_null($model)) {
+            $poll = $doc->createElement('poll');
+            $poll->appendChild($doc->createElement('id', $model->id));
+            $poll->appendChild($doc->createElement('question', $model->question));
+            $poll->appendChild($doc->createElement('date', $model->created_on));
+            $data->appendChild($poll);               
+            foreach($model['pollAnswers'] as $t)
+            {
+                $answer = $doc->createElement('answer');
+                $answer->appendChild($doc->createElement('id', $t->id));
+                $answer->appendChild($doc->createElement('answer', $t->answer));
+                $answer->appendChild($doc->createElement('date', $t->created_on));
+                $answer->appendChild($doc->createElement('total', $t->tally));
+                $answer->appendChild($doc->createElement('percentage', round(($t->tally/$model->tally)*100)));
+                $poll->appendChild($answer);
+            }
+        }   
+        $doc->appendChild($data);                    
+        echo $doc->saveXML();                       
+    }
+    
+    public function actionQuestionTicker($id = 0) {
+        
+        $questionModel = eQuestion::model()->findByPK($id);
+        //$tickersModel = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id));
+        if(TICKER_FILTERS_EXTENDED) {
+            $tickersModel = eTicker::model()->with('user')->acceptedtv()->findAllByAttributes(Array('question_id'=>$questionModel->id));
+        } else {
+            $tickersModel = eTicker::model()->with('user')->accepted()->findAllByAttributes(Array('question_id'=>$questionModel->id));
+        }
+        $entityTickers = eTicker::model()->accepted()->findAllByAttributes(Array('type'=>'entity'));
+        
+        $combinedTickers = TickerUtility::combineTickerWithEntityTickers($tickersModel, $entityTickers);
+        
+        header("Content-Type: application/xml");
+        
+        $doc = new DOMDocument("1.0", "ISO-8859-1");
+        
+        $data = $doc->createElement('data');
+        
+        $doc->appendChild($data);
+        
+        if(count($questionModel) != 0)
+        {
+            $question = $doc->createElement('question');
+            $data->appendChild($question);
+
+            $question->appendChild($doc->createElement('id', $questionModel->id));
+            $question->appendChild($doc->createElement('question', $questionModel->question));
+            $question->appendChild($doc->createElement('hashtag', $questionModel->hashtag));
+            $question->appendChild($doc->createElement('date', $questionModel->created_on));
+
+            $answers = $doc->createElement('answers');
+            $data->appendChild($answers);
+
+            foreach($combinedTickers as $t)
+            {
+                $user = eUser::model()->findByPK($t->user_id);
+
+                $ticker = $doc->createElement('ticker');
+                $ticker->appendChild($doc->createElement('id', $t->id));
+                $ticker->appendChild($doc->createElement('answer', $t->ticker));
+                $ticker->appendChild($doc->createElement('date', $t->created_on));
+                $ticker->appendChild($doc->createElement('username', $user->username));
+                $ticker->appendChild($doc->createElement('first_name', $user->first_name));
+                $ticker->appendChild($doc->createElement('last_name', $user->last_name));
+                $ticker->appendChild($doc->createElement('avatar', TickerUtility::getAvatar($t)));
+                $ticker->appendChild($doc->createElement('avatar', $user->id));
+                $ticker->appendChild($doc->createElement('source', $t->source));
+                $answers->appendChild($ticker);
+            }
+            
+            if(count($combinedTickers) == 0)
+            {
+                $ticker = $doc->createElement('ticker');
+                $ticker->appendChild($doc->createElement('id', 'No tickers approved'));
+                $answers->appendChild($ticker);
+            }
+        }
+        else
+        {
+            $question = $doc->createElement('question');
+            $question->appendChild($doc->createElement('id', 'No tickers approved'));
+            $data->appendChild($question);
+        }
+        
+        echo $doc->saveXML();
+    }
+}
+
+?>

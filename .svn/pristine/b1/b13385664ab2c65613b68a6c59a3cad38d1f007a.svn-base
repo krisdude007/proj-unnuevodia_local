@@ -1,0 +1,88 @@
+<?php
+
+class clientSiteController extends SiteController{
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    public $defaultAction='index';
+    public $user = null;
+    public function init(){
+        parent::init();
+        if ($this->isMobile() && Yii::app()->params['useMobileTheme']) {
+            $this->defaultAction = "home";
+        }
+    }
+    public function actionIndex()
+    {
+        $this->render('index', array());
+    }
+    public function actionHome()
+    {
+        $this->layout = "blank";
+        $this->render('home', array('user'=>$this->user));
+
+    }
+    public function actionAboutlinks()
+    {
+        $this->render('aboutlinks', array());
+    }
+    public function actionAbout()
+    {
+        $this->render('about', array());
+    }
+    public function actionPatents()
+    {
+        $this->render('patents', array());
+    }
+    public function actionSchedule()
+    {
+        $this->render('schedule', array());
+    }
+    public function actionWatch()
+    {
+        $this->render('watch', array());
+    }
+    public function actionShow()
+    {
+        $this->render('show', array());
+    }
+    public function actionMore()
+    {
+        $this->render('more', array());
+    }
+    public function actionLegallinks()
+    {
+        $this->render('legallinks', array());
+    }
+    public function actionTerms()
+    {
+        $this->render('terms', array());
+    }
+    public function actionPrivacy()
+    {
+        $this->render('privacy', array());
+    }
+    public function actionTermsYoutoo()
+    {
+        $this->render('termsyoutoo', array());
+    }
+    public function actionPrivacyYoutoo()
+    {
+        $this->render('privacyyoutoo', array());
+    }
+    public function actionHelplinks()
+    {
+        $this->render('helplinks', array());
+    }
+    public function actionFAQ()
+    {
+        $this->render('faq', array());
+    }
+    public function actionHelp()
+    {
+        $this->render('help', array());
+    }
+
+}

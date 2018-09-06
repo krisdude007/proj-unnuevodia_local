@@ -1,0 +1,57 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerScript('maxActives',"var maxActives = $maxActives", CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/adminAudit/index.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+$cs->registerCssFile('/core/webassets/css/adminAudit/index.css');
+?>
+
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/dashboard-icon.png" style="margin-right: 10px;float:left;"/>Audit Trail</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+
+        <!-- END PAGE HEADER-->
+        <div id="fab-dashboard">
+            <div style="margin-bottom:20px">
+                Click on the column title to sort by that column.<br>
+                Click on any question details to edit them.
+            </div>       
+            <table id="auditTable">
+                <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Action</th>
+                    <th>Created</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                    $rowFormat = "
+                        <tr>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>%s</td>
+                        </tr>
+                    ";
+                    $i=0;
+                    foreach($audits as $k=>$v){                   
+                        echo sprintf($rowFormat,
+                                $v['user_id'],
+                                $v['action'],
+                                $v['created_on']
+                             );
+                    }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

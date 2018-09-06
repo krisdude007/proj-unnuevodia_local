@@ -1,0 +1,131 @@
+<?php
+
+class BoloroController extends Controller {
+
+    public $layout = '//layouts/main';
+    public $user;
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest && !ClientUtility::isSharedAccount()) {
+            $this->user = ClientUtility::getUser();
+        } else {
+            $this->redirect('/login');
+        }
+    }
+
+    public function actionIndex($type, $id) {
+
+        if (isset($_POST['total'])) {
+            $total = $_POST['total'];
+            if (!is_numeric($total)) {
+                return;
+            }
+            $orderId = uniqid();
+            $url = "http://uat.boloro.net:8080/processorv3/boloroprocessor/getauthtoken?api_login_id=API-YOUTO&transaction_key=DP9YFtBRcx60TMwY19253df7e7c58422";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $json = curl_exec($ch);
+            $response = json_decode($json);
+            $token = $response->token;
+            $params = array('type' => $type, 'id' => $id);
+            $returnUrl = Yii::app()->createAbsoluteUrl('boloro/confirm', $params);
+            $cancelUrl = Yii::app()->createAbsoluteUrl('boloro/cancel', $params);
+            $this->redirect('http://uat.boloro.net:8080/processorv3/boloroprocessor/checkout?auth_token=' . urlencode($token) . '&order_id=' . urlencode($orderId) . '&total=' . $total . '&return_URL=' . urlencode($returnUrl) . '&cancel_URL=' . urlencode($cancelUrl) . '&currency_code=USD');
+        }
+
+        $this->render('index', array(
+        ));
+    }
+
+    public function actionConfirm($type, $id) {
+        //print_r($_POST);
+        foreach ($_POST as $key => $value) {
+            $$key = $value;
+        }
+
+        if (!empty($txn_id) && !empty($txn_status) && !empty($total)) {
+            $transaction = new eTransaction();
+            $transaction->user_id = $this->user->id;
+            
+            switch ($type) {
+                case 'video':
+                    $transaction->video_id = $id;
+                    // ideally we would check boloro status before
+                    // finding video and change processed to 1
+                    $video = eVideo::model()->findByPk($id);
+                    if(!is_null($video)) {
+                        $video->processed = 1;
+                        $video->save();
+                    }
+                    break;
+                case 'image':
+                    $transaction->image_id = $id;
+                    break;
+            }
+            
+            $transaction->processor = 'boloro';
+            $transaction->txn_id = $txn_id;
+            $transaction->order_id = $order_id; 
+            $transaction->txn_status = $txn_status;
+            $transaction->price = $total;
+            $transaction->created_on = new CDbExpression('NOW()');
+            $transaction->updated_on = new CDbExpression('NOW()');
+            
+            if ($transaction->validate()) {
+                $transaction->save();
+            } 
+        }
+
+        $this->render('confirm', array(
+            'transStatus' => $txn_status,
+            'orderId' => $order_id,
+            'transMsg' => $txn_status_msg,
+        ));
+    }
+
+    public function actionCancel($type, $id) {
+
+        foreach ($_POST as $key => $value) {
+            $$key = $value;
+        }
+
+        if (!empty($txn_id) && !empty($txn_status) && !empty($total)) {
+            $transaction = new eTransaction();
+            $transaction->user_id = $this->user->id;
+            switch ($type) {
+                case 'video':
+                    $transaction->video_id = $id;
+                    break;
+                case 'image':
+                    $transaction->image_id = $id;
+                    break;
+            }
+            $transaction->processor = 'boloro';
+            $transaction->txn_id = $txn_id;
+            $transaction->order_id = $order_id; 
+            $transaction->txn_status = $txn_status;
+            $transaction->price = $total;
+            $transaction->created_on = new CDbExpression('NOW()');
+            $transaction->updated_on = new CDbExpression('NOW()');
+            if ($transaction->validate()) {
+                $transaction->save();
+            } else {
+                return;
+            }
+        }
+
+        $this->render('cancel', array(
+            'transStatus' => $txn_status,
+            'orderId' => $order_id,
+            'transMsg' => $txn_status_msg,
+        ));
+    }
+
+}

@@ -1,0 +1,438 @@
+
+var GradientColorPickers = function() {
+    var defaultStartColors = ['#0083C1'];
+    var defaultEndColors = ['#0083C1'];
+    $("#gradient_start_color").off('change');
+    $("#gradient_start_color").on('change', function(e) {
+        e.preventDefault();
+        var colorVal = $(this).val();
+
+    });
+    var selCol = $('#gradient_start_color').val() ? $('#gradient_start_color').val() : defaultStartColors[0];
+    $('#gradient_start_color').spectrum({
+        showPaletteOnly: false,
+        showPalette: false,
+        color: selCol,
+        clickoutFiresChange: true,
+        preferredFormat: "string",
+        palette: [defaultStartColors],
+        showInput: true
+
+    })
+    $('#gradient_start_color').val(selCol).trigger('change');
+
+    $('.qtyplusLeft').click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_x').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_x').val(currentVal + 1);
+        } else {
+            $('#offset_x').val(0);
+        }
+    });
+    $(".qtyminusLeft").click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_x').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_x').val(currentVal - 1);
+        } else {
+            $('#offset_x').val(0);
+        }
+    });
+
+    $('.qtyplusTop').click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y').val(currentVal + 1);
+        } else {
+            $('#offset_y').val(0);
+        }
+    });
+    $(".qtyminusTop").click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y').val(currentVal - 1);
+        } else {
+            $('#offset_y').val(0);
+        }
+    });
+
+    $('.qtyplusTopContainer').click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y').val(currentVal - 1);
+        } else {
+            $('#offset_y').val(0);
+        }
+    });
+    $(".qtyminusTopContainer").click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y').val(currentVal + 1);
+        } else {
+            $('#offset_y').val(0);
+        }
+    });
+
+    $('.qtyplusTopText').click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y_text').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y_text').val(currentVal - 1);
+        } else {
+            $('#offset_y_text').val(0);
+        }
+    });
+    $(".qtyminusTopText").click(function(e) {
+        e.preventDefault();
+        var currentVal = parseInt($('#offset_y_text').val());
+        if (!isNaN(currentVal)) {
+            $('#offset_y_text').val(currentVal + 1);
+        } else {
+            $('#offset_y_text').val(0);
+        }
+    });
+
+    $("#gradient_end_color").off('change');
+    $("#gradient_end_color").on('change', function(e) {
+        e.preventDefault();
+        var colorVal = $(this).val();
+
+    });
+    var selCol = $('#gradient_end_color').val() ? $('#gradient_end_color').val() : defaultEndColors[0];
+    $('#gradient_end_color').spectrum({
+        showPaletteOnly: false,
+        showPalette: false,
+        color: selCol,
+        clickoutFiresChange: true,
+        preferredFormat: "string",
+        palette: [defaultEndColors],
+        showInput: true
+
+    })
+    $('#gradient_end_color').val(selCol).trigger('change');
+
+}
+var fontColorPicker = function() {
+    var colors = ['#000000'];
+    $(".spectrumColorPicker").off('change');
+    $(".spectrumColorPicker").on('change', function(e) {
+        e.preventDefault();
+        var colorVal = $(this).val();
+
+    });
+    //var selCol = $('.spectrumColorPicker').val() ? $('.spectrumColorPicker').val() : colors[0];
+    $('.spectrumColorPicker').spectrum({
+        showPaletteOnly: false,
+        showPalette: false,
+        //color: selCol,
+        clickoutFiresChange: true,
+        preferredFormat: "string",
+        palette: [colors],
+        showInput: true
+    });
+    //$('.spectrumColorPicker').val(selCol).trigger('change');
+
+}
+var backgroundType = function() {
+    $(".radioLabel").off('change');
+    $(".radioLabel").on('change', function(e) {
+        e.preventDefault();
+        if ($(this).val() == 'background') {
+            $('#bgOption').show();
+        } else {
+
+            $('#bgOptionImage').hide();
+            $('#eTvScreenAppearSetting_filename').val('');
+        }
+        onloadSelectBGOption();
+    });
+}
+var onloadSelectBGOption = function() {
+    if ($(".radioLabel:checked").val() == 'background') {
+        $('#bgOptionImage').show();
+    }
+    if ($("input:radio[name=foreground_type]:checked").val() == 'image') {
+        $('#foreOptionImage').show();
+        $('#foreOptionColor').hide();
+    }
+}
+var saveSetting = function() {
+    $('#save_button').off('click');
+    $('#save_button').on('click', function(e) {
+        e.preventDefault();
+        if ($('#eTvScreenAppearSetting_filename').val() !== "" &&
+                parseInt($('#countOfFile').val()) >= parseInt($('#definedcountOfFile').val())) {
+            $('#flashMsg').html('File Limit exceeded.  Please delete one of image from the list.');
+            $('#flashMsg').show();
+            return false;
+        }
+        if ($('#eTvScreenAppearSetting_forebg_filename').val() !== "" &&
+                parseInt($('#countOfFile').val()) >= parseInt($('#definedcountOfFile').val())) {
+            $('#flashMsg').html('File Limit exceeded.  Please delete one of image from the list.');
+            $('#flashMsg').show();
+            return false;
+        }
+        if ($(".radioLabel:checked").val() == 'background') {
+            if ($('#eTvScreenAppearSetting_filename').val() == "" &&
+                    $('#existingBGImage').val() == "") {
+                $('#flashMsg').html('Please upload or choose an image.');
+                $('#flashMsg').show();
+                return false;
+            }
+        }
+        if ($("input:radio[name=foreground_type]:checked").val() == 'image') {
+            if ($('#eTvScreenAppearSetting_forebg_filename').val() == "" &&
+                    $('#existingForeBGImage').val() == "") {
+                $('#flashMsg').html('Please upload or choose a forebackground image.');
+                $('#flashMsg').show();
+                return false;
+            }
+        }
+
+        $('#flashMsg').hide();
+        $('.saveContainer').hide();
+        $("#ajaxSpinner").show();
+        var formData = new FormData($('form')[1]);
+        $.ajax({
+            url: '/adminTvScreenAppearSetting/save',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false
+        }).done(function(data, textStatus, jqXHR) {
+            $('#flashMsg').html(data.result);
+            $('#flashMsg').show('slow');
+            selectSpeedOnload();
+            if (data.filename != "") {
+                $('#existingBGImage').attr('value', data.filename);
+                $('#eTvScreenAppearSetting_filename').attr('value', '');
+                $(".bgImageList .imgDelete").each(function(e) {
+                    $(this).attr('style', 'display:block');
+                });
+                tmpCount = $('#countOfFile').val();
+                tmpCount = parseInt(tmpCount) + 1;
+                $('#countOfFile').val(tmpCount);
+                $(".bgImageList").append('<div class="bgImageListContainer" id="' + $('#countOfFile').val() + '"><div class="bgImageListInner" ><img src="/userimages/tvscreensetting/' + data.filename + '"  class="selectedImg" imgid="' + data.filename + '" /></div><div class="imgDelete" style="display:none"><img src="/core/webassets/images/list_remove.png" deleteid="' + $('#countOfFile').val() + '" imagename="' + data.filename + '"/></div></div>');
+            }
+            if (data.forebgFileName != "") {
+                $('#existingForeBGImage').attr('value', data.forebgFileName);
+                $('#eTvScreenAppearSetting_forebg_filename').attr('value', '');
+                $(".forebgImageList .imgDelete").each(function(e) {
+                    $(this).attr('style', 'display:block');
+                });
+                tmpCount = $('#foreBgcountOfFile').val();
+                tmpCount = parseInt(tmpCount) + 1;
+                $('#foreBgcountOfFile').val(tmpCount);
+                $(".forebgImageList").append('<div class="forebgImageListContainer" id="fore_' + $('#foreBgcountOfFile').val() + '"><div class="forebgImageListInner" ><img src="/userimages/tvscreensetting/' + data.forebgFileName + '"  class="selectedImg" imgid="' + data.forebgFileName + '"/></div><div class="imgDelete" style="display:none"><img src="/core/webassets/images/list_remove.png" deleteid="fore_' + $('#foreBgcountOfFile').val() + '" imagename="' + data.forebgFileName + '"/></div></div>');
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            $('#flashMsg').html(jqXHR.responseText);
+            $('#flashMsg').show('slow');
+        }).always(function(a, textStatus, b) {//a = data, b = jqXHR or a = jqXHR, b = errorThrown
+            $('#ajaxSpinner').hide();
+            $('.saveContainer').show();
+        });
+        ;
+
+    });
+}
+var selectImageTrigger = function() {
+    console.log(1);
+    //when user select image from the list
+    $('.bgImageListInner img').off('click');
+    $('.bgImageListInner img').on('click', function(e) {
+        e.preventDefault();
+        console.log(2);
+        $('#eTvScreenAppearSetting_filename').attr('value', '');
+        $('#existingBGImage').attr('value', $(this).attr('imgid'));
+        $(".bgImageListInner img").each(function(e) {
+            $(this).attr('class', 'borderimg')
+        });
+        $(".bgImageList .imgDelete").each(function(e) {
+            $(this).attr('style', 'display:block')
+        });
+        $(this).attr('class', 'selectedImg');
+
+    });
+    console.log(3);
+    //when user trying to upload or trying not to upload.
+    $('#eTvScreenAppearSetting_filename').off('change');
+    $('#eTvScreenAppearSetting_filename').on('change', function(e) {
+        e.preventDefault();
+        console.log(5);
+        $('#existingBGImage').attr('value', '');
+        $(".bgImageListInner img").each(function(e) {
+            $(this).attr('class', 'borderimg')
+        });
+        $(".bgImageList .imgDelete").each(function(e) {
+            $(this).attr('style', 'display:block')
+        });
+    });
+
+    //when user select forebg image from the list
+    $('.forebgImageListInner img').off('click');
+    $('.forebgImageListInner img').on('click', function(e) {
+        e.preventDefault();
+        console.log(4);
+        $('#existingForeBGImage').attr('value', $(this).attr('imgid'));
+        $(".forebgImageListInner img").each(function(e) {
+            $(this).attr('class', 'borderimg')
+        });
+        $(".forebgImageList .imgDelete").each(function(e) {
+            $(this).attr('style', 'display:block')
+        });
+        $(this).attr('class', 'selectedImg');
+
+    });
+    //when user trying to forebgimage upload or trying not to upload.
+    $('#eTvScreenAppearSetting_forebg_filename').off('change');
+    $('#eTvScreenAppearSetting_forebg_filename').on('change', function(e) {
+        e.preventDefault();
+        $('#existingForeBGImage').attr('value', '');
+        $(".forebgImageListInner img").each(function(e) {
+            $(this).attr('class', 'borderimg')
+        });
+        $(".forebgImageList .imgDelete").each(function(e) {
+            $(this).attr('style', 'display:block')
+        });
+    });
+}
+var deleteImage = function() {
+    $('.imgDelete img').off('click');
+    $('.imgDelete img').on('click', function(e) {
+        e.preventDefault();
+        console.log(1);
+        var r = confirm("Are you sure you want to delete!");
+        if (r == true) {
+            $.ajax({
+                url: "/adminTvScreenAppearSetting/AjaxDeleteImage",
+                type: 'POST',
+                data: ({
+                    'CSRF_TOKEN': getCsrfToken(),
+                    'filename': $(this).attr('imagename')
+                })
+            });
+            $("#" + $(this).attr('deleteid')).remove();
+            tmpCount = $('#countOfFile').val();
+            tmpCount = parseInt(tmpCount) - 1;
+            $('#countOfFile').val(tmpCount);
+            if ($(this).closest(".bgImageList").attr('class') == 'clearfix  bgImageList')
+                $('#existingBGImage').attr('value', '');
+            else
+                $('#existingForeBGImage').attr('value', '');
+        }
+    });
+}
+var closeModal = function() {
+    $('#close_button').off('click');
+    $('#close_button').on('click', function(e) {
+        e.preventDefault();
+        //$("a[rel=#tvScreenOverlay]").overlay().close();
+        // $(".tvScreenOverlay").overlay().close();
+
+    });
+}
+var previewButton = function() {
+    $('#preview_button').off('click');
+    $('#preview_button').on('click', function(e) {
+        e.preventDefault();
+        var baseurl = $("#baseurl").val();
+        var entity_type = $("#eTvScreenAppearSetting_entity_type").val();
+        var refid = $(this).attr('refid');
+        window.open(baseurl + '/preview/question' + entity_type.charAt(0).toUpperCase() + entity_type.slice(1).toLowerCase() + '?id=' + refid);
+    });
+}
+var tabTrigger = function() {
+    $('.tabNav li').off('click');
+    $('.tabNav li').on('click', function(e) {
+        e.preventDefault();
+        if ($(this).attr('class') != 'selected') {
+            var formId = $(this).attr('formId');
+            $(".tabNav li").each(function(e) {
+                $(this).attr('class', '');
+                $("#" + $(this).attr('formId')).hide();
+            });
+            $("#" + formId).show();
+            $(this).attr('class', 'selected');
+        }
+
+    });
+}
+function getSlideSpeedSelected(elementID)
+{
+    $(elementID).attr('class', '');
+    $(elementID).prevAll().each(function(e) {
+        //console.log('prev'+$(this).attr('barValue'));
+        $(this).attr('class', '');
+        $(this).attr('class', 'bar barOnHover');
+    });
+    $(elementID).nextAll().each(function(e) {
+        //console.log('Next'+$(this).attr('barValue'));
+        $(this).attr('class', '');
+        $(this).attr('class', 'bar barOffHover');
+    });
+    $(elementID).addClass('bar barOnHover');
+
+}
+var slideSpeed = function() {
+
+    $('.graph div').off('hover');
+    $('.graph div').on('hover', function(e) {
+        e.preventDefault();
+        getSlideSpeedSelected(this);
+    });
+    // $('.graph div').off('mouseout');
+    $('.graph').mouseleave(function(e) {
+        e.preventDefault();
+        var slidSpeed = $('#eTvScreenAppearSetting_slide_speed').val();
+        getSlideSpeedSelected($("div").find("[barValue='" + slidSpeed + "']"));
+    });
+
+    $('.graph div').off('click');
+    $('.graph div').on('click', function(e) {
+        e.preventDefault();
+        $('#eTvScreenAppearSetting_slide_speed').val($(this).attr('barValue'));
+    });
+
+}
+var selectSpeedOnload = function() {
+    var slidSpeed = $('#eTvScreenAppearSetting_slide_speed').val();
+    getSlideSpeedSelected($("div").find("[barValue='" + slidSpeed + "']"));
+}
+var foreBackGroundOptions = function() {
+    $("input:radio[name=foreground_type]").off('change');
+    $("input:radio[name=foreground_type]").on('change', function(e) {
+        e.preventDefault();
+        if ($(this).val() == 'image') {
+            $('#foreOptionImage').show();
+            $('#foreOptionColor').hide();
+        } else {
+            $('#foreOptionImage').hide();
+            $('#foreOptionColor').show();
+        }
+
+    });
+
+}
+
+$(document).ready(function() {
+    saveSetting();
+    backgroundType();
+    GradientColorPickers();
+    onloadSelectBGOption();
+    selectImageTrigger();
+    deleteImage();
+    previewButton();
+    tabTrigger();
+    fontColorPicker();
+    slideSpeed();
+    selectSpeedOnload();
+    foreBackGroundOptions();
+});

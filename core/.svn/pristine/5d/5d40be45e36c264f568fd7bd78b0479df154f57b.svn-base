@@ -1,0 +1,108 @@
+/* 
+    Document   : _dashboard
+    Created on : Jun 17, 2013, 9:52:37 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the dashboard page should take place here.
+*/
+
+.fab-dashboard-stat {
+    margin-bottom : 25px;
+}
+
+.fab-dashboard-stat:before,
+.fab-dashboard-stat:after {
+    display     : table;
+    line-height : 0;
+    content     : "";
+}
+
+.fab-dashboard-stat:after {
+    clear : both;
+}
+
+.fab-dashboard-stat .fab-visual {
+    width        : 35%;
+    height       : 80px;
+    display      : block;
+    float        : left;
+    padding-top  : 10px;
+    padding-left : 10px;
+}
+
+.fab-dashboard-stat .fab-visual i {
+    font-size : 65px;
+    color     : #fff;
+}
+
+.fab-dashboard-stat .fab-details {
+    padding-right : 10px;
+    padding-top   : 10px;
+}
+
+.fab-dashboard-stat .fab-more {
+    clear       : both;
+    display     : block;
+    padding     : 5px 10px 5px 10px;
+    font-weight : 300;
+    font-size   : 11px;
+    color       : #fff;
+    opacity     : 0.7;
+    filter      : alpha(opacity=70);
+}
+
+.fab-dashboard-stat .fab-more i {
+    margin-top : 4px;
+    float      : right;
+}
+
+.fab-dashboard-stat .fab-more:hover {
+    text-decoration    : none;
+    -webkit-transition : all 0.1s ease-in-out;
+    -moz-transition    : all 0.1s ease-in-out;
+    -o-transition      : all 0.1s ease-in-out;
+    -ms-transition     : all 0.1s ease-in-out;
+    transition         : all 0.1s ease-in-out;
+    opacity            : 1;
+    filter             : alpha(opacity=100);
+}
+
+.fab-dashboard-stat.fab-blue .fab-more {
+    background-color : #208dbe;
+}
+
+.fab-dashboard-stat.fab-green {
+    background-color : #28b779;
+}
+
+.fab-dashboard-stat.fab-green .fab-more {
+    background-color : #10a062;
+}
+
+.fab-dashboard-stat.fab-red {
+    background-color : #e7191b;
+}
+
+.fab-dashboard-stat.fab-red .fab-more {
+    background-color : #bc0d0e;
+}
+
+.fab-dashboard-stat.fab-yellow {
+    background-color : #ffb848;
+}
+
+.fab-dashboard-stat.fab-yellow .fab-more {
+    background-color : #cb871b;
+}
+
+.fab-dashboard-stat.fab-purple {
+    background-color : #852b99;
+}
+
+.fab-dashboard-stat.fab-purple .fab-more {
+    background-color : #6e1881;
+}
+
+#graphWrap{
+    padding-left:20px;
+}

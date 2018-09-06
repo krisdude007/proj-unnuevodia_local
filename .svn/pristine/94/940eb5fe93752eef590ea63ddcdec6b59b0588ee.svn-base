@@ -1,0 +1,44 @@
+<?php
+
+class clientAdminVideoController extends AdminVideoController {
+
+    function init() {
+        parent::init();
+    }
+    public function actionAjaxVideoFTP() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+
+        $video = eVideo::model()->findByPk($id);
+
+        if (!is_null($video)) {
+
+            $videoExt = VideoUtility::getVideoFileExtention($video->processed);
+            $fileName = $video->filename . $videoExt;
+            $fileLocal = Yii::app()->params['paths']['video'] . '/' . $fileName;
+
+            if (!file_exists($fileLocal)) {
+                echo json_encode(array('response' => 'Cannot find local file.'));
+            }
+
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $fileLocal, $fileName);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $fileLocal));
+            }
+            else
+            {
+                //Cancel sending out Email on video submit.
+                //$userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                //$email = $userEmail->email;
+                //$viewKey = $video->view_key;
+                //ClientMailUtility::send('video on TV', $email, array('button'=>"<a href='http://{$_SERVER['HTTP_HOST']}/play/$viewKey'><button style='background-color:#f57a24;color:white;font-size:19px;padding:8px;'>WATCH YOUR VIDEO</button></a>",'link' => "<a href='http://{$_SERVER['HTTP_HOST']}/'>{$_SERVER['HTTP_HOST']}</a>"));
+            }
+        } else {
+            echo json_encode(array('response' => 'Unable to find video by id.'));
+        }
+    }
+}

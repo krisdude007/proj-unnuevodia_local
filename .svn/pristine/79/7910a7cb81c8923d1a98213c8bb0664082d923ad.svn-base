@@ -1,0 +1,15 @@
+<div class="homeTop">
+    <h5>Be on</h5>
+    <h2>&pictures</h2>
+</div>
+<img class=homeImage src="/webassets/mobile/images/Image_Hero2.png"/>
+<div class="homeFooter text-center">
+    <h5 class="text-center" style="text-align:center;">
+        <p>Upload a message for your <br/>Bollywood Star.</p>
+
+         <p>Get a chance to be on &pictures  <br/> with dil se.</p>
+
+    </h5>
+    <a href="<?php echo Yii::app()->createUrl('video/videoupload'); ?>" class="btn btn-default btn-block">Upload a Video</a>
+    <a href="<?php echo Yii::app()->createUrl('video/index'); ?>" class="btn btn-default btn-block">Watch Videos</a>
+</div>

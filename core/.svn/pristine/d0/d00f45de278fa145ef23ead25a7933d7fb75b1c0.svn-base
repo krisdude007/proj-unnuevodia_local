@@ -1,0 +1,29 @@
+/* 
+    Document   : _contact
+    Created on : Jun 25, 2013, 9:35:32 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the contact page should take place here.
+*/
+#fab-contact {
+    max-width: 570px;margin-top:29px;
+}
+
+.fab-controls-contact {
+    max-width:435px;
+}
+
+.fab-row-fluid .fab-span5 {
+    width:100% !important;
+}
+
+.fab-controls-message { 
+    max-width:555px;
+}
+
+.contactPoints{
+    font-size:14px;
+}
+.contactPoints div{
+    margin-bottom:20px
+}

@@ -1,0 +1,43 @@
+
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/preview/preview.css');
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+?>
+<div style="margin-top:80px;margin-bottom: 80px">
+    <center>
+        <div style="padding: 15px;">
+            <div style="font-size: 50px;color: #007a38;padding: 5px;">
+                <?php if (strtotime($activePoll->end_time) <= time()): ?>
+                    إغلاق التصويت
+                <?php else: ?>
+                    صوت الآن
+                <?php endif; ?>
+            </div>
+            <div style="font-size:18px;">
+                <?php echo $activePoll->question; ?>
+            </div>
+        </div>
+        <div>
+            <?php if (!is_null($activePoll)): ?>
+
+                <div style="padding: 10px;">
+                    <div class="afterVote">
+                        <div style="display:inline-block;">
+                            <div class="votegraphBG" class="floatLeft">
+                                <?php $this->renderPartial('_voteGraph', array('poll' => $activePoll)); ?>
+                                <div class="percentageBar">
+                                    <img src="/webassets/images/poll/votebar.png"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div style="padding-top:15px;">
+                    <div style="font-size: 50px;color: #007a38;padding: 5px;">لا تصويت مفتوح</div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </center>
+</div>

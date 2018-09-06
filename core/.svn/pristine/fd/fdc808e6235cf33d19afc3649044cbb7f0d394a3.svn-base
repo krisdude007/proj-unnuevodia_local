@@ -1,0 +1,204 @@
+<?php
+
+class GameController extends Controller {
+
+    public $activeNavLink = 'play';
+    public $layout = '//layouts/main';
+    //public $layout = 'none';
+    public $user;
+    public $ticker;
+    public $notification;
+
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        }
+    }
+
+    public function actionIndex() {
+
+    }
+
+    public function actionThankYou() {
+
+        unset(Yii::app()->session['transId']);
+        $creditTransaction = Yii::app()->user->getState('creditTransaction');
+        $gameChoiceAnswer = Yii::app()->user->getState('gameChoiceAnswer');
+        $game = Yii::app()->user->getState('game');
+        if (!(isset($gameChoiceAnswer->is_correct) && isset($creditTransaction->credits) && isset($game->price))) {
+            Yii::app()->user->setFlash('error', Yii::t('youtoo', "Page has been expired"));
+            $this->redirect(Yii::app()->createURL('site/index'));
+        }
+        Yii::app()->user->setState('creditTransaction', null);
+        Yii::app()->user->setState('gameChoiceAnswer', null);
+        Yii::app()->user->setState('game', null);
+        $this->render('thankyou', array(
+            'isCorrect' => $gameChoiceAnswer->is_correct,
+            'credit' => $creditTransaction->credits,
+            'date' => $creditTransaction->created_on,
+            'orderNo' => ($creditTransaction->id + 10000),
+            'price' => $game->price,
+        ));
+    }
+
+    public function actionReveal($id) {
+        $layout = false;
+
+        $reveal = eGameReveal::model()->findByPk((int) $id);
+
+        if ($reveal) {
+            $this->render('reveal', array(
+                'reveal' => $reveal,
+            ));
+        } else {
+            echo "No game with this ID exists.";
+            exit;
+        }
+    }
+
+    public function actionMultiple($id = NULL) {
+        if ($id == NULL) {
+            $game = eGameChoice::model()->multiple()->isActive()->with('gameChoiceAnswers')->find();
+        } else {
+            $game = eGameChoice::model()->multiple()->with('gameChoiceAnswers')->findByPk((int) $id);
+        }
+
+        $response = new eGameChoiceResponse;
+
+        if (empty(Yii::app()->session['transId'])) {
+            $this->redirect($this->createUrl('/playnow'));
+        } else {
+            if (Yii::app()->session['transId'] != '1234') {
+                $trans = eGamingTransaction::model()->findByPk(Yii::app()->session['transId']);
+                if (empty($trans->id)) {
+                    $this->redirect($this->createUrl('/playnow'));
+                }
+            }
+        }
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'game-choice-form') {
+            echo CActiveForm::validate($response);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eGameChoiceResponse'])) {
+            $response->attributes = $_POST['eGameChoiceResponse'];
+            $response->user_id = Yii::app()->user->getId();
+
+            if (empty($response->game_choice_answer_id)) {
+                Yii::app()->user->setFlash('error', 'Please choose an answer.' );
+                $this->redirect($this->createUrl('/game/multiple'));
+            }
+
+            if ($response->validate()) {
+                $response->save();
+
+                $transaction = new eCreditTransaction;
+                $transaction->game_type = "game_choice";
+                $transaction->game_id = $response->game_choice_id;
+                $transaction->type = "earned";
+
+                $answer = eGameChoiceAnswer::model()->findByPk($response->game_choice_answer_id);
+
+                $transaction->credits = $answer->point_value;
+                if (Yii::app()->session['transId'] == '1234') {
+                    $transaction->trans_id = NULL;
+                } else {
+                    $transaction->trans_id = Yii::app()->session['transId'];
+                }
+
+                $transaction->save();
+
+                Yii::app()->user->setState('creditTransaction', $transaction);
+                Yii::app()->user->setState('gameChoiceAnswer', $answer);
+                Yii::app()->user->setState('game', $game);
+
+                $this->redirect($this->createUrl('/game/thankyou'));
+            } else {
+                Yii::app()->user->setFlash('error', "Errors found!");
+            }
+        }
+
+        if ($game) {
+            $this->render('multiple', array(
+                'game' => $game,
+                'response' => $response,
+            ));
+        } else {
+            echo "No game with this ID exists.";
+        }
+    }
+
+    public function actionHotornot($id = NULL) {
+        if ($id == NULL) {
+            $game = eGameChoice::model()->hotornot()->isActive()->with('gameChoiceAnswers')->find();
+        } else {
+            $game = eGameChoice::model()->hotornot()->with('gameChoiceAnswers')->findByPk((int) $id);
+        }
+
+        $response = new eGameChoiceResponse;
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'game-choice-form') {
+            echo CActiveForm::validate($response);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eGameChoiceResponse'])) {
+            $response->attributes = $_POST['eGameChoiceResponse'];
+            $response->user_id = Yii::app()->user->getId();
+
+            if ($response->validate()) {
+                $response->save();
+
+                $transaction = new eCreditTransaction;
+                $transaction->game_type = "game_choice";
+                $transaction->game_id = $response->game_choice_id;
+                $transaction->type = "earned";
+
+                $answer = eGameChoiceAnswer::model()->findByPk($response->game_choice_answer_id);
+
+                $transaction->credits = $answer->point_value;
+                $transaction->save();
+                Yii::app()->user->setState('creditTransaction', $transaction);
+                Yii::app()->user->setState('gameChiceAnswer', $answer);
+                Yii::app()->user->setState('game', $game);
+                $this->redirect($this->createUrl('/game/thankyou'));
+            } else {
+                Yii::app()->user->setFlash('error', "Errors found!");
+            }
+        }
+
+        if ($game) {
+            $this->render('hotornot', array(
+                'game' => $game,
+                'response' => $response,
+            ));
+        } else {
+            echo "No game with this ID exists.";
+        }
+    }
+
+    public function actionAjaxRevealGridGet() {
+        $layout = false;
+
+        $grid_id = $_POST['grid_id'];
+
+        if (isset($grid_id)) {
+            $revealGrid = eGameRevealGrid::model()->findAllByAttributes(array('reveal_id' => $grid_id));
+            if ($revealGrid)
+                ; {
+                $rows = array();
+                foreach ($revealGrid as $grid) {
+                    $rows[] = $grid->attributes;
+                }
+                echo json_encode($rows);
+            }
+        }
+
+        Yii::app()->end();
+    }
+
+}

@@ -1,0 +1,75 @@
+/* 
+    Document   : _demographic
+    Created on : Aug 23, 2013, 11:40:49 AM
+    Author     : Lee Elliott
+    Description:
+        Fine tuning of the demographics page here
+*/
+
+#tabs ul{
+    height: 35px;
+}
+
+.jqplot-table-legend{
+    right: -10px !important;
+}
+
+.jqplot-target{
+    padding:0px 20px;
+}
+
+#tabs-1, #tabs-2{
+    border-left:1px solid #ABA9A9;
+    border-right:1px solid #ABA9A9;
+    border-bottom:1px solid #ABA9A9;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active{
+    border-left:1px solid #ABA9A9;
+    border-right:1px solid #ABA9A9;
+    border-top:1px solid #ABA9A9;
+    border-bottom:1px solid #fff;
+}
+
+.ui-tabs .ui-tabs-nav{
+    border-bottom: 1px solid #ABA9A9;
+}
+
+#map{
+    height:300px;
+    margin-top:4px;
+}
+
+.iPhoneCheckHandleCenter {
+    height: 26px !important;
+}
+
+#map label{
+    display:inline !important;
+}
+
+table.dataTable td{
+    color:#fff;
+}
+
+table.dataTable th{
+    border:1px solid black;
+    text-align:left;
+}
+
+.dataTables_filter {
+    padding-bottom:0px !important;
+}
+
+img {
+    max-width: initial;
+}
+
+body {
+    line-height: initial;
+}
+
+table {
+    border-collapse: inherit;
+    border-spacing: initial;
+}

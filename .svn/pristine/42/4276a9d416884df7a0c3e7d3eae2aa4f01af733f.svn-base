@@ -1,0 +1,24 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery-ui-1.10.0.css');
+Yii::app()->clientScript->registerScriptFile('http://cdn.jquerytools.org/1.2.7/all/jquery.tools.min.js', CClientScript::POS_END);
+?>
+<div id="registerTerms" style="position:absolute; display:none; background-image: url('/core/webassets/images/shadow.png'); width: 980px; height: 437px;">
+    <div class="orange closeBar" onclick="$('#registerTerms').toggle();">X</div>
+    <div style="background-color: #fff;padding:20px;margin-left:230px;width:504px;height:349px;overflow:auto" class="jspScrollable scroll-pane">                    
+        <?php $this->renderPartial('/user/_terms'); ?>                    
+    </div>
+</div>
+<div id="content">
+    <?php
+    $this->renderPartial('/user/_formRegister', array(
+        'user' => $user,
+        'userEmail' => $userEmail,
+        'userLocation' => $userLocation,
+            )
+    );
+    ?>
+</div>

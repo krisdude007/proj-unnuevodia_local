@@ -1,0 +1,200 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerScript('maxActives', "var maxActives = $maxActives", CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/adminQuestion/index.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/adminQuestion/index.css');
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+$this->renderPartial('/admin/_csrfToken');
+?>
+
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title">
+            <img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/dashboard-icon.png"/>
+            <div style="float:left;"><?php echo ucfirst($q_type); ?> Question Editor</div>
+            <?php if(TICKER_BREAKING && $q_type == 'ticker'):
+                $this->renderPartial('/admin/_breakingTweetsShortNav');
+            endif; ?>
+        </h2>
+        
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+
+        <!-- END PAGE HEADER-->
+        <div id="fab-dashboard">
+            <div style="padding:0px 20px 0px 20px;">    
+                <div>
+                    <h2>Create New Question:</h2>
+                    <?php
+                    /* @var $this AdminController */
+                    /* @var $model Question */
+                    /* @var $form CActiveForm */
+                    ?>
+            <a href='/admin/socialstream/?hashtag=%s'>Stream</a><br/>
+
+                    <div class="form">
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'admin-questionEditor-form',
+                            'enableAjaxValidation' => true,
+                                ));
+                        ?>    
+                        <?php echo $form->errorSummary($model); ?>
+                        <div class="clearfix">
+                            <?php echo $form->labelEx($model, 'question'); ?>
+                            <?php echo $form->textField($model, 'question',array('maxlength' => '140', 'class' => 'counter')); ?>
+                            <?php echo $form->error($model, 'question'); ?>
+                        </div>
+                        <div class="clearfix">
+                            <?php echo $form->labelEx($model, 'hashtag'); ?>
+                            <?php echo $form->textField($model, 'hashtag',array('maxlength' => '30', 'class' => 'counter linkToeQuestion_question')); ?>
+                            <?php echo $form->error($model, 'hashtag'); ?>
+                        </div>
+                        <div class="clearfix">
+                            <?php echo $form->hiddenField($model, 'end_time', array('value' => date('Y-m-d', QUESTION_DEFAULT_END_TIME))); ?>            
+                            <?php echo $form->hiddenField($model, 'start_time', array('value' => date('Y-m-d', time()))); ?>   
+                            <?php echo $form->hiddenField($model, 'is_ticker', array('value' => $is_ticker)); ?>
+                            <?php echo CHtml::submitButton('Submit'); ?>
+                        </div>
+
+                        <?php $this->endWidget(); ?>
+
+                    </div><!-- form -->
+
+                </div>
+                <div style="margin-top:40px;">
+                    <h2>Edit Question:</h2>
+                    <div style="margin-bottom:20px">
+                        Click on the column title to sort by that column.<br>
+                        Click on any question details to edit them.
+                    </div>        
+                    <table id="questionTable">
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Update</th>
+                                <th>Question</th>
+                                <th>Hashtag</th>
+                                <th>Social</th>
+                                <th>Post</th>
+                                <?php if($is_ticker): ?>
+                                <th>Question Ticker XML</th>
+                                <?php endif; ?>
+                                <th>Responses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if($is_ticker)
+                            {
+                                $rowFormat = "
+                                <tr>
+                                    <td style='text-align:center;width:50px' class='%s'>
+                                        <button type='button' class='setQuestionState' rel='%s' rev='%s'>%s</button>
+                                    </td>
+                                    <td>%s</td>
+                                    <td><a href='#' class='edit' rel='question' rev='%s'>%s</a></td>
+                                    <td><a href='#' class='edit' rel='hashtag' rev='%s'>%s</a></td>
+                                    <td>
+                                        <!--<a href='/admin/socialstream/?hashtag=%s'>Stream</a><br/>-->
+                                        <a href='/admin/socialsearch/?hashtag=%s'>Search</a>
+                                    </td>
+                                    <td>
+                                        <!--<a rev='%s' href='#' id='clientShareFacebookTrigger'><img alt='%s' style='max-width:initial' class='videoIcon videoIconFacebook' src='/core/webassets/images/facebook-transparent.png' /></a>-->
+                                        <a rev='%s' href='#' id='clientShareTwitterTrigger'><img alt='%s' style='max-width:initial' class='videoIcon videoIconTwitter' src='/core/webassets/images/twitter-transparent.png' /></a>
+                                    </td>
+                                    <td>
+                                        <a href='%s' target='_blank' rel='xml' rev='%s'>%s</a>
+                                        <a href='%s' target='_blank' rel='preview' rev='%s'>%s</a>
+                                    </td>
+                                    <td style='border:0px;padding:0px !important'>
+                                        <table style='width:100%%'>
+                                        <tr style='background:#FFF'>
+                                            <th style='width:50%%'>Tickers</th>
+                                        </tr>
+                                        %s
+                                        </table>
+                                    </td>
+                                </tr>";
+                            }
+                            else
+                            {
+                                $rowFormat = "
+                                <tr>
+                                    <td style='text-align:center;width:50px' class='%s'>
+                                        <button type='button' class='setQuestionState' rel='%s' rev='%s'>%s</button>
+                                    </td>
+                                    <td>%s</td>
+                                    <td><a href='#' class='edit' rel='question' rev='%s'>%s</a></td>
+                                    <td><a href='#' class='edit' rel='hashtag' rev='%s'>%s</a></td>
+                                    <td>
+                                        <!--<a href='/admin/socialstream/?hashtag=%s'>Stream</a><br/>-->
+                                        <a href='/admin/socialsearch/?hashtag=%s'>Search</a>
+                                    </td>
+                                    <td>
+                                        <!--<a rev='%s' href='#' id='clientShareFacebookTrigger'><img alt='%s' style='max-width:initial' class='videoIcon videoIconFacebook' src='/core/webassets/images/facebook-transparent.png' /></a>-->
+                                        <a rev='%s' href='#' id='clientShareTwitterTrigger'><img alt='%s' style='max-width:initial' class='videoIcon videoIconTwitter' src='/core/webassets/images/twitter-transparent.png' /></a>
+                                    </td>
+                                    <td style='border:0px;padding:0px !important'>
+                                        <table style='width:100%%'>
+                                        <tr style='background:#FFF'>
+                                            <th style='width:50%%'>Videos</th>
+                                        </tr>
+                                        %s
+                                        </table>
+                                    </td>
+                                </tr>";
+                            }
+                            
+                            $totalFormat = "
+                                <tr>
+                                    <td>%s</td>
+                                </tr>";
+                            $i = 0;
+                            foreach ($questions as $k => $v) {
+                                $active = strtotime($v->start_time) <= time() && time() <= strtotime($v->end_time) ? 'active' : 'inactive';
+                                
+                                if($is_ticker)
+                                {
+                                    echo sprintf($rowFormat, 
+                                        $active, 
+                                        $v->id, ($active == 'active') ? date('Y-m-d', time()) : date('Y-m-d', QUESTION_DEFAULT_END_TIME), ($active == 'active') ? 'Stop' : 'Start',
+                                        $v->updated_on,    
+                                        $v->id, (!empty($v->question)) ? $v->question : '*', 
+                                        $v->id, (!empty($v->hashtag)) ? $v->hashtag : '*', 
+                                        $v->hashtag,$v->hashtag,    
+                                        $v->id, $v->id,
+                                        $v->id, $v->id,
+                                        '/XML/questionTicker?id='.$v->id, $v->id, $v->id . '.xml', '/preview/questionTicker?id='.$v->id, $v->id, ' - Preview Ticker' ,
+                                        sprintf($totalFormat,$v->tickerTally)                                        
+                                    );
+                                }
+                                else
+                                {
+                                    echo sprintf($rowFormat, 
+                                        $active, 
+                                        $v->id, ($active == 'active') ? date('Y-m-d', time()) : date('Y-m-d', QUESTION_DEFAULT_END_TIME), ($active == 'active') ? 'Stop' : 'Start',
+                                        $v->updated_on,    
+                                        $v->id, (!empty($v->question)) ? $v->question : '*', 
+                                        $v->id, (!empty($v->hashtag)) ? $v->hashtag : '*', 
+                                        $v->hashtag,$v->hashtag,    
+                                        $v->id, $v->id,
+                                        $v->id, $v->id,
+                                        sprintf($totalFormat,$v->videoTally)                                        
+                                    );
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

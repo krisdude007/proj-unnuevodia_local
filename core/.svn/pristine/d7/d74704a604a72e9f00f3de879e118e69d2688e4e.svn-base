@@ -1,0 +1,35 @@
+<?php
+
+class FormEmailAssistance extends CFormModel {
+
+    public $name;
+    public $email;
+    public $phone;
+    public $body;
+    
+    public function rules() {
+      
+      $email_regex_pattern = '/^[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z](?:[a-zA-Z]*[a-zA-Z])?$/';
+
+        return array(
+            array('name, email, phone, body', 'required'),
+            array('email', 'email', 'pattern' => $email_regex_pattern),
+            array('name, email, phone, body', 'safe')
+        );
+
+        return $rules;
+    }
+
+    /**
+     * Declares attribute labels.
+     */
+    public function attributeLabels() {
+        return array(
+            'name' => 'Name',
+            'email' => 'Email',
+            'phone' => 'Phone Number',
+            'body' => 'Body'
+        );
+    }
+
+}

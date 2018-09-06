@@ -1,0 +1,1 @@
+<div id="startDate" style="display:none;"><?php echo(Yii::app()->params['analytics']['startDate']); ?></div>

@@ -1,0 +1,78 @@
+<?php
+/* @var $this UserController */
+/* @var $user User */
+/* @var $form CActiveForm */
+?>
+
+<?php
+if ($user->scenario === 'changePassword') {
+    $action = '/user/password';
+} else if ($user->scenario === 'resetPassword') {
+    $action = '/user/resetpassword';
+}
+
+$form = $this->beginWidget('CActiveForm', array(
+    'action' => $action,
+    'id' => 'user-password-form',
+    'enableAjaxValidation' => true,
+    'clientOptions' => array(
+        'validateOnSubmit' => true,
+        'validateOnChange' => true,
+        'validateOnType' => false,
+    ),
+));
+echo $form->errorSummary(array($user));
+?>
+
+<table class="userPasswordForm">
+    <?php if ($user->scenario === 'changePassword'): ?>
+        <tr>
+            <td>old password</td>
+        </tr>
+        <tr class="spaceUnder">
+            <td>
+                <?php echo $form->passwordField($user, 'oldPassword'); ?>
+                <?php echo $form->error($user, 'oldPassword'); ?>
+            </td>
+        </tr>
+    <?php elseif ($user->scenario === 'resetPassword'): ?>
+        <tr>
+            <td>
+                <h4>reset your password</h4>
+                <br />
+            </td>
+        </tr>
+    <?php endif; ?>
+
+    <tr>
+        <td>new password</td>
+    </tr>
+    <tr class="spaceUnder">
+        <td>
+            <?php echo $form->passwordField($user, 'newPassword'); ?>
+            <?php echo $form->error($user, 'newPassword'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>confirm password</td>
+    </tr>
+    <tr class="spaceUnder">
+        <td>
+            <?php echo $form->passwordField($user, 'newPasswordConfirm'); ?>
+            <?php echo $form->error($user, 'newPasswordConfirm'); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding-top:10px;">
+            <?php echo CHtml::submitButton('submit'); ?>
+        </td>
+    </tr>
+</table>
+<?php $this->endWidget(); ?>
+
+<?php if ($user->scenario === 'changePassword'): ?>
+    <div style="float:left; margin-top:18px; margin-left:10px;">
+        <a href="<?php echo Yii::app()->request->baseurl; ?>/forgot" style="font-size:12px; text-decoration:underline;">forgot your password?</a>
+    </div>
+<?php endif; ?>

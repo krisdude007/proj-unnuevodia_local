@@ -1,0 +1,27 @@
+<?php
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminVideo/videoSchedulerModal.js', CClientScript::POS_END);
+?>
+
+<div class="fab-row-fluid" style="color: #fff;">
+  <h1>Network Scheduler</h1>
+  <hr/>
+</div>
+
+<div class="fab-row-fluid" style="color: #fff;">
+  <div id="videoSchedulerModalTabs">
+    <ul>
+      <li><a href="#tab-schedule">Scheduler</a></li>
+      <li><a href="#tab-schedule-history">History</a></li>
+    </ul>
+    <div id="tab-schedule">
+      asdasdasdasd
+    </div>
+
+
+    <div id="tab-schedule-history">
+      Coming soon.
+    </div>
+
+
+  </div>
+</div>

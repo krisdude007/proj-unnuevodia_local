@@ -1,0 +1,118 @@
+<?php
+
+class VideoImportUtility {
+
+    public $categoryIdentifier; // hashtag etc.
+    public $numVideos; // number of videos to return
+    public $source; // vine, youtube etc.
+    private $sourceUtilityInstance;
+
+    public function __construct($source, $categoryIdentifier, $numVideos) {
+
+        $this->source = $source;
+        $this->categoryIdentifier = $categoryIdentifier;
+        $this->numVideos = $numVideos;
+        return $this->loadSourceInstance();
+    }
+
+    private function loadSourceInstance() {
+
+        $sourceUtilityClassName = $this->source . 'Utility';
+
+        if (class_exists($sourceUtilityClassName)) {
+            $this->sourceUtilityInstance = new $sourceUtilityClassName();
+            return true;
+        } else {
+            Yii::app()->user->setFlash('error', "Unable to locate Utility for " . $this->source);
+            return false;
+        }
+    }
+
+    public function importVideos() {
+
+        if ($this->sourceUtilityInstance->connected === true) {
+            return $this->importVine();
+        } else {
+            Yii::app()->user->setFlash('error', "Unable to authenticate to " . $this->source);
+            return false;
+        }
+    }
+
+    public function importVine() {
+
+        // all vine specific
+        // must abstract
+        $this->categoryIdentifier = str_replace('#', '', $this->categoryIdentifier);
+        $userInfo = $this->sourceUtilityInstance->getUserInfo();
+        $timeLine = $this->sourceUtilityInstance->getTimeline($userInfo["key"], $userInfo["userId"], $this->categoryIdentifier, $this->numVideos);
+        $timelineArray = json_decode($timeLine, true);
+        $numVideos = count($timelineArray['data']['records']);
+
+        $videosImported = 0;
+        for ($i = 0; $i < $numVideos; $i++) {
+
+            $urlArray = array();
+            $urlArray['urlForSharing'] = $timelineArray['data']['records'][$i]['shareUrl'];
+            $urlArray['urlToVideo'] = $timelineArray['data']['records'][$i]['videoUrl'];
+            $tmp_array = explode('v/', $urlArray['urlForSharing']); // grab the original filename from the url
+            $filenameDb = $tmp_array[1];
+            $filename = $filenameDb . VIDEO_IMPORT_VINE_FILE_EXT;
+            $filenamePng = $filenameDb . '.png';
+            $fileLocationMp4 = Yii::app()->params['paths']['video'] . '/' . $filename;
+            $fileLocationTmpMp4 = Yii::app()->params['paths']['video'] . '/' .  $filenameDb . '_bak' . VIDEO_IMPORT_VINE_FILE_EXT;
+            $fileLocationPng = Yii::app()->params['paths']['video'] . '/' . $filenamePng;
+
+            // see if video already exists
+            $videoExists = eVideo::model()->findByAttributes(array('filename' => $filenameDb));
+            if ($videoExists) {
+                continue;
+            }
+
+            // pull the video from vine
+            $videoFileContents = file_get_contents($urlArray['urlToVideo']);
+            if (!file_put_contents($fileLocationMp4, $videoFileContents)) {
+                continue;
+            }
+
+            // rescale vine video to match our convention
+            VideoUtility::ffmpegRescaleVideo($fileLocationMp4, $fileLocationTmpMp4);
+
+            // generate thumb
+            VideoUtility::ffmpegGenerateThumbFromVideo($fileLocationMp4, $fileLocationPng);
+
+            // get info from video
+            $videoData = VideoUtility::ffprobeVideo($fileLocationMp4);
+
+            // get frame rate
+            $frame_rate_str = $videoData->streams[0]->r_frame_rate;
+            $frameRate = round(eval("return ($frame_rate_str);"), 2);
+
+            // insert new video record
+            $video = new eVideo();
+            $video->user_id = Yii::app()->user->getId();
+            $video->question_id = 1;
+            $video->filename = $filenameDb;
+            $video->thumbnail = $filenameDb;
+            $video->processed = 1;
+            $video->watermarked = 0;
+            $video->title = "{$this->source} Video";
+            $video->description = "Video created via {$this->source} on {$videoData->format->tags->creation_time}.";
+            $video->duration = round($videoData->format->duration, 2);
+            $video->frame_rate = $frameRate;
+            $video->source = strtolower($this->source);
+            $video->to_youtube = 0;
+            $video->to_facebook = 0;
+            $video->to_twitter = 0;
+            $video->arbitrator_id = Yii::app()->user->getId();
+            $video->status = 'new';
+            
+            if($video->save()) {
+                ++$videosImported;
+            }
+        }
+        
+        Yii::app()->user->setFlash('success', "Successfully imported {$videosImported} video from {$this->source}.");
+    }
+
+}
+

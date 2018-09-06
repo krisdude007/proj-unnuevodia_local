@@ -1,0 +1,72 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminCampaign/index.css');
+ 
+ 
+Yii::app()->clientScript->registerScriptFile('/core/webassets/js/adminCampaign/index.js', CClientScript::POS_END);
+ 
+?>
+
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+
+     
+    <div class="campaign_top_bar">
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/campaign/campaign_manager_icon.png" />
+        <a href='<?php echo $this->createUrl('/adminCampaign'); ?>' >Campaign Manager</a>
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='campaign_container'>
+    		<div class='fab-row-fluid'>
+        		<div class="btn-group">
+    				<button class="fab-btn" >Home</button>
+    				 
+    			</div>
+                <div class="btn-group">
+                    <a class="fab-btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Campaign
+                    <span class="caret"></span>
+                    </a>
+                    <ul class="fab-dropdown-menu">
+                    	<li><a href="<?php echo  $this->createUrl('adminCampaign/create'); ?>">New Campaign</a></li>
+                    	<li><a href="#">Stop Campaign</a></li>
+                    	<li><a href="#">View Campaigns</a></li>
+                    	<li><a href="#">Edit Campaigns</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+    				<a class="fab-btn dropdown-toggle" data-toggle="dropdown" href="#">
+    				Edit <span class="caret"></span>
+    				<!-- <i class="icon-angle-down"></i> -->
+    				</a>
+    				<ul class="fab-dropdown-menu">
+    					<li><a href="#">Edit Accounts</a></li>
+    					<li><a href="#">Edit Show Details</a></li>
+    					<li><a href="#">Edit Package</a></li>
+    				</ul>
+    			</div>
+    			<div class="btn-group">
+    				<button class="fab-btn fab-green" >New Post </button>
+    				 
+    			</div>
+    			 
+
+        	</div>
+             
+              
+             
+            <div class="campaign_subtitle">Edit Campaign</div>
+            <div class="campaign_divider"></div>
+            <?php $this->renderPartial('_campaign_form', array('campaign'=>$campaign)); ?>
+        </div>
+         
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+
+ 
+ 

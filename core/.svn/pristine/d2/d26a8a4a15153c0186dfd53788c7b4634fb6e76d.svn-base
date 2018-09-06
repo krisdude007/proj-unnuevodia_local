@@ -1,0 +1,435 @@
+
+$(document).ready(function() {
+    socialHandlers();
+    datePickerHandlers();
+    autoCompleteHandlers();
+    overlayHandlers();
+    imageStatusHandlers();
+    imageFilterHandlers();
+    buttonHandlers();
+});
+
+
+/**
+ * Takes a status and updates all checked images with that status
+ */
+function updateAllImageStatuses(newStatus, currentStatus) {
+    var id = null;
+
+    $('.fab-main-images').find('input:checkbox').each(function() {
+        id = $(this).attr('value');
+        if ($(this).is(':checked')) {
+            updateImageStatus(newStatus, currentStatus, id);
+        }
+
+        var clickedElement = null;
+        switch (newStatus) {
+            case 'accepted':
+                clickedElement = $("#imageAcceptAll");
+                break;
+            case 'denied':
+                clickedElement = $("#imageDenyAll");
+                break;
+        }
+
+        // uncheck the ALL checkboxes
+        $('#fab-check_box').prop('checked', false);
+        // remove greyed out button class
+        clickedElement.removeClass("fab-grey");
+    });
+}
+
+/**
+ * Takes a status and video id, and updates that video with that status
+ */
+function updateImageStatus(newStatus, currentStatus, imageId) {
+
+    var request = $.ajax({
+        url: '/adminImage/ajaxImageUpdateStatus',
+        type: 'POST',
+        data: ({
+            'status': newStatus,
+            'currentStatus': currentStatus,
+            'imageId': imageId,
+            'CSRF_TOKEN': getCsrfToken()
+        }),
+        success: function(data) {
+            // if current filter is all, do not hide
+            // the video
+            if (currentStatus != 'all') {
+                $("#image" + imageId).hide(1000);
+            } else {
+                if (newStatus == 'accepted') {
+
+                    $("#image" + imageId).fadeOut(500, function() {
+                        $('#fab-accept-button' + imageId).hide();
+                        $('#fab-deny-button' + imageId).show();
+                        $("#imageIcons" + imageId).show();
+                        $("#image" + imageId).fadeIn(500);
+                    });
+
+                } else {
+
+                    $("#image" + imageId).fadeOut(500, function() {
+                        $('#fab-deny-button' + imageId).hide();
+                        $('#fab-accept-button' + imageId).show();
+                        $("#imageIcons" + imageId).hide();
+                        $("#image" + imageId).fadeIn(500);
+                    });
+                }
+            }
+        },
+        error: function(data) {
+            console.log(data);
+            alert('Unable to update image status.');
+            return false;
+        }
+    });
+}
+
+
+
+/**
+ * Handlers
+ */
+var socialHandlers = function() {
+    $('#clientShareTwitterTrigger, #clientShareTwitterModalTrigger').off('click');
+    $('#clientShareTwitterTrigger, #clientShareTwitterModalTrigger').on('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to Tweet this?')) {
+            var image_id = $(this).attr('rev');
+            var message = $('#message').val();
+            var elem = $(this).replaceWith($('<img></img>').attr({
+                'id': 'spinner_tw_' + image_id,
+                'src': '/core/webassets/images/socialSearch/ajaxSpinner.gif'
+            }).css({
+                'width': '25px'
+            }));
+            var request = $.ajax({
+                url: "/admin/ajaxClientShareTwitter",
+                type: 'POST',
+                data: ({
+                    'CSRF_TOKEN': getCsrfToken(),
+                    'type': 'image',
+                    'id': image_id,
+                    'message': message,
+                }),
+                success: function(data) {
+                    alert('Twitter Says: ' + data);
+                    $('#spinner_tw_' + image_id).replaceWith(elem);
+                    socialHandlers();
+                }
+            });
+        }
+    });
+    $('#clientShareFacebookTrigger, #clientShareFacebookModalTrigger').off('click');
+    $('#clientShareFacebookTrigger, #clientShareFacebookModalTrigger').on('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to post this to facebook?')) {
+            var image_id = $(this).attr('rev');
+            var message = $('#message').val();
+            var elem = $(this).replaceWith($('<img></img>').attr({
+                'id': 'spinner_fb_' + image_id,
+                'src': '/core/webassets/images/socialSearch/ajaxSpinner.gif'
+            }).css({
+                'width': '25px'
+            }));
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    var request = $.ajax({
+                        url: "/user/ajaxFacebookConnect",
+                        type: 'POST',
+                        data: ({
+                            'CSRF_TOKEN': getCsrfToken(),
+                            'accessToken': response.authResponse.accessToken,
+                            'expiresIn': response.authResponse.expiresIn,
+                            'userID': response.authResponse.userID
+                        }),
+                        success: function(data) {
+                            var request = $.ajax({
+                                url: "/admin/ajaxClientShareFacebook",
+                                type: 'POST',
+                                data: ({
+                                    'CSRF_TOKEN': getCsrfToken(),
+                                    'type': 'image',
+                                    'id': image_id,
+                                    'message': message,
+                                }),
+                                success: function(data) {
+                                    alert('Facebook Says: ' + data);
+                                    $('#spinner_fb_' + image_id).replaceWith(elem);
+                                    socialHandlers();
+                                },
+                                error: function(msg) {
+                                    alert(msg.status);
+                                }
+                            });
+                        },
+                        error: function(msg) {
+                            alert(msg.status);
+                        }
+                    });
+                }
+            }, {
+                scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update,manage_pages'
+            });
+        }
+    });
+}
+
+var datePickerHandlers = function() {
+    // datepickers for datestart datestop on video filters
+    $("#datepickerVideoFilterStart").datepicker({
+        maxDate: "0"
+    });
+    $("#datepickerVideoFilterStop").datepicker({
+        maxDate: "0"
+    });
+}
+
+var autoCompleteHandlers = function() {
+    // autocomplete for user filter
+    var cache = {};
+    var dataCache;
+    var uiItem;
+    var userId;
+
+    $("#userAutoCompleter").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            var term = request.term;
+
+            if (term in cache) {
+                response(cache[ term ]);
+                return;
+            }
+
+            $.getJSON("/adminImage/ajaxImageGetUsers", request, function(data, status, xhr) {
+                cache[ term ] = data;
+                dataCache = data;
+                response(data);
+            });
+        },
+        select: function(event, ui) {
+            // iterate thru cached data to find associated user id
+            uiItem = ui.item.value;
+
+            for (i = 0; i < dataCache.length; i++) {
+                if (dataCache[i].label == uiItem) {
+                    userId = dataCache[i].id;
+                    uiItem = userId;
+                    $("#userIdAutoComplete").val(userId);
+
+                }
+            }
+        }
+    });
+}
+
+var overlayHandlers = function() {
+    /**
+     * IMAGE OVERLAY
+     * Provides method for showing overlay when video is clicked or when history
+     * is clicked.
+     */
+    $("a[rel], button[rel]").overlay({
+        mask: '#000',
+        effect: 'default',
+        top: 25,
+        closeOnClick: true,
+        closeOnEsc: true,
+        fixed: true,
+        oneInstance: true,
+        api: true,
+        onBeforeLoad: function() {
+            // grab wrapper element inside content
+            var wrap = this.getOverlay().find(".imageModalContent");
+
+            // load the page specified in the trigger
+            var url = this.getTrigger().attr("href");
+
+            // quick hack to tack on status for video modal
+            if (this.getTrigger().attr("class") == 'imageModalTrigger') {
+                url = url + $('#fab-select-accept').val();
+            }
+            wrap.html('');
+            wrap.load(url);
+        }
+    });
+}
+
+var imageStatusHandlers = function() {
+    /**
+     * Handle accept/deny buttons
+     */
+    $('.fab-accept-button, .fab-modal-accept-button').each(function() {
+        status = $(this).val();
+        if (status == 'all')
+        {
+            $(this).hide();
+        }
+        else if (status != 'accepted' || status == 'new') {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+
+    $('.fab-deny-button, .fab-modal-deny-button').each(function() {
+        status = $(this).val();
+        if (status == 'all')
+        {
+            $(this).hide();
+        }
+        else if (status != 'denied' || status == 'new') {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+    /*
+     $('#imageAcceptAll').click(function() {
+     updateAllImageStatuses('accepted');
+     });
+
+     $('#imageDenyAll').click(function() {
+     updateAllImageStatuses('denied');
+     });
+     */
+    /**
+     * Handler for checkboxes
+     */
+    $('#fab-check_box').click(function() {
+
+        var checked_status = this.checked;
+        $('.fab-main-images').find('input:checkbox').each(function() {
+            this.checked = checked_status;
+        });
+    });
+
+    var optionVal = $("#fab-select-accept").val();
+    if (optionVal == 'v1') {
+        $(".fab-accepted-image").show();
+        $(".fab-not-accepted-image").hide();
+    } else if (optionVal == 'v2') {
+        $(".fab-accepted-image").hide();
+        $(".fab-not-accepted-image").show();
+    }
+
+    $("#fab-select-accept").change(function() {
+        var optionVal = $(this).val();
+        if (optionVal == 'v1') {
+            $(".fab-accepted-image").show();
+            $(".fab-not-accepted-image").hide();
+        } else if (optionVal == 'v2') {
+            $(".fab-accepted-image").hide();
+            $(".fab-not-accepted-image").show();
+        }
+
+    });
+}
+
+var imageFilterHandlers = function() {
+    /**
+     * Handle results per page
+     */
+    $('#perPage').change(function() {
+        window.location = '/adminImage/index?perPage=' + $(this).val();
+    });
+
+    /**
+     * Advanced filtering button
+     */
+    $("#fab-advanced-button").click(function() {
+        if ($("#fab-advanced-filtering").hasClass('fab-show')) {
+            $("#fab-advanced-filtering").removeClass('fab-show');
+            $("#fab-advanced-filtering").addClass('fab-hide');
+
+            $(".fab-form-right").css('height', '115px');
+        } else {
+            $("#fab-advanced-filtering").removeClass('fab-hide');
+            $("#fab-advanced-filtering").addClass('fab-show');
+            $(".fab-form-right").css('height', '144px');
+        }
+    });
+}
+
+var buttonHandlers = function() {
+    // fb, twitter, ftp video icons
+    $('.imageIconFTP').off('click');
+    $('.imageIconFTP').on('click', function(e) {
+        e.preventDefault();
+        imageFtp($(this));
+    });
+
+
+
+    $(".imageIcon").hover(
+            function() {
+                $(this).css('cursor', 'pointer');
+                $(this).fadeTo('fast', 0.5, function() {
+                });
+            },
+            function() {
+                $(this).css('cursor', 'pointer');
+                $(this).fadeTo('fast', 1, function() {
+                });
+            }
+    );
+
+    $("button").hover(
+            function() {
+                $(this).addClass('fab-grey');
+            },
+            function() {
+                $(this).removeClass('fab-grey');
+            }
+    );
+
+    $("button").click(function(e) {
+        e.preventDefault();
+    });
+}
+
+
+
+/**
+ * Takes a status and video id, and updates that video with that status
+ */
+function imageFtp(buttonObj) {
+
+    var id = $(buttonObj).attr('alt');
+
+    if (confirm('Are you sure you want to upload this image?')) {
+
+        var elem = $(buttonObj).replaceWith($('<img></img>').attr({
+            'id': 'spinner_ftp_' + id,
+            'src': '/core/webassets/images/socialSearch/ajaxSpinner.gif'
+        }).css({
+            'width': '20px',
+            'margin-top': '4px'
+        }));
+
+
+        var request = $.ajax({
+            url: '/adminImage/ajaxImageFTP',
+            type: 'POST',
+            data: ({
+                'id': id,
+                'CSRF_TOKEN': getCsrfToken()
+            }),
+            dataType: "json",
+            success: function(data) {
+                $('#spinner_ftp_' + id).replaceWith(elem);
+                alert(data.response);
+                return true;
+            },
+            error: function(data) {
+                $('#spinner_ftp_' + id).replaceWith(elem);
+                alert('Unable to FTP image to client server.');
+                return false;
+            }
+        });
+
+    }
+}

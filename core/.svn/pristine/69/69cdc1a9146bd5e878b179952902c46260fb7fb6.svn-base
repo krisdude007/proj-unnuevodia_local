@@ -1,0 +1,29 @@
+<?php
+
+class ImageUtility {
+    
+
+    // gets values for image status dropdown
+        public static function getStatuses() {
+        $admin = array('new' => 'New',
+            'accepted' => 'Accepted');
+
+        if (Yii::app()->user->isSuperAdmin()) {
+            $superAdmin = array('denied' => 'Deleted',
+                'all' => 'All');
+        }
+
+        return CMap::mergeArray($admin, $superAdmin);
+    }
+    
+    public static function getPerPageOptions() {
+        return array('12' => '12',
+            '24' => '24',
+            '36' => '36',
+            '48' => '48'
+        );
+    }
+
+}
+
+?>

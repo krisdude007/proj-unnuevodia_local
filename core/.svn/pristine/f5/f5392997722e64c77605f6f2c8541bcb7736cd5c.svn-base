@@ -1,0 +1,25 @@
+
+
+$(document).ready(function() {
+
+    $(".trainingVideoTrigger").click(function(e) {
+        e.preventDefault();
+        var videoUrl = $(this).attr('href');
+        var imageUrl = $(this).find('img').attr('src');
+        
+        // update flashvars
+        var flavhVars = 'file=' + videoUrl + '&image=' + imageUrl + '&controlbar=none&dock=false&autostart=false&stretching=exactfit';
+
+        $("object param[name='flashvars']").attr("value", flavhVars);
+        $("embed").attr("flashvars", flavhVars);
+
+        // create new object to hold it     
+        var obj = $("object");
+
+        // remove existing Flash from DOM
+        $("object").remove();
+
+        // add new HTML to DOM
+        $("#player").append(obj);
+    });
+});

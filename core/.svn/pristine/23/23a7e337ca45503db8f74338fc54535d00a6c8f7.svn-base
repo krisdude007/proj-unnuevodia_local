@@ -1,0 +1,103 @@
+<?php
+
+class AdminQuestionController extends Controller {
+
+    
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            
+            array('allow',
+                'actions' => array(
+                    'index',
+                    'save'
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * QUESTION EDITOR ACTIONS
+     * This section contains everything required for the video question editor section of the admin
+     * 
+     * 
+     */
+    public function actionIndex($is_ticker = 0) {
+        
+        if($is_ticker)
+        {
+            $qType = 'ticker';
+        }
+        else
+        {
+            $qType = 'video';
+        }
+        
+        $model = new eQuestion;
+        $model->hashtag = QUESTION_DEFAULT_HASHTAG;
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'admin-questionEditor-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+        if (isset($_POST['eQuestion'])) {
+            $model->attributes = $_POST['eQuestion'];
+            if ($model->validate()) {
+                $questions = eQuestion::model()->ticker()->findAll();
+                if (sizeof($questions) >= Yii::app()->params['maxActiveQuestions']) {
+                    $model->end_time = date('Y-m-d', time());
+                    Yii::app()->user->setFlash('message', "Question was added as inactive because the maximum limit of " . Yii::app()->params['maxActiveQuestions'] . " active questions was reached.");
+                }
+                $model->save();
+                Yii::app()->user->setFlash('success', "Question Added!");
+            } else {
+                Yii::app()->user->setFlash('error', "Error");
+            }
+        }
+    $questions = eQuestion::model()->{$qType}()->orderByIDDesc()->findAll();
+        $this->render('index', array(
+            'maxActives' => Yii::app()->params['maxActiveQuestions'],
+            'questions' => $questions,
+            'q_type' => $qType,
+            'is_ticker' => $is_ticker,
+            'model' => $model,
+        ));
+    }
+
+    public function actionSave() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $question = eQuestion::model()->findByPK($id);
+        $question->$column = $value;
+        $question->save();
+        echo $value;
+    }
+    
+}

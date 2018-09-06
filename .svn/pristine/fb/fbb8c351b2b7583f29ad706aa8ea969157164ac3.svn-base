@@ -1,0 +1,371 @@
+/*
+    Document   : client
+    Created on : Apr 10, 2014, 10:44:09 AM
+    Author     : YouToo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root {
+    display: block;
+}
+#popupWrap{
+    display: none;
+    background-image: url('/webassets/images/shadow.png');
+    position: absolute;
+    z-index: 12;
+    width: 100%;
+    height: 100%;
+}
+.flashMobile{
+    background-color: white;
+    color: black;
+    width: auto;
+    border-radius:15px;
+    margin-right: 20px;
+    margin-left: 20px;
+    /*box-shadow: 10px 10px 5px #888888;*/
+}
+.flashMobile a{
+    color: #20104c;
+    font-size: 20px;
+
+}
+.flashMobileContents{
+    padding:10px;
+}
+.flashMobileButton{
+    padding:5px;
+    text-align: center;
+}
+.flash-success h2{
+    color: black;
+    margin: 8px;
+    text-align: center;
+}
+.errorMessage{
+    color: red;
+    font-size: 16px;
+}
+#fabmob_login-divider{
+    margin: 4px;
+}
+
+.sidebar{
+    background-color: #f4f4f4;
+}
+.white{
+    background-color: #ffffff;
+}
+
+li.sidebar > a {
+    text-decoration: none;
+    text-indent: 4px;
+    color: #f17100;
+}
+.sidebar a span{
+    padding-left: 12px;
+    vertical-align: middle;
+}
+.sidebar a.activePage span{
+    color: #ffffff;
+}
+.sidebar a.activePage{
+    background-color:#f17100;
+}
+.sidebar a div{
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    display: inline-block;
+    vertical-align: middle;
+}
+.sidebar a div.homeimage{
+    background-image: url("/webassets/mobile/images/Icon_Home-Neutral.png");
+}
+.sidebar a.activePage div.homeimage{
+    background-image: url("/webassets/mobile/images/Icon_Home-Active.png");
+}
+.sidebar a div.uploadimage{
+    background-image: url("/webassets/mobile/images/Icon_Upload a Video-Neutral.png");
+    margin-top: 10px;
+}
+.sidebar a.activePage div.uploadimage{
+    background-image: url("/webassets/mobile/images/Icon_Upload a Video-Active.png");
+    margin-top: 10px;
+}
+.sidebar a div.videosimage{
+    background-image: url("/webassets/mobile/images/Icon_Watch Videos-Neutral.png");
+}
+.sidebar a.activePage div.videosimage{
+    background-image: url("/webassets/mobile/images/Icon_Watch Videos-Active.png");
+}
+.sidebar a div.aboutimage{
+    background-image: url("/webassets/mobile/images/Icon_About-Neutral.png");
+}
+.sidebar a.activePage div.aboutimage{
+    background-image: url("/webassets/mobile/images/Icon_About-Active.png");
+}
+.sidebar a div.legalimage{
+    background-image: url("/webassets/mobile/images/Icon_Legal-Neutral.png");
+    margin-top: 10px;
+}
+.sidebar a.activePage div.legalimage{
+    background-image: url("/webassets/mobile/images/Icon_Legal-Active.png");
+    margin-top: 10px;
+}
+.sidebar a div.helpimage{
+    background-image: url("/webassets/mobile/images/Icon_Help & Feedback-Neutral.png");
+}
+.sidebar a.activePage div.helpimage{
+    background-image: url("/webassets/mobile/images/Icon_Help & Feedback-Active.png");
+}
+.sidebar a div.rulesimage{
+    background-image: url("/webassets/mobile/images/Icon_Rules & Regulations-Neutral.png");
+}
+.sidebar a.activePage div.rulesimage{
+    background-image: url("/webassets/mobile/images/Icon_Rules & Regulations-Active.png");
+}
+.graylink{
+    color: #65707a;
+}
+#spinerWrap{
+    position: absolute;
+    z-index: 10;
+    display:none;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:black;
+    opacity: 0.3;
+}
+.spinner {
+    position: fixed;
+    width: 70px;
+    height: 70px;
+    top: 50%;
+    left: 50%;
+    margin-top: -35px;
+    margin-left: -35px;
+}
+#main_container_home_video { float: left; position: relative; left:0; top:0; }
+#overlay_home_video { position: absolute; left: 0px; top: 0px; height: 100%; width: 100%; z-index: 9998; }
+a.btn, a.btn:hover{
+    color: #f17100;
+    background-color: #ffffff;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #f17100;
+    text-transform: none;
+}
+#toolbar{
+background-color: #2579c2;
+position: relative;
+text-align: center;
+/*padding: 4px;*/
+box-shadow: 0 1px 1px rgba(0,0,0,0.4);
+}
+#toolbar img{
+    width:50px;
+}
+#open-left{
+    background: url("../images/Button_Menu.png") center center no-repeat;
+    width:32px;
+    display: inline;
+    background-size: contain;
+    position: absolute;
+    left: 5px;
+    top: 0px;
+    color: #ececec;
+}
+#back-left {
+    background: url("../images/Button_Back.png") center center no-repeat;
+    width:32px;
+    display: inline;
+    background-size: contain;
+    position: absolute;
+    left: 5px;
+    top: 0px;
+    height: 45px;
+    color: #ececec;
+}
+#fabmob_view-container {
+    background-image: none;
+    background-color: #f4f4f4;
+    height: calc(100% - 50px);
+}
+#site-index #fabmob_view-container,#video-thanks2 #fabmob_view-container {
+    background-color: #2579c2;
+}
+
+a {
+    color: #f17100;
+    text-decoration: underline;
+}
+button.btn, button.btn:hover, button.btn:active, button.btn:focus,
+.btn.btn-inverse, .btn.btn-inverse:hover, .btn.btn-inverse:active, .btn.btn-inverse:focus {
+    color: #f17100;
+    background-color: transparent;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #f17100;
+    box-shadow: none;
+    text-transform: none;
+    font-size: 16px;
+}
+input, select, textarea {
+    background-color: #ffffff;
+    color: #65707a;
+}
+textarea:focus, input:focus {
+    color: #65707a;
+}
+.horizontalLine {
+    overflow: hidden;
+    text-align: center;
+}
+.horizontalLine:before,
+.horizontalLine:after {
+    background-color: #65707a;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+.horizontalLine:before {
+    right: 0.5em;
+    margin-left: -50%;
+}
+.horizontalLine:after {
+    left: 0.5em;
+    margin-right: -50%;
+}
+.emailSendHeader{
+    color: #65707a;
+}
+.emailSendContents{
+    color: #65707a;
+    text-align: center;
+}
+
+.homeTop{
+    background-color: #ffb400;
+    text-align: center;
+    padding: 4px;
+}
+.homeTop h5{
+    color: white;
+    margin: 0;
+
+}
+.homeTop h2{
+    color: white;
+    margin: 0;
+}
+.homeImage{
+    width: 100%;
+}
+.homeFooter{
+    background-color: #2579c2;
+    padding: 10px;
+}
+.homeFooter h5{
+    color: #ffffff;
+    padding: 10px;
+    text-align: left;
+}
+.homeFooter .btn,.homeFooter .btn:hover{
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #ffffff;
+}
+.videoupload{
+    background-color: #e45500;
+    padding: 10px;
+    text-align:center;
+}
+.videoupload h5{
+    color: #ffffff;
+    margin: 0px;
+}
+.thanks{
+    color: #ffffff;
+    background-color: #f17100;
+    text-align: center;
+}
+.thanks h1{
+    color: #ffffff;
+    margin: 5px;
+}
+.fabmob_video-container{
+    background-color: #ffffff;
+}
+.fabmob_video-copy-container {
+    background-color: #ffffff;
+    line-height: 16px;
+    padding: 4px 8px;
+}
+.fabmob_video-copy-container .fabmob_video-title{
+    font-size: 16px;
+    color: #f17100;
+    margin-bottom: 0px;
+    padding: 2px;
+}
+.fabmob_video-copy-container h6{
+    font-size: 16px;
+    color: #65707a;
+    margin: 0px;
+    padding: 2px;
+}
+.fabmob_video-copy-container > span{
+    font-size: 14px;
+    color: #65707a;
+    margin: 0px;
+}
+.text{
+    font-size: 14px;
+    padding: 10px 16px;
+    color:#65707a;
+}
+.text img{
+    padding: 10px 0px;
+}
+.text h2{
+    color:#f17100;
+    font-size: 25px;
+}
+.legalLink{
+    background-color: #ffffff;
+}
+.legalLink div{
+    padding: 10px;
+}
+.legalLink div a{
+    font-size: 18px;
+    color: #65707a;
+    text-decoration: none;
+}
+.legalLink div a:after{
+    background-image: url('/webassets/mobile/images/Button_Arrow.png');
+    background-repeat: no-repeat;
+    background-size: 10px 20px;
+    content:"";
+    width: 20px;
+    height: 20px;
+    float: right;
+    position: relative;
+    top: 5px;
+}
+.legalLink hr{
+    margin: 5px 0px;
+}
+video, img, canvas, audio, svg{
+    vertical-align: middle;
+}
+.SocialLoginImage{
+    width: 100%;
+}

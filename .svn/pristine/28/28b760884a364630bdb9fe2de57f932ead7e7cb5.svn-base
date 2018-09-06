@@ -1,0 +1,91 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+?>
+<div class="fabmob_content-container text-center">
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-register-form',
+        'enableAjaxValidation' => true,
+        'htmlOptions' => array(
+            'class' => 'form-horizontal fabmob_condensed-form',
+        ),
+    ));
+    ?>
+    <br/>
+    <h3 class="text-center text" style="padding: 0;">Registrate</h3>
+    <br/>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'first_name', array('class' => 'form-control fabmob_round-border-top', 'placeholder' =>'Nombre')); ?>
+        <?php echo $form->error($user, 'first_name'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'last_name', array('class' => 'form-control fabmob_round-border-top', 'placeholder' => 'Apellido')); ?>
+        <?php echo $form->error($user, 'last_name'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->emailField($userEmail, 'email', array('class' => 'form-control', 'placeholder' => 'Dirección de correo electrónico')); ?>
+        <?php echo $form->error($userEmail, 'email'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->emailField($userEmail, 'confirm_email', array('class' => 'form-control', 'placeholder' => 'Confirmar dirección de correo electrónico')); ?>
+        <?php echo $form->error($userEmail, 'confirm_email'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->passwordField($user, 'password', array('class' => 'form-control', 'placeholder' => 'Contraseña')); ?>
+        <?php echo $form->error($user, 'password'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->passwordField($user, 'confirm_password', array('class' => 'form-control', 'placeholder' => 'Confirmar contraseña')); ?>
+        <?php echo $form->error($user, 'confirm_password'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($userLocation, 'postal_code', array('class' => 'form-control', 'placeholder' => 'Código postal/ZIP')); ?>
+        <?php echo $form->error($userLocation, 'postal_code'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'birthday', array('class' => 'form-control fabmob_round-border-bottom', 'placeholder' => 'Fecha de nacimiento')); ?>
+        <?php echo $form->error($user, 'birthday'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+<!--    <div class="form-group">
+        <?php //echo $form->dropDownList($user, 'gender', array('M' => 'Male', 'F' => 'Female') , array('separator' => ' ', 'class' => 'form-control fabmob_round-border-bottom', 'placeholder' => 'Gender')); ?>
+        <?php //echo $form->error($user, 'gender'); ?>
+        <span class="help-block hidden"></span>
+    </div>-->
+    <div class="form-group text">
+        <span id="fabmob_sign-up-terms-input-label" style="font-size: 14px; width: 100%;"><?php echo $form->checkBox($user, 'terms_accepted'); ?>
+            Acepto los
+            <a class="active" style="text-decoration:underline; font-size: 14px;" href="<?php echo Yii::app()->createUrl('site/terms');?>">
+               Términos de Presentación</a> y la
+            <a class="active" style="text-decoration:underline; font-size: 14px;" href="<?php echo Yii::app()->createUrl('site/privacy');?>">
+                Politica de privacidad</a>
+
+        </span>
+        <?php echo $form->error($user, 'terms_accepted'); ?>
+    </div>
+    <button id="signUpButton" class="btn btn-default" style="min-width: 165px; min-height: 45px; font-size: 19px;">Registrate</button>
+    <?php $this->endWidget(); ?>
+<!--    <br/>
+    <div class="SocialLoginImage">
+        <div>
+            <img class="fbreg SocialLoginImage" src="/webassets/mobile/images/Button_Facebook_Login.png"/>
+        </div>
+        <div style="margin-top:10px">
+            <img class="twreg SocialLoginImage" src="/webassets/mobile/images/Button_Twitter_Login.png"/>
+        </div>
+    </div>-->
+    <p id="fabmob_login-register-copy" class="text" style="font-size: 19px;">
+        ¿Ya tienes nombre de usuario?
+    </p>
+    <span class="text-center">
+    <a id="fabmob_login-register-link" class="active" style="font-size: 19px;" href="/login">Iniciar</a>
+    </span>
+</div>

@@ -1,0 +1,127 @@
+<?php
+
+class TickerController extends Controller {
+
+    public $layout = '//layouts/main';
+    public $user;
+    public $ticker;
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        }
+    }
+
+    public function actionAjaxStream(){
+        $this->layout = false;
+        foreach($_POST as $k=>$v){
+            $$k = $v;
+        }
+        $stream = eTickerStream::model()->current()->findByAttributes(Array('destination'=>$destination));
+        $impression = new eTickerImpression;
+        if(!Yii::app()->user->isGuest){
+            $impression->user_id = Yii::app()->user->getId();
+        }        
+        $impression->stream_id = $stream->id;
+        $impression->save();
+        $ticker = eTicker::model()->with('user','entity','entity.images:isAvatar')->findByPK($stream->ticker_id);
+        $ret['ticker'] = $ticker['ticker'];
+        $ret['image'] = TickerUtility::getAvatar($ticker);                        
+        echo json_encode($ret);
+    }
+        
+    public function actionIndex($id = 0) {
+        $tickerModel = new eTicker;
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'ticker-form') {
+            echo CActiveForm::validate($tickerModel);
+            Yii::app()->end();
+        }
+        
+        if ($id == 0) {
+            $questions = eQuestion::model()->current()->findAll();
+            foreach ($questions as $q) {
+                $question = $q->question;
+                $id = $q->id;
+            }
+        } else {
+            $questions = eQuestion::model()->findByPK($id);
+            $question = $questions->question;
+        }
+        
+        if (isset($_POST['eTicker'])) {
+            $tickerModel->attributes = $_POST['eTicker'];
+            $tickerModel->type = 'ticker';
+            if ($tickerModel->validate()) {
+                $tickerModel->user_id = Yii::app()->user->getId();
+                $tickerModel->question_id = $id;
+                $tickerModel->to_web = 1;
+                $tickerModel->arbitrator_id = Yii::app()->user->getId();
+                $tickerModel->save();
+                Yii::app()->user->setFlash('success', "Ticker Added!");
+            } else {
+                Yii::app()->user->setFlash('error', "Unable to Add Ticker!");
+            }
+        }
+
+        $tickers = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted'),Array('order'=>'t.created_on DESC'));        
+        $this->render('index', 
+                array(
+                    'question'=>$question,
+                    'question_id'=>$id,
+                    'tickers'=>$tickers,
+                    'tickerModel'=>$tickerModel,
+                )
+        );
+    }
+
+    public function actionSave() {
+
+        $this->layout = false;
+
+        if (isset($_POST['eTicker'])) {
+            $this->ticker->attributes = $_POST['eTicker'];
+            $this->ticker->type = 'ticker';
+            $this->ticker->source = 'web';
+            $this->ticker->to_web = '1';
+            $this->ticker->user_id = Yii::app()->user->getId();
+            $this->ticker->arbitrator_id = Yii::app()->user->getId();
+
+            if ($this->ticker->validate()) {
+                Yii::app()->user->setFlash('success', "Ticker Added!");
+                $this->ticker->save();
+            }
+        } else {
+            Yii::app()->user->setFlash('error', "Unable to add ticker.");
+        }
+
+        $this->redirect(Yii::app()->request->urlReferrer);
+    }
+    
+    public function actionAjaxSave(){
+        $this->layout = false;
+        foreach($_POST as $k=>$v){
+            $$k = $v;
+        }
+        $ticker = new eTicker;
+        $ticker->ticker = $text;
+        $ticker->type = 'ticker';
+        $ticker->source = 'web';
+        $ticker->to_web = '1';
+        $ticker->user_id = Yii::app()->user->id;
+        $ticker->arbitrator_id = Yii::app()->user->id;
+        if($ticker->validate()){
+            $ticker->save();
+            echo 'ticker saved';
+        } else {
+            echo 'unable to save ticker'.$ticker->errors;
+        }                
+    }
+
+}

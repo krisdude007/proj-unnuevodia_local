@@ -1,0 +1,34 @@
+<?php
+
+error_reporting(0);
+ini_set('display_errors',false);
+
+list($tld,$host,$subdomain) = array_reverse(explode(".",$_SERVER["HTTP_HOST"]));
+
+// change the following paths if necessary
+$yii='framework/yiilite.php';
+
+// remove the following lines when in production mode
+//defined('YII_DEBUG') or define('YII_DEBUG',true);
+// specify how many levels of call stack should be shown in each log message
+//defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+
+//Required for php-fpm
+set_include_path('/var/www/yii');
+
+require_once($yii);
+require('core/protected/YttCore.php');
+
+Yii::setPathOfAlias('client',$_SERVER["DOCUMENT_ROOT"].'/protected');
+Yii::setPathOfAlias('core',$_SERVER["DOCUMENT_ROOT"].'/core/protected');
+
+$config = CMap::mergeArray(
+    require(dirname(__FILE__).'/core/protected/config/_defaults.php'),
+    require($_SERVER["DOCUMENT_ROOT"].'/protected/config/main.php')
+);
+
+require_once('core/protected/vendor/getid3/getid3.php');
+
+$app = Yii::createApplication('YttCore',$config);
+
+$app->run();

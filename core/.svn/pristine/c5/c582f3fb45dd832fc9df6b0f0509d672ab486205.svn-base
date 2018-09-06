@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * This is the model class for table "network_show_schedule".
+ *
+ * The followings are the available columns in table 'network_show_schedule':
+ * @property integer $id
+ * @property integer $network_show_id
+ * @property integer $video_id
+ * @property integer $user_id
+ * @property string $house_number
+ * @property string $show_datetime
+ * @property string $spot_datetime
+ * @property integer $spot_length
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property NetworkShow $networkShow
+ * @property Video $video
+ * @property User $user
+ */
+class NetworkShowSchedule extends CActiveRecord
+{
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return 'network_show_schedule';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('network_show_id, house_number, show_datetime, spot_datetime, spot_length, created_on', 'required'),
+            array('network_show_id, video_id, user_id, spot_length', 'numerical', 'integerOnly'=>true),
+            array('house_number', 'length', 'max'=>255),
+            array('updated_on', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, network_show_id, video_id, user_id, house_number, show_datetime, spot_datetime, spot_length, created_on, updated_on', 'safe', 'on'=>'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'networkShow' => array(self::BELONGS_TO, 'NetworkShow', 'network_show_id'),
+            'video' => array(self::BELONGS_TO, 'Video', 'video_id'),
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'network_show_id' => 'Network Show',
+            'video_id' => 'Video',
+            'user_id' => 'User',
+            'house_number' => 'House Number',
+            'show_datetime' => 'Show Datetime',
+            'spot_datetime' => 'Spot Datetime',
+            'spot_length' => 'Spot Length',
+            'created_on' => 'Created On',
+            'updated_on' => 'Updated On',
+        );
+    }
+
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search()
+    {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria=new CDbCriteria;
+
+        $criteria->compare('id',$this->id);
+        $criteria->compare('network_show_id',$this->network_show_id);
+        $criteria->compare('video_id',$this->video_id);
+        $criteria->compare('user_id',$this->user_id);
+        $criteria->compare('house_number',$this->house_number,true);
+        $criteria->compare('show_datetime',$this->show_datetime,true);
+        $criteria->compare('spot_datetime',$this->spot_datetime,true);
+        $criteria->compare('spot_length',$this->spot_length);
+        $criteria->compare('created_on',$this->created_on,true);
+        $criteria->compare('updated_on',$this->updated_on,true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return NetworkShowSchedule the static model class
+     */
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+}

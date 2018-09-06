@@ -1,0 +1,186 @@
+/* 
+    Document   : _ticker
+    Created on : Jun 18, 2013, 10:49:02 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the ticker page should take place here.
+*/
+
+.fab-ticker-container {
+    max-width  : 925px;
+    line-height: 15px;
+}
+
+.fab-form-right-ticker {
+    display        : inline-block;
+    float          : right;
+    margin-right   : 11px;
+    border-left    : 1px solid #d5d5d5;
+    padding-bottom : 11px;
+    padding-left   : 8px;
+    padding-top    : 11px;
+}
+#fab-ticker-filter-form {
+    max-width         : 920px;
+    height        : 58px;
+    border        : 1px solid #ABA9A9;
+    margin-bottom : 20px;
+}
+
+#fab-ticker-filter-form .fab-filter {
+    text-align  : center;
+    margin-top  : 13px;
+    margin-left : 12px;
+    border      : 0px;
+    cursor      : pointer;
+    height      : 34px;
+    color       : white;
+    font-size   : 14px;
+    font-family : "Open Sans", sans-serif;
+    font-weight : normal;
+    width:auto;
+    padding-left:14px;
+    padding-right:14px;
+}
+#fab-ticker-filter-form .fab-filter.fab-first{
+    margin-left:28px;
+}
+
+.fab-ticker-form-left {
+
+}
+.fab-form-right-ticker {
+    display        : inline-block;
+    float          : left;
+    border-left    : 1px solid #ABA9A9;
+    padding-bottom : 12px;
+    padding-left   : 23px;
+    padding-top    : 13px;
+    margin-left: 23px;
+}
+.fab-ticker-clear-filter {
+    width      : 96px !important;
+    height     : 34px;
+    color      : white;
+    font-size  : 14px;
+    border     : 0px;
+    background : #D0CFCF;
+    cursor     : pointer;
+}
+.ticker-yellow{
+    background:#fcb922;
+}
+.fab-ticker-container .fab-detail-table th{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+.fab-ticker-container .fab-detail-table td{
+    padding-top:3px;
+    padding-bottom:3px;
+}
+.fab-ticker-container .fab-detail-table input{
+    margin:0px;
+}
+.fab-ticker-container .fab-mk{
+    padding:0px;
+}
+.fab-detail-table{
+    width:100%
+}
+.fab-detail-table th{
+    background: #8f8e8e;
+    color:white;
+    border-right:1px solid white;
+    text-align: left;
+    padding-left:10px;
+    padding-top:12px;
+    padding-bottom:12px;
+    font-size: 11px;
+}
+.fab-detail-table td{
+    border:1px solid #e3e2e2;
+    padding-left: 10px;
+    padding-top:2px;
+    padding-bottom:2px;
+    font-size: 10px;
+}
+.fab-ticker-container .fab-detail-table tr.fab-over:hover{
+    background:#fce5b1;
+}
+.fab-detail-table td.fab-first-cell{
+    padding:5px;
+}
+.show-message{
+    width:140px;
+    background:#898987;
+    color:#fcb922;
+    font-size: 10px;
+    position:absolute;
+    padding:10px;
+    padding-bottom:25px;
+    margin-top:-109px;
+    margin-left: -45px;
+    display:none;
+}
+.text-message{
+    width:100%;
+    cursor:pointer;
+}
+.text-message:hover + .show-message{
+    display:block
+}
+.fab-message-arrow{
+    position:absolute;
+    width:18px;
+    height:9px;
+    margin-top:18px;
+    margin-left:124px;
+}
+.ticker-username{
+    width:100%;
+    cursor:pointer;
+}
+.ticker-username a{
+    color:#FCB922;
+}
+.ticker-username:hover + .show-username{
+    display:block
+}
+.show-username{
+    width:140px;
+    background:#898987;
+    color:#fcb922;
+    font-size: 10px;
+    position:absolute;
+    padding:10px;
+    padding-bottom:25px;
+    margin-top:-75px;
+    margin-left:-100px;
+    display:none;
+}
+.fab-small-moderate{
+    width:26px;
+    font-size: 10px;
+    padding:1px !important;
+    margin-top:5px;
+}
+
+.valignTop td{
+    vertical-align: top;
+    color:white;
+}
+
+.runsInput{
+    width:30px;
+}
+
+.radioList input{
+    margin-right:3px;
+}
+
+input[type='text']{
+    width:25px;
+}
+th, td{
+    padding:3px !important;
+}

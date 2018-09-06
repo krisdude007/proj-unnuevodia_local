@@ -1,0 +1,130 @@
+<?php
+class AdminTvScreenAppearSettingController extends Controller {
+ 
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+
+            array('allow',
+                'actions' => array(
+                    'save',
+                    'index',
+                    'AjaxDeleteImage'
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+
+    public function actionIndex($e_type,$refid)
+    { 
+        if( !file_exists (Yii::app()->params['paths']['image'].'/tvscreensetting/') )
+        {  
+            if (!mkdir(Yii::app()->params['paths']['image'].'/tvscreensetting', 0777)) {
+                die('Failed to create folders...');
+            }
+        }
+        $this->layout = false; 
+        $id = ''; 
+        $filesArr = array();
+        $formTvScreenSettingModel = eTvScreenAppearSetting::model()->findByAttributes(array('entity_type' => $e_type));
+        
+        if(is_null($formTvScreenSettingModel)){
+            $formTvScreenSettingModel = new eTvScreenAppearSetting; 
+            $formTvScreenSettingModel->screen_type = 'transparent';
+            $formTvScreenSettingModel->entity_type = $e_type;
+            $formTvScreenSettingModel->slide_speed = 20;
+            $formTvScreenSettingModel->direction = 1;
+        } else {
+           $id = $formTvScreenSettingModel->id;
+        }
+        $files = scandir(Yii::app()->params['paths']['image'].'/tvscreensetting/');
+        foreach ($files as $key => $value) {
+           if($value != '.' && $value != '..'){
+               $filesArr[] =  $value;
+           }
+        }
+
+        $array = array('formTvScreenSettingModel' => $formTvScreenSettingModel,'images'=>$filesArr,'refId'=>$refid);
+        $this->render('index', $array);
+    }
+
+    public function actionSave()
+    { 
+        $this->layout = false; 
+        $result ='';
+        $fileName ='';
+        if($_POST['eTvScreenAppearSetting']) { 
+            $model = eTvScreenAppearSetting::model()->findByAttributes(array('entity_type' =>$_POST['eTvScreenAppearSetting']['entity_type']));
+            $model = (is_null($model)) ? new eTvScreenAppearSetting()  : $model;  
+            $model->attributes = $_POST['eTvScreenAppearSetting'];
+            $selectedFile = $_POST['eTvScreenAppearSetting']['existingBGImage'];
+            $model->filename = CUploadedFile::getInstance($model,'filename'); 
+             
+            $model->validate(); 
+            if (!empty($model->filename)){ 
+                list($width, $height) = getimagesize($model->filename->getTempName());  
+                if ($width.'x'.$height !== Yii::app()->params['cloudGraphicAppearanceSetting']['tvScreenImageAllowedDimension'])
+                    $model->addError('filename', 'Size must be ' .Yii::app()->params['cloudGraphicAppearanceSetting']['tvScreenImageAllowedDimension'] );
+            
+            }
+            
+            if(count($model->getErrors()) == 0) { 
+                if (!empty($model->filename)){
+                   $extension = pathinfo($model->filename->getName(),PATHINFO_EXTENSION);  
+                   $fileName = uniqid('tvsc_').'.'.$extension;
+                   $model->filename->saveAs(Yii::app()->params['paths']['image'].'/tvscreensetting/'.$fileName);
+                   $model->filename = $fileName; 
+                }
+                if($selectedFile)
+                    $model->filename = $selectedFile; 
+
+               $model->save();  
+               $result = 'Setting Saved!';
+            } else {
+                $errorMsg  ='';
+                $error = $model->getErrors(); 
+                foreach($error['filename'] as $key =>$val):
+                    $errorMsg .= $val;
+                endforeach;
+               $result = $errorMsg;
+            }
+        }
+        header('Content-type: application/json');
+        echo CJSON::encode(array('result'=>$result,'filename'=>$fileName));
+        Yii::app()->end();
+          
+    } 
+
+    public function actionAjaxDeleteImage()
+    {
+        if(Yii::app()->request->isAjaxRequest )
+            unlink(Yii::app()->params['paths']['image'].'/tvscreensetting/'.$_POST['filename']);
+        
+    }
+ 
+
+}

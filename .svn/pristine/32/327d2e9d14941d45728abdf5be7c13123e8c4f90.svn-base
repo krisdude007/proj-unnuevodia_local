@@ -1,0 +1,21 @@
+<?php
+
+class clientTicker extends eTicker {
+
+    public function scopes() {
+        return array(
+            'new' => array('condition' => 'status="new"'),
+            'accepted' => array('condition' => 'status="accepted"'),
+            'denied' => array('condition' => 'status="denied"'),
+            'hasWebRuns' => array('condition' => 'tickerRun.web_runs != 0'),
+            'hasTvRuns' => array('condition' => 'tickerRun.tv_runs != 0'),
+            'hasMobileRuns' => array('condition' => 'tickerRun.mobile_runs != 0'),
+            'hasDestination' => array('condition' => 'tickerDestination.ticker_id is not null'),
+            'hasRuns' => array('condition' => '(tickerRuns.mobile_runs != 0 || tickerRuns.tv_runs != 0 || tickerRuns.web_runs != 0)'),
+            'canRun' => array('condition' => 'tickerRun.ticker_id is not null'),
+            'ticker' => array('condition' => 'type="ticker"'),
+            'social' => array('condition' => 'type="social"'),
+            'toWeb' => array('condition' => 'tickerDestinations.destination_id = (select id from destination where destination = "web")'),
+        );
+    }
+}

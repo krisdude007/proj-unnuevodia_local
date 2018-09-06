@@ -1,0 +1,55 @@
+<?php
+
+/*
+ * Dots demographic service
+ * gstringer - Oct 2013
+ */
+
+class importNetworkScheduleCommand extends CConsoleCommand {
+
+    public function run($args) {
+
+        self::import();
+    }
+
+    private static function import() {
+        
+        // delete all existing records
+        
+        /*
+         * 
+SELECT 
+ytt_initech_dev.network_show.id, 
+youludb.vci_spots.house_number, 
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.blocktime, 'm'), '%m/%d/%Y %h:%i:%s %p') AS show_time,
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.spot_time, 'm'), '%m/%d/%Y %h:%i:%s %p') AS spot_time,
+TIME_TO_SEC(REPLACE(youludb.vci_spots.length, ':', '')) AS spot_length,
+NOW(),
+NOW()  
+FROM youludb.vci_spots 
+LEFT JOIN ytt_initech_dev.network_show ON ytt_initech_dev.network_show.abbreviation = youludb.vci_spots.show_id 
+WHERE ytt_initech_dev.network_show.id IS NOT NULL
+
+
+INSERT INTO network_show_schedule (network_show_id, house_number, show_datetime, spot_datetime, spot_length, created_on, updated_on)
+SELECT 
+ytt_initech_dev.network_show.id, 
+youludb.vci_spots.house_number, 
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.blocktime, 'm'), '%m/%d/%Y %h:%i:%s %p') AS show_time,
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.spot_time, 'm'), '%m/%d/%Y %h:%i:%s %p') AS spot_time,
+TIME_TO_SEC(REPLACE(youludb.vci_spots.length, ':', '')) AS spot_length,
+NOW(),
+NOW()  
+FROM youludb.vci_spots 
+LEFT JOIN ytt_initech_dev.network_show ON ytt_initech_dev.network_show.abbreviation = youludb.vci_spots.show_id 
+WHERE ytt_initech_dev.network_show.id IS NOT NULL
+
+
+         */
+        
+    }
+
+    
+}
+
+?>

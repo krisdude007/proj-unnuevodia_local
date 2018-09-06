@@ -1,0 +1,166 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminCampaign/index.css');
+ 
+ 
+Yii::app()->clientScript->registerScriptFile('/core/webassets/js/adminCampaign/index.js', CClientScript::POS_END);
+ 
+?>
+<style>
+<!--
+.fab-dropdown-menu
+{
+	top:34px;
+	height:auto;
+	width:auto;
+}
+-->
+</style>
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+
+     
+    <div class="campaign_top_bar">
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/campaign/campaign_manager_icon.png" />
+        <a href='<?php echo $this->createUrl('/adminCampaign'); ?>' >Campaign Manager</a>
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='campaign_container'>
+              
+            <div class='fab-row-fluid'>
+        		<div class="btn-group">
+    				<a class="fab-btn" href="<?php echo  $this->createUrl('adminCampaign/'); ?>">Home</a>
+    				 
+    			</div>
+                <div class="btn-group">
+                    <a class="fab-btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Campaign
+                    <span class="caret"></span>
+                    </a>
+                    <ul class="fab-dropdown-menu">
+                    	<li><a href="<?php echo  $this->createUrl('adminCampaign/create'); ?>">New Campaign</a></li>
+                    	<li><a href="#">Stop Campaign</a></li>
+                    	<li><a href="#">View Campaigns</a></li>
+                    	<li><a href="#">Edit Campaigns</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+    				<a class="fab-btn dropdown-toggle" data-toggle="dropdown" href="#">
+    				Edit <span class="caret"></span>
+    				<!-- <i class="icon-angle-down"></i> -->
+    				</a>
+    				<ul class="fab-dropdown-menu">
+    					<li><a href="#">Edit Accounts</a></li>
+    					<li><a href="#">Edit Show Details</a></li>
+    					<li><a href="#">Edit Package</a></li>
+    				</ul>
+    			</div>
+    			<div class="btn-group">
+    				<a class="fab-btn fab-green" href="<?php echo  $this->createUrl('adminCampaign/createPost', array('id'=>$campaign->id)); ?>">New Post </a>
+    				 
+    			</div>
+    			 
+
+        	</div>
+             
+            <div class="campaign_subtitle">
+            	<?php echo $campaign->campaign_title; ?> 
+            	<a href='<?php echo Yii::app()->createUrl('/adminCampaign/update', array('id'=>$campaign->id));?>' class='btn btn-small'>Edit</a>
+            </div>
+            <?php if(!$campaign->status): ?> 
+            	(Stopped)
+            <?php endif;?>
+            <div class="campaign_divider"></div>
+             
+             
+         
+        
+        </div>
+        <div class="hero-unit">
+           
+            <p><?php echo $campaign->show_title; ?></p>
+            <p>From <?php echo $campaign->start_date; ?> To <?php echo $campaign->end_date;?></p>
+            <p>Reoccur <?php echo $campaign->occurrence; ?> @ <?php echo $campaign->show_airing_time; ?> 
+                <?php if($campaign->occurrence == 'weekly'): ?>
+                (<?php echo $campaign->day; ?>)
+                <?php endif; ?>
+            </p>
+            <p>Tags: <?php echo $campaign->tags; ?></p>
+            <p>Hash Tags: <?php echo $campaign->hashtags; ?>
+           
+        </div>
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+    	'id'=>'campaign-grid',
+    	'dataProvider'=>$campaign_post->searchByCampaignId($campaign->id),
+    	'filter'=>$campaign_post,
+    	'columns'=>array(
+    		array(
+    			'header'=>'Media',
+    		    'type'=>'raw',
+    		    'value'=>'CHtml::image($data->media->media_type == "video" ? 
+    		    	"/".basename(Yii::app()->params["paths"]["video"])."/".$data->media->media_url.".png" :
+    		    	"/".basename(Yii::app()->params["paths"]["video"])."/".$data->media->media_url, 
+    		    	$data->media->media_name, 
+    		    	array(
+    		    		"width"=>50,"height"=>50,"data-toggle"=>"modal", "data-target"=>"#modal","class"=>"image_icon","media_type"=>$data->media->media_type,
+    		    		"video"=>"/".basename(Yii::app()->params["paths"]["video"])."/".$data->media->media_url
+    		    	)
+    		    )'
+    		),
+    		'post_content', 
+            'hash_tag',
+            'post_time',
+             
+    		 
+    		array(
+    			'class'=>'CButtonColumn',
+    		    'template'=>'{update}{delete}',
+    		    'deleteButtonUrl'=>'Yii::app()->createUrl("/adminCampaign/deletePost", array("post_id"=>$data->id))',
+    		    'updateButtonUrl'=>'Yii::app()->createUrl("/adminCampaign/updatePost", array("post_id"=>$data->id))',
+    		),
+    	),
+    )); ?>
+         
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>   
+
+<div id="modal" class="modal hide fade upgrade_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header upgrade_modal_header"> 
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="icon-remove-sign"></i></button> 
+    <div id="myModalLabel"></div>
+  </div>
+  <div class="modal-body text-center">
+     <img id='large_image' src="">
+     <video id='video' width="320" height="240" controls>
+        <source id='video_source' src="" type="video/mp4">
+	 </video>
+  </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$('.image_icon').click(function(){
+			image = $(this);
+    		$('#modal').on('show.bs.modal', function (e) {
+        		$('#myModalLabel').text(image.attr('alt'));
+        		if(image.attr('media_type') == 'video') {
+            		$('#large_image').hide();
+            		$('#video_source').attr('src', image.attr('video'));
+            		$('#video').load().show();
+        		} else {
+            		$('#video').hide();
+    				$('#large_image').attr('src', image.attr('src')).show();
+        		}
+    		});
+		});
+	})
+</script>
+<!--
+
+//-->
+</script>

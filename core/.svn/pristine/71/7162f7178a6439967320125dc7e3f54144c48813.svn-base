@@ -1,0 +1,105 @@
+<?php
+
+class AdminBannerController extends Controller {
+
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array(
+                    //BANNER ACTIONS
+                    'index',
+                    'upload',
+                    'ajaxremove',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+        if(!defined('BANNERDIMENSION'))
+            define('BANNERDIMENSION','660x300');
+    }
+
+    public function actionUpload() {
+        $model = new FormBannerUpload;
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'banner-upload-form') {
+            echo CActiveForm::validate(array());
+            Yii::app()->end();
+        }
+        if (!isset($_POST['FormBannerUpload'])) {
+            $this->redirect('/adminBanner/index');
+            Yii::app()->end();
+        }
+        $model->attributes = $_POST['FormBannerUpload'];
+        $model->validate();
+        foreach ($_POST['FormBannerUpload'] as $bannerId => $file) {
+            $model->$bannerId = CUploadedFile::getInstance($model, $bannerId);
+            if(empty($model->$bannerId))//file not selected
+                continue;
+            list($width, $height, $type, $attr) = getimagesize($model->$bannerId->getTempName());
+            if ($type !== 3) {//file not png
+                $model->addError($bannerId, 'Type must be .' . BANNERNAMEEXTENSION);
+                continue;
+            }
+            if ($width . 'x' . $height !== BANNERDIMENSION) {//file not correct width x height
+                $model->addError($bannerId, 'Size must be ' . BANNERDIMENSION);
+                continue;
+            }
+            $fileName = Yii::app()->params['paths']['image'] . '/' . BANNERNAMEPREFIX . '_' . $bannerId . "." .BANNERNAMEEXTENSION;
+            $model->$bannerId->saveAs($fileName);
+        }
+        Yii::app()->user->setState('model', $model);
+        $this->redirect('/adminBanner/index');
+        Yii::app()->end();
+    }
+
+    public function actionAjaxRemove() {
+        if(!$_POST['fileName']){
+            echo(json_encode(array('status' => 0)));
+            Yii::app()->end();
+        }
+        $fileName = $_POST['fileName'];
+        if(!unlink(Yii::app()->params['paths']['image'] . '/' . $fileName)){
+            echo(json_encode(array('status' => 0)));
+            Yii::app()->end();
+        }
+        echo(json_encode(array('status' => 1)));
+    }
+
+    public function actionIndex() {
+        $bannerImages = BannerUtility::getBanners();
+        $model = Yii::app()->user->getState('model');
+        Yii::app()->user->clearStates();
+        if(empty($model)){
+            $model = new FormBannerUpload;
+        }
+        $this->render('index', array(
+            'model' => $model,
+            'bannerImages' => $bannerImages,
+        ));
+    }
+
+}
+

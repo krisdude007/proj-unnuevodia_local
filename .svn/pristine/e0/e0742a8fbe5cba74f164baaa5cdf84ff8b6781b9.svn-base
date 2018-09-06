@@ -1,0 +1,74 @@
+<?php
+
+class clientImageController extends ImageController {
+
+public function actionUpload() {
+
+    if (Yii::app()->user->isGuest) {
+      $this->redirect('/login');
+    }
+
+    $image = new eImage;
+
+    if (isset($_POST['ajax']) && $_POST['ajax'] === 'image-upload-form') {
+      echo CActiveForm::validate(array($image));
+      Yii::app()->end();
+    }
+    if (isset($_POST['eImage'])) {
+
+      $image->attributes = $_POST['eImage'];
+      $image->user_id = Yii::app()->user->getId();
+      $image->filename = CUploadedFile::getInstance($image, 'image');
+     // $image->title = 'Photo';
+      //$image->description = 'User uploaded photograph.';
+      $image->source = 'web';
+       // see if user selected share to twitter or facebook
+                if ($image->to_twitter == '1') {
+                    // check to see if user has connected a twitter account
+                    if (eUserTwitter::model()->countByAttributes(array('user_id' => Yii::app()->user->id)) == 0) {
+                        // set to_twitter back to false
+                        $image->to_twitter = 0;
+                    }
+                }
+                // see if user selected share to twitter or facebook
+                if ($image->to_facebook == '1') {
+                 // check to see if user has connected a twitter account
+                    if (eUserFacebook::model()->countByAttributes(array('user_id' => Yii::app()->user->id)) == 0) {
+                        // set to_facebook back to false
+                        $image->to_facebook = 0;
+                    }
+                }
+
+      //$image->to_facebook = 0;
+      //$image->to_twitter = 0;
+      $image->status = (IMAGE_AUTO_APPROVE === true) ? 'accepted' : 'new';
+      $image->arbitrator_id = Yii::app()->user->getId();
+      $image->is_avatar = 0;
+
+      if ($image->validate()) {
+        preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+        $filetype = $matches[0];
+        $filename = "{$user->id}_" . md5($image->filename) . $filetype;
+        $image->filename->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+        $image->filename = $filename;
+        $image->save();
+        Yii::app()->user->setFlash('success', "Foto subido correctamente.");
+        if(PAYPAL_ACTIVE){
+            $paypal = PaymentUtility::paypal($image);
+            if($paypal['response'] == 'success'){
+                $this->redirect($paypal['url']); 
+            } else {
+                var_dump($paypal);
+                //$this->redirect(Yii::app()->createURL('/thanks'));
+            }
+        } else {
+            $this->redirect('/image/thanks');
+        }                                        
+      }
+    }
+
+    $this->render('upload', array('image' => $image));
+  }
+
+}
+?>

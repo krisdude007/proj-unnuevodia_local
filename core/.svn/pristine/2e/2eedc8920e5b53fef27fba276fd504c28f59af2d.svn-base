@@ -1,0 +1,105 @@
+<?php
+
+// uncomment the following to define a path alias
+// Yii::setPathOfAlias('local','path/to/local-folder');
+// This is the main Web application configuration. Any writable
+// CWebApplication properties can be configured here.
+require('constants.php');
+list($tld,$host,$subdomain,$developer) = array_reverse(explode(".",$_SERVER["HTTP_HOST"]));
+if(isset($developer)){
+    ini_set('display_errors',true);
+}
+return array(
+    'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
+    'name' => 'My Web Application',
+    // preloading 'log' component
+    'preload' => array('log'),
+    // autoloading model and component classes
+    'import' => array(
+        'application.models.*',
+        'application.components.*',
+        'application.components.utilities.*',
+        'core.vendor.getid3.*',
+    ),
+    'modules' => array(
+        // uncomment the following to enable the Gii tool
+        'gii' => array(
+            'class' => 'system.gii.GiiModule',
+            'password' => 'g111tup',
+            // If removed, Gii defaults to localhost only. Edit carefully to taste.
+            'ipFilters' => array('*'),
+        ),
+    ),
+    // application components
+    'components' => array(
+        'user' => array(
+            // enable cookie-based authentication
+            'allowAutoLogin' => true,
+            'loginUrl'=>array('admin/login'),
+            'class' => 'WebUser',
+            'autoUpdateFlash' => false,
+        ),
+        'request' => array(
+            'enableCsrfValidation' => true,
+            'enableCookieValidation' => true,
+            'class'=>'HttpRequest',
+            
+            //'class' => 'application.components.GHttpRequest',
+        ),
+        // uncomment the following to enable URLs in path-format
+        'urlManager' => array(
+            'showScriptName' => false,
+            'urlFormat' => 'path',
+          'rules'=>array(
+              'admin/dashboard'=>'adminDashboard/index',
+              'admin/video'=>'adminVideo/index',
+              'admin/image'=>'adminImage/index',
+              'admin/ticker'=>'adminTicker/index',              
+              'admin/voting'=>'adminVoting/index',
+              'admin/question'=>'adminQuestion/index',
+              'admin/socialsearch'=>'adminSocialSearch/index',
+              'admin/socialstream'=>'adminSocialStream/index',              
+              'admin/language'=>'adminLanguage/index',
+              'admin/report'=>'adminReport/index',  
+              'admin/audit'=>'adminAudit/index',  
+              'admin/user'=>'adminUser/index',                
+              'admin/entity/<id:\d+>'=>'adminEntity/index',                
+              'admin/entity'=>'adminEntity/index',                
+              'XML/voting/<id:\d+>'=>'XML/voting',                
+              'twittercard/<key:\w+>'=>'video/twittercard',
+          ),
+        ),
+        'db' => array(
+            'connectionString' => 'mysql:host=192.168.2.16;dbname=ytt',
+            'emulatePrepare' => true,
+            'username' => 'jayson',
+            'password' => 'Dallas1101',
+            'charset' => 'utf8',
+        ),
+        'errorHandler' => array(
+            // use 'site/error' action to display errors
+            'errorAction' => 'admin/error', 
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            // uncomment the following to show log messages on web pages
+            /*
+              array(
+              'class'=>'CWebLogRoute',
+              ),
+             */
+            ),
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        // this is used in contact page
+        'adminEmail' => 'webmaster@example.com',
+    ),
+);

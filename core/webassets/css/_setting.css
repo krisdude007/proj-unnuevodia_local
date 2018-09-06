@@ -1,0 +1,20 @@
+/* 
+    Document   : _setting
+    Created on : Jun 25, 2013, 9:35:32 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the setting page should take place here.
+*/
+
+.global-title{
+    background: none repeat scroll 0 0 #F33C23 !important;
+}
+.report_map-title{
+    background: none repeat scroll 0 0 #4B8DF8 !important;
+}
+.dashboard-title{
+    background: none repeat scroll 0 0 #555555 !important;
+}
+.report_page-title{
+    background: none repeat scroll 0 0 #852B99 !important;
+}

@@ -1,0 +1,35 @@
+
+<?php if($user->id != Yii::app()->user->id): ?>
+<div class="sidebar">
+    <div style="padding:10px;">
+        <div style="margin-bottom:20px;width:130px;">
+            <a target="_blank" href="<?php echo Yii::app()->request->baseurl;?>/user/<?php echo $user->id; ?>">
+                <img style="margin-left:auto;margin-right:auto;max-width:130px;max-height:150px;display:block" src="<?php echo UserUtility::getAvatar($user); ?>" />
+            </a>
+        </div>
+        <div class="bold" style="margin-bottom:5px;"><?php echo $user->first_name; ?> <?php echo $user->last_name; ?></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/user/<?php echo $user->id; ?>"><?php echo ClientUtility::getNumVideos($user->id);?> Videos</a></div>
+    </div>
+</div>
+<?php else: ?>
+<div class="sidebar">
+    <div style="padding:10px;">
+        <div style="margin-bottom:20px;width:130px;">
+            <img style="margin-left:auto;margin-right:auto;max-width:130px;max-height:150px;display:block" src="<?php echo UserUtility::getAvatar($user); ?>" />
+        </div>
+        <div class="bold" style="margin-bottom:5px;"><?php echo $user->first_name; ?> <?php echo $user->last_name; ?></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumVideos($user->id);?> Videos</a></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumVotes($user->id);?> Votes</a></div>
+        <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/recent"><?php echo ClientUtility::getNumTexts($user->id);?> Texts</a></div>
+        <div class="linklist">
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Get Connected</a></div>
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/help">Need Help?</a></div>
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/about">About</a></div>
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/terms">Terms of Use</a></div>
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/you/profile">Profile Settings</a></div>
+            <div><a href="<?php echo Yii::app()->request->baseurl;?>/logout">Logout</a></div>                    
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+

@@ -1,0 +1,354 @@
+.campaign_container
+{
+    margin-top: 10px;
+    margin-left:10px;
+    padding-top: 25px;
+    font-family:'Open Sans';
+	 
+}
+.campaign_container .row
+{
+	margin-left:10px;
+	clear:both;
+}
+.campaign_subtitle
+{
+    font-size: 18pt;
+    color: #5a5a5a;
+    margin-top:30px;
+}
+.campain_header
+{
+	font-size: 31pt;
+	color: #4d90f3;
+	font-weight: bold;
+	margin-bottom: 30px;
+}
+
+.campaign_top_bar
+{
+    background-color: #4d90f3;
+    height: 40px;
+    padding-left:30px;
+    padding-top: 15px;
+    color: #ffffff;
+    font-size: 14pt;
+    clear:both;
+    margin-bottom: 10px;
+}
+
+.campaign_top_bar img
+{
+    margin-right : 20px;
+}
+
+.campaign_step 
+{
+    display: inline;
+    width: auto;
+    height: auto;
+     
+}
+.campaign_step1_selected{
+    background: url('/core/webassets/images/campaign/step-1-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step2_selected{
+    background: url('/core/webassets/images/campaign/step-2-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step3_selected{
+    background: url('/core/webassets/images/campaign/step-3-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step1_unselected{
+    background: url('/core/webassets/images/campaign/step-1-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step2_unselected{
+    background: url('/core/webassets/images/campaign/step-2-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step3_unselected{
+    background: url('/core/webassets/images/campaign/step-3-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+
+.campaign_divider {
+    background-image: url('/core/webassets/images/campaign/divider.png');
+    height:2px;
+    width:100%;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.campaign_media_row
+{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.campaign_media_button_facebook
+{
+    background: url('/core/webassets/images/campaign/facebook.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+    font-size: 13pt;
+    color:#ffffff;
+    cursor:pointer;
+     
+}
+.campaign_media_row_text{
+    width:60px;
+    margin-left:50px;
+    padding-top:5px;
+    position:absolute;
+}
+.campaign_media_button_twitter
+{
+    background: url('/core/webassets/images/campaign/twitter.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    font-size: 13pt;
+    color:#ffffff;
+    display: inline-block;
+    //cursor:pointer;
+}
+.campaign_media_button_google
+{
+    background: url('/core/webassets/images/campaign/google+.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+.campaign_media_button_tumblr
+{
+    background: url('/core/webassets/images/campaign/tumblr.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+.campaign_media_button_youtube
+{
+    background: url('/core/webassets/images/campaign/youtube.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+
+.campaign_on_selected
+{
+    background: url('/core/webassets/images/campaign/on.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_off_selected
+{
+    background: url('/core/webassets/images/campaign/off.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_on_unselected
+{
+    background: url('/core/webassets/images/campaign/on_blank.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_off_unselected
+{
+    background: url('/core/webassets/images/campaign/off-blank.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_continue_button
+{
+	width:50%;
+    float:right;
+    clear:both;
+    padding: 20px;
+}
+.campaign_social_media_email{
+    font-size:12pt;
+    color: #5a5a5a;
+    margin-left:30px;
+    height:32px;
+    position:relative;
+    bottom: 10px;
+}
+.campaign_form_element 
+{
+	margin: 5px;
+	width: auto;
+	float: left;
+}
+.campaign_form_element .label
+{
+	font-size:11pt;
+	color:#5a5a5a;
+	font-weight:500;
+	background-color:#ffffff;
+}
+.errorMessage
+{
+	color:red;
+}
+
+.package_name
+{
+	font-size:24pt;
+	padding-top:20px;
+	padding-left:20px;
+}
+
+.package_button
+{
+	height:34px;
+	background-color:#2d72d8;
+	font-size:14pt;
+	text-align:center;
+	padding-top:10px;
+	color: #ffffff;
+}
+
+.package_unselected .package_button
+{
+	background-color:#4d90f3;
+}
+
+.package_price
+{
+	font-size:14pt;
+	margin-top:20px;
+	margin-bottom:10px;
+	padding-left:20px;
+}
+ 
+.package_content
+{
+	font-family: 'Open Sans';
+	font-weight: 600;
+	font-size: 12pt;
+}
+.package_content_row
+{
+	padding: 10px 20px 10px 20px;
+}
+
+.package_divider_black
+{
+	background-image: url('/core/webassets/images/campaign/black-divider.png');
+    height:2px;
+    width:100%;
+}
+	
+.package_divider_white
+{
+	background-image: url('/core/webassets/images/campaign/white-divider.png');
+    height:2px;
+    width:100%;
+    padding: 0 20px 0 20px;
+}
+
+.toggle_down
+{
+	background: url('/core/webassets/images/campaign/toggle-down.png') no-repeat center;
+    height:8px;
+    width: 13px;
+    margin-top:20px;
+} 
+.toggle_up
+{
+	background: url('/core/webassets/images/campaign/toggle-up.png') no-repeat center;
+    height:8px;
+    width: 13px;
+}
+.package_selected
+{
+	background-color:#4d90f3;
+	color:#ffffff;	
+	width:330px;
+	float:left;
+	margin-right:30px;
+}
+
+.package_unselected
+{
+	background-color:#f1f2f2;
+	color:#000000;
+	width:330px;
+	float:left;
+	margin-right:30px;
+	 
+}
+
+.show_cursor
+{
+	cursor:pointer;
+}
+
+.upgrade_model
+{
+	width:400px;
+	 
+	padding-bottom:20px;
+}
+
+.upgrade_modal_header
+{
+	color:#ffffff;
+	background-color:#4d90f3;
+	font-size:16pt;
+}
+.upgrade_modal_header .close
+{
+	width: 20px;
+	height: 20px;
+	color:#ffffff;	
+}
+.upgrade_price
+{
+	font-weight: bold;
+	font-size: 28pt;
+	color: #4d90f3;
+}
+
+.upgrade_price_month
+{
+	font-size:12pt;
+	color: #4d90f3;
+}
+
+.upgrade_modal_title
+{
+	text-align:left;
+	font-size:13pt;
+	margin: 10px 0px 20px 15px;
+}

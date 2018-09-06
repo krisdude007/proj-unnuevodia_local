@@ -1,0 +1,25 @@
+<div class='as-table'>
+    <div class="homeTop">
+        <h4>Be On TV</h4>
+    </div>
+    <div style='background-color:#1794d1;padding: 5% 25%;'>
+        <img class=homeImage src="/webassets/mobile/images/Image_Logo_Landing.png"/>
+    </div>
+    <div class="homeFooter text-center as-table-row">
+        <div style='height:33%;background-color:#1780b2;'>
+            <div style='height:100%;'>
+                <button class="filledButton" onclick="window.location='<?php echo Yii::app()->createUrl('poll/index'); ?>'"><h2>poll</h2><h5>Vote Now</h5></button>
+            </div>
+        </div>
+        <div style='height:33%;background-color:#0f668f;'>
+            <div style='height:100%;'>
+                <button class="filledButton" onclick="window.location='<?php echo Yii::app()->createUrl('ticker/index'); ?>'"><h2>social shout</h2><h5>Send a Social Shout</h5></button>
+            </div>
+        </div>
+        <div style='height:34%;background-color:#094f70;'>
+            <div style='height:100%;'>
+                <button class="filledButton" onclick="window.location='<?php echo Yii::app()->createUrl('questions/'); ?>'"><h2>fame spot</h2><h5>Record or Upload</h5></button>
+            </div>
+        </div>
+    </div>
+</div>

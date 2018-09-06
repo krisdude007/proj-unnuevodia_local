@@ -1,0 +1,26 @@
+<?php
+
+class MobileController extends Controller {
+
+    public $layout = false;
+    private $outputFormat = 'json'; // json, xml
+
+    public function filters() {
+        return array();
+    }
+    
+    // start stubbing out - for obvious reasons, 
+    // these will need to tap into existing functionality 
+    public function actionLogin() {
+      
+    }
+    
+    public function actionLogout() {
+      
+    }
+    
+    public function actionRegister() {
+      
+    }
+
+}

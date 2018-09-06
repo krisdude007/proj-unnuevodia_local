@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * This is the model class for table "network_show_schedule".
+ *
+ * The followings are the available columns in table 'network_show_schedule':
+ * @property integer $id
+ * @property integer $network_show_id
+ * @property integer $video_id
+ * @property integer $user_id
+ * @property string $house_number
+ * @property string $show_datetime
+ * @property string $spot_datetime
+ * @property integer $spot_length
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property NetworkShow $networkShow
+ * @property Video $video
+ * @property User $user
+ */
+class eNetworkShowSchedule extends NetworkShowSchedule
+{
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return NetworkShowSchedule the static model class
+     */
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+}

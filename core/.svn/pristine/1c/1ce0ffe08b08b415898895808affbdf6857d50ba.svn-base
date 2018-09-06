@@ -1,0 +1,223 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery-ui-1.10.0.css');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/_training.css');
+
+// page specific js
+Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/_training.js', CClientScript::POS_END);
+?>
+
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 style="color: rgb(4, 4, 4);" class="fab-title"><img style="margin-right: 11px; margin-top:5px; float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/settings-image.png">Training</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <!-- END PAGE HEADER-->
+        <div class="fab-row-fluid">
+
+            <div id="player" class="player">
+                <object
+                        data ="file=/core/webassets/swf/training/Service_Dashboard_1.m4v&image=/core/webassets/images/training/Service_Dashboard_1.jpg"
+                        codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
+                        width="528" height="297" allowFullScreen="true">
+                    <param name="flashvars" value="file=/core/webassets/swf/training/Service_Dashboard_1.m4v&image=/core/webassets/images/training/Service_Dashboard_1.jpg&controlbar=none&dock=false&autostart=false&stretching=exactfit" />
+                    <param name="movie" value="/webassets/swf/player.swf" />
+                    <param name="wmode" value="transparent" />
+                    <embed src="/webassets/swf/player.swf"
+                           width="700"
+                           height="400"
+                           wmode="transparent"
+                           type="application/x-shockwave-flash"
+                           pluginspage="https://www.macromedia.com/go/getflashplayer"
+                           allowFullScreen="true"
+                           flashvars="file=/core/webassets/swf/training/Service_Dashboard_1.m4v&image=/core/webassets/images/training/Service_Dashboard_1.jpg&controlbar=none&dock=false&autostart=false&stretching=exactfit" />
+                </object>
+            </div>
+
+
+
+            <div class="admin_video_list">
+                <div class="admin_video_category">
+                    <?php if(ADMIN_USER_MANUAL): ?>
+                    <div class="admin_video_category_name">
+                        <h2>Admin User Manual</h2>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <span class="admin_video_display_name">
+                        <a target="_blank" href="<?php echo Yii::app()->request->baseUrl; ?>/manuals/admin_user_manual.pdf">
+                            ADMIN USER MANUAL
+                        </a>
+                            </span>
+
+                    </div>
+                    <button type="button" id="fab-upload-file-button" class="fab-right-filter" style="margin-top:3px;padding-top:0"><i>Upload Manual</i></button>
+
+                    <?php endif; ?>
+                    <!-- dashboard videos -->
+                    <div class="admin_video_category_name">
+                        <h2>Dashboard Videos</h2>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Dashboard_1.m4v">
+                            <span class="admin_video_display_name">Dashboard Video Part 1</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Dashboard_1.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Dashboard_2.m4v">
+                            <span class="admin_video_display_name">Dashboard Video Part 2</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Dashboard_2.jpg" />
+                        </a>
+                    </div>
+
+
+                    <!-- video service videos -->
+                    <div class="admin_video_category_name">
+                        <h2>Video Service Videos</h2>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_1.m4v">
+                            <span class="admin_video_display_name">Video Admin: Overview</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_1.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_2.m4v">
+                            <span class="admin_video_display_name">Video Admin: Accept/Deny</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_2.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_3.m4v">
+                            <span class="admin_video_display_name">Video Admin: Filters</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_3.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_4.m4v">
+                            <span class="admin_video_display_name">Video Admin: Upper Results</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_4.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_5.m4v">
+                            <span class="admin_video_display_name">Video Admin: Lower Results</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_5.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_6.m4v">
+                            <span class="admin_video_display_name">Video Admin: Player Part 1</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_6.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Video_7.m4v">
+                            <span class="admin_video_display_name">Video Admin: Player Part 2</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Video_7.jpg" />
+                        </a>
+                    </div>
+
+
+
+                    <!-- voting videos -->
+                    <div class="admin_video_category_name">
+                        <h2>Voting Service Videos</h2>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Voting_1.m4v">
+                            <span class="admin_video_display_name">Voting: Overview</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Voting_1.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Voting_2.m4v">
+                            <span class="admin_video_display_name">Voting: Setup</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Voting_2.jpg" />
+                        </a>
+                    </div>
+
+
+                    <!-- ticker videos -->
+                    <div class="admin_video_category_name">
+                        <h2>Ticker Service Videos</h2>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Ticker_1.m4v">
+                            <span class="admin_video_display_name">Ticker: Overview</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Ticker_1.jpg" />
+                        </a>
+                    </div>
+
+                    <div class="admin_video_item">
+                        <a class="trainingVideoTrigger" href="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/swf/training/Service_Ticker_2.m4v">
+                            <span class="admin_video_display_name">Ticker: Setup</span>
+                            <img class="admin_video_thumb" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/training/Service_Ticker_2.jpg" />
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <?php
+            /*
+              // List of admin videos.
+              echo '<div class="admin_video_list">' . "\n";
+              foreach ($categories as $category) {
+              echo '  <div class="admin_video_category">' . "\n";
+              echo '    <div class="admin_video_category_name"><h2>' .
+              $category->admin_video_category_name . "</h2></div>\n";
+              foreach ($videos as $video) {
+              if (
+              $video->admin_video_category_id != $category->admin_video_category_id
+              || !$video->admin_video_basename
+              ) {
+              continue;
+              }
+              echo '    <div class="admin_video_item"><a href="' . $video->admin_video_url . '">' . "\n";
+              echo '      <span class="admin_video_display_name">' .
+              $video->admin_video_display_name . "</span>\n";
+
+              // TODO: video thumbnail and link/js to select/play video in player
+              echo '      <img class="admin_video_thumb" src="' . $video->admin_video_thumb_url . '" />' . "\n";
+              echo "    </a></div>\n"; // item
+              }
+              echo "  </div>  <!-- /category -->\n";
+              }
+              echo "</div> <!-- /admin_video_list -->\n";
+             *
+             */
+            ?>
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->
+
+
+                 <?php
+            $this->renderPartial('/admin/_overlayManualUpload', array(
+                    'formUploadManualModel'=>$formUploadManualModel,
+                )
+            );
+            ?>
+

@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * This is the model class for table "language_filter".
+ *
+ * The followings are the available columns in table 'language_filter':
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $pattern
+ * @property integer $active
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property User $user
+ */
+class eLanguageFilter extends LanguageFilter
+{
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('pattern', 'required'),
+			array('user_id, active', 'numerical', 'integerOnly'=>true),
+			array('pattern', 'length', 'max'=>255),
+                        array('pattern', 'unique'),
+                        array('user_id', 'default', 'value' => Yii::app()->user->getId()),
+                        array('active', 'default', 'value' => 1,'setOnEmpty'=>true,'on' => 'insert'),
+                        array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, user_id, pattern, active, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+
+        /**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return LanguageFilter the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+	
+	
+	protected function afterSave()
+	{
+	    parent::afterSave();
+	    $filters = self::model()->findAllByAttributes(Array('active'=>1));
+        Yii::app()->cache->set('language_filters', $filters, 3600);
+    }
+}

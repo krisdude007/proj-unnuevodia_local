@@ -1,0 +1,268 @@
+<?php
+
+class GameUtility {
+
+    //get total points for a user
+    public static function totalUserPoints($user_id) {
+        //will need to convert to yii
+        $total = Yii::app()->db->createCommand("SELECT SUM(A.point_value) "
+                        . "FROM game_choice_answer AS A "
+                        . "RIGHT JOIN game_choice_response AS R ON R.game_choice_answer_id=A.id AND R.user_id=$user_id")->queryScalar();
+
+        return $total;
+    }
+
+    //get top users according to points
+    public static function topUsersPoints($top = 10) {
+        //will need to convert to yii
+        $result = Yii::app()->db->createCommand("SELECT SUM(A.point_value) AS total, R.user_id "
+                        . "FROM game_choice_answer AS A "
+                        . "RIGHT JOIN game_choice_response AS R ON R.game_choice_answer_id=A.id "
+                        . "GROUP BY R.user_id "
+                        . "ORDER BY total DESC LIMIT $top")->queryAll();
+
+        $totals = array();
+        $i = 0;
+        foreach ($result as $r) {
+            $totals[$i]['id'] = $r['user_id'];
+            $totals[$i]['total'] = $r['total'];
+            $i++;
+        }
+
+        return $totals;
+    }
+
+    public static function pickWinnerRand($old_is_active, $new_is_active, $game_id) {
+
+        if ($old_is_active == 1 && $new_is_active == 0) {
+            $answers = eGameChoiceAnswer::model()->with('gameChoiceResponse:isPaid')->findByAttributes(array('game_choice_id' => $game_id, 'is_correct' => 1));
+
+            if ($answers != NULL && sizeof($answers->gameChoiceResponse) >= 1) { //make sure there is a correct response
+                //get random response
+                $response_id = $answers->gameChoiceResponse[rand(0, sizeof($answers->gameChoiceResponse) - 1)]->id;
+
+                $response = eGameChoiceResponse::model()->findByPK($response_id);
+                $response->is_winner = 1;
+                $response->save();
+            }
+            
+            GameUtility::sendEmailEndGame($game_id);
+        }
+    }
+
+    public static function sendEmailEndGame($game_id) {
+        $game = eGameChoice::model()->findByPk($game_id);
+        
+        $total_plays = $game->num_plays_paid+$game->num_plays_free;
+                
+        $report = "
+        <h3>Game Statistics</h3>
+    
+    <table border=\"1\">
+        <thead>
+            <tr>
+                <th>Paid Plays</th>
+                <th>Free Plays</th>
+                <th>Paid Unique Users</th>
+                <th>Free Unique Users</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>{$game->num_plays_paid}</td>
+            <td>{$game->num_plays_free}</td>
+            <td>{$game->num_users_paid}</td>
+            <td>{$game->num_users_free}</td>
+            <td>{$game->spent}</td>
+        </tr>
+        <tr></tr>
+    </table>
+    <br/>
+    <table border=\"1\">
+        <thead>
+            <tr>
+                <th>Total Plays</th>
+                <th>SMS Plays</th>
+                <th>IVR Plays</th>
+                <th>Web Plays</th>
+                <th>Web Free Plays</th>
+                <th>Web Anonymous Plays</th>
+            </tr>
+        </thead>
+            <tr>
+            <td>{$total_plays}</td>
+            <td>{$game->num_plays_sms_paid}</td>
+            <td>{$game->num_plays_ivr_paid}</td>
+            <td>{$game->num_plays_web_paid}</td>
+            <td>{$game->num_plays_web_free}</td>
+            <td>{$game->num_plays_free_anonymous}</td>
+            </tr>
+        <tr></tr>
+    </table>";
+            
+        $to = Array('philip@philipgura.com','mark@youtootech.com','mbahmj@gmail.com');
+    
+        MailUtility::send('endgame', $to, 
+        array('game_id' => $game->id,
+              'game_title' => $game->question,
+              'start_date' => $game->start_date,
+              'end_date' => $game->end_date,
+              'winner_link' => Yii::app()->createAbsoluteUrl('adminGame/printInvoice', array('type' => 'game', 'id' => $game->id)),
+              'winner' => $game->winner_username,
+              'game_link' => Yii::app()->createAbsoluteUrl('admin/gamereport', array('id' => $game->id)),
+              'game_title' => $game->question,
+              'report' => $report)
+              );
+    }
+
+    public static function setPeriodWinner($type, $day, $week, $month, $year) {
+
+        $flagValidDate = false;
+
+        //validate date
+        if ($type == 'week') {
+            if ($year < date('Y') || ($year == date('Y') && $week < date('W'))) {
+                $flagValidDate = true;
+            }
+        } else if ($type == 'month' || $type == 'year') {
+            if ($year < date('Y') || ($year == date('Y') && $month < date('n'))) {
+                $date = new DateTime();
+                $date->setDate($year, $month, $day);
+
+                $flagValidDate = true;
+            }
+        }
+
+//        if (($year <= date('Y') && $month <= 12 && $month >= 1 && $day <= 31 && $day >= 1 && $week >= 0 && $week <= 52)) {
+//            $date = new DateTime();
+//            $date->setDate($year, $month, $day);
+//        } else {
+//            echo 'Invalid date, only past dates can be run, NOT future or present.';
+//            exit;
+//        }
+
+        if ($flagValidDate) {
+            if ($type == 'week') { //week
+                $starEnd = DateTimeUtility::getStartAndEndDateWeek($week, $year);
+
+                $from = "{$starEnd[0]} 00:00:00";
+                $to = "{$starEnd[1]} 23:59:59";
+
+                $name = "{$week}-{$year}";
+            } else if ($type == 'month') { //month
+                $from = "{$date->format('Y-m')}-01 00:00:00";
+                $to = "{$date->format('Y-m-t')} 23:59:59";
+
+                $name = $date->format('F-Y');
+            } else if ($type == 'year') { //year
+                $from = "{$date->format('Y')}-01-01 00:00:00";
+                $to = "{$date->format('Y')}-12-31 23:59:59";
+
+                $name = $date->format('Y');
+            } else {
+                exit;
+            }
+
+            $winner = eGameWinner::model()->{$type}()->notdeleted()->findByAttributes(array('from_date' => $from, 'to_date' => $to));
+
+            if ($winner == NULL) {
+                GameUtility::pickWinnerRandPeriod($type, $name, $from, $to);
+            } else if ($winner->user_id == NULL) {
+                GameUtility::pickWinnerRandPeriod($type, $name, $from, $to, false, $winner->id);
+            } else {
+                //echo 'This period already exists.';
+            }
+        }
+    }
+
+    public static function pickWinnerRandPeriod($type, $name, $from, $to, $isNew = true, $winnerID = NULL) {
+        //YYYY-MM-DD HH:MM:SS
+        //$from = '2015-01-01 00:00:00';
+        //$to = '2015-01-15 00:00:00';
+
+        $criteria = new CDbCriteria();
+        $criteria->addBetweenCondition('t.created_on', $from, $to);
+
+        $answers = eGameChoiceAnswer::model()->with('gameChoiceResponse')->findByAttributes(array('is_correct' => 1), $criteria);
+
+        if ($isNew) {
+            $winner = new eGameWinner;
+        } else if ($winnerID != NULL) {
+            $winner = eGameWinner::model()->findByPk($winnerID);
+        } else {
+            exit;
+        }
+
+        $num_games = 0;
+        $num_plays = 0;
+        $num_users = 0;
+        $num_correct_plays = 0;
+
+        if ($answers != NULL && sizeof($answers->gameChoiceResponse) >= 1) {
+            $num_correct_plays = sizeof($answers->gameChoiceResponse);
+            $winner->user_id = $answers->gameChoiceResponse[rand(0, sizeof($answers->gameChoiceResponse) - 1)]->user_id;
+            $winner->type = $type;
+        } else {
+            $winner->user_id = NULL;
+        }
+
+        $winner->type = $type;
+        $winner->contest_name = $name;
+        $winner->num_games = $num_games;
+        $winner->num_plays = $num_plays;
+        $winner->num_correct_plays = $num_correct_plays;
+        $winner->num_users = $num_users;
+        $winner->from_date = $from;
+        $winner->to_date = $to;
+        $winner->save();
+    }
+
+    public static function getWinners() {
+        //$with = array('eGameChoiceResponse:isWinner', 'eGameChoiceAnswers:isCorrect');
+        //$games = eGameChoice::model()->recent()->isNotActive()->notdeleted()->multiple()->with('gameChoiceResponse')->with('gameChoiceAnswers:isCorrect')->findAll();
+        $games = eGameChoice::model()->recent()->isNotActive()->notdeleted()->multiple()->with('gameChoiceAnswers:isCorrect')->findAll();
+
+        return $games;
+    }
+
+    public static function getPeriodWinners() {
+        $winners = eGameWinner::model()->notdeleted()->findAll();
+
+        return $winners;
+    }
+
+    public static function getActiveGameDesc() {
+        $game = eGameChoice::model()->multiple()->isActive()->with('gameChoiceAnswers')->find();
+        if (isset($game)) {
+        return $game->description;
+        }
+    }
+
+    public static function actionGameSMS($phone = NULL) { //TO-DO
+        $smssender = eGameChoiceSmsOutbound::model()->findByPk($phone);
+
+        //to-do: check if the given smssender is a current user, registered in our system.
+        //If so, send sms, that his answer his recorded, else register the user and send temporary password.
+        //Record answer in the game_choice_answer table along with the user_id.
+
+        if ($id == NULL) {
+            $game = eGameChoice::model()->multiple()->isActive()->with('gameChoiceAnswers')->find();
+        } else {
+            $game = eGameChoice::model()->multiple()->with('gameChoiceAnswers')->findByPk((int) $id);
+        }
+
+
+        $user = eUser::model()->findByAttributes(array('username' => $smssender));
+        if (isset($user) != NULL) {
+            //Send sms that user answer is recorded.
+        } else {
+            //register user and send temporary password sms. Then record the answer.
+        }
+
+        $answers = array('#answer 1', '#answer 2', '#answer 3', '#answer 4');
+        if (in_array($gamesms, $answers)) {
+            //functionality to record answer is here.
+        }
+    }
+
+}

@@ -1,0 +1,85 @@
+<?php
+
+class MailUtility {
+
+    public static function send($template, $to, $merges = Array(), $active=true, $checkuser=true) {
+
+        if (is_array($to) && count($to) > 0) {
+            foreach ($to as $emailAddress) {
+                self::deliver($template, $emailAddress, $merges, $active, $checkuser);
+            }
+        } else {
+            return self::deliver($template, $to, $merges, $active, $checkuser);
+        }
+    }
+
+    private static function deliver($template, $to, $merges = array(), $active=true, $checkuser=true) {
+
+        if($active)
+            $userEmail = eUserEmail::model()->active()->findByAttributes(array('email' => $to));
+        else
+            $userEmail = eUserEmail::model()->findByAttributes(array('email' => $to));
+        if(!$emailTemplate = eEmailTemplate::model()->findByAttributes(array('name' => $template, 'active' => 1))) {
+            return false;
+        }
+
+        $template_file = $_SERVER['DOCUMENT_ROOT'].'/protected/views/email/'.str_replace(' ','_', $template).'.php';
+        if(file_exists($template_file)) {
+            $emailTemplate->content = Yii::app()->controller->renderFile($template_file, null, true);
+        }
+        if($checkuser)
+        {
+            if (!$userEmail) {
+                return false;
+            }
+            $user = eUser::model()->findByPK($userEmail->user_id);
+
+            $merges = array_merge($merges, Array(
+                'hostname' => $_SERVER['HTTP_HOST'],
+                'clientname' => Yii::app()->params['email']['title'],
+                'sitename' => Yii::app()->name,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $to,
+                'reply' => ContactUtility::getAdminEmail(),
+                'subject' => $emailTemplate->subject,
+                'imagetitle' => $merges['imagetitle'],
+                'imagethumb' => $merges['imagethumb'],
+            ));
+        }
+        else
+        {
+            $merges = array_merge($merges, Array(
+                'hostname' => $_SERVER['HTTP_HOST'],
+                'clientname' => Yii::app()->params['email']['title'],
+                'sitename' => Yii::app()->name,
+                'first_name' => '',
+                'last_name' => '',
+                'email' => $to,
+                'reply' => ContactUtility::getAdminEmail(),
+                'subject' => $emailTemplate->subject,
+                'imagetitle' => $merges['imagetitle'],
+                'imagethumb' => $merges['imagethumb'],
+            ));
+        }
+
+        if (!empty($emailTemplate)) {
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+            $headers .= 'To: {first_name} {last_name} <{email}>' . "\r\n";
+            $headers .= 'From: {clientname} <{reply}>' . "\r\n";
+            $subject = $emailTemplate->subject;
+            $content = $emailTemplate->content;
+            foreach ($merges as $k => $v) {
+                $headers = preg_replace("/\{$k\}/", $v, $headers);
+                $subject = preg_replace("/\{$k\}/", $v, $subject);
+                $content = preg_replace("/\{$k\}/", $v, $content);
+            }
+            return mail($to, $subject, $content, $headers);
+        }
+        return false;
+    }
+
+}
+
+?>

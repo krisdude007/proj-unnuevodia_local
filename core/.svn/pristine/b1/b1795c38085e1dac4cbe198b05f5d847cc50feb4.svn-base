@@ -1,0 +1,28 @@
+<?php
+class eBrightcove extends Brightcove
+{
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('video_id, brightcove_id', 'required'),
+            array('video_id', 'numerical', 'integerOnly'=>true),
+            array('brightcove_id', 'length', 'max'=>255),
+            array('status', 'length', 'max'=>4),
+            array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'insert'),
+            array('updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'update'),            
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, video_id, brightcove_id, created_on, updated_on', 'safe', 'on'=>'search'),
+        );
+    }    
+    
+    public function afterSave(){
+        ProcessUtility::startProcess('sendvideotobrightcove');
+        return true;
+    }
+    
+    
+    
+}

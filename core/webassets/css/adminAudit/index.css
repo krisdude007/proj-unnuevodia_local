@@ -1,0 +1,21 @@
+.grid-view .filters input, .grid-view .filters select {
+    width: 94% !important;
+    border: 1px solid #ccc;
+}
+
+
+
+.grid-view table.items th, .grid-view table.items td {
+  border: 1px rgb(190, 178, 178) solid !important;
+}
+
+
+.grid-view table.items tr.selected {
+  background: #AEE0FC !important;
+}
+
+.grey{color:#999}
+
+.row{
+    margin-left:0px;
+}

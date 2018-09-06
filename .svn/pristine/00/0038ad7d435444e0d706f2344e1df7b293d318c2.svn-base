@@ -1,0 +1,16 @@
+/* 
+    Document   : _index
+    Created on : Sep 23, 2013, 1:53:06 PM
+    Author     : Greg
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#index {
+    width:70%;
+    float:left;
+    margin-top:5px;
+    position:relative;
+    height:275px;
+}
+

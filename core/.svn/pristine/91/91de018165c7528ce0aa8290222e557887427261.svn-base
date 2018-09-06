@@ -1,0 +1,16 @@
+<?php
+
+?>
+
+<div style="text-align: center">
+	<h3>Payment Cancellation</h3>
+	<p>
+		Thank You for choosing Boloro Payment Gateway.
+	</p>
+        <p>
+           <?php echo 'Order-ID: ' .$orderId. ' , Transaction Status Code: ' .$transStatus ?>
+        </p>
+        <p>
+           <?php echo $transMsg; ?>
+        </p>
+</div>

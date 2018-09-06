@@ -1,0 +1,44 @@
+table {
+    border: 1px solid gray;
+}
+
+table td {
+    color: #000000;
+    border: 1px solid gray;
+}
+
+table .odd {
+    background-color: #FFFFFF;
+}
+
+table a {
+    color: #000000;
+}
+
+#gameTable th {
+    background-color: #C9DAF8;
+}
+
+#gameTable .odd td {
+    background-color: #FFFFFF;
+}
+
+table .even {
+    background-color: #EEEEEE;
+}
+
+#gameTable .even td {
+    background-color: #EEEEEE;
+}
+
+#gameTable .odd td {
+    background-color: #FFFFFF;
+}
+
+#gameTable .even td {
+    background-color: #EEEEEE;
+}
+
+#gameTable table .correct td {
+    background-color: #93C47D;
+}

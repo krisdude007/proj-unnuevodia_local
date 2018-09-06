@@ -1,0 +1,98 @@
+<?php
+
+class ImageController extends Controller {
+
+    public $layout = '//layouts/main';
+    public $user;
+    public $ticker;
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        }
+    }
+
+    public function actionIndex($order = 'recent') {
+        switch ($order) {
+            case 'recent':
+                $images = eImage::model()->with('user')->accepted()->recent()->findAll();
+                break;
+            default:
+                $image = new eImage;
+                $images = $image->orderBy(NULL, $order);
+                break;
+        }
+        $this->render('index', array(
+            'images' => $images,
+                )
+        );
+    }
+
+    public function actionView($view_key) {
+        
+        $image = eImage::model()->with('user')->accepted()->findByAttributes(array('view_key' => $view_key));
+        $user = eUser::model()->findByPK($image->user_id);
+        $this->render('view', array(
+            'image' => $image,
+            'user' => $user,
+                )
+        );
+        exit;
+        if (!Yii::app()->user->isGuest) {
+            $imageView = new eImageView;
+            $imageView->user_id = Yii::app()->user->getId();
+            $imageView->image_id = $image->id;
+            $imageView->save();
+        }
+    }
+
+    public function actionThanks() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $videos = eVideo::model()->findAllByAttributes(Array('user_id' => Yii::app()->user->getId()));
+        $questions = eQuestion::model()->current()->findAll();
+        foreach ($videos as $video) {
+            $user_answered[] = $video->question_id;
+        }
+        foreach ($questions as $question) {
+            if (in_array($question->id, $user_answered)) {
+                continue;
+            } else {
+                break;
+            }
+        }
+        $question = (is_null($question)) ? eQuestion::model()->current()->find() : $question;
+        $this->render('thanks', array('question' => $question));
+    }
+
+    public function actionAjaxRate() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        if (!Yii::app()->user->isGuest) {
+            $imageRate = eImageRating::model()->findByAttributes(array('user_id' => Yii::app()->user->getId(), 'image_id' => $object_id));
+            $imageRate = (is_null($imageRate)) ? new eImageRating() : $imageRate;
+            $imageRate->user_id = Yii::app()->user->getId();
+            $imageRate->image_id = $object_id;
+            $imageRate->rating = $rating;
+            $imageRate->save();
+            
+            print_r($imageRate);
+            $image = eImage::model()->findByPK($object_id);
+            //echo json_encode(array('avg' => $image->rating, 'votes' => sizeof($image->imageRatings)));
+        }
+    }
+
+    
+
+
+}

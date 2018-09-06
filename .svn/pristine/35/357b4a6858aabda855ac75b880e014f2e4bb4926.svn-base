@@ -1,0 +1,91 @@
+<?php
+
+class clientVideoController extends VideoController {
+
+    function init() {
+        parent::init();
+    }
+
+    public function actionProcess($id = 0) {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        if ($id == 0) {
+            $this->redirect(Yii::app()->createUrl('/record'));
+        }
+        $video = eVideo::model()->findByPK($id);
+        if ($video->user_id != Yii::app()->user->getId()) {
+            $this->redirect(Yii::app()->createUrl('/record'));
+        }
+        if (is_null($video) || $video->processed == 1) {
+            $this->redirect(Yii::app()->createUrl('/record'));
+        }
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'video-process-form') {
+            echo CActiveForm::validate(array($video));
+            Yii::app()->end();
+        }
+        $this->download($id);
+        if (isset($_POST['eVideo'])) {
+            $video->attributes = $_POST['eVideo'];
+            if ($video->validate()) {
+
+                // see if user selected share to twitter or facebook
+                if ($video->to_twitter == '1') {
+
+                    // check to see if user has connected a twitter account
+                    if (eUserTwitter::model()->countByAttributes(array('user_id' => Yii::app()->user->id)) == 0) {
+
+                        // set to_twitter back to false
+                        $video->to_twitter = 0;
+                    }
+                }
+
+                // see if user selected share to twitter or facebook
+                if ($video->to_facebook == '1') {
+
+                    // check to see if user has connected a twitter account
+                    if (eUserFacebook::model()->countByAttributes(array('user_id' => Yii::app()->user->id)) == 0) {
+
+                        // set to_facebook back to false
+                        $video->to_facebook = 0;
+                    }
+                }
+
+                $autoApprove = eAppSetting::model()->findByAttributes(Array('attribute' => 'auto_approve_submitted_videos'));
+
+                if ($autoApprove->value) {
+                    $video->status = 'accepted';
+                }
+
+                // save the video
+                $video->save();
+
+                if ($video->status == 'accepted') {
+                    AuditUtility::save($this, false, Array('action' => 'autoApprove', 'type' => 'video', 'id' => $video->id));
+                }
+                $this->encode($video->id);
+                // add email after submit video
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => Yii::app()->user->id, 'type' => 'primary'));
+                ClientMailUtility::send('video submit', $userEmail->email, array('link' => "
+                        <a href='http://{$_SERVER['HTTP_HOST']}/play/{$video->view_key}'>
+                            <div style='width:232px;display:inline-block;'>
+                                <img style='width:232px;height:119px;' src='http://{$_SERVER['HTTP_HOST']}/".basename(Yii::app()->params['paths']['video'])."/{$video->thumbnail}".VIDEO_IMAGE_FILE_EXT."'/>
+                            </div>
+                        </a>"));
+                //end of add
+                $this->redirect(Yii::app()->createURL('/thanks'));
+                return true;
+            }
+        }
+        $this->render('process', array(
+            'model' => $video,
+            'question_id' => $video->question_id,
+            'videoInfo' => Array(
+                'videofile' => '/' . basename(Yii::app()->params['paths']['video']) . "/{$video->filename}" . VIDEO_PRE_FILE_EXT,
+                'image' => '/' . basename(Yii::app()->params['paths']['video']) . "/{$video->thumbnail}" . VIDEO_IMAGE_FILE_EXT,
+                'width' => 426,
+                'height' => 240,
+            ),
+        ));
+    }
+}

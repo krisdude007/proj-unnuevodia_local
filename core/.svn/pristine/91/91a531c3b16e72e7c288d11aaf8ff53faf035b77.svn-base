@@ -1,0 +1,49 @@
+/* 
+    Document   : tickerModalHistory
+    Created on : Mar 20, 2014, 11:40:02 AM
+    Author     : YouToo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+#cover {
+    position:fixed;
+    background-color: #000000;
+    opacity: 0.6;filter:alpha(opacity=60);
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#modal {
+    background-color: white;
+    position:fixed;
+    width:600px;
+    height:360px;
+    color:black;
+    border:1px solid black;
+    /*background-image:url('/webassets/images/sweepstakes/3/Background.png');*/
+}
+
+#modalTitle {
+    padding:3px;
+    border:0px;
+    color:white;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #85bad8),
+        color-stop(1, #4c99c5)
+        );
+    background-image: -o-linear-gradient(bottom, #85bad8 0%, #4c99c5 100%);
+    background-image: -moz-linear-gradient(bottom, #85bad8 0%, #4c99c5 100%);
+    background-image: -webkit-linear-gradient(bottom, #85bad8 0%, #4c99c5 100%);
+    background-image: -ms-linear-gradient(bottom, #85bad8 0%, #4c99c5 100%);
+    background-image: linear-gradient(to bottom, #85bad8 0%, #4c99c5 100%);
+}
+
+#modalContents {
+    padding: 5px;    
+    /*margin-bottom: 10px; */   
+}

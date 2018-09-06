@@ -1,0 +1,52 @@
+<?php $this->renderPartial('/csrf/_csrfToken'); ?>
+<div id="content" style="color: #ffffff;height: 100%;">
+    <div id="voteDetail" style="padding: 8px;height: 100%;">
+        <?php if (!is_null($poll)): ?>
+            <div class="afterVote" rel='<?php echo $poll->id; ?>'>
+                <div id="voteHead" class='text-center'>
+                    <h2 style="font-size: 1.8em;padding: 6px;margin: 0 auto;">
+                        <?php echo Yii::t('system', 'Vote Now'); ?>
+                    </h2>
+                    <div id="question" style="font-size: 1.2em;padding: 3px;">
+                        <?php echo $poll->question; ?>
+                    </div>
+                </div>
+                <div class="text-center" style="overflow: hidden;">
+                    <?php foreach ($poll->pollAnswers as $answer): ?>
+                        <div style="width: 50%; float:left; padding: 4px;">
+                            <a href="#" class="btn voteButton white" style="font-size: 1.2em;color: #ffffff !important; border-color: #ffffff !important;padding: 1% !important;height: auto;min-height: initial;" rel="<?php echo $answer->id; ?>">
+                                <?php echo $answer->answer; ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="afterVote" style="display: none;">
+                <div id="voteHead" class='text-center'>
+<!--                    <h2 style="font-size: 1.8em;padding: 6px;margin: 0 auto;">
+                        <?php //echo Yii::t('system', 'Poll Results'); ?>
+                    </h2>-->
+                    <div id="question" style="font-size: 1.2em;padding: 3px;">
+                        <?php echo $poll->question; ?>
+                    </div>
+                </div>
+                <div style="padding: 0px 20px;">
+                    <?php foreach ($poll->pollAnswers as $answer): ?>
+                        <div class='vote_label'>
+                            <span <?php echo (!Yii::app()->params['useMobileTheme'] && !$this->isMobile()) ? "class='pull-left'" : ""; ?>><?php echo $answer->answer; ?></span>
+                            <span class='pull-right percent'>0%</span>
+                        </div>
+                        <div class="progress" style="margin: 4px; height: 3px; background-color: transparent;">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style=" background-color: white;"  >
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class='text-center'>
+                <h2>No Polls Open!</h2>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

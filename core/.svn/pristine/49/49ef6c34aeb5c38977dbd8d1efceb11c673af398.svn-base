@@ -1,0 +1,653 @@
+<?php
+
+class AdminReportController extends Controller {
+
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array(
+                    'ajaxSelectedQuestion',
+                    'ajaxAnalytics',
+                    'ajaxUpdateAnalytics',
+                    'ajaxDashboardGraph',
+                    'ajaxGetLineGraphData',
+                    'ajaxGetGraphData',
+                    'demographic',
+                    'weeklyReport',
+                    'videoQuestionReport',
+                    'tickerQuestionReport',
+                    'index',
+                    'test',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionAjaxSelectedQuestion() {
+        $this->layout = false;
+        if ($_POST['pollId'] == "" || $_POST['startDate'] == "" || $_POST['endDate'] == "")
+            return;
+        $rows = Array(
+            'Total' => number_format(ePollResponse::model()->filterByDates($_POST['startDate'], $_POST['endDate'])->countByAttributes(Array('poll_id' => $_POST['pollId']))),
+            'Web' => number_format(ePollResponse::model()->filterByDates($_POST['startDate'], $_POST['endDate'])->countByAttributes(Array('poll_id' => $_POST['pollId'], 'source' => 'web'))),
+            'Facebook' => number_format(ePollResponse::model()->filterByDates($_POST['startDate'], $_POST['endDate'])->countByAttributes(Array('poll_id' => $_POST['pollId'], 'source' => 'facebook'))),
+            'Mobile' => number_format(ePollResponse::model()->filterByDates($_POST['startDate'], $_POST['endDate'])->countByAttributes(Array('poll_id' => $_POST['pollId'], 'source' => 'mobile'))),
+            'Twitter' => number_format(ePollResponse::model()->filterByDates($_POST['startDate'], $_POST['endDate'])->countByAttributes(Array('poll_id' => $_POST['pollId'], 'source' => 'twitter'))),
+                //'Text' => ePollResponse::model()->filterByDates($_POST['date'])->countByAttributes(Array('poll_id' => $_POST['pollId'], 'source' => 'text')),
+        );
+        $links = Array(
+            'total_pollResponse_' . $_POST['pollId'],
+            'web_pollResponse_' . $_POST['pollId'],
+            'facebook_pollResponse_' . $_POST['pollId'],
+            'mobile_pollResponse_' . $_POST['pollId'],
+            'twitter_pollResponse_' . $_POST['pollId'],
+        );
+        $this->renderPartial('_reportTable', array('headerRow' => true, 'classes' => 'fab-a-blue', 'rows' => $rows, 'links' => $links, 'startDate' => $_POST['startDate'], 'endDate' => $_POST['endDate']));
+    }
+
+    public function actionAjaxAnalytics() {
+        $this->layout = false;
+        $results = eAnalytics::pullGAdata($_POST['start_date'], $_POST['end_date']);
+        $rows = Array(
+            'Total Visits' => number_format($results->visits),
+            'Unique Visitors' => number_format($results->uniqueVisitors),
+            'Pageviews' => number_format($results->pageviews),
+            'Pages Per Visit' => $results->pagesPerVisit,
+            'Avg. Visit Duration' => $results->avgTimeOnSite,
+            'Bounce Rate' => $results->bounceRate,
+            '% New Visits' => $results->percentNew,
+        );
+
+        $this->renderPartial('_reportTable', array('headerRow' => true, 'id' => 'gaData', 'rows' => $rows));
+        unset($rows);
+        $rows['By Browser'] = '';
+        foreach ($results->browsers as $browser => $visits) {
+            $rows[$browser] = $visits . '&nbsp;-&nbsp;' . round(($visits / $results->browsersTotal) * 100, 2) . '%';
+        }
+        $this->renderPartial('_reportTableToggle', array('id' => 'gaBrowserData', 'rows' => $rows));
+
+        unset($rows);
+        $rows['By OS'] = '';
+        foreach ($results->os as $os => $visits) {
+            $rows[$os] = $visits . '&nbsp;-&nbsp;' . round(($visits / $results->osTotal) * 100, 2) . '%';
+        }
+        $this->renderPartial('_reportTableToggle', array('id' => 'gaOsData', 'rows' => $rows));
+    }
+
+    public function actionAjaxUpdateAnalytics() {
+        $this->layout = false;
+        $analytics = eAnalytics::model()->findByPk(Yii::app()->params['analytics']['projectId']);
+        if (sizeof($analytics) == 0) {
+            $analytics = new eAnalytics('new');
+        }
+        $analytics->project_id = Yii::app()->params['analytics']['projectId'];
+        $startDate = Yii::app()->params['analytics']['startDate'];
+        $endDate = date('Y-m-d');
+        $results = eAnalytics::pullGAdata($startDate, $endDate);
+        $results->startDate = $startDate;
+        $results->endDate = $endDate;
+        $analytics->json = json_encode($results);
+        if ($analytics->validate())
+            $analytics->save();
+        else
+            setFlash('error', "Unexpected data format");
+    }
+
+    /**
+     *
+     *
+     * Demographic ACTIONS
+     * This section contains everything required for the Demographic section of the admin
+     *
+     *
+     */
+    public function actionDemographic($startDate = null, $endDate = null, $request = null) {
+        $startDate = DateTimeUtility::getStartDate($startDate);
+        $endDate = (is_null($endDate) || $endDate == '') ? date("Y-m-d") : $endDate;
+        ini_set('memory_limit', '512M');
+        list($scope, $model, $pollId) = explode('_', $request);
+        //for map
+        switch ($model) {
+            case 'user':
+                $demographicData = eUser::model()->filterByDates($startDate, $endDate)->with('userEmails:primary', 'votesByUserId', 'countVideosByUserId', 'countVotesByUserId', 'userLocations:primary', 'userLogins:latestMax')->findAll(array('group' => eUser::model()->getTableAlias() . '.id'));
+                break;
+            case 'ticker':
+                $demographicData = eTicker::model()->filterByDates($startDate, $endDate)->ticker()->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eTicker::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'video':
+                $demographicData = eVideo::model()->filterByDates($startDate, $endDate)->processed()->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eVideo::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'videoAccepted':
+                $demographicData = eVideo::model()->filterByDates($startDate, $endDate)->processed()->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eVideo::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'videoNew':
+                $demographicData = eVideo::model()->filterByDates($startDate, $endDate)->processed()->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eVideo::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'videoDenied':
+                $demographicData = eVideo::model()->filterByDates($startDate, $endDate)->processed()->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eVideo::model()->getTableAlias() . '.user_id'));
+                break;
+
+            case 'image':
+                $demographicData = eImage::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eImage::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'imageAccepted':
+                $demographicData = eImage::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eImage::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'imageNew':
+                $demographicData = eImage::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eImage::model()->getTableAlias() . '.user_id'));
+                break;
+            case 'imageDenied':
+                $demographicData = eImage::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => eImage::model()->getTableAlias() . '.user_id'));
+                break;
+
+            case 'pollResponse':
+                $parms = explode('_', $request);
+//                $scope = $parms[0];
+//                $model = $parms[1];
+                if (sizeof($parms) == 3) {
+                    $pollId = $parms[2];
+                    $demographicData = ePollResponse::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => ePollResponse::model()->getTableAlias() . '.user_id'));
+                }
+                $demographicData = ePollResponse::model()->filterByDates($startDate, $endDate)->with('user', 'user.userEmails:primary', 'user.votesByUserId', 'user.countVideosByUserId', 'user.countVotesByUserId', 'user.userLocations:primary', 'user.userLogins:latestMax')->findAll(array('group' => ePollResponse::model()->getTableAlias() . '.user_id'));
+                break;
+            default:
+                echo "error, unrecognized model";
+                exit;
+        }
+        $uniqueZips = array();
+        foreach ($demographicData as $d) {
+            $zip = ($model != 'user') ? $d->user->userLocations[0]->postal_code : $d->userLocations[0]->postal_code;
+            if ((is_numeric($zip)) && (strlen($zip) == 5)) {
+                $zip = (string) $zip;
+                if (in_array($zip, $uniqueZips)) {
+                    $uniqueZips[$zip]['count'] = 1;
+                } else {
+                    $uniqueZips[$zip]['count']++;
+                }
+            }
+        }
+        $postalCodes = ePostalCode::model()->findAll();
+        foreach ($postalCodes as $postalCode) {
+            if (isset($uniqueZips[$postalCode->identifier])) {
+                $uniqueZips[$postalCode->identifier]['lat'] = ReportUtility::cleanLatLng($postalCode->latitude);
+                $uniqueZips[$postalCode->identifier]['lng'] = ReportUtility::cleanLatLng($postalCode->longitude);
+                $uniqueZips[$postalCode->identifier]['income'] = $postalCode->income;
+            }
+        }
+        $records['records'] = array();
+        foreach (eAppSetting::model()->demographic()->active()->findAll() as $setting) {
+            $records['mapDisplayOnly'][] = $setting->attribute;
+        }
+        foreach ($demographicData as $d) {
+            $userId = ($model != 'user') ? $d->user->id : $d->id;
+            if ($userId) {
+                $records['records'][] = array(
+                    'UserID' => $userId,
+                    'LastName' => ($model != 'user') ? $d->user->last_name : $d->last_name,
+                    'FirstName' => ($model != 'user') ? $d->user->first_name : $d->first_name,
+                    'Email' => ($model != 'user') ? $d->user->userEmails[0]->email : $d->userEmails[0]->email,
+                    'Videos' => ($model != 'user') ? $d->user->countVideosByUserId : $d->countVideosByUserId,
+                    'Votes' => ($model != 'user') ? $d->user->countVotesByUserId : $d->countVotesByUserId,
+                    'Source' => ($model != 'user') ? $d->user->source : $d->source,
+                    'LastLoginDate' => ($model != 'user') ? $d->user->userLogins[0]->created_on : $d->userLogins[0]->created_on,
+                    'JoinDate' => ($model != 'user') ? $d->user->created_on : $d->created_on,
+                    'ZipCode' => ($model != 'user') ? $d->user->userLocations[0]->postal_code : $d->userLocations[0]->postal_code,
+                    'AreaHouseholdIncome' => ($model != 'user') ? $uniqueZips[$d->user->userLocations[0]->postal_code]['income'] : $uniqueZips[$d->userLocations[0]->postal_code]['income'],
+                    'latitude' => ($model != 'user') ? $uniqueZips[$d->user->userLocations[0]->postal_code]['lat'] : $uniqueZips[$d->userLocations[0]->postal_code]['lat'],
+                    'longitude' => ($model != 'user') ? $uniqueZips[$d->user->userLocations[0]->postal_code]['lng'] : $uniqueZips[$d->userLocations[0]->postal_code]['lng'],
+                );
+            }
+        }
+        //for graph
+        if ($daysBack != 'total') {
+            $filterDate = date('Y-m-d', strtotime('-' . $daysBack . ' days'));
+        } else {
+            $filterDate = Yii::app()->params['analytics']['startDate'];
+        }
+        $this->render('demographic', array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'request' => $request,
+            'demographicData' => $demographicData,
+            'uniqueZips' => $uniqueZips,
+            'records' => $records,
+            'model' => $model,
+            'scope' => $scope,
+            'pollId' => $pollId
+        ));
+    }
+
+    /**
+     *
+     *
+     * REPORTING ACTIONS
+     * This section contains everything required for the reporting section of the admin
+     *
+     *
+     */
+    public function actionIndex($startDate = null, $endDate = null) {
+        $startDate = DateTimeUtility::getStartDate($startDate);
+        $endDate = is_null($endDate) ? date("Y-m-d") : $endDate;
+        $questions = ePoll::model()->findAll(array(
+            'condition' => 'start_time or end_time >= :startDate and start_time or end_time <= :endDate',
+            'params' => array(':startDate' => $startDate !== null ? gmdate('Y-m-d H:i:s', strtotime($startDate)) : null, ':endDate' => $endDate !== null ? gmdate('Y-m-d H:i:s', strtotime($endDate)) : null),
+            'order' => 'id DESC'
+        ));
+        $json = eAnalytics::model()->findByPk(Yii::app()->params['analytics']['projectId']);
+        $analyticsData = json_decode($json->json);
+
+        $webId = eDestination::model()->findByAttributes(Array('destination' => 'web'))->id;
+        $facebookId = eDestination::model()->findByAttributes(Array('destination' => 'facebook'))->id;
+        $tvId = eDestination::model()->findByAttributes(Array('destination' => 'tv'))->id;
+
+        $settings = eAppSetting::model()->report()->active()->findAll();
+        foreach ($settings as $k => $v) {
+            $pageSettings[$v->attribute] = $v->value;
+        }
+        $this->render('index', array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'questions' => $questions,
+            'analyticsData' => $analyticsData,
+            'usersTotal' => eUser::model()->filterByDates($startDate, $endDate)->countByAttributes('id'),
+            'usersWeb' => eUser::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+            'usersFacebook' => eUser::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+            'usersMobile' => eUser::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+            'usersTwitter' => eUser::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'twitter')),
+            'responseTotalCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->count(),
+            'responseWebCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+            'responseFaceboookCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+            'responseMobileCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+            'responseTwitterCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'twitter')),
+            'responseTextCount' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'text')),
+            'tickerTotalCount' => eTicker::model()->ticker()->filterByDates($startDate, $endDate)->countByAttributes('id'),
+            'tickerWebCount' => eTicker::model()->ticker()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+            'tickerFacebookCount' => eTicker::model()->ticker()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+            'tickerMobileCount' => eTicker::model()->ticker()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+            'tickerTwitterCount' => eTicker::model()->ticker()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'twitter')),
+            'videoTotalCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes('id'),
+            'videoWebCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+            'videoFacebookCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+            'videoMobileCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+            'videoVineCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'vine')),
+            'videoAcceptedCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'accepted')),
+            'videoNewCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'new')),
+            'videoDeniedCount' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'denied')),
+            'videoViewCount' => eVideoView::model()->filterByDates($startDate, $endDate)->count(),
+            'imageTotalCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes('id'),
+            'imageWebCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+            'imageFacebookCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+            'imageMobileCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+            'imageVineCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'vine')),
+            'imageAcceptedCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'accepted')),
+            'imageNewCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'new')),
+            'imageDeniedCount' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('status' => 'denied')),
+            'socialReceivedTotalCount' => eTicker::model()->filterByDates($startDate, $endDate)->social()->count(),
+            'socialFacebookCount' => eTicker::model()->filterByDates($startDate, $endDate)->social()->countByAttributes(Array('source' => 'facebook')),
+            'socialTwitterCount' => eTicker::model()->filterByDates($startDate, $endDate)->social()->countByAttributes(Array('source' => 'twitter')),
+            'settings' => $pageSettings,
+                //SOCIAL SEARCH tricky part is filterByDate, or filterByTickerDate or filterByDestinationDate (destonation date broken for some reason)
+//            'socialPublishedTotalCount' => eTicker::model()->filterByDestinationDate($filterDate)->social()->with('tickerDestination')->hasDestination()->count(),
+//            'socialToWebCount' => eTicker::model()->filterByTickerDate($filterDate)->social()->with('tickerDestination')->filterByDestination($webId)->count(),
+//            'socialToFacebookCount' => eTicker::model()->filterByTickerDate($filterDate)->social()->with('tickerDestination')->filterByDestination($facebookId)->count(),
+//            'socialToTvCount' => eTicker::model()->filterByTickerDate($filterDate)->social()->with('tickerDestination')->filterByDestination($tvId)->count(),
+        ));
+    }
+
+    public function actionAjaxGetLineGraphData() {
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+        switch ($_POST['model']) {
+            case "user":
+                $results = eUser::model()->filterByDates($startDate, $endDate)->findAll();
+                break;
+            case "video":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->findAll();
+                break;
+            case "ticker":
+                $results = eTicker::model()->ticker()->filterByDates($startDate, $endDate)->findAll();
+                break;
+            case "pollResponse":
+                if (isset($_POST['pollId']) && $_POST['pollId'] != '')
+                    $results = ePollResponse::model()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('poll_id' => $_POST['pollId']));
+                else
+                    $results = ePollResponse::model()->filterByDates($startDate, $endDate)->findAll();
+                break;
+            case "videoAccepted":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'accepted'));
+                break;
+            case "videoNew":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'new'));
+                break;
+            case "videoDenied":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'denied'));
+                break;
+
+
+            case "image":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->findAll();
+                break;
+            case "imageAccepted":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'accepted'));
+                break;
+            case "imageNew":
+                $results = eVideo::model()->processed()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'new'));
+                break;
+            case "imageDenied":
+                $results = eImage::model()->filterByDates($startDate, $endDate)->FindAllByAttributes(Array('status' => 'denied'));
+                break;
+            default:
+                echo "error: unexpected model ONE";
+                return true;
+        }
+        if ($_POST['scope'] == 'total') {
+            $initializedResultSet = ReportUtility::initResults($startDate, $endDate);
+            switch ($_POST['model']) {
+                case "user":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#aaaaaa');
+                    break;
+                case "video":
+                case "videoAccepted":
+                case "videoNew":
+                case "videoDenied":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'vine' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#00bf8f', '#aaaaaa');
+                    break;
+                case "image":
+                case "imageAccepted":
+                case "imageNew":
+                case "imageDenied":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'vine' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#00bf8f', '#aaaaaa');
+                    break;
+                case "ticker":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#aaaaaa');
+                    break;
+                case "vote":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#aaaaaa');
+                    break;
+                case "pollResponse":
+                    $totals = Array(
+                        'web' => $initializedResultSet,
+                        'facebook' => $initializedResultSet,
+                        'twitter' => $initializedResultSet,
+                        'mobile' => $initializedResultSet,
+                        'total' => $initializedResultSet
+                    );
+                    $seriesColors = array('#35aa47', '#ff9900', '#e02222', '#852b99', '#aaaaaa');
+                    break;
+                default:
+                    echo "error: unexpected model TWO";
+                    return;
+                    break;
+            }
+        } else {
+            $totals = Array(
+                $_POST['scope'] => ReportUtility::initResults($filterDate)
+            );
+        }
+        $max = 0;
+        foreach ($results as $k => $v) {
+            if ($_POST['scope'] == 'total' || $_POST['scope'] == $v->source) {
+                $totals[$v->source][substr($v->created_on, 0, strpos($v->created_on, ' '))]++;
+                $totals['total'][substr($v->created_on, 0, strpos($v->created_on, ' '))]++;
+                $newMax = $totals['total'][substr($v->created_on, 0, strpos($v->created_on, ' '))];
+                $max = $newMax > $max ? $newMax : $max;
+            }
+        }
+        if ($_POST['scope'] != 'total') {
+            unset($totals['total']);
+        } else {
+            $ret['deselectTotal'] = true;
+        }
+        $ret['data'] = $totals;
+        $ret['seriesColors'] = json_encode($seriesColors);
+        $ret['yMax'] = $max;
+        echo json_encode($ret);
+    }
+
+    public function actionAjaxGetGraphData() {
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+        switch ($_POST['model']) {
+            case "video":
+                $results = Array(
+                    'Web' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+                    'Mobile' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+                    'Facebook' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+                    'Vine' => eVideo::model()->processed()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'vine'))
+                );
+                $seriesColors = array('#fd8e22', '#ff4014', '#e7191b', '#c91011');
+                break;
+            case "image":
+                $results = Array(
+                    'Web' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+                    'Mobile' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+                    'Facebook' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+                    'Vine' => eImage::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'vine'))
+                );
+                $seriesColors = array('#fd8e22', '#ff4014', '#e7191b', '#c91011');
+                break;
+            case "ticker":
+                $results = Array(
+                    'Web' => eTicker::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+                    'Mobile' => eTicker::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+                    'Facebook' => eTicker::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook'))
+                );
+                $seriesColors = array('#ffd73d', '#b1b614', '#909408');
+                break;
+            case "vote":
+                $results = Array(
+                    'Web' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'web')),
+                    'Mobile' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'mobile')),
+                    'Facebook' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'facebook')),
+                    'Twitter' => ePollResponse::model()->filterByDates($startDate, $endDate)->countByAttributes(Array('source' => 'twitter'))
+                );
+                $seriesColors = array('#bf4ca6', '#941278', '#480858', '#2c0237');
+                break;
+        }
+        $max = 0;
+        foreach ($results as $k => $v) {
+            $max = $v > $max ? $v : $max;
+        }
+        $max = ceil($max * .2 + $max);
+        $ret['data'] = $results;
+        $ret['seriesColors'] = json_encode($seriesColors);
+        $ret['yMax'] = $max;
+        echo json_encode($ret);
+    }
+
+    public function actionWeeklyReport($startDate = null) {
+        $startDate = is_null($startDate) ? date('Y-m-d', strtotime('this week', time())) : $startDate;
+        $ru = new ReportUtility($startDate);
+        $HAS_VIDEO = in_array('HAS_VIDEO', unserialize(Yii::app()->params['features']));
+        $HAS_IMAGE = in_array('HAS_IMAGE', unserialize(Yii::app()->params['features']));
+        $HAS_VOTING = in_array('HAS_VOTING', unserialize(Yii::app()->params['features']));
+        $criteria = new CDbCriteria;
+
+        $criteria->condition = 'source = "web"';
+        $users['New Registered Users from Website'] = $ru->formatCategoryWeek(eUser::model(), $criteria);
+        $criteria->condition = 'source = "facebook"';
+        $users['New Registered Users logging in w/ FB'] = $ru->formatCategoryWeek(eUser::model(), $criteria);
+
+        if ($HAS_VIDEO) {
+            $criteria->condition = 'source = "web"';
+            $videos['Web Video Submissions'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = 'source = "facebook"';
+            $videos['Facebook Video Submissions'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = 'source = "mobile"';
+            $videos['Mobile Video Submissions'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = '1 = 1';
+            $criteria->group = 'user_id';
+            $videos['Unique Users to Record'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = 'status = "new"';
+            $criteria->group = '';
+            $videos['Videos Not Accepted'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = 'status = "denied"';
+            $videos['Videos Deleted'] = $ru->formatCategoryWeek(eVideo::model()->processed(), $criteria);
+            $criteria->condition = '1 = 1';
+            $videos['Total Video Views'] = $ru->formatCategoryWeek(eVideoView::model(), $criteria);
+        }
+
+        if ($HAS_IMAGE) {
+            $criteria->condition = 'source = "web"';
+            $photos['Web Photo Submissions'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = 'source = "facebook"';
+            $photos['Facebook Photo Submissions'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = 'source = "mobile"';
+            $photos['Mobile Photo Submissions'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = '1 = 1';
+            $criteria->group = 'user_id';
+            $photos['Unique Users to Record'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = 'status = "new"';
+            $criteria->group = '';
+            $photos['Photos Not Accepted'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = 'status = "denied"';
+            $photos['Photos Deleted'] = $ru->formatCategoryWeek(eImage::model(), $criteria);
+            $criteria->condition = '1 = 1';
+            $photos['Total Photo Views'] = $ru->formatCategoryWeek(eImageView::model(), $criteria);
+        }
+
+        $criteria->condition = 'source = "web"';
+        $votes['Web Votes'] = $ru->formatCategoryWeek(ePollResponse::model(), $criteria);
+        $criteria->condition = 'source = "facebook"';
+        $votes['Facebook Votes'] = $ru->formatCategoryWeek(ePollResponse::model(), $criteria);
+        $criteria->condition = 'source = "mobile"';
+        $votes['Mobile Votes'] = $ru->formatCategoryWeek(ePollResponse::model(), $criteria);
+        $criteria->condition = 'source = "twitter"';
+        $votes['Twitter Votes'] = $ru->formatCategoryWeek(ePollResponse::model(), $criteria);
+
+        $totals['New Registered Users'] = $ru->compareCategoryWeeks(eUser::model());
+        if ($HAS_VIDEO)
+            $totals['Video Submissions'] = $ru->compareCategoryWeeks(eVideo::model());
+        if ($HAS_IMAGE)
+            $totals['Photo Submissions'] = $ru->compareCategoryWeeks(eImage::model());
+        if ($HAS_VOTING)
+            $totals['Voting Participation'] = $ru->compareCategoryWeeks(ePollResponse::model());
+        if ($HAS_VIDEO)
+            $totals['Total Video Views'] = $ru->compareCategoryWeeks(eVideoView::model());
+
+        $weekBefore = date('Y-m-d', strtotime($startDate . ' - 1 week'));
+        $ymd = explode("-", $weekBefore);
+        $startingIndexDay = $ymd[2];
+        foreach (eAnalytics::pullData($weekBefore, date('Y-m-d', strtotime($startDate . ' + 1 week'))) as $gapiReportEntry) {
+            $temp = $gapiReportEntry->getDimesions();
+            $associative[$temp['day']][$temp['visitorType']] = $gapiReportEntry->getMetrics();
+        }
+        //array_split wont work on associative array
+        //put the starting day at the front of the array since google's order by day uses the number and not the date(stupid)
+        $gotToStartIndex = false;
+        foreach ($associative as $day => $record) {
+            if ($day == $startingIndexDay)
+                $gotToStartIndex = true;
+            if ($gotToStartIndex)
+                $analyticsTotals[] = $record;
+        }
+        $analytics = $ru->formatAnalyticWeek($analyticsTotals);
+        $analyticsCompare = $ru->compareAnalyticWeeks($analyticsTotals);
+
+        $collection['User Data'] = $users;
+        if ($HAS_VIDEO)
+            $collection['Video Participation'] = $videos;
+        if ($HAS_IMAGE)
+            $collection['Photo Participation'] = $photos;
+        if ($HAS_VOTING)
+            $collection['Voting Participation'] = $votes;
+        $collection['Web Analytics'] = $analytics;
+        $collection['Week-to-week Trends'] = $totals;
+        $collection['Analytic Trends'] = $analyticsCompare;
+        //echo memory_get_usage();
+        //var_dump($collection);exit;
+        $this->render('weekly', Array(
+            'startDate' => $startDate,
+            'collection' => $collection,
+        ));
+    }
+
+    public function actionTickerQuestionReport() {
+        $type = 'ticker';
+        $question = new eQuestion('search');
+        $dataProvider = $question->search($type);
+        $questions = eQuestion::model()->{$type}()->findAll($dataProvider->criteria);
+        $this->render('question', Array(
+            'questions' => $questions,
+            'pages' => $dataProvider->pagination,
+            'sort' => $dataProvider->sort,
+            'type' => $type,
+        ));
+    }
+
+    public function actionVideoQuestionReport() {
+        $type = 'video';
+        $question = new eQuestion('search');
+        $dataProvider = $question->search($type);
+        $questions = eQuestion::model()->{$type}()->findAll($dataProvider->criteria);
+        $this->render('question', Array(
+            'questions' => $questions,
+            'pages' => $dataProvider->pagination,
+            'sort' => $dataProvider->sort,
+            'type' => $type,
+        ));
+    }
+
+}

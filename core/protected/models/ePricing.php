@@ -1,0 +1,25 @@
+<?php
+
+class ePricing extends Pricing
+{
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('price', 'numerical'),
+                        array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),                    
+			array('id', 'length', 'max'=>11),
+			array('product', 'length', 'max'=>255),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, product, price, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+}

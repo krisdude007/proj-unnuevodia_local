@@ -1,0 +1,47 @@
+$(document).ready(function () {
+    var date = new Date();
+    var dd = date.getDate();
+    var mm = date.getMonth(); //date 1 month ago
+
+    var yyyy = date.getFullYear();
+    if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} date = yyyy+'-'+mm+'-'+dd;
+    var monthAgo = date;
+    var filterDate = getStartDate();
+//    graph('video', filterDate);
+//    graph('user', monthAgo);
+//    graph('ticker', filterDate);
+//    graph('vote', filterDate);
+lineGrapher('userGraph', 'user','ajaxGetLineGraphData', monthAgo, 'total', null);
+pieGrapher('videoGraph', 'video','ajaxGetGraphData', filterDate, 'total');
+barGrapher('tickerGraph', 'ticker','ajaxGetGraphData', filterDate, 'total');
+barGrapher('voteGraph', 'vote','ajaxGetGraphData', filterDate, 'total');
+});
+
+function boldCurrentLink(obj){
+    var nodes = obj.parentNode.childNodes;
+    for(var i = 0; i < nodes.length; i++){
+        if(nodes[i].nodeName.toLowerCase() === 'a'){
+            nodes[i].style.fontWeight = 'normal';
+        }
+    }
+    obj.style.fontWeight = 'bold';
+}
+
+function graph(id, date){
+    $("#"+id+"Graph").html('<img src="/core/webassets/images/spinner.gif" width="100" style="display: block;margin:0px auto;">');
+    var request = $.ajax({
+        url:"/adminReport/ajaxDashboardGraph",
+        type:'POST',
+        data:({
+            metric:id,
+            date:date,
+            YII_CSRF_TOKEN: getCsrfToken()
+        }),
+        success: function(data){
+            $("#"+id+"Graph").html(data);
+        },
+        error: function(data){
+            console.log('Unable to update analytics.');
+        }
+    });
+}

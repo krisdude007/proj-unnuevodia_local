@@ -1,0 +1,92 @@
+table{
+    border-collapse:collapse;
+}
+#eQuestion_question{
+    width:500px;
+}
+#submitEdit,#cancelEdit{
+    float:left;
+}
+#submitEdit{
+    margin:0;
+}
+th {
+    padding:3px;
+    border:1px solid black;
+    color:#000;
+}
+td {
+    padding:3px;
+    border:1px solid black;
+    color:#FFF;        
+}
+label{
+    display:inline-block;
+    min-width:70px;
+    font-weight:900;
+}
+#question{
+    width:500px;
+    margin-left:2px
+}
+a{
+    color:#FFF;
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}
+.grey{color:#999}
+.active{background:#0C0 !important;}
+.active td{background:#0C0 !important;}
+.active a{color:#000 !important;}
+.active td a{color:#000 !important;}    
+.deleted {background:red !important;}
+.send_button
+{ 
+	margin-left:20px;
+	height:10px;
+	line-height:10px;
+}
+.linkPopUp{
+    float:right;
+}
+#linksPopUpOverlay{
+    background-color: rgba(255, 255, 255, 1);
+    width: 430px;
+    min-height: 200px;
+    border: 0 !important;
+    -moz-box-shadow: 0 0 90px 5px #000;
+    -webkit-box-shadow: 0 0 90px #000;
+    color: #000;
+    margin-top: 50px;
+    padding: 5px;
+
+}
+.copyBtn{  
+
+    margin-top: -12px; 
+    margin-left:5px; 
+}
+.close{
+    margin-top: -10px;
+}
+.copyTxtBox{
+    width:400px;
+    cursor: text!important;
+}
+.linksContent{
+    padding:10px;
+}
+#linksPopUpOverlay h2{ 
+    font-size: 18px;
+    background-color: #EEEDED;
+    margin-top: -25px;
+    width: 428px;
+    margin-left: -5px;
+    height: 35px;
+    line-height: 33px;
+    padding-left: 12px;
+    text-align: center;
+    color:#000;
+}

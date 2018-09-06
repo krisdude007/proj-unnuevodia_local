@@ -1,0 +1,33 @@
+
+
+$(document).ready(function () {
+    sliderHandler();
+});
+
+var sliderHandler = function() { 
+    
+    var temp = 0;
+    
+    $('#sliderContainer .sliders').css('left', $(window).width()+'px');
+    
+    $('#sliderContainer .sliders .slider').each(function(i, e){
+        temp = temp + $(this).width() + 50;
+    });
+    
+    $('#sliderContainer .sliders').css('width', temp+'px');
+    $('#sliderContainer .sliders').animate({
+        left: -$(".sliders").width()},
+        {duration: 15000,
+         easing: "linear",
+        complete: function() {
+            sliderHandler();
+        }
+    });
+}
+
+var textWidth = function() {
+    
+}
+  
+  
+

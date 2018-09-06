@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * This is the model class for table "video".
+ *
+ * The followings are the available columns in table 'video':
+ * @property integer $id
+ * @property integer $user_id
+ * @property integer $question_id
+ * @property string $filename
+ * @property string $thumbnail
+ * @property integer $processed
+ * @property integer $watermarked
+ * @property string $title
+ * @property string $description
+ * @property string $duration
+ * @property double $frame_rate
+ * @property string $view_key
+ * @property string $source
+ * @property string $source_content_id
+ * @property string $source_user_id
+ * @property integer $to_youtube
+ * @property integer $to_facebook
+ * @property integer $to_twitter
+ * @property integer $arbitrator_id
+ * @property string $status
+ * @property string $status_date
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property Brightcove[] $brightcoves
+ * @property User $user
+ * @property Question $question
+ * @property User $arbitrator
+ * @property VideoDestination[] $videoDestinations
+ * @property VideoRating[] $videoRatings
+ * @property VideoView[] $videoViews
+ */
+class Video extends CActiveRecord
+{
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'video';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('question_id, filename, thumbnail, processed, title, description, frame_rate, view_key, source, source_content_id, source_user_id, to_youtube, to_facebook, to_twitter, arbitrator_id, status, status_date, created_on, updated_on', 'required'),
+			array('user_id, question_id, processed, watermarked, to_youtube, to_facebook, to_twitter, arbitrator_id', 'numerical', 'integerOnly'=>true),
+			array('frame_rate', 'numerical'),
+			array('filename, thumbnail, title, description, view_key, source, source_content_id, source_user_id', 'length', 'max'=>255),
+			array('duration', 'length', 'max'=>11),
+			array('status', 'length', 'max'=>8),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, user_id, question_id, filename, thumbnail, processed, watermarked, title, description, duration, frame_rate, view_key, source, source_content_id, source_user_id, to_youtube, to_facebook, to_twitter, arbitrator_id, status, status_date, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'brightcoves' => array(self::HAS_MANY, 'Brightcove', 'video_id'),
+			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+			'question' => array(self::BELONGS_TO, 'Question', 'question_id'),
+			'arbitrator' => array(self::BELONGS_TO, 'User', 'arbitrator_id'),
+			'videoDestinations' => array(self::HAS_MANY, 'VideoDestination', 'video_id'),
+			'videoRatings' => array(self::HAS_MANY, 'VideoRating', 'video_id'),
+			'videoViews' => array(self::HAS_MANY, 'VideoView', 'video_id'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID',
+			'user_id' => 'User',
+			'question_id' => 'Question',
+			'filename' => 'Filename',
+			'thumbnail' => 'Thumbnail',
+			'processed' => 'Processed',
+			'watermarked' => 'Watermarked',
+			'title' => 'Title',
+			'description' => 'Description',
+			'duration' => 'Duration',
+			'frame_rate' => 'Frame Rate',
+			'view_key' => 'View Key',
+			'source' => 'Source',
+			'source_content_id' => 'Source Content',
+			'source_user_id' => 'Source User',
+			'to_youtube' => 'To Youtube',
+			'to_facebook' => 'To Facebook',
+			'to_twitter' => 'To Twitter',
+			'arbitrator_id' => 'Arbitrator',
+			'status' => 'Status',
+			'status_date' => 'Status Date',
+			'created_on' => 'Created On',
+			'updated_on' => 'Updated On',
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('id',$this->id);
+		$criteria->compare('user_id',$this->user_id);
+		$criteria->compare('question_id',$this->question_id);
+		$criteria->compare('filename',$this->filename,true);
+		$criteria->compare('thumbnail',$this->thumbnail,true);
+		$criteria->compare('processed',$this->processed);
+		$criteria->compare('watermarked',$this->watermarked);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('duration',$this->duration,true);
+		$criteria->compare('frame_rate',$this->frame_rate);
+		$criteria->compare('view_key',$this->view_key,true);
+		$criteria->compare('source',$this->source,true);
+		$criteria->compare('source_content_id',$this->source_content_id,true);
+		$criteria->compare('source_user_id',$this->source_user_id,true);
+		$criteria->compare('to_youtube',$this->to_youtube);
+		$criteria->compare('to_facebook',$this->to_facebook);
+		$criteria->compare('to_twitter',$this->to_twitter);
+		$criteria->compare('arbitrator_id',$this->arbitrator_id);
+		$criteria->compare('status',$this->status,true);
+		$criteria->compare('status_date',$this->status_date,true);
+		$criteria->compare('created_on',$this->created_on,true);
+		$criteria->compare('updated_on',$this->updated_on,true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
+	}
+
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return Video the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+}

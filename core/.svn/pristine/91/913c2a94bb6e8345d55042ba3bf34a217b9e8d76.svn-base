@@ -1,0 +1,43 @@
+<div id="settingFormContainer" class="content">
+	<div class="clearfix">
+		<?php echo CHtml::label('Screen Type',''); ?>
+		<br/>
+		<?php
+			echo $form->radioButtonList($formTvScreenSettingModel, 'screen_type', array('transparent' => 'Alpha', 'green' => 'Green', 'background'=>'Alpha Background'), array('class' => 'radioLabel', 'separator' => '<br/>'));
+		?> 
+	</div>
+	<div id="bgOption" style="display:none">
+			 <?php 
+			 echo CHtml::dropDownList('bgOptionList',null, array('I'=>'BG Image'), array( ));
+			 ?>
+	</div> 
+	<div id="bgOptionImage" style="display:none">
+		<input id="existingBGImage" type="hidden" value="<?php echo $formTvScreenSettingModel->filename?>" name="eTvScreenAppearSetting[existingBGImage]">
+			
+			<?php echo $form->fileField($formTvScreenSettingModel,'filename');?>
+			<div class="hintTxt">Supported File type: <?php echo Yii::app()->params['cloudGraphicAppearanceSetting']['tvScreenImageAllowedType']?> and dimension must be <?php echo Yii::app()->params['cloudGraphicAppearanceSetting']['tvScreenImageAllowedDimension']?></div> 
+			  
+		<div class="clearfix  bgImageList">
+			<?php 
+			if(count($images) > 0)
+				echo CHtml::label('Choose a Background Image','');
+			 ?><br/>
+			<?php
+			foreach($images as $key => $value) {
+				?>
+				<div class="bgImageListContainer" id="<?php echo $key?>">
+					<div class="bgImageListInner"><img src="/userimages/tvscreensetting/<?php echo $value?>"  imgid="<?php echo $value?>"  class="<?php echo (($formTvScreenSettingModel->filename ==$value  )  ? 'selectedImg' : 'borderimg')?>"/></div>
+					<div class="imgDelete" style="display:<?php echo (($formTvScreenSettingModel->filename ==$value  )  ? 'none' : 'block')?>"><img src="/core/webassets/images/list_remove.png" imgid="<?php echo $key?>" imagename="<?php echo $value?>" /></div>
+				</div>
+
+			 	<?php
+			}
+
+			?>
+		</div> 
+	</div>
+	<div id="foreOptionColor">
+			<?php echo CHtml::label('Choose a Foreground Bar Color',''); ?><br/>
+			<?php echo $form->textField($formTvScreenSettingModel, 'color', array('id' => 'colorpickerField', 'style' => 'width: 50px', 'maxlength' => 5))?>
+	</div>
+</div>

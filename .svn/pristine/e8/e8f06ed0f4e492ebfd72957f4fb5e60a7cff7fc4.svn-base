@@ -1,0 +1,17 @@
+<div class='row congrats col-sm-offset-1 col-sm-10 text-center thanks' style="height:100%;padding-right: 0px;" >
+    <div class="homeTop">
+        <h4>Be On TV</h4>
+    </div>
+    <br/>
+    <h1>Congrats!</h1>
+    <br/>
+    <p>Thank you for submitting your Social Shout!</p>
+    <br/>
+<!--    <div>
+        <a style='margin: 4px 0px;width: auto;' class='btn btn-inverse' href="<?php echo Yii::app()->createUrl('/ticker/index'); ?>">Send Another</a>
+    </div>
+    <br/>-->
+    <div>
+        <a style="width:50%;background-color: transparent !important;border-color: white !important;" class='btn btn-inverse' href="<?php echo Yii::app()->createUrl('/ticker/index'); ?>">Social Activity</a>
+    </div>
+</div>

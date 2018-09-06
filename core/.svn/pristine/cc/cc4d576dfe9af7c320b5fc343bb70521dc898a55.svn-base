@@ -1,0 +1,267 @@
+
+var colorPickers = function() {
+    var colors = ['#0083C1'];
+        $("#colorpickerField").off('change');
+        $("#colorpickerField").on('change', function(e) {
+            e.preventDefault(); 
+            var colorVal = $(this).val();
+            
+        });
+        var selCol = $('#colorpickerField').val() ? $('#colorpickerField').val() :colors[0];
+        $('#colorpickerField').spectrum({
+            showPaletteOnly: false,
+            showPalette: false,
+            color: selCol,
+            clickoutFiresChange: true,
+            preferredFormat: "string",
+            palette: [colors],
+            showInput: true
+
+        })
+        $('#colorpickerField').val(selCol).trigger('change');
+    
+}
+var fontColorPicker = function() {
+    var colors = ['#00000'];
+        $("#fontColorPicker").off('change');
+        $("#fontColorPicker").on('change', function(e) {
+            e.preventDefault(); 
+            var colorVal = $(this).val();
+             
+        });
+        var selCol = $('#fontColorPicker').val() ? $('#fontColorPicker').val() :colors[0];
+        $('#fontColorPicker').spectrum({
+            showPaletteOnly: false,
+            showPalette: false,
+            color: selCol,
+            clickoutFiresChange: true,
+            preferredFormat: "string",
+            palette: [colors],
+            showInput: true
+
+        })
+        $('#fontColorPicker').val(selCol).trigger('change');
+    
+}
+var backgroundType = function() {
+    $(".radioLabel").off('change');
+    $(".radioLabel").on('change', function(e) {
+        e.preventDefault();
+        if($(this).val() == 'background') { 
+            $('#bgOption').show();
+            $('#bgOptionImage').show(); 
+        } else {
+            $('#bgOption').hide();
+            $('#bgOptionImage').hide(); 
+            $('#eTvScreenAppearSetting_filename').val('');
+        } 
+        onloadSelectBGOption();
+    });
+}
+var onloadSelectBGOption = function(){ 
+    if($(".radioLabel:checked").val() == 'background') {
+        $('#bgOption').show(); 
+        $("#bgOptionList").val('I'); 
+        $('#bgOptionImage').show(); 
+    }
+}
+var backgroundOptions = function() { 
+    $("#bgOptionList").off('change');
+    $("#bgOptionList").on('change', function(e) {
+        e.preventDefault(); 
+        if($(this).val() == 'I') {  
+            $('#bgOptionImage').show();  
+        }
+    });
+}
+var saveSetting = function(){
+    $('#save_button').off('click');
+    $('#save_button').on('click', function(e){
+        e.preventDefault();
+        if($('#eTvScreenAppearSetting_filename').val() !== "" && 
+            $('#countOfFile').val() >= $('#definedcountOfFile').val()) {
+            $('#flashMsg').html('File Limit exceeded.  Please delete one of image from the list.');
+            $('#flashMsg').show();
+            return false; 
+        }
+        if($(".radioLabel:checked").val() == 'background') {
+            if( $('#eTvScreenAppearSetting_filename').val() == "" && 
+                $('#existingBGImage').val() == "" ) {
+                 $('#flashMsg').html('Please upload or choose a image.');
+                 $('#flashMsg').show();
+                 return false; 
+            }
+        }
+        $('#flashMsg').hide(); 
+        $('.saveContainer').hide(); 
+        $("#ajaxSpinner").show();
+        var formData =  new FormData($('form')[1]);
+        $.ajax({
+            url: '/adminTvScreenAppearSetting/save',
+            type: 'POST',  
+            data: formData,
+            dataType:'json',
+            cache: false,
+            contentType: false,
+            processData: false
+        }).done(function( data ) { 
+           $('#ajaxSpinner').hide(); 
+           $('.saveContainer').show();
+           $('#flashMsg').html(data.result);
+           $('#flashMsg').show('slow'); 
+           selectSpeedOnload();
+           if(data.filename !=""){
+                $('#eTvScreenAppearSetting_filename').attr('value',''); 
+                $(".imgDelete").each(function(e) {
+                    $(this).attr('style','display:block');
+                });  
+                tmpCount = $('#countOfFile').val();
+                tmpCount = parseInt(tmpCount) + 1; 
+                $('#countOfFile').val(tmpCount);
+                $(".bgImageList").append('<div class="bgImageListContainer" id="'+$('#countOfFile').val()+'"><div class="bgImageListInner" ><img src="/userimages/tvscreensetting/'+data.filename +'"  class="selectedImg"/></div><div class="imgDelete" style="display:none"><img src="/core/webassets/images/list_remove.png" imgid="'+$('#countOfFile').val()+'" imagename="'+data.filename +'"/></div></div>');
+            }
+        });
+
+    });
+} 
+var selectImageTrigger = function(){
+
+//when user select image from the list 
+    $('.bgImageListInner img').off('click');
+    $('.bgImageListInner img').on('click', function(e){
+        e.preventDefault(); 
+        $('#eTvScreenAppearSetting_filename').attr('value','');
+        $('#existingBGImage').attr('value',$(this).attr('imgid'));
+        $(".bgImageListInner img").each(function(e) {
+            $(this).attr('class','borderimg')
+        }); 
+        $(".imgDelete").each(function(e) {
+            $(this).attr('style','display:block')
+        });
+        $(this).attr('class','selectedImg'); 
+
+    });  
+    //when user trying to upload or trying not to upload. 
+    $('#eTvScreenAppearSetting_filename').off('change');
+    $('#eTvScreenAppearSetting_filename').on('change', function(e){
+        e.preventDefault(); 
+        $('#existingBGImage').attr('value','');
+        $(".bgImageListInner img").each(function(e) {
+            $(this).attr('class','borderimg')
+        });
+         $(".imgDelete").each(function(e) {
+            $(this).attr('style','display:block')
+        }); 
+    });
+}
+var deleteImage = function(){ 
+    $('.imgDelete img').off('click');
+    $('.imgDelete img').on('click', function(e){
+        e.preventDefault(); 
+        var r = confirm("Are you sure you want to delete!");
+        if (r == true) { 
+            $.ajax({
+                url: "/adminTvScreenAppearSetting/AjaxDeleteImage",
+                type: 'POST', 
+                data: ({
+                    'CSRF_TOKEN': getCsrfToken(),
+                    'filename': $(this).attr('imagename')
+                    })
+            }); 
+            $("#"+$(this).attr('imgid')).remove(); 
+            tmpCount = $('#countOfFile').val();
+            tmpCount = parseInt(tmpCount) - 1; 
+            $('#countOfFile').val(tmpCount);
+        } 
+    }); 
+}
+var closeModal = function(){ 
+    $('#close_button').off('click');
+    $('#close_button').on('click', function(e){
+        e.preventDefault();
+         //$("a[rel=#tvScreenOverlay]").overlay().close();
+       // $(".tvScreenOverlay").overlay().close(); 
+       
+    }); 
+}
+var previewButton = function(){ 
+    $('#preview_button').off('click');
+    $('#preview_button').on('click', function(e){
+        e.preventDefault();
+        var baseurl =$("#baseurl").val();
+        var refid = $(this).attr('refid'); 
+        window.open( baseurl+'/preview/questionTicker?id='+refid);
+    }); 
+}
+var tabTrigger = function() {
+    $('.tabNav li').off('click');
+    $('.tabNav li').on('click', function(e){
+        e.preventDefault();
+        if($(this).attr('class') != 'selected') {
+            var formId = $(this).attr('formId'); 
+            $(".tabNav li").each(function(e) {
+                $(this).attr('class',''); 
+                $("#"+$(this).attr('formId')).hide(); 
+            });
+            $("#"+formId).show(); 
+            $(this).attr('class','selected'); 
+        }    
+        
+    });
+}
+function getSlideSpeedSelected(elementID)
+{
+    $(elementID).attr('class',''); 
+    $(elementID).prevAll().each(function(e) { 
+        //console.log('prev'+$(this).attr('barValue'));
+        $(this).attr('class','');
+        $(this).attr('class','bar barOnHover'); 
+    });
+    $(elementID).nextAll().each(function(e) {
+        //console.log('Next'+$(this).attr('barValue'));
+        $(this).attr('class',''); 
+        $(this).attr('class','bar barOffHover');
+    }); 
+    $(elementID).addClass('bar barOnHover');
+
+}
+var slideSpeed = function() { 
+
+    $('.graph div').off('hover');
+    $('.graph div').on('hover', function(e){
+        e.preventDefault(); 
+        getSlideSpeedSelected(this); 
+    });  
+   // $('.graph div').off('mouseout');
+    $('.graph').mouseleave(function(e){ 
+        e.preventDefault(); 
+        var slidSpeed = $('#eTvScreenAppearSetting_slide_speed').val();  
+        getSlideSpeedSelected($("div").find("[barValue='" + slidSpeed + "']")); 
+    });  
+
+    $('.graph div').off('click');
+    $('.graph div').on('click', function(e){
+        e.preventDefault(); 
+        $('#eTvScreenAppearSetting_slide_speed').val($(this).attr('barValue'));
+    }); 
+
+}
+var selectSpeedOnload = function() {
+    var slidSpeed = $('#eTvScreenAppearSetting_slide_speed').val();  
+    getSlideSpeedSelected($("div").find("[barValue='" + slidSpeed + "']"));  
+}
+
+$(document).ready(function() {
+    saveSetting();
+    backgroundOptions();
+    backgroundType();
+    colorPickers();
+    onloadSelectBGOption(); 
+    selectImageTrigger();
+    deleteImage();
+    previewButton();
+    tabTrigger();
+    fontColorPicker();
+    slideSpeed();
+    selectSpeedOnload(); 
+});

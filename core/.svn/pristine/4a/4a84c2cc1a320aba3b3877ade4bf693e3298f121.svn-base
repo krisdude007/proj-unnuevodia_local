@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * This is the model class for table "email_template".
+ *
+ * The followings are the available columns in table 'email_template':
+ * @property integer $id
+ * @property string $name
+ * @property string $subject
+ * @property string $content
+ * @property integer $active
+ * @property string $created_on
+ * @property string $updated_on
+ */
+class eEmailTemplate extends EmailTemplate {
+
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('name, subject, content', 'required'),
+            array('active', 'numerical', 'integerOnly' => true),
+            array('name, subject', 'length', 'max' => 255),
+            array('active', 'default', 'integerOnly' => true),
+            array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+            array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),
+            array('active', 'default', 'value' => 1, 'on' => 'insert'),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, name, subject, content, active, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+
+}

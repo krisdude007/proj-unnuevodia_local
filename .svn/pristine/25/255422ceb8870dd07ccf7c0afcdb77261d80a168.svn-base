@@ -1,0 +1,60 @@
+<?php
+/* @var $this VideoController */
+/* @var $model Video */
+/* @var $form CActiveForm */
+?>
+
+<div class="form">
+
+<?php $form=$this->beginWidget('CActiveForm', array(
+    'id'=>'photo-process-form',
+    'enableAjaxValidation'=>true,
+)); ?>
+
+    <p class="note">Fields with <span class="required">*</span> are required.</p>
+    
+    <?php echo $form->errorSummary($model); ?>
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'title'); ?>
+        <div class="helperText">This will help you find your photo.</div>
+        <?php echo $form->textField($model,'title'); ?>
+        <?php echo $form->error($model,'title'); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'description'); ?>
+        <div class="helperText">Describe your photo so people know what your photo is about</div>        
+        <?php echo $form->textArea($model,'description'); ?>
+        <?php echo $form->error($model,'description'); ?>
+    </div>    
+
+    <div class="bold" style="float:left">Also Post On Your Social Networks</div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <?php echo $form->checkBox($model,'to_twitter'); ?>
+        <?php echo $form->labelEx($model,'to_twitter'); ?>            
+        <?php echo $form->error($model,'to_twitter'); ?>
+    </div>
+    <div class="row" style="margin-left:20px">
+        <?php echo $form->checkBox($model,'to_facebook'); ?>
+        <?php echo $form->labelEx($model,'to_facebook'); ?>            
+        <?php echo $form->error($model,'to_facebook'); ?>
+    </div>
+
+    <div style="clear:both">
+    <div class="row buttons" style="margin-top:50px;width:390px;text-align:right">
+        <?php echo $form->hiddenField($model,'source',array('value'=>'web')); ?>                    
+        <?php echo $form->hiddenField($model,'question_id',array('value'=>$question_id)); ?>                    
+        <?php echo CHtml::submitButton(''); ?>
+    </div>
+    </div>
+
+<?php $this->endWidget(); ?>
+
+</div><!-- form -->
+
+    <div style="clear:both;margin-top:20px;display:inline-block;width:100%">
+        <input type="hidden" name="userid" value="<?php print Yii::app()->user->getId(); ?>">                    
+        <input type="hidden" name="question_id" value="<?php print $question_id; ?>">
+    </div>                

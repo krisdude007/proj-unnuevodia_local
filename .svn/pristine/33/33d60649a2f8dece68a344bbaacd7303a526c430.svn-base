@@ -1,0 +1,44 @@
+<div id="content">
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+        <div class="verticalRule">
+        </div>
+        <div class="youContent" style="padding-top:20px;">
+            <?php if (sizeof($videos) == 0): ?>
+                <h2 class="bold" style="margin-top:50px">
+                    <?php echo $question; ?>
+                </h2>                                    
+                <h2 class="bold">
+                    Click "record now" to get started!
+                </h2>    
+                <div>
+                    <div style="width:200px; margin-top:20px;">
+                        <a href="<?php echo Yii::app()->request->baseurl; ?>/questions" style="color:white;text-transform: uppercase;text-decoration: none;">
+                            <div class="darkOrange" style="padding:10px 30px; text-align: center;font-weight: bold;">RECORD NOW</div>
+                        </a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div style="text-align:center; width:545px;">
+                    <h1>YOUR VIDEOS</h1>
+                    <div class="sorter" style="font-size:12px;margin-bottom:8px;font-weight:bold;">View By:
+                        <a href="<?php echo Yii::app()->request->baseurl; ?>/you/recent">Most Recent</a>
+                        <a href="<?php echo Yii::app()->request->baseurl; ?>/you/views">Most Viewed</a> 
+                        <a href="<?php echo Yii::app()->request->baseurl; ?>/you/rating">Highest Rated</a>                  
+                    </div>
+                    <div class="videoBlocks scroll-pane jspScrollable">
+                        <?php
+                        $this->renderPartial('/video/_blocks', array('videos' => $videos)
+                        );
+                        ?>
+                    </div>
+                </div>
+            <?php endif; ?>                
+        </div>
+    </div>
+</div>

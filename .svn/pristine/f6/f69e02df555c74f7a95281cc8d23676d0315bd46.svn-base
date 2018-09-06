@@ -1,0 +1,63 @@
+<?php
+
+class ClientMailUtility {
+
+    public static function send($template,$to,$merges=Array(),$activeOnly=true){
+        if($activeOnly)
+            $userEmail = eUserEmail::model()->active()->findByAttributes(array('email'=>$to));
+        else
+            $userEmail = eUserEmail::model()->findByAttributes(array('email'=>$to));
+        if(!$userEmail){
+            return false;
+        }
+        $user = eUser::model()->findByPK($userEmail->user_id);
+        $merges = array_merge($merges,Array(
+            'hostname'=>$_SERVER['HTTP_HOST'],
+            'sitename'=>Yii::app()->name,
+            'first_name'=>$user->first_name,
+            'last_name'=>$user->last_name,
+            'email'=>$to,
+            'reply'=>Yii::app()->params['contacts']['Admin Email'],
+        ));        
+        $emailTemplate = clientEmailTemplate::model()->findByAttributes(Array('name'=>$template,'active'=>1));        
+        if(!is_null($emailTemplate)){
+            $headers  = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+            //$headers .= 'Content-Transfer-Encoding: base64' . "\r\n";
+            $headers .= 'To: {first_name} {last_name} <{email}>' . "\r\n";
+            $headers .= 'From: {reply} <{reply}>' . "\r\n";
+            $subject = $emailTemplate->subject;                        
+            $content = "
+                <html>
+                <head>
+                    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+                    </head>
+                    <body>
+                    <div style='width:600px;height:595px;padding:8px;background-color:#EFEFEF;font-family:\"Helvetica Neue\",HelveticaNeue-Light,\"Helvetica Neue Light\", Helvetica, sans-serif;font-size:12px;color:#696969;'>
+                        <img src='http://{hostname}/webassets/images/email/header.png'/>
+                        <div style='background-color:white;padding:15px;'>
+                            <div style='font-size:28px;color:#696969;font-weight:bold;margin-bottom:10px;'>".$emailTemplate->subject."</div>
+                            <!--<div style='float:right;width:300px;height:250px;margin-bottom:10px;margin-top:20px;margin-left:15px;background-color:#EFEFEF;'>300*250 ad</div>-->
+                            ".$emailTemplate->content."
+                        </div><br/>
+                        <div>Para NO recibir más notificaciones en el futuro, haz clic aquí: <b><a href='http://{hostname}/you/profile' style='color: #636363'>No_Recibir</a></b> 
+                        Claro que siempre tendrás la posibilidad de suscribirte de nuevo.<br/>
+                        <br/>
+                        Telemundo <a href='http://{hostname}/terms' target='_blank' style='color: #636363'>Terms of Use</a> & <a href='http://{hostname}/privacyoverlay' target='_blank' style='color: #636363'>Privacy Policy</a>. Youtoo <a href='http://youtootech.com/terms' target='_blank' style='color: #636363'>Terms of Use</a> & <a href='http://youtootech.com/privacy.html' target='_blank' style='color: #636363'>Privacy Policy</a><br/> 
+                        2014 Youtoo Technologies, LLC <a href='http://youtootech.com/patents' target='_blank' style='color: #636363'>youtootech.com/patents</a>
+                        </div>
+                     </div>
+                     </body>
+                 </html>";                        
+            foreach($merges as $k=>$v){
+                $headers = preg_replace("/\{$k\}/",$v,$headers);
+                $subject = preg_replace("/\{$k\}/",$v,$subject);
+                $content = preg_replace("/\{$k\}/",$v,$content);
+            }
+            return mail($to, $subject, $content, $headers);        
+        }
+        return false;
+    }
+    
+}
+?>

@@ -1,0 +1,51 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+?>
+
+<div class="fabmob_content-container text-center">
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-login-form',
+        'enableAjaxValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+            'validateOnType' => false,
+        ),
+        'htmlOptions' => array(
+            'class' => 'form-horizontal fabmob_condensed-form',
+        ),
+    ));
+    ?>
+    <br/>
+    <h2 class="text-center text">Login</h2>
+    <br/>
+    <div class="form-group">
+        <?php echo $form->textField($model, 'username', array('class' => 'form-control fabmob_round-border-top', 'placeholder' => 'Email')); ?>
+    </div>
+    <div id="fabmob_login-password-form-input" class="form-group">
+        <?php echo $form->passwordField($model, 'password', array('class' => 'form-control fabmob_round-border-top', 'placeholder' => 'Password')); ?>
+    </div>
+    <?php echo $form->hiddenField($model, 'source', array('value' => 'mobile web')); ?>
+    <a id="fabmob_login-forgot-password-link" class="active" href="/forgot">forgot password?</a>
+    <div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+    <?php $this->endWidget(); ?>
+    <br/>
+    <h5 class='horizontalLine text'>or</h5>
+    <br/>
+    <div class="SocialLoginImage">
+        <div>
+            <img class="fbreg SocialLoginImage" src="/webassets/mobile/images/Button_Facebook_Login.png"/>
+        </div>
+        <div style="margin-top:10px">
+            <img class="twreg SocialLoginImage" src="/webassets/mobile/images/Button_Twitter_Login.png"/>
+        </div>
+    </div>
+    <p id="fabmob_login-register-copy" class="text">
+        New to Youtoo?
+    </p>
+    <a id="fabmob_login-register-link" class="active" href="/register">Signup</a>
+</div>

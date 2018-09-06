@@ -1,0 +1,56 @@
+<?php
+
+class FacebookController extends Controller {
+
+    public $layout = false;
+
+    public function actionIndex() {
+        $facebook = Yii::app()->facebook;
+        try {
+            $facebookData = $facebook->api('/me');
+        } catch(FacebookApiException $e){
+            $canvasURL = "http://apps.facebook.com/".FACEBOOK_APPLICATION_NAMESPACE;
+            $authURL = "https://www.facebook.com/dialog/oauth?client_id=".FACEBOOK_APPLICATION_ID."&redirect_uri=".$canvasURL."&scope=user_location,user_birthday,email,publish_stream,publish_actions,status_update";
+            echo("<script> top.location.href='" . $authURL . "'</script>");
+            exit;
+        }
+        if ($userFacebook = eUserFacebook::model()->findByAttributes(array('facebook_user_id' => $facebookData['id']))) {
+          $user = eUser::model()->findByPK($userFacebook->user_id);
+        } else {
+          $userFacebook = new eUserFacebook;
+          $user = eUser::Model()->findByAttributes(Array('username' => $facebookData['email']));
+        }
+        if (!$user) {
+          $user = new eUser;
+          $userEmail = new eUserEmail;
+          $userLocation = new eUserLocation;
+          $user->setScenario('facebook');
+          $userLocation->setScenario('facebook');
+          $user->username = (!empty($facebookData['email'])) ? $facebookData['email'] : $facebookData['id'];
+          $user->password = uniqid('', true);
+          $user->birthday = date('Y-m-d', strtotime($facebookData['birthday']));
+          $user->gender = ($facebookData['gender'] == 'male') ? 'M' : 'F';
+          $user->first_name = $facebookData['first_name'];
+          $user->last_name = $facebookData['last_name'];
+          $user->source = 'facebook';
+          $userEmail->user_id = $user->id;
+          $userEmail->email = $user->username;
+          $userEmail->type = 'primary';
+          $location = preg_split('/, /', $facebookData['location']['name']);
+          $userLocation->user_id = $user->id;
+          $userLocation->city = $location[0];
+          $userLocation->state = $location[1];
+          $userLocation->timezone = $facebookData['timezone'];
+          $userLocation->type = 'primary';
+          UserUtility::register($user, $userEmail, $userLocation);
+          //MailUtility::send('welcome', $userEmail->email);
+        }
+        $user->setScenario('facebook');
+        UserUtility::login($user);
+        FacebookUtility::connect($userFacebook);
+        Yii::app()->request->cookies['fbApp'] = new CHttpCookie('fbApp', 1);
+        $this->redirect(Yii::app()->createUrl('/you'));
+    }
+}
+
+?>

@@ -1,0 +1,188 @@
+.campaign_container
+{
+    margin-top: 10px;
+    margin-left:10px;
+    padding-top: 25px;
+    font-family:'Open Sans';
+	 
+}
+.campaign_subtitle
+{
+    font-size: 18pt;
+    color: #5a5a5a;
+    margin-top:30px;
+}
+.campain_header
+{
+	font-size: 31pt;
+	color: #4d90f3;
+	font-weight: bold;
+	margin-bottom: 30px;
+}
+
+.campaign_top_bar
+{
+    background-color: #4d90f3;
+    height: 40px;
+    padding-left:30px;
+    padding-top: 15px;
+    color: #ffffff;
+    font-size: 14pt;
+    clear:both;
+    margin-bottom: 10px;
+}
+
+.campaign_top_bar img
+{
+    margin-right : 20px;
+}
+
+.campaign_step 
+{
+    display: inline;
+    width: auto;
+    height: auto;
+     
+}
+.campaign_step1_selected{
+    background: url('/core/webassets/images/campaign/step-1-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step2_selected{
+    background: url('/core/webassets/images/campaign/step-2-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step3_selected{
+    background: url('/core/webassets/images/campaign/step-3-selected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step1_unselected{
+    background: url('/core/webassets/images/campaign/step-1-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step2_unselected{
+    background: url('/core/webassets/images/campaign/step-2-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+.campaign_step3_unselected{
+    background: url('/core/webassets/images/campaign/step-3-unselected.png') no-repeat top left;
+    display: inline-block;
+    width: 180px;
+    height: 70px;
+    padding-left : 10px;
+    padding-right: 10px;
+}
+
+.campaign_divider {
+    background-image: url('/core/webassets/images/campaign/divider.png');
+    height:2px;
+    width:100%;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.campaign_media_row
+{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.campaign_media_button_facebook
+{
+    background: url('/core/webassets/images/campaign/facebook.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+    font-size: 13pt;
+    color:#ffffff;
+     
+}
+.campaign_media_row_text{
+    width:60px;
+    margin-left:50px;
+    padding-top:5px;
+    position:absolute;
+}
+.campaign_media_button_twitter
+{
+    background: url('/core/webassets/images/campaign/twitter.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    font-size: 13pt;
+    color:#ffffff;
+    display: inline-block;
+}
+.campaign_media_button_google
+{
+    background: url('/core/webassets/images/campaign/google+.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+.campaign_media_button_tumblr
+{
+    background: url('/core/webassets/images/campaign/tumblr.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+.campaign_media_button_youtube
+{
+    background: url('/core/webassets/images/campaign/youtube.png') no-repeat top left;
+    height:32px;
+    width:165px;
+    display: inline-block;
+}
+
+.campaign_on_selected
+{
+    background: url('/core/webassets/images/campaign/on.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_off_selected
+{
+    background: url('/core/webassets/images/campaign/off.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_on_unselected
+{
+    background: url('/core/webassets/images/campaign/on_blank.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_off_unselected
+{
+    background: url('/core/webassets/images/campaign/off_blank.png') no-repeat top left;
+    display:inline-block;
+    height: 32px;
+    width:38px;
+}
+.campaign_continue_button
+{
+    float:right;
+    clear:both;
+}

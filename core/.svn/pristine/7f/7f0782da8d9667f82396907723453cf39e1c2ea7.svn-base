@@ -1,0 +1,505 @@
+var getCsrfToken = function(){
+    return $("#csrfToken").html();
+}
+
+
+var tickerHandlers = function(){    
+    $("#showTickerFormTrigger").off("click");
+    $("#showTickerFormTrigger").on("click",function(e){ 
+        e.preventDefault();
+        if($("#userHeaderTickerForm").is(":visible")) {
+            $("#userHeaderTickerForm").hide("blind",{
+                direction:"vertical"
+            },400);
+        } else {
+            $("#userHeaderTickerForm").show("blind",{
+                direction:"vertical"
+            },400);
+        }
+    });
+    
+    $("#addTickerTrigger").off("click");
+    $("#addTickerTrigger").on("click",function(e){ 
+        e.preventDefault();
+        tickerSave($("#tickerTextField").val()); 
+    }); 
+	 	 
+    function tickerSave(text){ 	 	 
+        var request = $.ajax({ 
+            url: '/ticker/ajaxSave', 
+            type: 'POST', 
+            data:({ 
+                'text': text, 
+                'CSRF_TOKEN': getCsrfToken() 
+            }), 
+            success: function(data){ 
+                alert(data);
+            }, 
+            error: function(data){ 
+                alert('Unable to save ticker.'); 
+                return false; 
+            } 
+        });    
+        $("#userHeaderTickerForm").hide("blind",{
+            direction:"vertical"
+        },400);        
+    }         
+    
+    $('.shoutListItem').each(function(i,e) {
+       $(e).mouseover(function() {
+          $(e).css('background-color','#1ca5ff'); 
+       }); 
+       $(e).mouseout(function() {
+           $(e).css('background-color','');
+       });
+    });
+}
+
+
+
+
+var tabHandlers = function(){
+    
+    $('.sidebar a').each(function(i,e){    
+        $(e).removeClass('activePage');
+        if(window.location.toString().match($(e).attr('href')+'$')){
+            $(e).addClass('activePage');
+        }
+    });    
+    $('.sorter a').each(function(i,e){    
+        $(e).removeClass('activeLink');
+        if(window.location.toString().match($(e).attr('href')+'$')){
+            $(e).addClass('activeLink');
+        }
+    });        
+}
+
+var socialHandlers = function(){
+    $('#tw_conn').off('click');
+    $('#tw_conn').on('click',function(e){
+        e.preventDefault();
+        if($(this).attr('rel')==1){
+            if(confirm('Are you sure you want to disconnect your twitter account?')){
+                var request = $.ajax({
+                    url:"/user/ajaxTwitterDisconnect",
+                    type:'POST',
+                    data:({
+                        'CSRF_TOKEN':getCsrfToken(),
+                    }),
+                    success:function(data){
+                        window.location.reload();
+                    }
+                });
+            }
+        } else {
+            $.oauthpopup({
+                path: '/user/twitterConnect',
+                callback: function(){
+                    window.location.reload();
+                }           
+            })                        
+        }
+    });    
+    $('#fb_conn').off('click');
+    $('#fb_conn').on('click',function(e){    
+        e.preventDefault();
+        if($(this).attr('rel')==1){
+            if(confirm('Are you sure you want to disconnect your facebook account?')){
+                var request = $.ajax({
+                    url:"/user/ajaxFacebookDisconnect",
+                    type:'POST',
+                    data:({
+                        'CSRF_TOKEN':getCsrfToken(),
+                    }),
+                    success:function(data){
+                        window.location.reload();
+                    }
+                });
+            }
+        } else {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    var request = $.ajax({
+                        url:"/user/ajaxFacebookConnect",
+                        type:'POST',
+                        data:({
+                            'CSRF_TOKEN':getCsrfToken(),
+                            'accessToken':response.authResponse.accessToken,
+                            'expiresIn':response.authResponse.expiresIn,
+                            'userID':response.authResponse.userID
+                        }),
+                        success: function(data){
+                            window.location.reload();
+                        }
+                    });
+                }
+            },{
+                scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update'
+            });                                
+        }        
+    });    
+    $('.twreg').off('click');
+    $('.twreg').on('click',function(e){
+        e.preventDefault();        
+        var elem = $(this).replaceWith($('<img></img>').attr({
+          'id':'spinner_tw',
+          'src':'/core/webassets/images/socialSearch/ajaxSpinner.gif'
+        }).css({
+          'width':'25px'
+        }));                
+        $.oauthpopup({
+            path: '/user/twitter',
+            callback: function(){
+                window.location.replace('/');
+            }           
+        })                        
+    });    
+    $('.fbreg').off('click');
+    $('.fbreg').on('click',function(e){    
+        e.preventDefault();
+        $(this).children('.campaign_media_row_text').html('<img height=32 width=32 src="/core/webassets/images/socialSearch/ajaxSpinner.gif"/>');
+          
+        FB.login(function(response) {
+            if (response.authResponse) {
+                var request = $.ajax({
+                    url:"/user/ajaxFacebook",
+                    type:'POST',
+                    data:({
+                        'CSRF_TOKEN':getCsrfToken(),
+                        'accessToken':response.authResponse.accessToken,
+                        'expiresIn':response.authResponse.expiresIn,
+                        'userID':response.authResponse.userID
+                    }),
+                    success: function(data){
+                        $('.fbreg .campaign_media_row_text').html('Connected');
+       
+                    }
+                });
+            }
+        },{
+            scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update'
+        });                    
+    });
+}
+
+var shareHandlers = function(){
+    $('#eVideo_to_twitter').off('change');
+    $('#eVideo_to_twitter').on('change',function(e){        
+        if($(this).is(':checked')){
+            $.oauthpopup({
+                path: '/user/twitterConnect',
+                callback: function(){
+                }           
+            })            
+        }
+    });
+    $('#eVideo_to_facebook').off('change');
+    $('#eVideo_to_facebook').on('change',function(e){
+        if($(this).is(':checked')){
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    var request = $.ajax({
+                        url:"/user/ajaxFacebookConnect",
+                        type:'POST',
+                        data:({
+                            'CSRF_TOKEN':getCsrfToken(),
+                            'accessToken':response.authResponse.accessToken,
+                            'expiresIn':response.authResponse.expiresIn,
+                            'userID':response.authResponse.userID
+                        })
+                    });
+                }
+            },{
+                scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update'
+            });                                
+        }
+    });    
+    $('.star').off('click');
+    $('.star').on('click',function(e){
+        e.preventDefault();
+        var ratingType = $('#ratingType').html();
+        var bID = $(this).attr('rev');
+        var request = $.ajax({
+            url: "/" + ratingType + "/ajaxRate",
+            type:'POST',
+            data:({
+                'CSRF_TOKEN':getCsrfToken(),
+                'rating':$(this).attr('rel'),
+                'object_id':$(this).attr('rev')
+            }),
+            success: function(data){
+                var obj = $.parseJSON(data);
+                $('#stars').html('');
+                var starnum = 0;
+                for(i=0;i<obj.avg;i++){
+                    starnum++;
+                    $('#stars').append(
+                        $('<a></a>').attr({
+                            'href':'#',
+                            'rel':starnum,
+                            'rev':bID
+                        }).addClass('star').append(
+                            $('<img></img>').attr({
+                                'src':'/webassets/images/play/star_yellow.png'
+                            })
+                            )
+                        )
+                }
+                for(t=0;t<5-i;t++){
+                    starnum++;
+                    $('#stars').append(
+                        $('<a></a>').attr({
+                            'href':'#',
+                            'rel':starnum,
+                            'rev':bID
+                        }).addClass('star').append(
+                            $('<img></img>').attr({
+                                'src':'/webassets/images/play/star_white.png'
+                            })
+                            )
+                        )
+                }                
+                $('#votes').html(obj.votes);
+                shareHandlers();
+            }
+        });        
+    });    
+    
+}
+
+var questionHandlers = function(){
+    $('.question').off('mouseover');
+    $('.question').on('mouseover',function(e){
+        $(this).addClass('hover');        
+    });    
+    $('.question').off('mouseout');
+    $('.question').on('mouseout',function(e){
+        $(this).removeClass('hover');        
+    });        
+}
+
+
+
+var linkHandlers = function(){
+    $('.delete').off('click');
+    $('.delete').on('click',function(e){
+        e.preventDefault();
+        if(confirm('Are you sure you want to delete this video?')){
+            window.location = $(this).attr('href');
+        }        
+    })
+}
+
+var termsHandlers = function(){
+    $('#terms_accept').off('change');
+    $('#terms_accept').on('change',function(e){
+        var choice = ($('#terms_accept').is(':checked')) ? 1 : 0;
+        var request = $.ajax({ 
+            type:'POST',
+            url: '/user/ajaxAcceptTerms', 
+            data:({
+                'CSRF_TOKEN':getCsrfToken(),
+                'choice':choice
+            }),
+            success: function(data){
+                document.location = '/record';
+            }
+        });
+    });
+}
+
+var newAcctHandlers = function(){
+
+    $('#createNewAccount').off('change');
+    $('#createNewAccount').on('change',function(e){
+        window.location = '/register';
+    });
+}
+
+var voteHandlers = function(){
+    $('.voteAgain').off('click');
+    $('.voteAgain').on('click',function(e){
+        e.preventDefault();
+        $('.afterVote').toggle();
+    });
+    $('.voteButton').off('click');
+    $('.voteButton').on('click',function(e){
+        e.preventDefault();
+        var request = $.ajax({ 
+            type:'POST',
+            url: '/poll/ajaxResponse', 
+            data:({
+                'CSRF_TOKEN':getCsrfToken(),
+                'answer':$(this).attr('rel'),
+                'source':'web'
+            }),
+            success: function(data){
+                $('.afterVote').toggle();
+            }
+        });        
+    });
+}
+
+var detectmob = function() { 
+    if( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+        ){
+        return true;
+    }
+    else {
+        return false;
+    }
+}    
+
+function getGraphData(pID){
+    var request = $.ajax({
+        url:"/poll/ajaxGetData",
+        type:'POST',
+        data:({
+            'id':pID,
+            'CSRF_TOKEN':getCsrfToken()
+        }),
+        success:function(data){
+            var data = $.parseJSON(data);
+            drawGraph(data.values,data.labels,data.colors);
+        }
+    });
+}
+
+function drawGraph(v,l,c){
+    RGraph.Clear(document.getElementById("cvs"));        
+    var graph = new RGraph.HBar('cvs',v);
+    graph.Set('chart.labels',l);         
+    graph.Set('chart.colors',c);            
+    graph.Set('chart.units.post', '%');
+    graph.Set('chart.labels.above', true);
+    graph.Set('chart.xmax', 100);
+    graph.Set('chart.background.barcolor1','transparent');
+    graph.Set('chart.background.barcolor2','transparent');
+    graph.Set('chart.text.size', 12);
+    graph.Set('chart.text.color', 'white');
+    graph.Set('chart.xlabels',false);
+    graph.Set('chart.gutter.left', 200);
+    graph.Set('chart.gutter.top', 0);
+    graph.Set('chart.gutter.bottom', 25);
+    graph.Set('chart.background.grid', false);
+    graph.Set('chart.colors.sequential',true);
+    graph.Set('chart.noaxes',true);        
+    graph.Set('chart.axis.color','transparent');                
+    graph.Draw();                        
+}
+
+var crawler = function(){
+    var request = $.ajax({
+        url:"/ticker/ajaxStream",
+        type:'POST',
+        data:({
+            'destination':'web',
+            'CSRF_TOKEN':getCsrfToken()
+        }),
+        success:function(data){
+            var data = $.parseJSON(data);
+            if(data){
+                $('#tickerCrawlImage').attr({'src':data.image});
+                $('#tickerCrawlText').html(data.ticker);
+            }
+        }
+    });    
+}
+
+var reloadVideo = function(vid){
+    var request = $.ajax({
+        url: '/video/ajaxPreviewVideo',
+        type: 'POST',
+        data: ({
+            'CSRF_TOKEN': getCsrfToken(),
+            'vID':vid
+        }),
+        success:function(data){
+            var obj = $.parseJSON(data);
+            console.log(obj.status);
+            $('#videoWindow').html(obj.html);
+            if(obj.status == 'WAIT'){
+                setTimeout('reloadVideo('+vid+')',2000);
+            }
+        }
+    });    
+}
+
+$(function() {
+    $('.fbreg').bind('click',function(e){    
+        if($(this).children('.campaign_media_row_text').html() == 'Connect') {
+            $(this).children('.campaign_media_row_text').html('<img height=32 width=32 src="/core/webassets/images/socialSearch/ajaxSpinner.gif"/>');
+
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    $.ajax({
+                        url:"/user/ajaxFacebook",
+                        type:'POST',
+                        data:({
+                            'CSRF_TOKEN':getCsrfToken(),
+                            'accessToken':response.authResponse.accessToken,
+                            'expiresIn':response.authResponse.expiresIn,
+                            'userID':response.authResponse.userID
+                        }),
+                        success: function(data){
+                            $('.fbreg .campaign_media_row_text').html('Connected');
+                            $('.fbreg_on').removeClass('campaign_on_unselected').addClass('campaign_on_selected');
+                            $('.fbreg_off').removeClass('campaign_off_selected').addClass('campaign_off_unselected');
+                            $('.campaign_media_button_facebook').css('cursor','auto');
+                            $('.fbreg_off').css('cursor','pointer');
+                            
+                        }
+                    });
+                    
+                    FB.api('/me', function(res) {
+                        $('.campaign_social_media_email').html(res.email);
+                    });
+                }
+            },{
+                scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update'
+            });    
+        }
+    });
+    
+    $('.fbreg_off').on('click',function(){    
+        if($(this).hasClass('campaign_off_unselected')) {
+            if(confirm('Are you sure you want to disconnect your facebook account?')){
+                FB.api(
+                    "/me/permissions","DELETE",
+                    function (response) {
+                      if (response && !response.error) {
+                        $('.fbreg .campaign_media_row_text').html('Connect');
+                        $('.fbreg_on').removeClass('campaign_on_selected').addClass('campaign_on_unselected');
+                        $('.fbreg_off').removeClass('campaign_off_unselected').addClass('campaign_off_selected');
+                        $('.campaign_media_button_facebook').css('cursor','pointer');
+                        $('.fbreg_off').css('cursor','auto');
+                        $('.campaign_social_media_email').html('');
+                      }
+                    }
+                );
+         
+            }
+        }
+    });
+ 
+    $('.twreg').on('click',function(e){
+        if($(this).children('.campaign_media_row_text').html() == 'Connect') {
+            $(this).children('.campaign_media_row_text').html('<img height=32 width=32 src="/core/webassets/images/socialSearch/ajaxSpinner.gif"/>');
+            $.oauthpopup({
+                path: '/user/twitter',
+                callback: function(){
+                    window.location.reload();
+                }           
+            }) 
+        }   
+    });    
+    
+});
+
+

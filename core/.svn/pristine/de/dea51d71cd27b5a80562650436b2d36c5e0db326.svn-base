@@ -1,0 +1,25 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/preview/preview.css');
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/preview/preview.js', CClientScript::POS_END);
+?>
+
+<!--<div class="message">Broadcast Signal</div>-->
+<div id="sliderContainer">
+    <div class="sliders">
+    <?php foreach($tickers as $t) { ?>
+        <div class="slider">
+            <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+            <div class="text"><?php echo $t->ticker; ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if(sizeof($tickers) == 0) { ?>
+        <div class="slider">
+            <div class="text">There are no tickers approved for this question.</div>
+        </div>
+    <?php } ?>
+
+    </div>
+</div>

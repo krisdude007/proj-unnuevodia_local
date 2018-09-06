@@ -1,0 +1,57 @@
+<div class="text">
+    <h2>Help & Feedback</h2>
+    <div style="text-align: left">
+        <div>
+            <p>
+            For any additional Help or
+            Feedback. Please fill in the
+            form with a brief description
+            of any Question/Concern/
+            Feedback. &pictures Team
+            will respond to you as soon
+            as possible!
+            </p>
+            or
+            <p>
+            Contact us at <a href="mailto:andpictures@zee.esselgroup.com" style="color:#f17100;">andpictures@zee.esselgroup.com</a>
+            </p>
+        </div>
+        <div>
+            <?php
+            $form = $this->beginWidget('CActiveForm', array(
+                'id' => 'email-assistance-form',
+                'enableClientValidation' => true,
+                'enableAjaxValidation' => false,
+                'clientOptions' => array(
+                    'validateOnSubmit' => true,
+                    'validateOnChange' => true,
+                    'validateOnType' => false,
+                )
+            ));
+            ?>
+            <div>
+                <div>
+                    <?php echo $form->textField($formEmailAssistanceModel, 'name', Array('class' => 'form-control','placeHolder'=>'Name')); ?>
+                    <?php echo $form->error($formEmailAssistanceModel, 'name'); ?>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <div>
+                    <?php echo $form->textField($formEmailAssistanceModel, 'email', Array('class' => 'form-control','placeHolder'=>'Email')); ?>
+                    <?php echo $form->error($formEmailAssistanceModel, 'email'); ?>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <div>
+                    <?php echo $form->textArea($formEmailAssistanceModel, 'description', Array('class' => 'form-control', 'maxlength' => 2500, 'rows' => 4, 'cols' => 50,'placeHolder'=>'Message')); ?>
+                    <?php echo $form->error($formEmailAssistanceModel, 'description'); ?>
+                </div>
+            </div>
+            <br/>
+            <button class="btn btn-block btn-inverse">Send</button>
+            <?php $this->endWidget(); ?>
+        </div>
+    </div>
+</div>

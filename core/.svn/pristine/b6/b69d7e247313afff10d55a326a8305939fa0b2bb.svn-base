@@ -1,0 +1,40 @@
+<?php
+
+class FormVideoUpload extends CFormModel {
+
+    public $is_ad;
+    public $question_id;
+    public $video;
+    public $title;
+    public $tags;
+    public $company_name;
+    public $company_email;
+
+    public function rules() {
+      
+      $email_regex_pattern = '/^[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z](?:[a-zA-Z]*[a-zA-Z])?$/';
+
+        return array(
+            array('question_id, video, title, is_ad', 'required'),
+            array('question_id, is_ad', 'numerical', 'integerOnly' => true),
+            array('video', 'file', 'types' => 'mov'),
+            array('company_email', 'email', 'pattern' => $email_regex_pattern),
+            array('question_id, title, is_ad, tags, company_name, company_email', 'safe')
+        );
+
+        return $rules;
+    }
+
+    /**
+     * Declares attribute labels.
+     */
+    public function attributeLabels() {
+        return array(
+            'question_id' => 'Question',
+            'video' => 'Video',
+            'title' => 'Title',
+            'tags' => 'Tags'
+        );
+    }
+
+}

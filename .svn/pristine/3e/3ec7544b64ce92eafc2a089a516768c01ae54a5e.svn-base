@@ -1,0 +1,7 @@
+<?php
+
+return array(
+    'Title cannot be blank' => 'El título no puede estar en blanco',
+    'Image cannot be blank' => 'La imagen no puede estar en blanco',
+);
+?>

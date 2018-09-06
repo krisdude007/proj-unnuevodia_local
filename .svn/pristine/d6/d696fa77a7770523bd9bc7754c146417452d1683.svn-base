@@ -1,0 +1,25 @@
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'id' => 'user-profilephoto-form',
+    'enableAjaxValidation' => true,
+    'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        ));
+?>
+<?php echo $form->errorSummary(Array($userPhoto)); ?>
+
+<div style="float:left; padding-right:30px; font-size:19px;">
+    Current Photo<br />
+    <div style="margin-bottom:20px;width:130px;">
+        <img style="margin-left:auto;margin-right:auto;max-width:130px;max-height:150px;display:block" src="<?php echo UserUtility::getAvatar($user); ?>" />
+        </a>
+    </div>
+</div>
+<div style="float:left; margin-top:30px;">
+    Current Upload a new photo<br/>
+    <?php $avatar = (empty($user->userPhotos[0]->filename)) ? : '/' . basename(Yii::app()->params['paths']['avatar']) . "/{$user->userPhotos[0]->filename}"; ?>
+    <?php echo $form->fileField($userPhoto, 'image'); ?>
+    <?php echo $form->error($userPhoto, 'image'); ?>
+    <br>
+    <?php echo CHtml::submitButton('upload picture', array('style' => 'cursor:pointer;margin-top:30px; width:200px;')); ?>
+</div>
+<?php $this->endWidget(); ?>

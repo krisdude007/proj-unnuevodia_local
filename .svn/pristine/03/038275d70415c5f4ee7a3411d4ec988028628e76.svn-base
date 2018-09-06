@@ -1,0 +1,38 @@
+
+<div id="content">
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+        <div class="verticalRule">
+            <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/you/profile.divider.png" />
+        </div>
+        <div class="youContent" style="text-align:left;">
+
+            <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/you/header-help.png">
+            <div style="background:url('<?php echo Yii::app()->request->baseurl;?>/webassets/images/you/help-container.png');height:284px;" class="textBox">
+                <div>
+                    <div style="padding:20px;margin-left:110px;height:53px;">
+                        <b>Click "Record" Lights, Camera, Action!</b><br>
+                        Look towards the webcam, speak up clearly, smile and
+                        have fun recording your video.
+                    </div>
+                    <div style="padding:20px;margin-left:110px;height:53px;">
+                        <b>Describe Your Video</b><br>
+                        Add a title, tags, and description. Don't forget to
+                        review your video. You can re-record your video if you don't like it.
+                    </div>
+                    <div style="padding:20px;margin-left:110px;height:53px;">
+                        After you click submit you will be prompted to log in if you have not already done so.
+                    </div>
+                </div>                    
+            </div> 
+            <div style="margin-top:20px;margin-right:20px;float:right;">
+                <a href="mailto:<?php echo CLIENT_SUPPORT_EMAIL;?>" style="color: #fff">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<?php
+
+// This is the configuration for yiic console application.
+// Any writable CConsoleApplication properties can be configured here.
+require('constants.php');
+if (defined('CLIENT_TZ')) {
+    date_default_timezone_set(CLIENT_TZ);
+}
+require(Yii::getPathOfAlias('core') . '/config/constants.php');
+$docroot = dirname(__FILE__) . '/../..';
+$config = require_once "env_manager.php";
+
+$pathParts = explode('/', $docroot);
+$client = ($pathParts[7] == 'config') ? $pathParts[5] : $pathParts[2];
+$dev = ($pathParts[7] == 'config') ? $pathParts[4] : '';
+
+return array(
+    'commandPath' => Yii::getPathOfAlias('core').'/commands',
+    'import' => array(
+        'core.models.*',
+        'core.components.*',
+        'core.components.utilities.*',
+        'client.models.*',
+    ),
+    //'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name' => ucfirst(basename($docroot)),
+    // preloading 'log' component
+    'preload' => array('log'),
+    // application components
+    'components' => array(
+        'db' => array(
+            'connectionString' => "mysql:host={$config->db_host};dbname={$config->db_name}",
+            'schemaCachingDuration' => 3600,
+            'emulatePrepare' => true,
+            'username' => $config->db_user,
+            'password' => $config->db_pass,
+            'charset' => 'utf8',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            ),
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'docroot' => $docroot,
+        'twitter' => (Yii::app()->params['twitter']['active'])
+            ? Array(
+                'consumerKey'=>Yii::app()->params['twitter']['consumer_key'],
+                'consumerSecret'=>Yii::app()->params['twitter']['consumer_secret'],
+                'adminAccessToken' =>Yii::app()->params['twitter']['adminAccessToken'],
+                'adminTokenSecret' =>Yii::app()->params['twitter']['adminTokenSecret'],
+                'streamFile'=>$docroot.'/twitter.txt',
+            )
+            : Array(),
+        'dev' => $dev,
+        'client' => $client,
+        'ticker' => array(
+            'sleepTime'=>Yii::app()->params['ticker']['sleepTime'],
+        ),
+    ),
+);

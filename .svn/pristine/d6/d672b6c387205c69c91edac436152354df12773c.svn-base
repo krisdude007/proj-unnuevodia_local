@@ -1,0 +1,29 @@
+ <div class="form">
+            <?php
+            $form = $this->beginWidget('CActiveForm', array(
+                'id' => 'image-upload-form',
+                'enableAjaxValidation' => true,
+                'htmlOptions' => array('enctype' => 'multipart/form-data'),
+                    ));
+            ?>
+            <?php echo $form->errorSummary(array($image)); ?>
+
+            <div class="clearfix" style="padding-top:20px;">
+              
+            </div>
+            <div class="clearfix">
+              <div class="row">
+                <?php echo $form->fileField($image, 'image'); ?>
+                <?php echo $form->error($image, 'image'); ?>
+              </div>        
+            </div>        
+            <div class="clearfix">
+              <div class="row buttons" style="float:left;margin-top:12px;margin-right:7px;">
+                <?php echo CHtml::submitButton('SUBE'); ?>
+              </div>
+            </div>    
+            <?php $this->endWidget(); ?>
+
+          </div><!-- form -->
+
+

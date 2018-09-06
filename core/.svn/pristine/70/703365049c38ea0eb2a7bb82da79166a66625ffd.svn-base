@@ -1,0 +1,17 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/preview.css');
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/preview.js', CClientScript::POS_END);
+?>
+
+<div id="sliderContainer">
+    <div class="sliders">
+    <?php foreach($tickers as $t) { ?>
+        <div class="slider">
+            <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+            <div class="text"><?php echo $t->ticker; ?></div>
+        </div>
+    <?php } ?>
+    </div>
+</div>

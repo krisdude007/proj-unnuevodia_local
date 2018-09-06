@@ -1,0 +1,76 @@
+<?php
+
+class MobileController extends Controller {
+
+    public $layout = false;
+    private $outputFormat = 'json'; // json, xml
+
+    public function filters() {
+        return array();
+    }
+
+    protected function renderOutput($output = array()) {
+        header('Content-type: application/json');
+        echo CJSON::encode($output);
+        Yii::app()->end();
+    }
+
+    private function throwException($errorCode, $errorMessage) {
+        $this->renderOutput(array('errorCode' => $errorCode, 'errorMessage' => $errorMessage));
+    }
+
+    // start stubbing out - for obvious reasons, 
+    // these will need to tap into existing functionality 
+    public function actionLogin() {
+
+        $user = new eUser;
+        $user->setScenario('login');
+
+        if (isset($_POST['eUser'])) {
+
+            $user->attributes = $_POST['eUser'];
+
+            if (UserUtility::login($user)) {
+
+                $userRecord = $user->findByAttributes(array('username' => $user->username));
+                AuditUtility::save($this, $_REQUEST);
+                Yii::app()->user->setFlash('success', SUCCESS_LOGIN . " {$userRecord->first_name}");
+                $this->redirect(Yii::app()->user->returnUrl);
+            } else {
+
+                $code = 401;
+                $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+            }
+        }
+
+        $code = 400;
+        $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+    }
+
+    public function actionLogout() {
+        
+    }
+
+    public function actionRegister() {
+        
+    }
+
+
+    private function getStatusCodeMessage($status) {
+        // these could be stored in a .ini file and loaded
+        // via parse_ini_file()... however, this will suffice
+        // for an example
+        $codes = Array(
+            200 => 'OK',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            500 => 'Internal Server Error',
+            501 => 'Not Implemented',
+        );
+        return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+}

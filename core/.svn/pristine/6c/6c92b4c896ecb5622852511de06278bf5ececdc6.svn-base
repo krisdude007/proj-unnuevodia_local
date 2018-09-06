@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * This is the model class for table "game_choice_t_response".
+ *
+ * The followings are the available columns in table 'game_choice_t_response':
+ * @property integer $id
+ * @property integer $game_choice_id
+ * @property integer $game_choice_answer_id
+ * @property integer $user_id
+ * @property string $source
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property User $user
+ */
+class eGameChoiceResponse extends GameChoiceResponse {
+
+    //public $transaction_id;
+    //public $hour;
+    public $webplays;
+    public $webfreeplays;
+    public $SMSplays;
+    public $mobileplays;
+    public $mobilefreeplays;
+    public $IVRplays;
+
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('user_id', 'default', 'value' => Yii::app()->user->getId()),
+            array('user_id, source', 'required'),
+            array('game_choice_id, game_choice_answer_id, sms_id, user_id, transaction_id, is_winner', 'numerical', 'integerOnly' => true),
+            array('is_winner', 'default', 'value' => 0),
+            array('source', 'length', 'max' => 256),
+            array('ip_address, ip_derivedcity', 'length', 'max' => 255),
+            array('created_on, updated_on', 'default', 'value' => date("Y-m-d H:i:s"), 'setOnEmpty' => false, 'on' => 'insert'),
+            array('ip_address', 'default', 'value' => getenv('REMOTE_ADDR'), 'setOnEmpty' => false, 'on' => 'insert, update'),
+            array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"), 'setOnEmpty' => false, 'on' => 'update'),
+            array('id, game_choice_id, game_choice_answer_id, sms_id, user_id, transaction_id, is_winner, source, ip_address, ip_derivedcity, ip_derivedstate, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'gameChoice' => array(self::BELONGS_TO, 'GameChoice', 'game_choice_id'),
+            'gameChoiceAnswer' => array(self::BELONGS_TO, 'GameChoiceAnswer', 'game_choice_answer_id'),
+            'gameChoiceSmsOutbound' => array(self::BELONGS_TO, 'GameChoiceSmsOutbound', 'sms_id'),
+            'eUser' => array(self::BELONGS_TO, 'eUser', 'user_id'),
+            'Transaction' => array(self::HAS_MANY, 'Transaction', 'item_id'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'game_choice_id' => 'Game Choice',
+            'game_choice_answer_id' => 'Game Choice Answer',
+            'sms_id' => 'SMS ID',
+            'user_id' => 'User',
+            'transaction_id' => 'Transaction',
+            'is_winner' => 'Winner',
+            'source' => 'Source',
+            'ip_address' => 'IP Address',
+            'ip_derivedcity' => 'IP Based City',
+            'ip_derivedstate' => 'IP Based State',
+            'created_on' => 'Created On',
+            'updated_on' => 'Updated On',
+        );
+    }
+
+    public function scopes() {
+        return array(
+            'recent' => array('order' => '`t`.`id` DESC'),
+            'recentASC' => array('order' => '`t`.`id` ASC'),
+            'isWinner' => array(
+                'condition' => "is_winner = '1'",
+            ),
+            'isFree' => array(
+                'condition' => "sms_id IS NULL AND transaction_id IS NULL",
+            ),
+            'isPaid' => array(
+                'condition' => "sms_id IS NOT NULL OR transaction_id IS NOT NULL",
+            ),
+        );
+    }
+
+    public function getPlaysByHourly($game_id) {
+        $criteria = new CDbCriteria();
+        $criteria->select = "t.created_on, count(*),
+  (
+      SELECT
+      count(*)
+      FROM game_choice_response a
+      WHERE
+      a.source='web'
+      and a.transaction_id is not NULL
+      and date(a.created_on) = date(t.created_on)
+      and hour(a.created_on) = hour(t.created_on)
+      and a.game_choice_id=t.game_choice_id
+      ) as webplays,
+(
+       SELECT
+		count(*)
+       FROM game_choice_response a
+       WHERE a.source='web'
+       and a.transaction_id is NULL
+       and date(a.created_on) = date(t.created_on)
+       and hour(a.created_on) = hour(t.created_on)
+      and a.game_choice_id=t.game_choice_id
+       ) as webfreeplays,
+(
+       SELECT
+       count(*)
+       FROM game_choice_response a
+       WHERE a.source='SMS'
+       and a.sms_id is not NULL
+       and date(a.created_on) = date(t.created_on)
+       and hour(a.created_on) = hour(t.created_on)
+       and a.game_choice_id=t.game_choice_id
+       ) as SMSplays,
+(
+       SELECT
+       count(*) FROM game_choice_response a
+       WHERE a.source='mobile'
+       and a.transaction_id is not NULL
+       and date(a.created_on) = date(t.created_on)
+       and hour(a.created_on) = hour(t.created_on)
+      and a.game_choice_id=t.game_choice_id
+       ) as mobileplays,
+(
+       SELECT
+       count(*) FROM game_choice_response a
+       WHERE a.source='mobile'
+       and a.transaction_id is NULL
+       and date(a.created_on) = date(t.created_on)
+       and hour(a.created_on) = hour(t.created_on)
+      and a.game_choice_id=t.game_choice_id
+       ) as mobilefreeplays,
+(
+       SELECT
+       count(*)
+       FROM game_choice_response a
+       WHERE a.source='IVR'
+       and date(a.created_on) = date(t.created_on)
+       and hour(a.created_on) = hour(t.created_on)
+      and a.game_choice_id=t.game_choice_id
+       ) as IVRplays";
+        $criteria->condition = "t.game_choice_id=" . $game_id;
+        $criteria->group = "date(t.created_on), hour(created_on)";
+
+        return self::model()->findAll($criteria);
+    }
+
+    public function filterByDates($startDate, $endDate) {
+        return DateTimeUtility::filterByDates($this, $startDate, $endDate);
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return GameChoiceResponse the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+}

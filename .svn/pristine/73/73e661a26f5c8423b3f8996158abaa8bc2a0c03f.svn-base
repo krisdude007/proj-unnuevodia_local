@@ -1,0 +1,50 @@
+<?php
+
+class clientAdminImageController extends AdminImageController {
+    
+    function init() {
+        parent::init();
+    }
+    
+    public function actionAjaxImageUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $currentStatus = trim($_POST['currentStatus']);
+        $imageId = trim($_POST['imageId']);
+
+        $image = eImage::model()->findByPk($imageId);
+
+        if (!is_null($image)) {
+            if(IMAGE_FILTERS_EXTENDED)
+            {
+                $image->extendedStatus = Utility::updateExtendedStatus($currentStatus, $status, $image);
+            }
+            else
+            {
+                $image->status = $status;
+            }
+            $image->arbitrator_id = Yii::app()->user->id;
+            $image->status_date = date("Y-m-d H:i:s");
+            $image->save();
+            if($image->status == 'accepted' || IMAGE_FILTERS_EXTENDED && $image->extendedStatus['accepted'] && !$image->extendedStatus['denied']){
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $image->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $image->view_key;
+                MailUtility::send('photo approve', $email);
+            }
+            elseif ($image->status == 'denied')
+            {
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $image->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $image->view_key;
+                MailUtility::send('photo not approved',$email);
+            }
+        }
+        
+        
+        else {
+            echo json_encode(array('success' => 'false'));
+        }
+    } 
+}

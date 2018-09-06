@@ -1,0 +1,84 @@
+var shareHandlers = function(){
+    $('.shareToClientTwitter').off('click');
+    $('.shareToClientTwitter').on('click',function(e){
+        e.preventDefault();
+        if(confirm('Are you sure you want to tweet this?')){
+            var ticker_id = $(this).attr('rel');
+            var elem = $(this).replaceWith($('<img></img>').attr({'id':'spinner_tw_'+ticker_id,'src':'/core/webassets/images/socialSearch/ajaxSpinner.gif'}).css({'width':'32px'}));        
+            var request = $.ajax({
+                url:"/admin/ajaxClientShareTwitter",
+                type:'POST',
+                data:({
+                    'YII_CSRF_TOKEN':getCsrfToken(),
+                    'type':'ticker',
+                    'id':ticker_id,
+                }),
+                success: function(data){
+                    alert('Twitter Says: '+data);
+                    $('#spinner_tw_'+ticker_id).replaceWith(elem);
+                    shareHandlers();
+                }
+            });
+        }
+    });
+    $('.shareToClientFacebook').off('click');
+    $('.shareToClientFacebook').on('click',function(e){
+        e.preventDefault();
+        if(confirm('Are you sure you want to post this to Facebook?')){
+            var ticker_id = $(this).attr('rel');
+            var elem = $(this).replaceWith($('<img></img>').attr({'id':'spinner_fb_'+ticker_id,'src':'/core/webassets/images/socialSearch/ajaxSpinner.gif'}).css({'width':'32px'}));                
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    var request = $.ajax({
+                        url:"/user/facebookConnect",
+                        type:'POST',
+                        data:({
+                            'YII_CSRF_TOKEN':getCsrfToken(),
+                            'accessToken':response.authResponse.accessToken,
+                            'expiresIn':response.authResponse.expiresIn,
+                            'userID':response.authResponse.userID
+                        }),
+                        success: function(data){
+                            var request = $.ajax({
+                                url:"/admin/ajaxClientShareFacebook",
+                                type:'POST',
+                                data:({
+                                    'YII_CSRF_TOKEN':getCsrfToken(),
+                                    'type':'ticker',
+                                    'id':ticker_id,
+                                }),
+                                success: function(data){
+                                    alert('Facebook Says: '+data);
+                                    $('#spinner_fb_'+ticker_id).replaceWith(elem);
+                                    shareHandlers();
+                                }
+                            });
+                        }
+                    });
+                }
+            },{
+                scope: 'user_location,user_birthday,email,publish_stream,publish_actions,status_update,manage_pages'
+            });                                
+        }
+    });    
+} 
+
+
+$(document).ready(function () {
+    
+    $("button").click(function (e) {
+
+        e.preventDefault();
+        if ($(this).hasClass('fab-grey')) {
+            $(this).removeClass('fab-grey');
+        } else {
+            $(this).addClass('fab-grey');
+        }
+    })
+    
+    $('#tickerTable').dataTable({
+        "fnDrawCallback":shareHandlers(),
+        "aaSorting": [[ 3, "desc" ]]
+    });
+});
+

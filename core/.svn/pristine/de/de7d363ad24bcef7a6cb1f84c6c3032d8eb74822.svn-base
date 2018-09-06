@@ -1,0 +1,754 @@
+<?php
+
+/**
+ * Mobile API Controller
+ *
+ * Responsible as main interface for all mobile traffic.
+ *
+ * @author     Original Author <greg.stringer@gmail.com>
+ */
+class MobileController extends Controller {
+
+    public $layout = false;
+    private $outputFormats = array('json', 'xml');
+    private $outputFormat = 'json';
+
+    const MAX_LIFETIME_SECS = 600;
+
+    public function filters() {
+        return array();
+    }
+
+    /*
+     * Utility methods
+     */
+
+    private function getStatusCodeMessage($status) {
+        // these could be stored in a .ini file and loaded
+        // via parse_ini_file()... however, this will suffice
+        // for an example
+        $codes = Array(
+            200 => 'OK',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            500 => 'Internal Server Error',
+            501 => 'Not Implemented',
+        );
+        return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    private function renderOutput($output = array(), $outputFormat = 'json') {
+
+        switch ($outputFormat) {
+            case 'json':
+                echo $this->renderJson($output);
+                break;
+            case 'xml':
+                echo $this->renderXml($output);
+                break;
+            default:
+                $code = 501;
+                $this->throwException($code, $this->getStatusCodeMessage($code));
+                break;
+        }
+        Yii::app()->end();
+    }
+
+    private function renderXml($output) {
+
+        header('Content-type: application/xml');
+        $xml = new SimpleXMLElement('<root/>');
+        $output = array_flip($output);
+        array_walk_recursive($output, array($xml, 'addChild'));
+        return $xml->asXML();
+    }
+
+    private function renderJson($output) {
+        header('Content-type: application/json');
+        return CJSON::encode($output);
+    }
+
+    private function throwException($errorCode, $errorMessage) {
+        $this->renderOutput(array('errorCode' => $errorCode, 'errorMessage' => $errorMessage));
+    }
+
+    private function getUserTokenObject($token = null, $withUser = true) {
+        $attributes = array('token' => $token);
+        if (!$withUser) {
+            return eUserToken::model()->findByAttributes($attributes);
+        }
+        return eUserToken::model()->with('user')->findByAttributes($attributes);
+    }
+
+    /*
+     * Call this first in an action when you want to make sure a user is logged in
+     * or in the controller init based on whether or not the user is logged in
+     *
+     * responsible for now for setting user class member
+     */
+
+    private function validateToken($token = null) {
+
+        if (!is_null($token)) {
+            $userTokenObject = $this->getUserTokenObject($token);
+
+            if (!is_null($userTokenObject)) {
+                // set user
+                $userObject = $userTokenObject->user;
+
+                // todo - check token updated_at.. expire if beyond x amount of time
+                $difference = time() - CDateTimeParser::parse($userTokenObject->updated_on, "yyyy-MM-dd HH:mm:ss");
+
+                if ($difference >= self::MAX_LIFETIME_SECS) {
+                    $this->logout($token);
+                }
+
+                // token is valid. update token and token timestamp
+                $userTokenObject->token = eUserToken::generateToken();
+                $userTokenObject->updated_on = new CDbExpression('NOW()');
+                $userTokenObject->save();
+                return $userTokenObject;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    /*
+     * Takes an array of models and returns the first model error found
+     */
+
+    private function getErrorFromModels($models = array()) {
+
+        foreach ($models as $model) {
+            foreach ($model->attributes as $key => $val) {
+                $error = $model->getError($key);
+                if (!is_null($error)) {
+                    return str_replace('"', '', $error);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * Authentication
+     *
+     *  todo - incorporate API KEY
+     *  todo - incorporate token expiration
+     *  todo - validate the token (strlen, etc) prior to querying the db
+     */
+
+    public function actionLogin() {
+
+        if (isset($_POST['eUser'])) {
+            $user = new eUser;
+            $user->setScenario('login');
+            $user->attributes = $_POST['eUser'];
+            $userTokenObject = $this->login($user);
+
+            if ($userTokenObject) {
+
+                // return successful login data
+                $output = array('user_id' => $userTokenObject->user_id, 'user_token' => $userTokenObject->token);
+                $this->renderOutput($output);
+            }
+
+            $code = 401;
+            $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+        }
+
+        $code = 400;
+        $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+    }
+
+    // now we can login without an action being called
+    private function login($user) {
+        if (UserUtility::login($user, false, true)) {
+
+            $userObject = $user->findByAttributes(array('username' => $user->username));
+            AuditUtility::save($this, $_REQUEST, array(), $userObject->id);
+
+            // remove any previous token record that might be associated with this user
+            eUserToken::model()->deleteAllByAttributes(array('user_id' => $userObject->id));
+
+            // generate & store token
+            $userTokenObject = new eUserToken();
+            $userTokenObject->user_id = $userObject->id;
+            $userTokenObject->token = eUserToken::generateToken();
+            $userTokenObject->created_on = new CDbExpression('NOW()');
+            $userTokenObject->updated_on = new CDbExpression('NOW()');
+            $userTokenObject->save();
+            return $userTokenObject;
+        }
+
+        return false;
+    }
+
+    public function actionLogout() {
+
+        if (isset($_POST['token'])) {
+            $token = $_POST['token'];
+            $this->logout($token);
+        }
+    }
+
+    // now we can logout without an action being called
+    private function logout($token = null) {
+
+        if (!is_null($token)) {
+            // fetch user token object
+            $userTokenObject = $this->getUserTokenObject($token, false);
+
+            // remove token
+            if ($userTokenObject) {
+                $userTokenObject->delete();
+                // send response
+                $code = 401;
+                $error = $this->throwException($code, 'User has been logged out.');
+            }
+        }
+        // send response
+        $code = 401;
+        $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+    }
+
+    /*
+     * Registration
+     */
+
+    public function actionRegister() {
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+
+            $user = new eUser;
+            $userEmail = new eUserEmail;
+            $userLocation = new eUserLocation;
+            $user->setScenario('register');
+            $userEmail->setScenario('register');
+            $userLocation->setScenario('register');
+            $user->attributes = $_POST['eUser'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $user->username = $userEmail->email;
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->source = 'mobile';
+            $userEmail->type = 'primary';
+            $userEmail->active = 1;
+            $userLocation->type = 'primary';
+
+            if (UserUtility::register($user, $userEmail, $userLocation)) {
+                MailUtility::send('welcome', $userEmail->email);
+                $user->setScenario('register');
+                $userTokenObject = $this->login($user);
+
+                if ($userTokenObject) {
+
+                    // return successful login data
+                    $output = array('user_id' => $userTokenObject->user_id, 'user_token' => $userTokenObject->token);
+                    $this->renderOutput($output);
+                }
+
+                $code = 401;
+                $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+            }
+
+            $error = $this->getErrorFromModels(array($user, $userEmail, $userLocation));
+
+            if ($error != false) {
+                $code = 400;
+                $error = $this->throwException($code, $error);
+            }
+        }
+
+        // send response
+        $code = 400;
+        $error = $this->throwException($code, $this->getStatusCodeMessage($code));
+    }
+
+    /*
+     * Video functionality
+     */
+
+    public function actionVideos($limit = 10) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        $criteria = new CDbCriteria();
+        $criteria->limit = $limit;
+        $videos = eVideo::model()->with('user', 'brightcoves')->accepted()->recent()->findAll($criteria);
+        $response = array('user_token' => $userTokenObject->token);
+        foreach ($videos as $video) {
+            $tags = array();
+            $tagVideos = eTagVideo::model()->with('tag')->findAllByAttributes(array('video_id' => $video->id));
+            foreach ($tagVideos as $tagVideo) {
+                $tags[] = $tagVideo->tag->title;
+            }
+            $response[$video->id] = array(
+                'createDate' => strtotime($video->created_on),
+                'title' => $video->title,
+                'description' => $video->description,
+                'tag' => implode(',', $tags),
+                'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+                'playerID' => Yii::app()->params['brightcove']['playerID'],
+                'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+                'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+                'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+                'views' => $video->views,
+                'stars' => $video->rating,
+                'user' => array(
+                    'id' => $video->user->id,
+                    'avatar' => UserUtility::getAvatar($video->user),
+                    'username' => $video->user->username
+                )
+            );
+        }
+        $this->renderOutput($response);
+    }
+
+    public function actionVideosByUserId($user_id = null, $limit = 10) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        if (is_null($user_id)) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+            //return;
+        }
+        $criteria = new CDbCriteria();
+        $criteria->compare('user_id', $user_id);
+        $criteria->limit = $limit;
+        $videos = eVideo::model()->with('user', 'brightcoves')->accepted()->recent()->findAll($criteria);
+        $response = array('user_token' => $userTokenObject->token);
+        foreach ($videos as $video) {
+            $tags = array();
+            $tagVideos = eTagVideo::model()->with('tag')->findAllByAttributes(array('video_id' => $video->id));
+            foreach ($tagVideos as $tagVideo) {
+                $tags[] = $tagVideo->tag->title;
+            }
+            $response[$video->id] = array(
+                'createDate' => strtotime($video->created_on),
+                'title' => $video->title,
+                'description' => $video->description,
+                'tag' => implode(',', $tags),
+                'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+                'playerID' => Yii::app()->params['brightcove']['playerID'],
+                'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+                'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+                'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+                'views' => $video->views,
+                'stars' => $video->rating,
+                'user' => array(
+                    'id' => $video->user->id,
+                    'avatar' => UserUtility::getAvatar($video->user),
+                    'username' => $video->user->username
+                )
+            );
+        }
+        $this->renderOutput($response);
+    }
+
+    public function actionVideoById($id = null) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        if (is_null($id)) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+            //return;
+        }
+        $video = eVideo::model()->with('user', 'brightcoves')->accepted()->findByPk($id);
+        if (is_null($video)) {
+            $this->throwException(404, $this->getStatusCodeMessage(404));
+            //return;
+        }
+        $tags = array();
+        $tagVideos = eTagVideo::model()->with('tag')->findAllByAttributes(array('video_id' => $video->id));
+        foreach ($tagVideos as $tagVideo) {
+            $tags[] = $tagVideo->tag->title;
+        }
+        $response = array(
+            'user_token' => $userTokenObject->token,
+            'id' => $video->id,
+            'createDate' => strtotime($video->created_on),
+            'title' => $video->title,
+            'description' => $video->description,
+            'tag' => implode(',', $tags),
+            'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+            'playerID' => Yii::app()->params['brightcove']['playerID'],
+            'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+            'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+            'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+            'views' => $video->views,
+            'stars' => $video->rating,
+            'user' => array(
+                'id' => $video->user->id,
+                'avatar' => UserUtility::getAvatar($video->user),
+                'username' => $video->user->username
+            )
+        );
+        $this->renderOutput($response);
+    }
+
+    public function actionVideoUpload() {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        $form = new FormVideoUpload;
+        $form->attributes = $_POST['FormVideoUpload'];
+        $form->is_ad = isset($form->is_ad) ? $form->is_ad : 0;
+        $form->video = CUploadedFile::getInstance($form, 'video');
+        if (!$form->validate()) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+        }
+        $filename = uniqid('MB');
+        $fileExtension = $form->video->extensionName;
+        $fileInput = Yii::app()->params['paths']['video'] . '/' . $filename . '.' . $fileExtension;
+        $fileOutput = Yii::app()->params['paths']['video'] . '/' . $filename . VIDEO_POST_FILE_EXT;
+        $fileThumb = Yii::app()->params['paths']['video'] . '/' . $filename . VIDEO_IMAGE_FILE_EXT;
+        $fileGif = Yii::app()->params['paths']['video'] . '/' . $filename . '.gif';
+        $form->video->saveAs($fileInput);
+
+        $durationArray = VideoUtility::getVideoDuration($fileInput);
+        $durations = explode('.', $durationArray[2]);
+        $duration = round($durations[0]);
+        $duration = "00:00:" . str_pad($duration, 2, '0', STR_PAD_LEFT) . ".00";
+        $watermarkVideo = eAppSetting::model()->findByAttributes(Array('attribute' => 'water_mark_on_video'));
+        if ($watermarkVideo->value == 1) {
+            $watermark = $_SERVER['DOCUMENT_ROOT'] . VIDEO_WATERMARK;
+        }
+        // convert to mp4
+        $videoEncoded = VideoUtility::ffmpegFlvToMp4($fileInput, $fileOutput, $duration, $watermark);
+        if (!$videoEncoded) {
+            $this->throwException(500, $this->getStatusCodeMessage(500));
+        }
+        //get fileInfo
+        $fileInfo = VideoUtility::getID3Info($fileOutput);
+        // generate thumb
+        VideoUtility::ffmpegGenerateThumbFromVideo($fileOutput, $fileThumb);
+        // generate gif
+        VideoUtility::ffmpegMp4ToGif($fileOutput, $fileGif);
+
+        $video = new eVideo();
+        $video->user_id = $userTokenObject->user->id;
+        $video->question_id = $form->question_id;
+        $video->filename = $filename;
+        $video->thumbnail = $filename;
+        $video->processed = 1;
+        $video->watermarked = $watermarkVideo->value;
+        $video->title = $form->title;
+        $video->description = $form->description;
+        $video->duration = $duration;
+        $video->frame_rate = $fileInfo['video']['frame_rate'];
+        $video->view_key = eVideo::generateViewKey();
+        $video->source = 'mobile';
+        $video->to_twitter = eUserTwitter::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $form->to_twitter;
+        $video->to_facebook = eUserFacebook::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $form->to_facebook;
+        /*
+          if ($form->is_ad == '1') {
+          $record['title'] = 'AD: ' . $form->title;
+          $record['description'] = 'amplify ad';
+          $record['source'] = 'ad';
+          }
+
+          if ($form->company_name != '' && $form->company_email != '') {
+          $record['company_name'] = $form->company_name;
+          $record['company_email'] = $form->company_email;
+          } */
+        $video->arbitrator_id = $userTokenObject->user->id;
+        $video->status = 'new';
+        if (VIDEO_FILTERS_EXTENDED) {
+            $video->extendedStatus['new'] = true;
+            $video->extendedStatus['new_tv'] = true;
+        }
+        //check auto accept
+        $autoApprove = eAppSetting::model()->findByAttributes(Array('attribute' => 'auto_approve_submitted_videos'));
+        if ($autoApprove->value) {
+            $video->status = 'accepted';
+            if (VIDEO_FILTERS_EXTENDED) {
+                $video->extendedStatus['accepted'] = true;
+                $video->extendedStatus['new_tv'] = true;
+            }
+        }
+        $video->save();
+
+        // handle tags
+        $tags = $form->tags;
+        if ($tags != '') {
+            // if more than one tag was passed, explode them into an array
+            if (strstr($tags, ',')) {
+                $tags = explode(',', $tags);
+            } else {
+                $tags = array($tags);
+            }
+
+            foreach ($tags as $tag) {
+                $tagModel = Tag::model()->findByAttributes(array('title' => $tag));
+                if (is_null($tagModel)) {
+                    $tagModel = new Tag();
+                    $tagModel->title = $tag;
+                    $tagModel->save();
+                }
+                $tagVideoModel = new TagVideo();
+                $tagVideoModel->tag_id = $tagModel->id;
+                $tagVideoModel->video_id = $video->id;
+                $tagVideoModel->save();
+            }
+        }
+        $response = array(
+            'user_token' => $userTokenObject->token,
+            'id' => $video->id,
+            'createDate' => strtotime($video->created_on),
+            'title' => $video->title,
+            'description' => $video->description,
+            'tags' => implode(',', $tags),
+            'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+            'playerID' => Yii::app()->params['brightcove']['playerID'],
+            'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+            'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+            'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+            'user' => array(
+                'id' => $userTokenObject->user->id,
+                'avatar' => UserUtility::getAvatar($userTokenObject->user),
+                'username' => $userTokenObject->user->username,
+            )
+        );
+        $this->renderOutput($response);
+    }
+
+    /*
+     * Photo functionality
+     */
+
+    public function actionPhotos($limit = 10) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        $criteria = new CDbCriteria();
+        $criteria->condition = "title <> 'Avatar'";
+        $criteria->limit = $limit;
+        $images = eImage::model()->with('user')->accepted()->recent()->findAll($criteria);
+        $response = array('user_token' => $userTokenObject->token);
+        foreach ($images as $image) {
+            $tags = array();
+            $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+            foreach ($tagImages as $tagImage) {
+                $tags[] = $tagImage->tag->title;
+            }
+            $response[$image->id] = array(
+                'createDate' => strtotime($image->created_on),
+                'title' => $image->title,
+                'description' => $image->description,
+                'tag' => implode(',', $tags),
+                'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+                'views' => $image->views,
+                'stars' => $image->rating,
+                'user' => array(
+                    'id' => $image->user->id,
+                    'avatar' => UserUtility::getAvatar($image->user),
+                    'username' => $image->user->username
+                )
+            );
+        }
+        $this->renderOutput($response);
+    }
+
+    public function actionPhotosByUserId($user_id = null, $limit = 10) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        if (is_null($user_id)) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+            //return;
+        }
+        $criteria = new CDbCriteria();
+        $criteria->condition = "title <> 'Avatar'";
+        $criteria->compare('user_id', $user_id);
+        $criteria->limit = $limit;
+        $images = eImage::model()->with('user')->accepted()->recent()->findAll($criteria);
+        $response = array('user_token' => $userTokenObject->token);
+        foreach ($images as $image) {
+            $tags = array();
+            $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+            foreach ($tagImages as $tagImage) {
+                $tags[] = $tagImage->tag->title;
+            }
+            $response[$image->id] = array(
+                'createDate' => strtotime($image->created_on),
+                'title' => $image->title,
+                'description' => $image->description,
+                'tag' => implode(',', $tags),
+                'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+                'views' => $image->views,
+                'stars' => $image->rating,
+                'user' => array(
+                    'id' => $image->user->id,
+                    'avatar' => UserUtility::getAvatar($image->user),
+                    'username' => $image->user->username
+                )
+            );
+        }
+        $this->renderOutput($response);
+    }
+
+    public function actionPhotoById($id = null) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        if (is_null($id)) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+            //return;
+        }
+        $image = eImage::model()->with('user')->accepted()->findByPk($id);
+        if (is_null($image)) {
+            $this->throwException(404, $this->getStatusCodeMessage(404));
+            //return;
+        }
+        $tags = array();
+        $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+        foreach ($tagImages as $tagImage) {
+            $tags[] = $tagImage->tag->title;
+        }
+        $response = array(
+            'user_token' => $userTokenObject->token,
+            'id' => $image->id,
+            'createDate' => strtotime($image->created_on),
+            'title' => $image->title,
+            'description' => $image->description,
+            'tag' => implode(',', $tags),
+            'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+            'views' => $image->views,
+            'stars' => $image->rating,
+            'user' => array(
+                'id' => $image->user->id,
+                'avatar' => UserUtility::getAvatar($image->user),
+                'username' => $image->user->username
+            )
+        );
+        $this->renderOutput($response);
+    }
+
+    public function actionPhotoUpload() {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+            //return; // calling renderOutput() ends script execution Andy ;)
+        }
+        if (!isset($_POST['eImage'])) {
+            $this->throwException(400, $this->getStatusCodeMessage(400));
+            //return;
+        }
+        $image = new eImage;
+        $image->attributes = $_POST['eImage'];
+        //$image->entity_id = 0;
+        $image->user_id = $userTokenObject->user->id;
+        $image->filename = CUploadedFile::getInstance($image, 'image');
+        $image->source = 'mobile';
+        $image->to_twitter = eUserTwitter::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $image->to_twitter;
+        $image->to_facebook = eUserFacebook::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $image->to_facebook;
+        $image->arbitrator_id = $userTokenObject->user->id;
+        //$image->watermarked = 0;
+        //$image->view_key = 0;
+        $image->is_avatar = 0;
+        $image->status = 'new';
+        if (IMAGE_FILTERS_EXTENDED) {
+            $image->extendedStatus['new'] = true;
+            $image->extendedStatus['new_tv'] = true;
+        }
+        if (IMAGE_AUTO_APPROVE) {
+            $image->status = 'accepted';
+            if (IMAGE_FILTERS_EXTENDED) {
+                $image->extendedStatus['accepted'] = true;
+                $image->extendedStatus['new_tv'] = true;
+            }
+        }
+        if (!$image->validate()) {
+            $this->throwException(400, $this->getStatusCodeMessage(400) . "2");
+            //return;
+        }
+        preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+        $filetype = $matches[0];
+        $filename = "{$userTokenObject->user->id}_" . md5(uniqid('', true) . $image->filename) . $filetype;
+        $image->filename->saveAs(Yii::app()->params['paths']['image'] . "/" . $filename);
+        $image->filename = $filename;
+        $image->save();
+
+        // handle tags
+        $tags = $_POST['eImage']['tags'];
+        if ($tags != '') {
+            // if more than one tag was passed, explode them into an array
+            if (strstr($tags, ',')) {
+                $tags = explode(',', $tags);
+            } else {
+                $tags = array($tags);
+            }
+
+            foreach ($tags as $tag) {
+                $tagModel = Tag::model()->findByAttributes(array('title' => $tag));
+                if (is_null($tagModel)) {
+                    $tagModel = new Tag();
+                    $tagModel->title = $tag;
+                    $tagModel->save();
+                }
+                $tagImageModel = new TagImage();
+                $tagImageModel->tag_id = $tagModel->id;
+                $tagImageModel->image_id = $image->id;
+                $tagImageModel->save();
+            }
+        }
+        $response = array(
+            'user_token' => $userTokenObject->token,
+            'id' => $image->id,
+            'createDate' => strtotime($image->created_on),
+            'title' => $image->title,
+            'description' => $image->description,
+            'tag' => implode(',', $tags),
+            'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+            'user' => array(
+                'id' => $image->user->id,
+                'avatar' => UserUtility::getAvatar($image->user),
+                'username' => $image->user->username
+            )
+        );
+        $this->renderOutput($response);
+    }
+
+    public function actionVideoQuestions($limit = 3) {
+        $userTokenObject = $this->validateToken($_POST['user_token']);
+        if (!$userTokenObject) {
+            $this->throwException(401, $this->getStatusCodeMessage(401));
+        }
+        $criteria = new CDbCriteria();
+        $criteria->limit = $limit;
+        $questions = eQuestion::model()->video()->current()->findAll($criteria);
+        $response = array('user_token' => $userTokenObject->token);
+        foreach ($questions as $question) {
+            $response[$question->id] = array(
+                'createDate' => strtotime($question->created_on),
+                'question' => $question->question,
+                'hashtag' => $question->hashtag,
+            );
+        }
+        $this->renderOutput($response);
+    }
+
+}
+

@@ -1,0 +1,129 @@
+<?php
+
+class ImageUtility {
+    // gets values for image status dropdown
+    public static function getStatuses() {
+        $filterLabels = unserialize(IMAGE_FILTERS_EXTENDED_LABELS);
+        $statuses = array();
+        foreach($filterLabels as &$value)
+        {
+            if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission(key($value)))
+            {
+                $statuses = CMap::mergeArray($statuses, $value);
+            }
+        }
+
+        if(Yii::app()->user->isSuperAdmin())
+        {
+            $statuses = CMap::mergeArray($statuses, unserialize(IMAGE_FILTERS_EXTENDED_SUPADMIN_LABELS));
+        }
+
+        return $statuses;
+    }
+    
+    public static function getPerPageOptions() {
+        return array('12' => '12',
+            '24' => '24',
+            '36' => '36',
+            '48' => '48'
+        );
+    }
+    
+    public static function ffmpegImageToVideo($fileInput, $fileOutput) {
+        if(file_exists($fileInput)) {
+            $params = IMAGE_TO_VIDEO_FFMPEG_PARAMS;
+            $params = str_replace('{FILE_INPUT}', $fileInput, $params);
+            $params = str_replace('{FILE_OUTPUT}', $fileOutput, $params);
+            $cmd = VIDEO_FFMPEG_PATH . $params;
+            exec($cmd);
+        }
+        
+        if(file_exists($fileOutput))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function ffmpegFinalizeImageVideoForTv($fileInput, $fileOutput) {
+        if(file_exists($fileInput)) {
+            $params = IMAGE_VIDEO_TO_TV_FFMPEG_PARAMS;
+            $params = str_replace('{FILE_INPUT}', $fileInput, $params);
+            $params = str_replace('{FILE_OUTPUT}', $fileOutput, $params);
+            $cmd = VIDEO_FFMPEG_PATH . $params;
+            exec($cmd);
+        }
+        
+        if(file_exists($fileOutput))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function ffmpegImageVideoAddAudio($fileInput, $fileInputAudio, $fileOutput) {
+        if(file_exists($fileInput)) {
+            $params = IMAGE_VIDEO_WAUDIO_FFMPEG_PARAMS;
+            $params = str_replace('{FILE_INPUT}', $fileInput, $params);
+            $params = str_replace('{FILE_INPUT_AUDIO}', $fileInputAudio, $params);
+            $params = str_replace('{FILE_OUTPUT}', $fileOutput, $params);
+            $cmd = VIDEO_FFMPEG_PATH . $params;
+            exec($cmd);
+        }
+        
+        if(file_exists($fileOutput))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function ffmpegImageScale($fileInput, $fileOutput) {
+        if(file_exists($fileInput)) {
+            $params = IMAGE_SCALE;
+            $params = str_replace('{FILE_INPUT}', $fileInput, $params);
+            $params = str_replace('{FILE_OUTPUT}', $fileOutput, $params);
+            $cmd = VIDEO_FFMPEG_PATH . $params;
+            exec($cmd);
+        }
+        
+        if(file_exists($fileOutput))
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public static function orientateImage($imagePath) {
+            // rotate image
+            if(exif_imagetype($imagePath) == IMAGETYPE_JPEG){
+                
+                $image = imagecreatefromstring(file_get_contents($imagePath));
+                $exif = exif_read_data($imagePath);
+                
+                if(!empty($exif['Orientation'])) {
+                    switch($exif['Orientation']) {
+                        case 8:
+                            $image = imagerotate($image,90,0);
+                            break;
+                        case 3:
+                            $image = imagerotate($image,180,0);
+                            break;
+                        case 6:
+                            $image = imagerotate($image,-90,0);
+                            break;
+                    }
+                    
+                    imagejpeg($image, $imagePath);
+                    imagedestroy($image);
+                }
+            }
+    }
+
+}
+
+?>

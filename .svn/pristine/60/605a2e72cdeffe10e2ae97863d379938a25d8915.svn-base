@@ -1,0 +1,74 @@
+<?php
+
+// This is the configuration for yiic console application.
+// Any writable CConsoleApplication properties can be configured here.
+require('constants.php');
+
+//require(Yii::getPathOfAlias('core') . '/config/constants.php');
+$docroot = dirname(__FILE__) . '/../..';
+$config = require_once "env_manager.php";
+
+$pathParts = explode('/', $docroot);
+$client = ($pathParts[7] == 'config') ? $pathParts[5] : $pathParts[2];
+$dev = ($pathParts[7] == 'config') ? $pathParts[4] : '';
+
+return array(
+    'commandPath' => Yii::getPathOfAlias('core').'/commands',
+    'import' => array(
+        'core.models.*',
+        'core.components.*',
+        'core.components.utilities.*',
+        'client.models.*',
+    ),
+    //'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name' => ucfirst(basename($docroot)),
+    // preloading 'log' component
+    'preload' => array('log'),
+    'timeZone' => 'America/New_York',
+    // application components
+    'components' => array(
+        'db' => array(
+            'connectionString' => "mysql:host={$config->db_host};dbname={$config->db_name}",
+            'schemaCachingDuration' => 3600,
+            'emulatePrepare' => true,
+            'username' => $config->db_user,
+            'password' => $config->db_pass,
+            'charset' => 'utf8',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            ),
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'docroot' => $docroot,
+        'paths' => array(
+          'video' => '/uservideos',
+        ),
+        'video' => array(
+            'postExt'=> '.mp4',
+            'useExtendedFilters' => true,
+        ),
+        'twitter' => (Yii::app()->params['twitter']['active'])
+            ? Array(
+                'consumerKey'=> '6fNUrCW1PLdV71tepHv75A',
+                'consumerSecret'=>'rVJAdP3AlkwRGS01Iku6BJ5gkGgTzFPDPKpsE3VYYE',
+                'adminAccessToken' =>'41820310-dHGfn6n1HSw2wAsop13t7mOMgq4wGtfWEB3z6Q3lw',
+                'adminTokenSecret' =>'AXU4z2aTcoOBD9J47b0FC6ttkjuYSqw3pjLjB2z3dYhBj',
+                'streamFile'=>$docroot.'/twitter.txt',
+            )
+            : Array(),
+        'dev' => $dev,
+        'client' => $client,
+        'ticker' => array(
+            'sleepTime'=>10,
+        ),
+    ),
+);

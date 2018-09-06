@@ -1,0 +1,554 @@
+/***
+Large notebooks and desktops
+***/
+@media (min-width: 980px) { 
+    /***
+    Remove horizontal scroll
+    ***/
+    body {
+        overflow-x: hidden;
+    }
+
+    /***
+    Page sidebar
+    ***/
+    .fab-page-sidebar {
+        position: absolute;
+    }
+
+    .fab-page-sidebar ul{
+    }
+
+    /***
+    Page content
+    ***/
+    .fab-page-content { 
+        margin-left: 107px;
+        margin-top: 0px;
+        min-height: 860px; 
+    }
+    html[dir='rtl'] .fab-page-content{
+        margin-right: 107px;
+    }
+}
+
+.full-width-page .fab-page-content {
+    margin-left: 0px;
+}
+
+/***
+For tablets and phones
+***/
+@media (max-width:979px) { 
+
+    /***
+    Body
+    ***/
+    body {
+        margin: 0px !important;
+    }	
+
+    /***
+    Page header
+    ***/
+    .fab-header {
+        margin: 0 !important;
+    }
+
+    .fab-header .fab-nav li.fab-dropdown i {
+        display: inline-block;
+        position: relative;
+        top:1px;
+        right:0px;
+    }
+
+    .fab-header .fab-nav {
+        margin-bottom: 0px !important;
+    }
+
+    /***
+    Page container
+    ***/
+    .fab-page-container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .fab-fixed-top .fab-page-container {
+        margin-top: 0px !important;
+    }
+
+    /***
+    Page content
+    ***/
+    .fab-page-content {
+        margin: 0px !important;
+        padding: 0px !important;  		
+        min-height: 280px; 
+    }
+
+    /***
+    Page sidebar
+    ***/
+    .fab-page-sidebar {
+        margin: 0 10px;
+    }
+
+    .fab-page-sidebar.in{
+        margin-left: 10px;
+        margin-right: 10px;
+        position: relative;
+        z-index: 5;
+        height:auto!important;
+    }
+
+    .fab-page-sidebar .fab-sidebar-toggler {
+        display: none;
+    }
+
+    .fab-page-sidebar ul {
+        margin-top:0px;
+        width:100%;
+    }
+
+    .fab-page-sidebar .fab-selected {
+        display: none !important;
+    }
+
+    .fab-page-sidebar .sidebar-search {
+        width: 220px;
+        margin-top: 20px;
+        margin-bottom:20px;
+    }
+
+    /***
+    Page title
+    ***/
+    .page-title {
+        margin: 15px 0px;
+    }
+
+    /***
+    Styler panel
+    ***/
+    .styler-panel {
+        top:55px;
+        right:20px;
+    }
+    .fab-row-fluid .fab-third{margin-left:18px!important}
+    #fab-video-filter-form{border:0px !important}
+    .fab-b-left{border:0px !important}
+}
+
+@media (min-width: 768px) and (max-width: 1280px) { 
+
+    /***
+    Form wizard
+    ***/
+    .form-wizard .step .desc {
+        margin-top: 10px;
+        display: block;
+    }
+
+    /***
+    Pricing tables
+    ***/
+
+    .pricing-table .rate .price,
+    .pricing-table2 .rate .price {
+        width: 100%;
+        display: block;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+} 
+
+@media (min-width: 768px) and (max-width: 979px) { 
+    /***
+    Body
+    ***/
+    body {
+        padding-top: 0px;
+    }
+
+    /***
+    Page sidebar
+    ***/
+    .fab-page-sidebar .fab-btn-navbar.fab-collapsed .fab-arrow { 
+        display: none;
+    }	
+
+    .fab-page-sidebar .fab-btn-navbar .fab-arrow {
+        position: absolute;
+        right: 25px;
+        width: 0; 
+        height: 0;
+        top:50px;
+        border-bottom: 15px solid #5f646b;
+        border-left: 15px solid transparent; 
+        border-right: 15px solid transparent; 
+    }
+    form{margin:0px !important;}
+} 
+
+@media (max-width: 767px) { 
+    /***
+    Page header
+    ***/
+    .fab-header .fab-navbar-inner .fab-container-fluid {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+    }
+
+    .fab-header .top-nav .fab-nav{  
+        margin-top: 0px;
+        margin-right: 5px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-notification:after, 
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-notification:before {
+        margin-right: 180px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-notification {
+        margin-right: -180px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.inbox:after, 
+    .fab-header .fab-nav > li > .fab-dropdown-menu.inbox:before {
+        margin-right: 140px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.inbox {
+        margin-right: -140px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-tasks:after, 
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-tasks:before {
+        margin-right: 90px;
+    }
+
+    .fab-header .fab-nav > li > .fab-dropdown-menu.fab-tasks {
+        margin-right: -90px;
+    }
+
+    /***
+    Page content
+    ***/
+    .fab-page-content {
+        padding: 10px;
+    }
+    .fab-page-content #fab-top{
+        padding-right: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    /***
+    Page title
+    ***/
+    .page-title {
+        margin-bottom: 20px;
+    }
+
+    /***
+    Styler pagel
+    ***/
+    .styler-panel {
+        top:58px;
+        right:12px;
+    }	
+
+    /***
+    Page breadcrumb
+    ***/
+    .breadcrumb {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /***
+    Portlet form action
+    ***/
+    .fab-portlet-body.fab-form .form-actions{
+        padding-left: 15px;	
+    } 
+
+    /***
+    Gritter notification
+    ***/
+    #gritter-notice-wrapper {
+        right:1px !important;
+    }
+    .fab-row-fluid .fab-third{margin-left:18px!important}
+    /***
+    Form input validation states
+    ***/
+    .fab-input-icon .input-error, 
+    .fab-input-icon .input-warning, 
+    .fab-input-icon .input-success { 
+        top:-27px;
+        float: right;
+        right:10px !important;
+    }	
+    form{margin:0px !important;}
+    #fab-top{margin-bottom:10px !important}
+    .fab-reports-container .fab-span4 {width:96% !important;margin-left:2% !important;}
+    /***
+    Advance tables
+    ***/
+    .table-advance tr td.highlight:first-child a {
+        margin-left: 8px;
+    }
+    #fab-voting #fab-question{
+        width:360px !important;
+    }
+    /***
+    Footer	
+    ***/	
+    .fab-footer {
+        padding-left: 10px;
+        padding-right: 10px;		
+    }	
+
+    .fab-footer .go-top {  
+        float: right;
+        display: block;
+        margin-top: -22px;
+        margin-right: 0px;
+        margin-bottom: 5px !important;
+    }
+
+    /***
+    Vertical inline menu
+    ***/
+    .ver-inline-menu li.fab-active:after {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    /***
+    Header navbar
+    ***/
+    .fab-header .fab-nav {
+        clear:both !important;
+        margin-top:14px;
+    }
+
+    .fab-header .fab-nav > li.fab-dropdown .fab-dropdown-toggle {
+        margin-top:3px !important;
+    }	
+
+    .fab-header .fab-nav li.fab-dropdown .fab-dropdown-toggle .badge {
+        top: 11px;
+    }
+
+    /***
+    Page sidebar
+    ***/
+    .fab-page-sidebar.in{
+        margin-top: 54px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    /***
+    Styler panel
+    ***/
+    .styler-panel {
+        top:92px;
+        right:12px;
+    }	
+
+    /***
+    Page title
+    ***/
+    .page-title small {
+        display: block;
+        clear: both;
+    }
+
+    /***
+    Dashboard date range panel
+    ***/
+    .fab-page-content .breadcrumb .dashboard-date-range  {
+        padding-bottom: 8px;
+    } 
+    .fab-page-container{background: url("../../images/header.png") repeat-x scroll 0 0 transparent !important;background-position:top;padding-top:10px}
+
+    .fab-page-content .breadcrumb .dashboard-date-range span {
+        display: none;
+    }
+
+    /***
+    Login page
+    ***/
+    .fab-login .logo {
+        margin-top:10px;
+    }
+
+    .fab-login .content {
+        padding: 30px; 
+        width: 222px;
+    }
+
+    .fab-login .content h3 {
+        font-size: 22px;
+    }
+
+    .fab-login .content .fab-m-wrap {
+        width: 180px;
+    }
+
+    .fab-login .fab-checkbox {
+        font-size: 13px;
+    }
+
+    /***
+    Form controls
+    ***/
+    .fab-form-horizontal.bordered .fab-control-label {
+        float: none;
+        width: auto;
+        padding-top: 0;
+        text-align: left;
+        margin-left: 10px;
+    }
+
+    .fab-form-horizontal.bordered .fab-controls {
+        margin-left: 10px;
+    }
+
+    .fab-portlet .fab-form-horizontal .form-actions {
+        padding-left: 10px; 	
+    }
+    #fab-voting #fab-question{
+        width:300px !important;
+    }
+    .fab-pagination{margin-left:0px !important}
+    form{margin:0px !important;}
+    #fab-top{margin-bottom:10px !important}
+    .fab-row-fluid .fab-third{width:96% !important;margin-left:2% !important;}
+    .fab-reports-container .fab-span4 {width:96% !important;margin-left:2% !important;}
+    .fab-tags{width:300px !important;}
+    .fab-grey-select select{width:300px !important;}
+    .fab-grey-select{width:320px !important;}
+    fieldset select{width:300px !important;}
+    fieldset input[type="text"]{width:300px !important;}
+    .fab-filter{margin-bottom:5px;}
+    /***
+    Hidden phone
+    ***/
+    .hidden-480 {
+        display: none;
+    }
+    /* Force table to not be like tables anymore */
+    .spot table, thead, tbody, th, td, tr { 
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .spot thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .spot tr { border: 1px solid #ccc; }
+
+    .spot td { 
+        /*   Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee; 
+        position: relative;
+        padding-left: 50%; 
+    }
+
+    .spot td:before { 
+        /*  Now like a table header */
+        position: absolute;
+
+        top: 6px;
+        left: 6px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 320px) {
+    .fab-header .fab-nav > li.fab-dropdown .fab-dropdown-toggle {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /***
+    Hidden phone
+    ***/
+    .hidden-320 {
+        display: none;
+    }
+    #fab-voting #fab-question{
+        clear:both;
+        width:160px !important;
+    }
+    .fab-pagination{margin-left:0px !important}
+    form{margin:0px !important;}
+    #fab-top{margin-bottom:10px !important}
+    .fab-row-fluid .fab-third{width:96% !important;margin-left:2% !important;}
+    .fab-reports-container .fab-span4 {width:96% !important;margin-left:2% !important;}
+    .fab-page-container{background: url("../../images/header.png") repeat-x scroll 0 0 transparent !important;background-position:top;padding-top:10px}
+    .fab-tags{width:160px !important;}
+    .fab-grey-select select{width:160px !important;}
+    .fab-grey-select{width:170px !important;}
+    fieldset select{width:100% !important;}
+    fieldset input[type="text"]{width:100% !important;}
+    .fab-filter{margin-bottom:5px;}
+    .flexslider{width:99%!important}
+    .fab-nav.fab-pull-right{margin-top:15px;}
+    #modal{top:80% !important;}
+
+    /* Force table to not be like tables anymore */
+    .spot table, thead, tbody, th, td, tr { 
+        display: block; 
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .spot thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .spot tr { border: 1px solid #ccc; }
+
+    .spot td { 
+        /*   Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee; 
+        position: relative;
+        padding-left: 50%; 
+    }
+
+    .spot td:before { 
+        /*  Now like a table header */
+        position: absolute;
+
+        top: 6px;
+        left: 6px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+    }
+
+}	
+@media (min-width: 980px){
+    #fab-nav-collapsed{display:block!important}
+    #fab-small-menu{display:none!important}
+}
+@media (max-width: 979px){
+    #fab-nav-collapsed{display:none!important}
+    #fab-small-menu{display:block!important}
+
+}

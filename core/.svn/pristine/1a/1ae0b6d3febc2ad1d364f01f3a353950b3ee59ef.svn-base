@@ -1,0 +1,18 @@
+<?php
+
+class ContactUtility {
+    // gets values for image status dropdown
+    public static function getAdminEmail() {
+        $contact = eContactInformation::model()->findByAttributes(array('attribute' => 'admin_email'));
+        if(!is_null($contact))
+            return $contact->value;
+        return "";
+    }
+    public static function getFTPEmail() {
+        $contact = eContactInformation::model()->findByAttributes(array('attribute' => 'ftp_file_transfer_emails'));
+        if(!is_null($contact))
+            return $contact->value;
+        return "";
+    }
+}
+?>

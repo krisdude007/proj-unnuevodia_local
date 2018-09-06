@@ -1,0 +1,37 @@
+<?php
+
+class eQuestion extends Question {
+
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('user_id', 'default', 'value' => Yii::app()->user->getId()),
+            array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'insert'),
+            array('updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'update'),
+            array('question, start_time, end_time', 'required', 'on' => 'insert'),
+            array('user_id', 'numerical', 'integerOnly' => true),
+            array('question', 'length', 'max' => 255),
+            array('hashtag', 'length', 'max'=> 64),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, user_id, question, hashtag, start_time, end_time, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+
+    public function scopes() {
+        return array(
+            'current' => array(
+                'condition' => 'NOW() between start_time and end_time'
+            ),
+            'orderByCreatedDesc' => array(
+                'order' => 'created_on DESC',
+            ),
+        );
+    }
+
+}

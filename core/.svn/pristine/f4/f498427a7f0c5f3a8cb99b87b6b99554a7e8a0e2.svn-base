@@ -1,0 +1,15 @@
+            
+            <table <?php echo isset($id) ? $id : ""; ?> cellspacing="0" cellpadding="0" class="fab-a-blue <?php echo $classes; ?>">
+                <tbody>
+                    <?php
+                    $i = 0;
+                    foreach($rows as $key => $value){
+                        $parameters = array('label' => $key, 'value' => $value);
+                        if(isset($headerRow) && $i == 0)
+                            $parameters['headerRow'] = true;
+                        $this->renderPartial('_reportRow', Array('parameters' => $parameters, 'link' => $links[$i], 'startDate' => $startDate, 'endDate' => $endDate));
+                        $i++;
+                    }
+                    ?>
+                </tbody>
+            </table>

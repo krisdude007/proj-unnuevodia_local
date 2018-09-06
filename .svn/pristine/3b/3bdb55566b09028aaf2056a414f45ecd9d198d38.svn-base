@@ -1,0 +1,14 @@
+<div id="contentHome">
+    <div class="orange" style="color:#fff;width:360px;float: right;margin-right: 30px;margin-top: 80px;padding:36px 20px 20px 20px;text-align:left; position: relative;">
+        <h2>record a video</h2>
+        <span style="font-size: 18px;">What's on your mind?</span>
+        <div style="width:200px; margin-top:20px;">
+            <a href="<?php echo Yii::app()->request->baseurl; ?>/record" style="color:white;text-transform: uppercase;text-decoration: none;">
+                <div class="darkOrange" style="padding:10px 30px; text-align: center;font-weight: bold;">RECORD NOW</div>
+            </a>
+        </div>
+        <div style="text-transform: uppercase; color:#636363; position: absolute; bottom: -20px; right:0px;font-weight: bold;font-size: 14px;">
+            need help?
+        </div>
+    </div>
+</div>

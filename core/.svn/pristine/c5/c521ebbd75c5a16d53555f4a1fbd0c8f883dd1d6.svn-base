@@ -1,0 +1,766 @@
+<?php
+
+class AdminVideoController extends Controller {
+
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array(
+                    // VIDEO ACTIONS
+                    'index',
+                    'videoModal',
+                    'videoDownload',
+                    'videoModalThumbnails',
+                    'videoSchedulerModal',
+                    'videoImportModal',
+                    'ajaxVideoAddTags',
+                    'ajaxVideoUpdateThumbnail',
+                    'ajaxVideoUpdateStatus',
+                    'ajaxVideoGetUsers',
+                    'ajaxVideoGetAdmins',
+                    'ajaxVideoFTP',
+                    'ajaxVideoImport',
+                    'ajaxVideoGetNetworkShowSchedule',
+                    'ajaxVideoGetNetworkSpotSchedule',
+                    'ajaxVideoFillNetworkSpot',
+                    'ajaxVideoUnfillNetworkSpot',
+                    'ajaxAmplifyPreview',
+                    'ajaxAmplifyConcatenate',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+
+    /**
+     * 
+     * 
+     * VIDEO ACTIONS
+     * This section contains everything required for the video section of the admin
+     * 
+     * 
+     */
+    public function actionIndex($perPage = '') {
+
+        // Ensure a per page value is set
+        if (empty($perPage)) {
+            $perPage = Yii::app()->params['videoAdmin']['perPage'];
+        }
+
+        // set to null
+        $videos = null;
+
+        // create video filter form
+        $filterVideoModel = new FormFilterVideo;
+
+        // get questions for filter dropdown
+        // pass to Utility in order to get key value pairs for dropdown
+        $questionList = Array();
+        $questionList[] = 'All';        
+        $questions = eQuestion::model()->with('videoTally')->orderByCreatedDesc()->findAll();
+        foreach($questions as $question){
+            if($question->videoTally > 0){
+                $questionList[$question->id] = $question->question;
+            }
+        }
+        $questions = $questionList;
+        $statuses = VideoUtility::getStatuses();
+        $sources = VideoUtility::getSources();
+        $perPageOptions = VideoUtility::getPerPageOptions();
+        $criteria = new CDbCriteria;
+        
+        $columnConditions = array();
+
+        if (isset($_GET['FormFilterVideo'])) {
+
+            $filterVideoModel->attributes = $_GET['FormFilterVideo'];
+
+            if ($filterVideoModel->validate()) {
+
+                if ($filterVideoModel->status != 'all') {
+                    $columnConditions['status'] = $filterVideoModel->status;
+                }
+                
+                if ($filterVideoModel->source != 'all') {
+                    $columnConditions['source'] = $filterVideoModel->source;
+                }
+
+                if ($filterVideoModel->question != '0') {
+                    $columnConditions['question_id'] = $filterVideoModel->question;
+                }
+
+                if (!empty($filterVideoModel->user_id)) {
+                    $columnConditions['user_id'] = $filterVideoModel->user_id;
+                }
+
+                if (!empty($filterVideoModel->tags)) {
+                    // not ideal, but will work for now
+                    $tags = explode(' ', $filterVideoModel->tags);
+                    $criteria2 = new CDbCriteria;
+                    $criteria2->addInCondition('title', $tags);
+                    $tags = eTag::model()->with('tagVideos')->findAll($criteria2);
+                    
+                    $tagVideoArr = array();
+                    if(!is_null($tags)) {
+                        foreach($tags as $tag) {
+                            foreach($tag->tagVideos as $tagVideos) {
+                                $tagVideoArr[] = $tagVideos->video_id;
+                            }
+                        }
+                    }
+                    
+                    if(count($tagVideoArr) > 0) {
+                        $criteria->addInCondition('id', $tagVideoArr);
+                    }
+                }
+                
+                if(count($columnConditions) > 0) {
+                    $criteria->addColumnCondition($columnConditions);
+                }
+                
+                if (!empty($filterVideoModel->dateStart) && !empty($filterVideoModel->dateStop)) {
+                    $fmtStartDate = date('Y-m-d H:i:s', strtotime($filterVideoModel->dateStart));
+                    $fmtStopDate = date('Y-m-d H:i:s', strtotime($filterVideoModel->dateStop));
+                    $criteria->addBetweenCondition('created_on', $fmtStartDate, $fmtStopDate);
+                }
+
+                $perPage = $filterVideoModel->perPage;
+            }
+            
+        } else {
+            $filterVideoModel->perPage = $perPage;
+            $filterVideoModel->status = 'new'; 
+            $filterVideoModel->source = 'all';
+            $columnConditions['status'] = 'new';
+            $criteria->addColumnCondition($columnConditions);
+        }
+
+        $model = new eVideo;
+        $videosTotal = $model->processed()->count($criteria);
+        $pages = new CPagination($videosTotal);
+        $pages->pageSize = $perPage;
+        $pages->applyLimit($criteria);
+        
+        if($columnConditions['status'] == '') {
+          $videos = $model->processed()->recent()->findAll($criteria);
+        } else {
+          $videos = $model->processed()->recent()->{$columnConditions['status']}()->findAll($criteria);
+        }
+        
+        
+
+        // - gstringer 20130813
+        // todo - this is just a quick hack in order to make sure that we
+        // store frame rate and duration. This should happen when we capture
+        // the video but we have no idea when the video has finished encoding 
+        // within wowza. We need to move this to the video controller at some point.
+
+        foreach ($videos as $v) {
+
+            if (empty($v->duration) || empty($v->frame_rate)) {
+                $fileName = Yii::app()->params['paths']['video'] . '/' . $v->filename . VideoUtility::getVideoFileExtention($v->processed);
+                $fileInfo = VideoUtility::getID3Info($fileName);
+                $v->duration = $fileInfo['playtime_seconds'];
+                $v->frame_rate = $fileInfo['video']['frame_rate'];
+                $v->save();
+                
+                
+            }
+            
+        }
+
+
+        $this->render('index', array(
+            'questions' => $questions,
+            'statuses' => $statuses,
+            'sources' => $sources,
+            'perPageOptions' => $perPageOptions,
+            'filterVideoModel' => $filterVideoModel,
+            'videos' => $videos,
+            'videosTotal' => $videosTotal,
+            'pages' => $pages,
+        ));
+    }
+    
+    
+
+    public function actionVideoModal($id, $currentStatus) {
+        $this->layout = false;
+        $video = eVideo::model()->findByPk($id);
+        $videoTags = eTagVideo::model()->findAllByAttributes(array('video_id' => $id));
+
+        $tagArr = array();
+        foreach ($videoTags as $videoTag) {
+            $tagArr[] = $videoTag->tag->title;
+        }
+
+        $tagModel = new eTag();
+        $tagModel->title = implode(',', $tagArr);
+        
+        $prePostRolls = eVideo::model()->findAllByAttributes(Array('status'=>'accepted','description'=>'amplify ad'));
+        $prePostRolls = Utility::resultToKeyValue($prePostRolls, 'id', 'title');
+        
+        $this->render('videoModal', array(
+            'id' => $id,
+            'currentStatus' => $currentStatus,
+            'video' => $video,
+            'videoTags' => $videoTags,
+            'tagModel' => $tagModel,
+            'prePostRolls' => $prePostRolls,             
+            )
+        );
+    }
+    
+    public function actionVideoModalThumbnails($id) {
+        $this->layout = false;
+        $video = eVideo::model()->findByPk($id);
+        $thumbnails = null;
+
+        if (!is_null($video)) {
+            $thumbnails = VideoUtility::generateThumbnailsForVideo($video->filename);
+        }
+
+        $this->render('videoModalThumbnails', array('video' => $video,
+            'thumbnails' => $thumbnails));
+    }
+    
+    public function actionAjaxVideoUpdateThumbnail() {
+        
+        $videoId = trim($_POST['videoId']);
+        $thumbnail = trim($_POST['thumbnail']);
+        $video = eVideo::model()->findByPk($videoId);
+        
+        if(!is_null($video)) {
+            $video->thumbnail = $thumbnail;
+            $video->save();
+        }
+    }
+    
+    public function actionAjaxVideoAddTags() {
+
+        $this->layout = false;
+        $tags = trim($_POST['tags']);
+        $videoId = trim($_POST['videoId']);
+
+        // since $tags will always be set, check for data the old fashioned way 
+        if ($tags != '') {
+
+            // if more than one tag was passed, explode them into an array
+            if (strstr($tags, ',')) {
+                $tags = explode(',', $tags);
+            }
+            // otherwise handle a single tag
+            else {
+                $tags = array($tags);
+            }
+
+            // we need to delete any video tags that exist in the db, but were deleted 
+            // from this request
+            $taggedVideos = TagVideo::model()->with('tag')->findAllByAttributes(array('video_id' => $videoId));
+
+            if (!is_null($taggedVideos)) {
+                foreach ($taggedVideos as $tagVideo) {
+                    if (!in_array($tagVideo->tag->title, $tags)) {
+                        // delete tagVideo record since it was deleted from the input field
+                        $tagVideo->delete();
+                    }
+                }
+            }
+
+            foreach ($tags as $tag) {
+
+                // see if tag already exist. If it does, grab its id
+                $tagModel = Tag::model()->findByAttributes(array('title' => $tag));
+
+                if (!is_null($tagModel)) {
+                    $tagId = $tagModel->id;
+
+                    // see if it already exist in the tag video table. If not, add it.
+                    $tagVideo = TagVideo::model()->findByAttributes(array('tag_id' => $tagId, 'video_id' => $videoId));
+
+                    if (is_null($tagVideo)) {
+                        // add record to tag video
+                        $tagVideoModel = new TagVideo();
+                        $tagVideoModel->tag_id = $tagId;
+                        $tagVideoModel->video_id = $videoId;
+                        $tagVideoModel->save();
+                    }
+                } else {
+                    // If not, create a new tag and grab id
+                    $tagModel = new Tag();
+                    $tagModel->title = $tag;
+                    $tagModel->save();
+
+                    // add record to tag video
+                    $tagVideoModel = new TagVideo();
+                    $tagVideoModel->tag_id = $tagModel->id;
+                    $tagVideoModel->video_id = $videoId;
+                    $tagVideoModel->save();
+                }
+            }
+        } else {
+            // remove all tags for video
+            TagVideo::model()->deleteAllByAttributes(array('video_id' => $videoId));
+        }
+    }
+
+    public function actionAjaxVideoUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $videoId = trim($_POST['videoId']);
+
+        $video = eVideo::model()->findByPk($videoId);
+
+        if (!is_null($video)) {
+            $video->status = $status;
+            $video->arbitrator_id = Yii::app()->user->id;
+            $video->status_date = new CDbExpression('NOW()');
+            $video->save();
+            if($video->status == 'accepted'){
+                $brightcove = eBrightcove::model()->findByAttributes(Array('video_id'=>$video->id));
+                if(is_null($brightcove)){
+                    $brightcove = new eBrightcove();
+                    $brightcove->video_id = $video->id;
+                    $brightcove->brightcove_id = 'N/A';
+                    $brightcove->status = 'new';
+                    $brightcove->save();
+                }
+            }
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+    
+    public function actionVideoSchedulerModal($video_id = null) {
+        $this->layout = null;
+        
+        if(!is_null($video_id)) {
+            $video = eVideo::model()->findByPk($video_id);
+        } else {
+            $video = null;
+        }
+        
+        $networkShowsPrepend = array('0' => 'All');
+        $networkShows = Utility::resultToKeyValue(eNetworkShow::model()->ascending()->findAll(), 'id', 'name');
+        $networkShows = $networkShowsPrepend + $networkShows;
+        $filterVideoSchedulerModel = new FormFilterVideoScheduler;
+        
+        $this->render('videoSchedulerModal', array('video' => $video,
+                                                   'networkShows' => $networkShows,
+                                                   'filterVideoSchedulerModel' => $filterVideoSchedulerModel));
+    }
+    
+    
+    public function actionAjaxVideoFillNetworkSpot() {
+      
+        $response = 'false';
+        $this->layout = false;
+        $network_show_schedule_id = trim($_POST['network_show_schedule_id']);
+        $video_id = trim($_POST['video_id']);
+        
+        $network_show_schedule = eNetworkShowSchedule::model()->findByPk($network_show_schedule_id);
+        $video = eVideo::model()->findByPk($video_id);
+
+        if (!is_null($video) && !is_null($network_show_schedule)) {
+          $network_show_schedule->user_id = Yii::app()->user->id;
+          $network_show_schedule->video_id = $video_id;
+          $network_show_schedule->submitted_on = new CDbExpression('NOW()');
+          $network_show_schedule->spot_filename = 'YTU_' . $network_show_schedule->spot_type.$network_show_schedule->spot_number.'.mxf';
+          $network_show_schedule->spot_available = 0;
+          $network_show_schedule->save();
+          
+          /*
+           * $convertedToMov = VideoUtility::ffmpegMp4ToMov();
+           * $sent = VideoUtility::curlVideoToFlipFactory();
+           */
+          
+          $fileNameMp4 = $video->filename . VIDEO_POST_FILE_EXT;
+          $fileNameMov = "YTU_". $network_show_schedule->spot_type . $network_show_schedule->spot_number . VIDEO_FLIP_FACTORY_FILE_EXT;
+          $filePathMp4 = Yii::app()->params['paths']['video'] . "/" . $fileNameMp4;
+          $filePathMov = Yii::app()->params['paths']['video'] . "/" . $fileNameMov ;
+          
+          if(VideoUtility::ffmpegMp4ToMov($filePathMp4, $filePathMov)) {
+
+              if(VideoUtility::curlVideoToFlipFactory($filePathMov, $fileNameMov)) {
+                  $response = 'Spot has been filled. Video has been sent to Flip Factory.';
+              } else {
+                  $response = 'Unable to send video to Flip Factory.';
+              }
+              
+          } else {
+              $response = 'Unable to convert .mp4 to .mov.';
+          }
+        } 
+        
+        echo json_encode(array('response' => $response));
+    }
+    
+    public function actionAjaxVideoUnfillNetworkSpot() {
+        // remove video id and user id from spot and set saved on = 0000-00-00 00:00:00
+        $this->layout = false;
+        $network_show_schedule_id = trim($_POST['network_show_schedule_id']);
+        $network_show_schedule = eNetworkShowSchedule::model()->findByPk($network_show_schedule_id);
+
+        if (!is_null($network_show_schedule)) {
+          $network_show_schedule->user_id = new CDbExpression('NULL');
+          $network_show_schedule->video_id = new CDbExpression('NULL');
+          $network_show_schedule->submitted_on = new CDbExpression('NULL');
+          $network_show_schedule->updated_on = new CDbExpression('NOW()');
+          $network_show_schedule->spot_filename = '';
+          $network_show_schedule->spot_available = 1;
+          $network_show_schedule->save();
+            
+        } else {
+            
+            echo json_encode(array('error' => $network_show_schedule->getError()));
+        }
+    }
+
+    
+    public function actionAjaxVideoGetNetworkShowSchedule($spot_type='FS', $network_show_id=null) {
+        /*
+        SELECT
+        DISTINCT show_on,
+        network_show.name,
+        COUNT( network_show_schedule.id ) AS available_slots,
+        spot_available,
+        CONCAT(spot_type, spot_number) as house_number
+        FROM  `network_show_schedule`
+        LEFT JOIN network_show ON network_show.id = network_show_schedule.network_show_id
+        WHERE spot_type =  'FS' 
+        AND spot_available = 1 
+        AND DATE(DATE_ADD(show_on, INTERVAL 1 DAY)) > CURRENT_DATE
+        GROUP BY show_on
+        ORDER BY show_on ASC
+        */
+        $this->layout = null;
+        
+        $attributes = array();
+        $attributes['spot_type'] = $spot_type;
+        $attributes['spot_available'] = 1;
+        
+        // check for filter
+        if(!is_null($network_show_id)) {
+            $attributes['network_show_id'] = $network_show_id;
+        }
+        
+        $networkShowSchedule = eNetworkShowSchedule::model()->with('networkShow', 'user')->showSchedule()->findAllByAttributes($attributes);
+        
+        $output = array(
+            "aaData" => array()
+        );
+        
+        foreach($networkShowSchedule as $nss) {
+          
+            $date = strtotime( $nss->show_on );
+            $runDateTime = date('Y-m-d H:i:s', $date);
+            $runDate = date( 'm-d-Y', $date );
+            $runTime = date( 'g:i:s a', $date );
+            $timeRemainingToSpot = eNetworkShowSchedule::timeRemaining($runDateTime);
+            $color = eNetworkShowSchedule::getSpotColor($timeRemainingToSpot);
+
+            
+            if($timeRemainingToSpot != false) {
+              
+              $output['aaData'][] = array($color,
+                                          $nss->networkShow->name, 
+                                          $runDate, 
+                                          $runTime,
+                                          $nss->available_slots,
+                                          $timeRemainingToSpot,
+                                          strtotime($nss->show_on),
+                                          $nss->networkShow->id,
+                                          $nss->spot_type,
+                                          $nss->id,
+                                          );
+            }
+        }
+
+        echo json_encode( $output );
+    }
+    
+    public function actionAjaxVideoGetNetworkSpotSchedule($show_on, $spot_type, $network_show_id) {
+        /*
+        SELECT *
+        FROM  `network_show_schedule`
+        WHERE  `network_show_id` =11
+        AND  `spot_type` =  'FS'
+        AND  `show_on` =  '2013-11-25 15:00:00'
+        LIMIT 0 , 30
+        */
+        $this->layout = null;
+        
+        $show_on = date( 'Y-m-d H:i:s', $show_on );
+        $attributes = array('show_on' => $show_on,
+                            'spot_type' => $spot_type,
+                            'network_show_id' => $network_show_id);
+        
+        $networkSpotSchedule = eNetworkShowSchedule::model()->with('networkShow', 'user', 'video')->findAllByAttributes($attributes);
+        
+        $output = array(
+            "aaData" => array()
+        );
+        
+        $position=1;
+        $spotTimeTmp = null;
+        $defaultDateTime = '0000-00-00 00:00:00';
+        $dateTimeFormat = 'Y-m-d g:i:s a';
+        $uiDateTimeFormat = 'm-d-Y g:i:s a';
+        $timeFormat = 'g:i:s a';
+        
+        foreach($networkSpotSchedule as $nss) {
+            
+            if($nss->submitted_on != $defaultDateTime) {
+                $submitted_date = date($uiDateTimeFormat, strtotime( $nss->submitted_on ));
+            } else {
+                $submitted_date = $defaultDateTime;
+            } 
+            
+            // calculate run time
+            if($spotTimeTmp != $nss->spot_on) {
+                $spotTimeTmp = $nss->spot_on;
+                $spotRunDateTime = date( $dateTimeFormat, strtotime( $spotTimeTmp ) ); 
+                $spotRunTime = date( $timeFormat, strtotime( $spotTimeTmp ) ); 
+            } else {
+                $spotRunDateTime = date( $dateTimeFormat, strtotime( $spotTimeTmp ) + $nss->spot_length ); 
+                $spotRunTime = date( $timeFormat, strtotime( $spotTimeTmp ) + $nss->spot_length ); 
+            }
+            
+            $spotFilled = (is_null($nss->video_id) && is_null($nss->user_id)) ? 0 : 1;
+            $spotThumbnailSrc = ($spotFilled) ? Yii::app()->request->baseUrl.'/'.basename(Yii::app()->params['paths']['video']).'/'.$nss->video->thumbnail.VIDEO_IMAGE_FILE_EXT : $nss->video->thumbnail;
+            $spot_length_exp = explode(':', $nss->spot_length);
+            $spot_length = '';
+            foreach($spot_length_exp as $sl) {
+                if($sl != '00') {
+                    $spot_length = $spot_length.':'.$sl;
+                }
+            }
+            
+            $output['aaData'][] = array($position,
+                                        $spotFilled,
+                                        $nss->spot_filename,
+                                        $nss->user->username,
+                                        $spotRunTime,
+                                        $spot_length,
+                                        eNetworkShowSchedule::timeRemaining($spotRunDateTime),
+                                        $nss->spot_type.$nss->spot_number,
+                                        $submitted_date,
+                                        $nss->id,
+                                        $nss->video->id,
+                                        $spotThumbnailSrc
+                                        );
+            ++$position;
+        }
+
+        echo json_encode( $output );
+    }
+    
+    public function actionVideoDownload($id) {
+        $video = eVideo::model()->findByPk($id);
+        if (!is_null($video)) {
+            $file = Yii::app()->params['path']['videos'] . '/' . $video->filename . VIDEO_POST_FILE_EXT;
+            return Yii::app()->getRequest()->sendFile(basename($file), @file_get_contents(Yii::app()->getBasePath() . '/' . $file));
+        } else {
+            return false;
+        }
+    }
+
+    public function actionAjaxVideoImport($source){
+
+        $questions = eQuestion::model()->current()->findAll();
+        foreach($questions as $question){
+            $videoImportUtility = new VideoImportUtility($source, $question->hashtag, 5);
+            if ($videoImportUtility) {
+                $videoImportUtility->importVideos();
+            }                    
+        }
+    }
+    
+    public function actionVideoImportModal() {
+   
+        $this->layout = null;
+        $formVineModel = new FormVideoImportVine();
+        
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'video-import-vine') {
+            echo CActiveForm::validate($formVineModel);
+            Yii::app()->end();
+        }
+        
+        if(isset($_POST['FormVideoImportVine'])) {
+          
+            $formVineModel->attributes = $_POST['FormVideoImportVine'];
+            
+            if($formVineModel->validate()) {
+              $videoImportUtility = new VideoImportUtility($formVineModel->source, $formVineModel->categoryIdentifier, $formVineModel->numVideos);
+
+              if ($videoImportUtility) {
+                // import videos here
+                $videoImportUtility->importVideos();
+                
+              }
+
+            } else {
+              Yii::app()->user->setFlash('error', 'There was an error while importing videos.');
+            }
+            
+            $this->redirect('/adminVideo');
+        }
+        
+        $this->render('videoImportModal', array('formVineModel' => $formVineModel));
+    }
+
+    
+    // ajax method for user filter
+    public function actionAjaxVideoGetUsers() {
+
+        $this->layout = null;
+        $email = trim($_GET['term']);
+        $criteria = new CDbCriteria();
+        $criteria->addSearchCondition('username', $email, true);
+        $users = eUser::model()->findAll($criteria);
+        $rows = array();
+
+        if ($users) {
+            foreach ($users as $u) {
+                $rows[] = array('label' => $u->username,
+                    'id' => $u->id);
+            }
+        }
+
+        echo json_encode($rows);
+    }
+
+
+
+    // FTP video to client server for 
+    // display on their network
+    public function actionAjaxVideoFTP() {
+
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+
+        $video = eVideo::model()->findByPk($id);
+
+        if (!is_null($video)) {
+
+            $videoExt = VideoUtility::getVideoFileExtention($video->processed);
+            $fileName = $video->filename . $videoExt;
+            $fileLocal = Yii::app()->params['paths']['video'] . '/' . $fileName;
+
+            if (!file_exists($fileLocal)) {
+                echo json_encode(array('response' => 'Cannot find local file.'));
+            }
+
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $fileLocal, $fileName);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $fileLocal));
+            }
+        } else {
+            echo json_encode(array('response' => 'Unable to find video by id.'));
+        }
+    }
+    
+    public function actionAjaxAmplifyPreview(){
+        foreach($_POST as $k=>$v) {
+            $$k = $v;
+        }
+        foreach($videos as $id){
+            if(is_numeric($id)){
+                $video = eVideo::model()->findByPK($id);
+                $playlist[] = Array(
+                    'file'=>'/' . basename(Yii::app()->params['paths']['video']) . "/{$video->filename}" . VIDEO_POST_FILE_EXT,
+                    'image' => '/' . basename(Yii::app()->params['paths']['video']) . "/{$video->thumbnail}" . VIDEO_IMAGE_FILE_EXT,                            
+                );
+            }
+        }
+        echo $this->renderPartial('/admin/_videoPlayer', array(
+                'videoInfo' => Array(
+                    'videofile' => $playlist,
+                    'image' => '/' . basename(Yii::app()->params['paths']['video']) . "/{$video->thumbnail}" . VIDEO_IMAGE_FILE_EXT,
+                    'width' => 243,
+                    'height' => 137,
+                )
+            )
+        );
+    }
+    
+    public function actionAjaxAmplifyConcatenate(){
+        foreach($_POST as $k=>$v) {
+            $$k = $v;
+        }
+        $baseVideo = eVideo::model()->findByPK($base);
+        foreach($videos as $id){
+            if(is_numeric($id)){
+                $video = eVideo::model()->findByPK($id);
+                $playlist[] = Yii::app()->params['paths']['video'] . "/{$video->filename}";
+            }
+        }
+        foreach($playlist as $k=>$v){
+            $concat .= "{$v}.ts|";
+            $ffmpeg[] = VIDEO_FFMPEG_PATH . " -y -i {$v}" . VIDEO_POST_FILE_EXT . " -c copy -bsf:v h264_mp4toannexb -f mpegts {$v}.ts";
+        }
+        $concat = rtrim($concat,'|');
+        $outfile = uniqid('AMP');
+        $ffmpeg[] = VIDEO_FFMPEG_PATH . " -y -f mpegts -i \"concat:{$concat}\" ". VIDEO_PARAMS ." -bsf:a aac_adtstoasc " . Yii::app()->params['paths']['video'] . "/{$outfile}" . VIDEO_POST_FILE_EXT;                            
+        foreach($ffmpeg as $cmd){
+            exec($cmd);
+        }
+        VideoUtility::ffmpegGenerateThumbFromVideo(Yii::app()->params['paths']['video'].'/'.$outfile.VIDEO_POST_FILE_EXT, Yii::app()->params['paths']['video'].'/'.$outfile.VIDEO_IMAGE_FILE_EXT);
+        VideoUtility::ffmpegMp4ToGif(Yii::app()->params['paths']['video'].'/'.$outfile.VIDEO_POST_FILE_EXT, Yii::app()->params['paths']['video'].'/'.$outfile.'.gif');
+        $video = new eVideo;
+        $video->filename = $video->thumbnail = $outfile;
+        $video->question_id = $baseVideo->question_id;
+        $video->source = 'Amplify';
+        $video->arbitrator_id = $video->user_id = Yii::app()->user->getId();
+        $video->processed = 1;
+        $video->watermarked = 0;
+        $video->title = 'Amplified Video';
+        $video->description = '';
+        $video->status = 'accepted';
+        $video->view_key = md5(uniqid('',true).time());        
+        if($video->validate()){
+            $video->save();            
+            echo $video->id;
+            $brightcove = eBrightcove::model()->findByAttributes(Array('video_id'=>$video->id));
+            if(is_null($brightcove)){
+                $brightcove = new eBrightcove();
+                $brightcove->video_id = $video->id;
+                $brightcove->brightcove_id = 'N/A';
+                $brightcove->status = 'new';
+                $brightcove->save();
+            }
+        } else {
+            echo 'fail';
+        }
+    }    
+    
+}

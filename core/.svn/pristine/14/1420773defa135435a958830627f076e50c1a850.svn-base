@@ -1,0 +1,64 @@
+/**
+ * Handlers
+ */
+var modalButtonHandlers = function() {
+  // save tags button
+  $('#saveTagTrigger').click(function() {
+    saveImageTags($("#imageId").html(), $("#imageTags").val());
+  });
+  
+  // video accept/deny buttons
+  $('#fab-modal-accept-button').click(function() {
+    $('#fab-modal-accept-button').hide();
+    $('#fab-modal-deny-button').show();
+  });
+    
+  $('#fab-modal-deny-button').click(function() {
+    $('#fab-modal-deny-button').hide();
+    $('#fab-modal-accept-button').show();
+  });
+}
+
+
+var tabHandlers = function() {
+  $('#modalTabs').tabs();
+}
+
+var tagHandlers = function() {
+  //var sampleTags = ['c++', 'java', 'php', 'coldfusion', 'javascript', 'asp', 'ruby', 'python', 'c', 'scala', 'groovy', 'haskell', 'perl', 'erlang', 'apl', 'cobol', 'go', 'lua'];
+  $('#imageTags').tagit({
+    //availableTags: sampleTags
+  });
+}
+
+$(document).ready(function () {
+
+  modalButtonHandlers();
+  tabHandlers();
+  tagHandlers();
+  socialHandlers();
+  imageStatusHandlers();
+});
+
+/**
+ * Takes an image id and list of tags to save
+ */
+function saveImageTags(imageId, tags){
+
+  var request = $.ajax({
+    url: '/adminImage/ajaxImageAddTags',
+    type: 'POST',
+    data:({
+      'tags': tags,
+      'imageId': imageId,
+      'YII_CSRF_TOKEN': getCsrfToken()
+    }),
+    success: function(data){
+      alert('Image tags were saved.');
+    },
+    error: function(data){
+      alert('Unable to save image tags.');
+      return false;
+    }
+  });   
+}

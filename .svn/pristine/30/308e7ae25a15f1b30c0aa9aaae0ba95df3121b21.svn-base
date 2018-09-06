@@ -1,0 +1,16 @@
+<div id="content">
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+        ));
+        ?>
+        <?php $this->renderPartial('/user/_profileHeader', array()); ?>
+        <?php
+        $this->renderPartial('/user/_formDetails', array(
+            'user' => $user,
+            'userDetail' => $userDetail,
+        ));
+        ?>
+    </div>
+</div>

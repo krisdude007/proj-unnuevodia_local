@@ -1,0 +1,40 @@
+<div id="content">
+
+    <div class="questions centerBlock">
+        <div class="stepQuestions">
+            <div class="textHead1">1</div>
+            <div class="textHead2">PICK</div>
+            <div class="textHead3">A TOPIC</div>
+        </div>
+        <div class="stepQuestions">
+            <div class="textHead1">2</div>
+            <div class="textHead2">RECORD</div>
+            <div class="textHead3">YOUR VIDEO</div>
+        </div>
+        <div class="stepQuestions">
+            <div class="textHead1">3</div>
+            <div class="textHead2">SUBMIT</div>
+            <div class="textHead3">GET STARTED BELOW</div>
+
+        </div>
+        <div style="display:inline-block;color:#fff; width:573px;"> 
+
+            <div class="bold" style="clear:both;padding:10px; background-color: #F57A24;">
+                <div style="text-align:center;">
+                    Click on the question you want to record yourself answering.<br>
+                    Now you're one step closer to getting on TV!
+                </div>
+            </div>
+        </div>
+        <?php $i = 1; ?>
+        <?php foreach ($questions as $question): ?>
+        <div class="<?php echo $i % 2 == 0 ? 'even' : 'odd';?>">
+            <a href="/record?id=<?php echo $question->id;?>">
+                <div class="questionTopic">Topic <?php echo $i; ?></div>
+                <?php echo $question->question; ?>
+            </a>
+            <?php ++$i; ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>

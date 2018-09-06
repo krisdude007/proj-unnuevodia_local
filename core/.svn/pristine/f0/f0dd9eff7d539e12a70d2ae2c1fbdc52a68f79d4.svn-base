@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * This is the model class for table "image_destination".
+ *
+ * The followings are the available columns in table 'image_destination':
+ * @property integer $id
+ * @property integer $image_id
+ * @property integer $user_id
+ * @property integer $destination_id
+ * @property string $response
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property Destination $destination
+ * @property Image $image
+ * @property User $user
+ */
+class eImageDestination extends ImageDestination
+{
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return ImageDestination the static model class
+     */
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+}

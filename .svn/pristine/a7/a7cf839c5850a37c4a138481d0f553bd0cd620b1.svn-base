@@ -1,0 +1,32 @@
+<div id="content">
+
+    <div class="questions centerBlock">
+        <img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/poll/header-questions.png">
+        <div style="background:url('<?php echo Yii::app()->request->baseurl; ?>/webassets/images/poll/back.png')"> 
+            <div style="display:inline-block;min-height:60px; width:100%;">        
+                <div class="bold" style="clear:both;padding:10px;">
+                    <div style="text-align:center;">
+                        Click on the question you want to record yourself answering.<br>
+                        Now you're one step closer to getting on TV!
+                    </div>
+                </div>
+            </div>
+            <hr style="border-top:1px solid #0000ea;">
+            <?php $i = 1; ?>
+            <?php foreach ($questions as $question): ?>
+                <a style="color:#FFF" href="/record?id=<?php echo $question->id;?>">            
+                    <div style="display:inline-block;min-height:60px;"> 
+                        <div class="bold" style="clear:both;padding:10px">
+                            <div style="float:left;width:100px">Report <?php echo $i; ?></div>
+                            <div style="float:left;margin-left:20px;width:400px"><?php echo $question->question; ?></div>
+                        </div>
+                    </div>
+                </a>
+                <hr style="border-top:1px solid #0000ea;">
+                <?php ++$i; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+
+</div>

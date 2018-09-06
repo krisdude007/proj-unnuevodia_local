@@ -1,0 +1,4 @@
+<div id='tickerGraph'></div>
+<script>
+    barGrapher('tickerGraph','ajaxGetTickerGraphData', '<?php echo $filterDate; ?>', ['#ffd73d', '#b1b614', '#909408']);
+</script>

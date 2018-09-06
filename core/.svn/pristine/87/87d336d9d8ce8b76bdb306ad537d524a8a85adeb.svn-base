@@ -1,0 +1,100 @@
+<?php
+// page specific css
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminSocialSearch/index.css');
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+
+// page specific js
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.dateFormat.js', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.currency.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminSocialSearch/index.js', CClientScript::POS_END);
+if ($_GET['hashtag'] != '') {
+    $cs->registerScript('lazyClient', '$("#spinnerReplace").trigger("click")', CClientScript::POS_READY);
+}
+$this->renderPartial('/admin/_csrfToken');
+?>
+
+
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE CONTAINER-->
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div style="background:#4bb55a" id="fab-top">
+        <h2 style="color:white" class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/social-image.png">Social Search</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <div class="fab-container-fluid">
+        <div style="padding:20px;">
+            <h2>Social Searching (Twitter)</h2>
+            <div>
+                <form id="search">
+                    <div style="float:left;">
+                        <label for="terms">Search Terms:</label>
+                    </div>
+                    <div style="clear:both;">
+                    </div>
+                    <div style="float:left;">
+                        <?php $purifier = new CHtmlPurifier(); ?>
+                        <input type="text" id="terms" name="terms" value="<?php echo ($_GET['hashtag'] != '') ? $purifier->purify($_GET['hashtag']) : QUESTION_T_DEFAULT_HASHTAG; ?>" />
+                        <select name="boolean">
+                            <option>AND</option>
+                            <option selected="selected">OR</option>
+                            <option>NOT</option>
+                        </select>
+                        <input type="text" id="filters" name="filters" value="<?php echo (defined('TWITTER_ACCOUNT_NAME')) ? TWITTER_ACCOUNT_NAME : ''; ?>"/>
+                        <input id="spinnerReplace" type="submit" />
+                    </div>
+                    <div id="ajaxSpinner" style="display:none;float:left">
+                        <center>
+                            <img style="height:40px" src="/core/webassets/images/socialSearch/ajaxSpinner.gif" />
+                        </center>
+                        <button type="reset"/>Stop</button>
+                    </div>
+                </form>
+            </div>
+            <div style="clear:both;">
+            </div>
+            <div style="margin-top:20px;margin-bottom:20px">
+                <div class="rates" style="margin-top:20px;"></div>
+                <div class="errors" style="margin-top:20px;"></div>
+            </div>
+            <div id="resultsDiv">
+                <?php
+                if (TWITTER_ADVANCED_FILTERS === true) {
+                    $this->renderPartial('/admin/_twitterFilters', array('questions' => $questions, 'cs' => $cs));
+                }
+                ?>
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Questions</th>
+                            <th>Avatar</th>
+                            <th>From</th>
+                            <th>Timestamp</th>
+                            <th>Date</th>
+                            <th>Content</th>
+                            <th>Category</th>
+                            <th>Tweet Clean</th>
+                            <th>Account Clean</th>
+                            <th>Media</th>
+                            <th>Tweet Language</th>
+                            <th>Account Language</th>
+                            <th>Verified</th>
+                            <th>Has Location</th>
+                            <th>Place</th>
+                            <th>Place Coordinates</th>
+                            <th>Tweet Coordinates</th>
+                            <th>Followers</th>
+                            <th>Following</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE -->
+</div>

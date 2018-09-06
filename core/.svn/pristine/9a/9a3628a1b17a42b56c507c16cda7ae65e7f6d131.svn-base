@@ -1,0 +1,1080 @@
+<?php
+
+/**
+ * Mobile API Controller
+ *
+ * Responsible as main interface for all mobile traffic.
+ *
+ * @author <greg.stringer@gmail.com>, <hyunguk@gmail.com>
+ */
+class MobileController extends Controller {
+
+    public $layout = false;
+    private $authenticated = false;
+    private $eUser;
+    private $outputFormats = array('json', 'xml');
+    private $outputFormat = 'json';
+    private $responseCode = NULL;
+    private $responseCodes = array(
+        100 => 'Continue',
+        101 => 'Switching Protocols',
+        102 => 'Processing',
+        200 => 'OK',
+        201 => 'Created',
+        202 => 'Accepted',
+        203 => 'Non-Authoritative Information',
+        204 => 'No Content',
+        205 => 'Reset Content',
+        206 => 'Partial Content',
+        207 => 'Multi-Status',
+        300 => 'Multiple Choices',
+        301 => 'Moved Permanently',
+        302 => 'Found',
+        303 => 'See Other',
+        304 => 'Not Modified',
+        305 => 'Use Proxy',
+        306 => 'Switch Proxy',
+        307 => 'Temporary Redirect',
+        400 => 'Bad Request',
+        401 => 'Unauthorized',
+        402 => 'Payment Required',
+        403 => 'Forbidden',
+        404 => 'Not Found',
+        405 => 'Method Not Allowed',
+        406 => 'Not Acceptable',
+        407 => 'Proxy Authentication Required',
+        408 => 'Request Timeout',
+        409 => 'Conflict',
+        410 => 'Gone',
+        411 => 'Length Required',
+        412 => 'Precondition Failed',
+        413 => 'Request Entity Too Large',
+        414 => 'Request-URI Too Long',
+        415 => 'Unsupported Media Type',
+        416 => 'Requested Range Not Satisfiable',
+        417 => 'Expectation Failed',
+        418 => 'I\'m a teapot',
+        422 => 'Unprocessable Entity',
+        423 => 'Locked',
+        424 => 'Failed Dependency',
+        425 => 'Unordered Collection',
+        426 => 'Upgrade Required',
+        449 => 'Retry With',
+        450 => 'Blocked by Windows Parental Controls',
+        500 => 'Internal Server Error',
+        501 => 'Not Implemented',
+        502 => 'Bad Gateway',
+        503 => 'Service Unavailable',
+        504 => 'Gateway Timeout',
+        505 => 'HTTP Version Not Supported',
+        506 => 'Variant Also Negotiates',
+        507 => 'Insufficient Storage',
+        509 => 'Bandwidth Limit Exceeded',
+        510 => 'Not Extended'
+    );
+
+    const cResponseUserAuthenticationInsufficient = 'Insufficient authentication parameters.';
+    const cResponseUserAuthenticationFailure = 'Username/Password invalid.';
+    const cResponseUserAuthenticationSuccess = 'Login Successful.';
+    const cResponseUserRegistrationInsufficient = 'Insufficient registration parameters.';
+    const cResponseUserOwnershipVerificationFailure = 'Access to resource is restricted to resource owner.';
+
+    /**
+     * Initialize. Here we set a custom error handler so that we do not 
+     * output default html.
+     */
+    public function init() {
+        parent::init();
+        Yii::app()->errorHandler->errorAction = 'mobile/error';
+    }
+
+    public function filters() {
+        return array();
+    }
+
+    /**
+     * Dummy action so that we can output json/xml errors instead of html.
+     */
+    public function actionError() {
+        $this->throwException(404);
+    }
+
+    /**
+     * Sets appropriate http(s) headers based on given response code.
+     * In PHP 5.4 this is native functionality.
+     * @param int $responseCode
+     * @return int
+     */
+    private function setHttpResponse($responseCode = NULL) {
+        if ($responseCode !== NULL) {
+            $text = $this->responseCodes[$responseCode];
+            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            header($protocol . ' ' . $responseCode . ' ' . $text);
+            $this->responseCode = $responseCode;
+        } else {
+            $responseCode = (isset($this->responseCode) ? $this->responseCode : 200);
+        }
+        return $responseCode;
+    }
+
+    /**
+     * throwException()
+     * Calls renderOutput (which ends script execution) after setting http 
+     * response code and deciding which type of data format to return.
+     * @param int $responseCode
+     * @param string $responseText 
+     */
+    private function throwException($responseCode = NULL, $responseText = '') {
+        if ($responseText == '') {
+            $responseText = $this->responseCodes[$responseCode];
+        }
+        $this->renderOutput(array('responseCode' => $responseCode, 'responseText' => $responseText), $responseCode);
+    }
+
+    /**
+     * First sets http response then renders output in either json or xml format.
+     * This is where script execution ends. Do not call exit.
+     * @param type $output
+     * @param type $responseCode 
+     */
+    private function renderOutput($output = array(), $responseCode = 200) {
+        $this->setHttpResponse($responseCode);
+        if (count($output) > 0) {
+            switch ($this->outputFormat) {
+                case 'json':
+                    echo $this->renderJson($output);
+                    break;
+                case 'xml':
+                    echo $this->renderXml($output);
+                    break;
+                default:
+                    // Bad request
+                    $this->setHttpResponse(400);
+                    break;
+            }
+        }
+        // todo - no data returned.. double check
+        Yii::app()->end();
+    }
+
+    /**
+     * Converts a PHP array to XML for output purposes.
+     * @param array $output
+     * @return XML
+     */
+    private function renderXml($output = array()) {
+
+        header('Content-type: application/xml');
+        $xml = new SimpleXMLElement('<root/>');
+        $output = array_flip($output);
+        array_walk_recursive($output, array($xml, 'addChild'));
+        return $xml->asXML();
+    }
+
+    /**
+     * Converts a PHP array to json for output purposes.
+     * @param array $output
+     * @return JSON
+     */
+    private function renderJson($output = array()) {
+        header('Content-type: application/json');
+        return CJSON::encode($output);
+    }
+
+    /**
+     * Takes an array of models and returns the first error found
+     * @param type $models
+     * @return string:bool 
+     */
+    private function getErrorFromModels($models = array()) {
+        foreach ($models as $model) {
+            foreach ($model->attributes as $key => $val) {
+                $error = $model->getError($key);
+                if (!is_null($error)) {
+                    return str_replace('"', '', $error);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Removes crutial information from an object
+     * @param object $object 
+     * @return object $object
+     */
+    private function cleanseObject($object = null, $properties = array()) {
+        if (!is_null($object) && count($properties) > 0) {
+            foreach ($properties as $key => $prop) {
+                unset($object->{$prop});
+            }
+        }
+        return $object;
+    }
+
+    /**
+     * Removes crutial information from eUser object
+     * @param object $eUser 
+     */
+    private function cleanseUser($eUser) {
+        $properties = array('password',
+            'salt',
+            'source',
+            'role');
+        $eUser = $this->cleanseObject($eUser, $properties);
+        return $eUser;
+    }
+
+    /**
+     * Removes crutial information from eUserLocation object
+     * @param object $eUserLocation 
+     * @return object $eUserLocation
+     */
+    private function cleanseUserLocation($eUserLocation) {
+        $properties = array('id',
+            'address1',
+            'address2',
+            'city',
+            'state',
+            'country',
+            'timezone',
+            'type');
+
+        $eUserLocation = $this->cleanseObject($eUserLocation, $properties);
+        return $eUserLocation;
+    }
+
+    /**
+     * Removes crutial information from eUserEmail object
+     * @param object $eUserEmail 
+     * @return object $eUserEmail
+     */
+    private function cleanseUserEmail($eUserEmail) {
+        $properties = array('id',
+            'type',
+            'active');
+        $eUserEmail = $this->cleanseObject($eUserEmail, $properties);
+        return $eUserEmail;
+    }
+
+    /**
+     * Call this when ever a user needs to be valid in order to
+     * perform a subsequent function.
+     * @return bool
+     */
+    private function authenticate() {
+
+        /*
+          if (is_null($username) && is_null($password)) {
+          // basic authentication - we can implement digest and other types at a later date
+          $username = $_SERVER['PHP_AUTH_USER'];
+          $password = $_SERVER['PHP_AUTH_PW'];
+          }
+
+          if (!isset($username) || !isset($password) || empty($username) || empty($password)) {
+          // Bad Request
+          $this->throwException(400, self::cResponseUserAuthenticationInsufficient);
+          }
+         * 
+         */
+
+        $eUser = new eUser;
+        $eUser->setScenario('login');
+        $eUser->username = $_SERVER['PHP_AUTH_USER'];
+        $eUser->password = $_SERVER['PHP_AUTH_PW'];
+        $eUser->source = 'mobile';
+
+        if (UserUtility::login($eUser, false, true)) {
+            // todo - have userUtil return the user object for both mobile and web
+            $this->eUser = $eUser->findByAttributes(array('username' => $eUser->username));
+            $this->authenticated = true;
+            AuditUtility::save($this, $_REQUEST, array(), $this->eUser->id);
+            // return successful login data
+            //$output = array('user_id' => $this->eUser->id);
+            //$this->renderOutput($output);
+            return true;
+        } else {
+            $responseCode = 401; // Unauthorized
+            $this->throwException($responseCode, self::cResponseUserAuthenticationFailure);
+        }
+    }
+
+    /**
+     * Verify that a user owns the resource they are attempting to access
+     * @param int $id 
+     */
+    private function verifyOwnership($id) {
+
+        if ($id != $this->eUser->id) {
+            $responseCode = 403; // Forbidden
+            $this->throwException($responseCode, self::cResponseUserOwnershipVerificationFailure);
+        }
+    }
+
+    private function userAdd() {
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+            $eUser = new eUser;
+            $eUserEmail = new eUserEmail;
+            $eUserLocation = new eUserLocation;
+            $eUser->setScenario('register');
+            $eUserEmail->setScenario('register');
+            $eUserLocation->setScenario('register');
+            $eUser->attributes = $_POST['eUser'];
+            $eUserEmail->attributes = $_POST['eUserEmail'];
+            $eUserLocation->attributes = $_POST['eUserLocation'];
+            $eUser->username = $eUserEmail->email;
+            $eUser->birthday = $eUser->birthYear . '-' . $eUser->birthMonth . '-' . $eUser->birthDay;
+            $eUser->source = 'mobile';
+            $eUserEmail->type = 'primary';
+            $eUserEmail->active = 1;
+            $eUserLocation->type = 'primary';
+
+            if (UserUtility::register($eUser, $eUserEmail, $eUserLocation)) {
+                MailUtility::send('welcome', $eUserEmail->email);
+                //$this->authenticate($eUser->username, $eUser->password);
+                // return successful login data
+                $eUser = $this->cleanseUser($eUser);
+                $eUserLocation = $this->cleanseUserLocation($eUserLocation);
+                $eUserEmail = $this->cleanseUserEmail($eUserEmail);
+
+                return array('eUser' => $eUser,
+                    'eUserLocation' => $eUserLocation,
+                    'eUserEmail' => $eUserEmail);
+            }
+
+            $this->throwException(400, $this->getErrorFromModels(array($eUser, $eUserEmail, $eUserLocation)));
+        }
+    }
+
+    /**
+     * Attempts to retrieve a user based on id
+     * @param int $id
+     * @return object:null 
+     */
+    private function userGet($id) {
+        $eUser = eUser::model()->findByPk($id);
+        $eUserLocation = $this->userLocationGet($id);
+        $eUserEmail = $this->userEmailGet($id);
+        if (!is_null($eUser) && !is_null($eUserLocation) && !is_null($eUserEmail)) {
+            $eUser = $this->cleanseUser($eUser);
+            $eUserLocation = $this->cleanseUserLocation($eUserLocation);
+            $eUserEmail = $this->cleanseUserEmail($eUserEmail);
+        }
+        return array('eUser' => $eUser,
+            'eUserLocation' => $eUserLocation,
+            'eUserEmail' => $eUserEmail);
+    }
+
+    /**
+     * Attempts to retrieve a user location based on id
+     * @param int $id
+     * @return object:null 
+     */
+    private function userLocationGet($id) {
+        return eUserLocation::model()->findByAttributes(array('user_id' => $id, 'type' => 'primary'));
+    }
+
+    /**
+     * Attempts to retrieve a user email based on id
+     * @param int $id
+     * @return object:null 
+     */
+    private function userEmailGet($id) {
+        return eUserEmail::model()->findByAttributes(array('user_id' => $id, 'type' => 'primary'));
+    }
+
+    /**
+     * Attempts to update a user based on id.
+     * @param int $id
+     * @return array:null  
+     */
+    private function userUpdate($id) {
+        // todo - add eUserLocation and eUserEmail
+        $eUserObjects = $this->userGet($id);
+        $eUser = $eUserObjects['eUser'];
+        $eUserLocation = $eUserObjects['eUserLocation'];
+        $eUserEmail = $eUserObjects['eUserEmail'];
+        $eUserModified = false;
+        $eUserLocationModified = false;
+        $eUserEmailModified = false;
+
+        if (!is_null($eUser) && !is_null($eUserLocation) && !is_null($eUserEmail)) {
+
+            $eUser->setScenario('profile');
+
+            // only allow the following attributes
+            if (isset($_POST['eUser']['first_name'])) {
+                $eUserModified = true;
+                $eUser->first_name = $_POST['eUser']['first_name'];
+            }
+            if (isset($_POST['eUser']['last_name'])) {
+                $eUserModified = true;
+                $eUser->last_name = $_POST['eUser']['last_name'];
+            }
+            if (isset($_POST['eUser']['birthMonth'])) {
+                $eUserModified = true;
+                $eUser->birthMonth = $_POST['eUser']['birthMonth'];
+                $eUser->birthday = $eUser->birthYear . '-' . $eUser->birthMonth . '-' . $eUser->birthDay;
+            }
+            if (isset($_POST['eUser']['birthDay'])) {
+                $eUserModified = true;
+                $eUser->birthDay = $_POST['eUser']['birthDay'];
+                $eUser->birthday = $eUser->birthYear . '-' . $eUser->birthMonth . '-' . $eUser->birthDay;
+            }
+            if (isset($_POST['eUser']['birthYear'])) {
+                $eUserModified = true;
+                $eUser->birthYear = $_POST['eUser']['birthYear'];
+                $eUser->birthday = $eUser->birthYear . '-' . $eUser->birthMonth . '-' . $eUser->birthDay;
+            }
+            if (isset($_POST['eUser']['gender'])) {
+                $eUserModified = true;
+                $eUser->gender = $_POST['eUser']['gender'];
+            }
+            if (isset($_POST['eUser']['terms_accepted'])) {
+                $eUserModified = true;
+                $eUser->terms_accepted = $_POST['eUser']['terms_accepted'];
+            }
+            if (isset($_POST['eUserLocation']['postal_code'])) {
+                $eUserLocation->setScenario('profile');
+                $eUserLocationModified = true;
+                $eUserLocation->postal_code = $_POST['eUserLocation']['postal_code'];
+            }
+            if (isset($_POST['eUserEmail']['email'])) {
+                $eUserEmail->setScenario('profile');
+                $eUserEmailModified = true;
+                $eUserModified = true;
+                $eUserEmail->email = $_POST['eUserEmail']['email'];
+                $eUser->username = $eUserEmail->email;
+            }
+
+            // handle email first because if not the user model will be updated even
+            // if the email model doesn't pass validation
+            if ($eUserEmailModified) {
+                if ($eUserEmail->validate()) {
+                    $eUserEmail->save();
+                    $eUserEmail = $this->cleanseUserEmail($eUserEmail);
+                } else {
+                    $this->throwException(400, $this->getErrorFromModels(array($eUserEmail)));
+                }
+            }
+
+            if ($eUserLocationModified) {
+                if ($eUserLocation->validate()) {
+                    $eUserLocation->save();
+                    $eUserLocation = $this->cleanseUserLocation($eUserLocation);
+                } else {
+                    $this->throwException(400, $this->getErrorFromModels(array($eUserLocation)));
+                }
+            }
+
+            if ($eUserModified) {
+                if ($eUser->validate()) {
+                    $eUser->save();
+                    $eUser = $this->cleanseUser($eUser);
+                } else {
+                    $this->throwException(400, $this->getErrorFromModels(array($eUser)));
+                }
+            }
+
+            return array('eUser' => $eUser,
+                'eUserLocation' => $eUserLocation,
+                'eUserEmail' => $eUserEmail);
+        } else {
+            return NULL;
+        }
+    }
+
+    private function videosGet($user_id = NULL, $id = NULL, $limit = 10, $offset = 0) {
+
+        if (!is_null($id) && is_null($user_id)) {
+            $video = eVideo::model()->with('user', 'brightcoves')->accepted()->recent()->hasUser()->nonAdvertisement()->findByPk($id);
+
+            if (!is_null($video)) {
+                $output = array(
+                    'id' => $video->id,
+                    'title' => $video->title,
+                    'description' => $video->description,
+                    'tag' => implode(',', $tags),
+                    'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+                    'playerID' => Yii::app()->params['brightcove']['playerID'],
+                    'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+                    'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+                    'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+                    'views' => $video->views,
+                    'stars' => $video->rating,
+                    'created_on' => strtotime($video->created_on),
+                    'eUser' => $this->cleanseUser($video->user)
+                );
+                return $output;
+            } else {
+                return NULL;
+            }
+        } else {
+            $criteria = new CDbCriteria();
+            $criteria->limit = $limit;
+            $criteria->offset = $offset;
+            if (!is_null($user_id)) {
+                $criteria->compare('user_id', $user_id);
+            }
+            $videos = eVideo::model()->with('user', 'brightcoves')->accepted()->recent()->hasUser()->nonAdvertisement()->findAll($criteria);
+        }
+
+        $output = array();
+        foreach ($videos as $video) {
+
+            $tags = array();
+            $tagVideos = eTagVideo::model()->with('tag')->findAllByAttributes(array('video_id' => $video->id));
+            foreach ($tagVideos as $tagVideo) {
+                $tags[] = $tagVideo->tag->title;
+            }
+
+            $output[] = array(
+                'id' => $video->id,
+                'title' => $video->title,
+                'description' => $video->description,
+                'tag' => implode(',', $tags),
+                'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+                'playerID' => Yii::app()->params['brightcove']['playerID'],
+                'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+                'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+                'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+                'views' => $video->views,
+                'stars' => $video->rating,
+                'created_on' => strtotime($video->created_on),
+                'eUser' => $this->cleanseUser($video->user)
+            );
+        }
+
+        if (count($output) > 0) {
+            return $output;
+        } else {
+            return NULL;
+        }
+    }
+
+    /**
+     * ********************************************************
+     * Begin actions
+     * ******************************************************** 
+     */
+
+    /**
+     * Adds, retrieves or updates eUser, eUserEmail and eUserLocation objects. 
+     * Expects GET or POST. If user id is null, and method is post, performs insert.
+     * If user id not null, and method is post, performs update.
+     * @param int $user_id 
+     */
+    public function actionUsers($user_id = null) {
+
+        if (!is_null($user_id)) {
+            $this->authenticate();
+            $this->verifyOwnership($user_id);
+        }
+
+        switch ($_SERVER['REQUEST_METHOD']) {
+            // retrieve eUser, eUserEmail and eUserLocation objects
+            case 'GET':
+                $eUserObjects = $this->userGet($user_id);
+                $eUser = $eUserObjects['eUser'];
+                $eUserLocation = $eUserObjects['eUserLocation'];
+                $eUserEmail = $eUserObjects['eUserEmail'];
+                if (!is_null($eUser) && !is_null($eUserLocation) && !is_null($eUserEmail)) {
+
+                    $output = array('eUser' => $eUser,
+                        'eUserLocation' => $eUserLocation,
+                        'eUserEmail' => $eUserEmail);
+                    ;
+                    $this->renderOutput($output);
+                }
+                $this->throwException(400);
+                break;
+
+            // add/update eUser, eUserEmail and eUserLocation objects
+            // todo - add update password
+            case 'POST':
+                if ($this->authenticated) {
+                    // update eUser, eUserEmail and eUserLocation objects
+                    $eUserObjects = $this->userUpdate($user_id);
+                    if (!is_null($eUserObjects)) {
+                        $output = $eUserObjects;
+                        $this->renderOutput($output);
+                    }
+                    $this->throwException(400);
+                } else {
+                    // add eUser, eUserEmail and eUserLocation objects
+
+                    $eUserObjects = $this->userAdd();
+                    if (!is_null($eUserObjects)) {
+                        $output = $eUserObjects;
+                        $this->renderOutput($output);
+                    }
+
+                    $this->throwException(400, self::cResponseUserRegistrationInsufficient);
+                }
+                break;
+
+            // we do not allow deletion of users
+            case 'DELETE':
+                $this->throwException(403);
+                break;
+
+            default:
+                $responseCode = 400;
+                $this->throwException(400);
+                break;
+        }
+
+        $responseCode = 400;
+        $this->throwException(400);
+    }
+
+    /**
+     * Retrieves or updates an eVideo record. Expects GET or POST.
+     * @param int $user_id 
+     */
+    public function actionVideos($user_id = NULL, $id = NULL, $limit = 10, $offset = 0) {
+
+        if(!is_null($user_id) && !is_numeric($user_id)) {
+            $this->throwException(400, 'User ID must be numeric.');
+        }
+        
+        if(!is_null($id) && !is_numeric($id)) {
+            $this->throwException(400, 'ID must be numeric.');
+        }
+        
+        if(!is_numeric($limit)) {
+            $this->throwException(400, 'Limit must be numeric.');
+        }
+        
+        if(!is_numeric($offset)) {
+            $this->throwException(400, 'Offset must be numeric.');
+        }
+        
+        $this->authenticate();
+
+        switch ($_SERVER['REQUEST_METHOD']) {
+            // retrieve eVideos
+            case 'GET':
+
+                // get all of a users eVideos
+                if (!is_null($user_id)) {
+                    $eVideoObjects = $this->videosGet($user_id, NULL, $limit, $offset);
+                } elseif (!is_null($id)) {
+                    // get eVideo by id
+                    $eVideoObjects = $this->videosGet(NULL, $id, NULL, NULL);
+                } else {
+                    // get all eVideos regardless of user
+                    $eVideoObjects = $this->videosGet(NULL, NULL, $limit, $offset);
+                }
+
+                if (!is_null($eVideoObjects)) {
+                    $output = array('eVideo' => $eVideoObjects);
+                    $this->renderOutput($output);
+                }
+                $this->throwException(400);
+                break;
+
+            // uploading an eVideo
+            case 'POST':
+
+                break;
+
+            // we do not allow deletion of videos
+            case 'DELETE':
+                $this->throwException(403);
+                break;
+
+            default:
+                $responseCode = 400;
+                $this->throwException(400);
+                break;
+        }
+
+        $responseCode = 400;
+        $this->throwException(400);
+    }
+
+    /*
+     * Video functionality
+     * GET /mobile/videos - get all videos
+     * POST /mobile/videos - add video
+     * GET /mobile/videos/<id> - get video
+     */
+
+    
+    /*
+      public function actionVideoUpload() {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      //return; // calling renderOutput() ends script execution Andy ;)
+      }
+      $form = new FormVideoUpload;
+      $form->attributes = $_POST['FormVideoUpload'];
+      $form->is_ad = isset($form->is_ad) ? $form->is_ad : 0;
+      $form->video = CUploadedFile::getInstance($form, 'video');
+      if (!$form->validate()) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      }
+      $filename = uniqid('MB');
+      $fileExtension = $form->video->extensionName;
+      $fileInput = Yii::app()->params['paths']['video'] . '/' . $filename . '.' . $fileExtension;
+      $fileOutput = Yii::app()->params['paths']['video'] . '/' . $filename . VIDEO_POST_FILE_EXT;
+      $fileThumb = Yii::app()->params['paths']['video'] . '/' . $filename . VIDEO_IMAGE_FILE_EXT;
+      $fileGif = Yii::app()->params['paths']['video'] . '/' . $filename . '.gif';
+      $form->video->saveAs($fileInput);
+
+      $durationArray = VideoUtility::getVideoDuration($fileInput);
+      $durations = explode('.', $durationArray[2]);
+      $duration = round($durations[0]);
+      $durationFormat = "00:00:" . str_pad($duration, 2, '0', STR_PAD_LEFT) . ".00";
+      $watermarkVideo = eAppSetting::model()->findByAttributes(Array('attribute' => 'water_mark_on_video'));
+      if ($watermarkVideo->value == 1) {
+      $watermark = $_SERVER['DOCUMENT_ROOT'] . VIDEO_WATERMARK;
+      }
+      // convert to mp4
+      $videoEncoded = VideoUtility::ffmpegFlvToMp4($fileInput, $fileOutput, $durationFormat, $watermark);
+      if (!$videoEncoded) {
+      $this->throwException(500, $this->getStatusCodeMessage(500));
+      }
+      //get fileInfo
+      $fileInfo = VideoUtility::getID3Info($fileOutput);
+      // generate thumb
+      VideoUtility::ffmpegGenerateThumbFromVideo($fileOutput, $fileThumb);
+      // generate gif
+      VideoUtility::ffmpegMp4ToGif($fileOutput, $fileGif);
+
+      $video = new eVideo();
+      $video->user_id = $userTokenObject->user->id;
+      $video->question_id = $form->question_id;
+      $video->filename = $filename;
+      $video->thumbnail = $filename;
+      $video->processed = 1;
+      $video->watermarked = $watermarkVideo->value;
+      $video->title = $form->title;
+      $video->description = $form->description;
+      $video->duration = $duration;
+      $video->frame_rate = $fileInfo['video']['frame_rate'];
+      $video->view_key = eVideo::generateViewKey();
+      $video->source = 'mobile';
+      $video->to_twitter = eUserTwitter::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $form->to_twitter;
+      $video->to_facebook = eUserFacebook::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $form->to_facebook;
+     * 
+     */
+
+    /*
+      $video->arbitrator_id = $userTokenObject->user->id;
+      $video->status = 'new';
+      if (VIDEO_FILTERS_EXTENDED) {
+      $video->extendedStatus['new'] = true;
+      $video->extendedStatus['new_tv'] = true;
+      }
+      //check auto accept
+      $autoApprove = eAppSetting::model()->findByAttributes(Array('attribute' => 'auto_approve_submitted_videos'));
+      if ($autoApprove->value) {
+      $video->status = 'accepted';
+      if (VIDEO_FILTERS_EXTENDED) {
+      $video->extendedStatus['accepted'] = true;
+      $video->extendedStatus['new_tv'] = true;
+      }
+      }
+      $video->save();
+
+
+      $response = array(
+      'user_token' => $userTokenObject->token,
+      'id' => $video->id,
+      'createDate' => strtotime($video->created_on),
+      'title' => $video->title,
+      'description' => $video->description,
+      'tags' => implode(',', $tags),
+      'brightcoveID' => $video->brightcoves[0]->brightcove_id,
+      'playerID' => Yii::app()->params['brightcove']['playerID'],
+      'playerKey' => Yii::app()->params['brightcove']['playerKey'],
+      'fallbackURL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->filename . VIDEO_POST_FILE_EXT),
+      'thumbnail' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['video']) . '/' . $video->thumbnail . VIDEO_IMAGE_FILE_EXT),
+      'user' => array(
+      'id' => $userTokenObject->user->id,
+      'avatar' => UserUtility::getAvatar($userTokenObject->user),
+      'username' => $userTokenObject->user->username,
+      )
+      );
+      $this->renderOutput($response);
+      }
+     * 
+     */
+
+    /*
+     * Photo functionality
+     */
+    /*
+      public function actionPhotos($limit = 10) {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      //return; // calling renderOutput() ends script execution Andy ;)
+      }
+      $criteria = new CDbCriteria();
+      $criteria->condition = "title <> 'Avatar'";
+      $criteria->limit = $limit;
+      $images = eImage::model()->with('user')->accepted()->recent()->findAll($criteria);
+      $response = array('user_token' => $userTokenObject->token);
+      foreach ($images as $image) {
+      $tags = array();
+      $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+      foreach ($tagImages as $tagImage) {
+      $tags[] = $tagImage->tag->title;
+      }
+      $response[$image->id] = array(
+      'createDate' => strtotime($image->created_on),
+      'title' => $image->title,
+      'description' => $image->description,
+      'tag' => implode(',', $tags),
+      'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+      'views' => $image->views,
+      'stars' => $image->rating,
+      'user' => array(
+      'id' => $image->user->id,
+      'avatar' => UserUtility::getAvatar($image->user),
+      'username' => $image->user->username
+      )
+      );
+      }
+      $this->renderOutput($response);
+      }
+
+      public function actionPhotosByUserId($user_id = null, $limit = 10) {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      //return; // calling renderOutput() ends script execution Andy ;)
+      }
+      if (is_null($user_id)) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      //return;
+      }
+      $criteria = new CDbCriteria();
+      $criteria->condition = "title <> 'Avatar'";
+      $criteria->compare('user_id', $user_id);
+      $criteria->limit = $limit;
+      $images = eImage::model()->with('user')->accepted()->recent()->findAll($criteria);
+      $response = array('user_token' => $userTokenObject->token);
+      foreach ($images as $image) {
+      $tags = array();
+      $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+      foreach ($tagImages as $tagImage) {
+      $tags[] = $tagImage->tag->title;
+      }
+      $response[$image->id] = array(
+      'createDate' => strtotime($image->created_on),
+      'title' => $image->title,
+      'description' => $image->description,
+      'tag' => implode(',', $tags),
+      'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+      'views' => $image->views,
+      'stars' => $image->rating,
+      'user' => array(
+      'id' => $image->user->id,
+      'avatar' => UserUtility::getAvatar($image->user),
+      'username' => $image->user->username
+      )
+      );
+      }
+      $this->renderOutput($response);
+      }
+
+      public function actionPhotoById($id = null) {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      //return; // calling renderOutput() ends script execution Andy ;)
+      }
+      if (is_null($id)) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      //return;
+      }
+      $image = eImage::model()->with('user')->accepted()->findByPk($id);
+      if (is_null($image)) {
+      $this->throwException(404, $this->getStatusCodeMessage(404));
+      //return;
+      }
+      $tags = array();
+      $tagImages = eTagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $image->id));
+      foreach ($tagImages as $tagImage) {
+      $tags[] = $tagImage->tag->title;
+      }
+      $response = array(
+      'user_token' => $userTokenObject->token,
+      'id' => $image->id,
+      'createDate' => strtotime($image->created_on),
+      'title' => $image->title,
+      'description' => $image->description,
+      'tag' => implode(',', $tags),
+      'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+      'views' => $image->views,
+      'stars' => $image->rating,
+      'user' => array(
+      'id' => $image->user->id,
+      'avatar' => UserUtility::getAvatar($image->user),
+      'username' => $image->user->username
+      )
+      );
+      $this->renderOutput($response);
+      }
+
+      public function actionPhotoUpload() {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      //return; // calling renderOutput() ends script execution Andy ;)
+      }
+      if (!isset($_POST['eImage'])) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      //return;
+      }
+      $image = new eImage;
+      $image->attributes = $_POST['eImage'];
+      //$image->entity_id = 0;
+      $image->user_id = $userTokenObject->user->id;
+      $image->filename = CUploadedFile::getInstance($image, 'image');
+      $image->source = 'mobile';
+      $image->to_twitter = eUserTwitter::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $image->to_twitter;
+      $image->to_facebook = eUserFacebook::model()->countByAttributes(array('user_id' => $userTokenObject->user->id)) == 0 ? 0 : $image->to_facebook;
+      $image->arbitrator_id = $userTokenObject->user->id;
+      //$image->watermarked = 0;
+      //$image->view_key = 0;
+      $image->is_avatar = 0;
+      $image->status = 'new';
+      if (IMAGE_FILTERS_EXTENDED) {
+      $image->extendedStatus['new'] = true;
+      $image->extendedStatus['new_tv'] = true;
+      }
+      if (IMAGE_AUTO_APPROVE) {
+      $image->status = 'accepted';
+      if (IMAGE_FILTERS_EXTENDED) {
+      $image->extendedStatus['accepted'] = true;
+      $image->extendedStatus['new_tv'] = true;
+      }
+      }
+      if (!$image->validate()) {
+      $this->throwException(400, $this->getStatusCodeMessage(400) . "2");
+      //return;
+      }
+      preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+      $filetype = $matches[0];
+      $filename = "{$userTokenObject->user->id}_" . md5(uniqid('', true) . $image->filename) . $filetype;
+      $image->filename->saveAs(Yii::app()->params['paths']['image'] . "/" . $filename);
+      $image->filename = $filename;
+      $image->save();
+
+      // handle tags
+      $tags = $_POST['eImage']['tags'];
+      if ($tags != '') {
+      // if more than one tag was passed, explode them into an array
+      if (strstr($tags, ',')) {
+      $tags = explode(',', $tags);
+      } else {
+      $tags = array($tags);
+      }
+
+      foreach ($tags as $tag) {
+      $tagModel = Tag::model()->findByAttributes(array('title' => $tag));
+      if (is_null($tagModel)) {
+      $tagModel = new Tag();
+      $tagModel->title = $tag;
+      $tagModel->save();
+      }
+      $tagImageModel = new TagImage();
+      $tagImageModel->tag_id = $tagModel->id;
+      $tagImageModel->image_id = $image->id;
+      $tagImageModel->save();
+      }
+      }
+      $response = array(
+      'user_token' => $userTokenObject->token,
+      'id' => $image->id,
+      'createDate' => strtotime($image->created_on),
+      'title' => $image->title,
+      'description' => $image->description,
+      'tag' => implode(',', $tags),
+      'URL' => $this->createAbsoluteUrl('/' . basename(Yii::app()->params['paths']['image']) . '/' . $image->filename),
+      'user' => array(
+      'id' => $image->user->id,
+      'avatar' => UserUtility::getAvatar($image->user),
+      'username' => $image->user->username
+      )
+      );
+      $this->renderOutput($response);
+      }
+
+      public function actionVideoQuestions($limit = 3) {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      }
+      $criteria = new CDbCriteria();
+      $criteria->limit = $limit;
+      $questions = eQuestion::model()->video()->current()->findAll($criteria);
+      $response = array('user_token' => $userTokenObject->token);
+      foreach ($questions as $question) {
+      $response[$question->id] = array(
+      'createDate' => strtotime($question->created_on),
+      'question' => $question->question,
+      'hashtag' => $question->hashtag,
+      );
+      }
+      $this->renderOutput($response);
+      }
+
+      public function actionPoll() {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      }
+      $criteria = new CDbCriteria();
+      $criteria->limit = 1;
+      $poll = ePoll::model()->with('pollAnswers')->current()->questionType()->findAll($criteria);
+      $response = array(
+      'user_token' => $userTokenObject->token,
+      'poll_id' => $poll->id,
+      'question' => $poll->question,
+      'startDate' => strtotime($poll->start_time),
+      'endDate' => strtotime($poll->end_time),
+      'createDate' => strtotime($poll->created_on)
+      );
+      foreach ($poll->pollAnswers as $answer) {
+      $response[$answer->id] = array(
+      'answer' => $answer->answer,
+      'color' => $answer->color,
+      'point' => $answer->point_value,
+      'hashtag' => $answer->hashtag,
+      );
+      }
+      $this->renderOutput($response);
+      }
+
+      public function actionVote() {
+      $userTokenObject = $this->validateToken($_POST['user_token']);
+      if (!$userTokenObject) {
+      $this->throwException(401, $this->getStatusCodeMessage(401));
+      }
+      if (!isset($_POST['ePollResponse'])) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      }
+      $pollResponse = new ePollResponse();
+      $pollResponse->attributes = $_POST['ePollResponse'];
+      if (!(is_int($pollResponse->poll_id) && is_int($pollResponse->answer_id))) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      }
+      $pollResponse->user_id = $userTokenObject->user->id;
+      $pollResponse->source = 'mobile';
+      if (!$pollResponse->save()) {
+      $this->throwException(400, $this->getStatusCodeMessage(400));
+      }
+      $response = array('user_token' => $userTokenObject->token);
+      $this->renderOutput($response);
+      }
+     * 
+     */
+}
+

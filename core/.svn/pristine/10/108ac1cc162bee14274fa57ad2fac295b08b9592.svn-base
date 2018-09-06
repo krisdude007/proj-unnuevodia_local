@@ -1,0 +1,5 @@
+<?php
+$config = CMap::mergeArray(
+    require('_defaults.php')
+);
+return $config;

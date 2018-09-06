@@ -1,0 +1,125 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/preview/preview.css');
+$cs->registerCSS('body', 'body{margin:0px;overflow: hidden;}');
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/preview/preview.js', CClientScript::POS_HEAD);
+
+
+$speed = '';
+
+if($tvScreenSetting->slide_speed)
+    $speed = $tvScreenSetting->slide_speed;
+else
+    $speed =  35;
+
+if($tvScreenSetting->direction == null || $tvScreenSetting->direction == 1)
+    $direction = 1;
+else
+    $direction = 0;
+
+if ($direction == 1) {
+    $cs->registerScript('previewRev', 'sliderHandlerReverse('.$speed.');', CClientScript::POS_READY);
+} else {
+
+    $cs->registerScript('preview', 'sliderHandler('.$speed.');', CClientScript::POS_READY);
+}
+
+?>
+<style>
+body {
+    <?php
+    switch($tvScreenSetting->screen_type){
+        case 'transparent':
+            echo 'background: rgba(0, 0, 0, 0.0);';
+        break;
+        case 'green':
+            echo 'background: rgba(13, 172, 26, 1);';
+        break;
+        case 'background':
+            echo 'background-image:url("/userimages/tvscreensetting/'.$tvScreenSetting->filename.'") ;background-repeat:repeat-y;';
+        break;
+        default:
+            echo 'background: rgba(0, 0, 0, 0.0);';
+        break;
+    }
+    ?>
+}
+.dynamicFontStyle {
+    font-size: <?php echo ($tvScreenSetting->font_size) ? $tvScreenSetting->font_size : '35'; ?>px;
+    color: <?php echo ($tvScreenSetting->font_color) ?  $tvScreenSetting->font_color : '#fff' ; ?>;
+
+
+
+}
+#sliderContainer {
+
+background-color: <?php echo ($tvScreenSetting->color) ? $tvScreenSetting->color :  '#0083C1';  ?>;
+
+
+}
+</style>
+
+<?php echo CHtml::hiddenField('slide_speed',$speed);?>
+<!--<div class="message">Broadcast Signal</div>-->
+
+<?php if ($direction == 1): ?>
+<!--    <img src ="/webassets/images/home/bg_alpha.png">-->
+    <?php if (Yii::app()->name == 'KOORA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'ALRISALA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'FEESAMEEM'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'YAHALA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+        <div class="slidersRev">
+            <?php foreach ($tickers as $t) { ?>
+                <div class="sliderRev">
+                    <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+                    <div class="dynamicFontStyle text"><?php echo TickerUtility::getUsername($t); ?></div>
+                    <div class="dynamicFontStyle text"><?php echo $t->ticker; ?></div>
+                </div>
+            <?php } ?>
+
+            <?php if (sizeof($tickers) == 0) { ?>
+                <div class="sliderRev">
+                    <div class="dynamicFontStyle text">There are no tickers approved for this question.</div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+<?php else: ?>
+    <?php if (Yii::app()->name == 'KOORA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'ALRISALA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'FEESAMEEM'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+       <?php if (Yii::app()->name == 'YAHALA'): ?>
+   <div id="sliderContainer" class="<?php echo 'slider'.Yii::app()->name?>">
+       <?php endif; ?>
+        <div class="sliders">
+            <?php foreach ($tickers as $t) { ?>
+                <div class="slider">
+                    <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+                    <div class="dynamicFontStyle text"><?php echo TickerUtility::getUsername($t); ?></div>
+                    <div class="dynamicFontStyle text"><?php echo $t->ticker; ?></div>
+                </div>
+            <?php } ?>
+
+            <?php if (sizeof($tickers) == 0) { ?>
+                <div class="slider">
+                    <div class="dynamicFontStyle text">There are no tickers approved for this question.</div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+<?php endif; ?>

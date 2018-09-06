@@ -1,0 +1,112 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminCampaign/index.css');
+ 
+Yii::app()->clientScript->registerScriptFile('/core/webassets/js/adminCampaign/index.js', CClientScript::POS_END);
+
+
+?>
+ 
+
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+
+     
+    <div class="campaign_top_bar">
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/campaign/campaign_manager_icon.png" />
+        <a href='<?php echo $this->createUrl('/adminCampaign'); ?>' >Campaign Manager</a>
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='fab-row-fluid'>
+    		<div class="btn-group">
+				<a class="fab-btn" href="<?php echo  $this->createUrl('adminCampaign/'); ?>">Home</a>
+			</div>
+			<div class="btn-group">
+				<a class="fab-btn fab-green" href="<?php echo  $this->createUrl('adminCampaign/create'); ?>">New Campaign </a>
+			</div>
+            <div class="btn-group">
+				<a class="fab-btn dropdown-toggle" data-toggle="dropdown" href="#">
+				Edit <span class="caret"></span>
+				<!-- <i class="icon-angle-down"></i> -->
+				</a>
+				<ul class="fab-dropdown-menu">
+					<li><a href="#">Edit Accounts</a></li>
+					<li><a href="#">Edit Show Details</a></li>
+					<li><a href="#">Edit Package</a></li>
+				</ul>
+			</div>
+    	</div>
+    </div>
+    <div class='fab-container-fluid'>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+    	'id'=>'campaign-grid',
+    	'dataProvider'=>$campaign->search(),
+    	'filter'=>$campaign,
+    	'columns'=>array(
+    		/*array(
+                'name'=>'category_id',
+                'header'=>'Category',
+                'value'=>'$data->category->name'
+            ) ,
+    
+    		array(
+                'name'=> 'status',
+                'value'=> ' $data->status ? ($data->status ==1 ? "Active" : "Inactive"): "Deleted"',
+                'filter'=>array(0=>'Deleted',1=>'Active',2=>'Inactive')
+            ),
+    		 
+    		*/
+            array(
+                'class'=>'CLinkColumn',
+                'labelExpression'=>'!$data->status ? "Start" : "Stop"',
+                'cssClassExpression'=>'!$data->status ? "btn-success" : "btn-danger"',
+                'linkHtmlOptions' => array(
+                    'class'=>'switch',
+                ),
+                'urlExpression'=>'Yii::app()->createUrl("/adminCampaign/changeStatus", array("id"=>$data->id))',
+                'htmlOptions'=> array(
+                    'class'=>'btn',
+                )
+            ),
+            'campaign_title', 
+            'show_title', 
+            'occurrence', 
+            'day', 
+            'show_airing_time', 
+            'start_date', 
+            'end_date',
+    
+    		 
+    		array(
+    			'class'=>'CButtonColumn',
+    		),
+    	),
+    )); ?>
+    </div>
+    
+    	 
+    <!-- END PAGE CONTAINER-->
+</div>
+<script type='text/javascript'>
+jQuery(document).on('click','#campaign-grid a.switch',function(e) {
+	e.preventDefault();
+	if(!confirm('Are you sure you want to change this?')) return false;
+	 
+	jQuery('#campaign-grid').yiiGridView('update', {
+		type: 'POST',
+		url: jQuery(this).attr('href'),
+		 
+		success: function(data) {
+			jQuery('#campaign-grid').yiiGridView('update');
+			 
+		},
+		 
+	});
+	return false;
+});
+
+</script>

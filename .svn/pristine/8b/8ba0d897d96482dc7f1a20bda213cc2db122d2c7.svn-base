@@ -1,0 +1,9 @@
+<div class="modal fade" id='loading_modal' style='top:30%;overflow:hidden;'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        It may take a while to process the video, please wait.....<img src='/webassets/images/ajax-loader.gif'/>
+      </div>
+    </div> 
+  </div> 
+</div> 

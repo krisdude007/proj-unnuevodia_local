@@ -1,0 +1,10 @@
+<div class="link">
+    <div onclick="window.location = '<?php echo Yii::app()->createUrl('user/profile'); ?>'"><a href="<?php echo Yii::app()->createUrl('user/profile'); ?>">Configuración de perfil</a></div>
+    <hr></hr>
+    <div onclick="window.location = '<?php echo Yii::app()->createUrl('user/connections'); ?>'"><a href="<?php echo Yii::app()->createUrl('user/connections'); ?>">Conéctarte</a></div>
+    <hr></hr>
+    <div onclick="window.location = '<?php echo Yii::app()->createUrl('user/password'); ?>'"><a href="<?php echo Yii::app()->createUrl('user/password'); ?>">Contraseña</a></div>
+    <hr></hr>
+    <div onclick="window.location = '<?php echo Yii::app()->createUrl('user/photo'); ?>'"><a href="<?php echo Yii::app()->createUrl('user/photo'); ?>">Foto</a></div>
+    <hr></hr>
+</div>

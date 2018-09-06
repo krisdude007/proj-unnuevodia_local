@@ -1,0 +1,88 @@
+<?php
+
+class UserUtility {
+
+    /**
+     * login
+     * 
+     * Put these here to avoid duplicate methods for admin and client
+     */
+    public static function login($user, $adminAuthAttempt = false) {        
+        if ($user->validate()) {
+
+            if($adminAuthAttempt) {
+                $userRecord = $user->isAdmin()->findByAttributes(array('username' => $user->username));
+            } else {
+                $userRecord = $user->findByAttributes(array('username' => $user->username));
+            }
+            
+            if(is_null($userRecord)) {
+                return false;
+            }
+            
+            $identity = new UserIdentity($user->username,$user->password,$user->scenario);
+            $userLogin = new eUserLogin;
+            $userLogin->source = $user->source;
+            $userLogin->user_id = $userRecord->id;
+            if ($identity->authenticate()) {
+                Yii::app()->user->login($identity, 86400);
+                $userLogin->result = 'PASS';
+                $userLogin->save();
+                $userTech = new eUserTech();
+                $userTech->user_id = Yii::app()->user->getId();
+                $userTech->login_id = $userLogin->id;
+                $userTech->user_agent = $_SERVER['HTTP_USER_AGENT'];
+                //$userTech->screen_height = $_POST['screen_height'];
+                //$userTech->screen_width = $_POST['screen_width'];
+                $userTech->save(false); // todo fix this shit. this is failing because of screen width/height
+                return true;
+            } else {
+                $userLogin->result = 'FAIL';
+                $userLogin->save();
+                Yii::app()->user->setFlash('error', "Username or password invalid.");
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * logout
+     * 
+     * Put these here to avoid duplicate methods for admin and client
+     */
+    public static function logout() {
+        $audit = new eAudit;
+        $audit->action = 'Logged Out';
+        $audit->save();
+        Yii::app()->user->logout();
+        return true;
+    }
+    
+    public static function getAvatar($user) {
+        return (empty($user->userPhotos[0]->filename)) ? '/webassets/images/you/profile-avatar.png' : '/'.basename(Yii::app()->params['paths']['avatar'])."/{$user->userPhotos[0]->filename}";
+    }
+    
+    public static function register($user,$userEmail){                  
+        
+        if ($user->validate() && $userEmail->validate()) {
+            
+            $user->save();
+            $userEmail->user_id = $user->id;
+            $userEmail->save();
+            $audit = new eAudit;
+            $audit->user_id = $user->id;
+            $audit->action = 'created an account via '.$user->source;
+            $audit->save();
+            
+            return true;
+        } else {
+            return false;
+        }
+        
+    } // end  function - register
+    
+}
+
+?>

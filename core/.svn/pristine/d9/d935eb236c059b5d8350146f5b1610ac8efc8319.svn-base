@@ -1,0 +1,382 @@
+<?php
+
+class TwitterUtility {
+
+    public static function getApplicationAccessToken() {
+        $access_token = base64_encode(Yii::app()->params['twitter']['consumerKey'] . ':' . Yii::app()->params['twitter']['consumerSecret']);
+        $url = 'https://api.twitter.com/oauth2/token';
+        $query = http_build_query(Array('grant_type' => 'client_credentials'));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Basic ' . $access_token,
+            'Content-Type: application/x-www-form-urlencoded;charset=UTF-8'
+        ));
+        $result = json_decode(curl_exec($ch));
+        return $result->access_token;
+    }
+
+    //TODO: collapse getUsernameFromID and getAvatarFromID into getUserdataFromID
+    //TODO: make this one function username/id lookup
+    public static function getIDFromUsername($username) {
+        $access_token = self::getApplicationAccessToken();
+        $url = 'https://api.twitter.com/1.1/users/lookup.json';
+        $query = http_build_query(Array(
+            'screen_name' => $username,
+        ));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $access_token,
+        ));
+        $response = curl_exec($ch);
+        list($headers, $results) = explode("\r\n\r\n", $response, 2);
+        $headers = explode("\r\n", $headers);
+        foreach ($headers as $header) {
+            list($k, $v) = explode(':', $header);
+            $headers[$k] = $v;
+        }
+        $results = json_decode($results);
+        return $results;
+    }
+
+    public static function getUsernameFromID($id) {
+        $twitterCache = eTwitterCache::model()->findByPK($id);
+        if (is_null($twitterCache) || $twitterCache->user_name == 'Twitter User') {
+            $access_token = self::getApplicationAccessToken();
+            $url = 'https://api.twitter.com/1.1/users/lookup.json';
+            $query = http_build_query(Array(
+                'user_id' => $id,
+            ));
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $access_token,
+            ));
+            $response = curl_exec($ch);
+            list($headers, $results) = explode("\r\n\r\n", $response, 2);
+            $headers = explode("\r\n", $headers);
+            foreach ($headers as $header) {
+                list($k, $v) = explode(':', $header);
+                $headers[$k] = $v;
+            }
+            $results = json_decode($results);
+            if (!empty($results->errors)) {
+                $results = Array(new stdClass());
+                $results[0]->screen_name = 'Twitter User';
+                $results[0]->profile_image_url_https = '/webassets/images/you/profile-avitar.png';
+            }
+            $twitterCache = (is_null($twitterCache)) ? new eTwitterCache : $twitterCache;
+            $twitterCache->id = $id;
+            $twitterCache->user_name = $results[0]->screen_name;
+            $twitterCache->user_avatar = $results[0]->profile_image_url_https;
+            $twitterCache->save();
+        }
+        return $twitterCache->user_name;
+    }
+
+    public static function getAvatarFromID($id) {
+        $twitterCache = eTwitterCache::model()->findByPK($id);
+        if (is_null($twitterCache) || $twitterCache->user_name == 'Twitter User') {
+            $access_token = self::getApplicationAccessToken();
+            $url = 'https://api.twitter.com/1.1/users/lookup.json';
+            $query = http_build_query(Array(
+                'user_id' => $id,
+            ));
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $access_token,
+            ));
+            $response = curl_exec($ch);
+            list($headers, $results) = explode("\r\n\r\n", $response, 2);
+            $headers = explode("\r\n", $headers);
+            foreach ($headers as $header) {
+                list($k, $v) = array_pad(explode(':', $header),4,'');
+                $headers[$k] = $v;
+            }
+            $results = json_decode($results);
+            if (!empty($results->errors)) {
+                $results = Array(new stdClass());
+                $results[0]->screen_name = 'Twitter User';
+                $results[0]->profile_image_url_https = '/webassets/images/you/profile-avitar.png';
+            }
+            $twitterCache = (is_null($twitterCache)) ? new eTwitterCache : $twitterCache;
+            $twitterCache->id = $id;
+            $twitterCache->user_name = $results[0]->screen_name;
+            $twitterCache->user_avatar = $results[0]->profile_image_url_https;
+            $twitterCache->save();
+        }
+        return $twitterCache->user_avatar;
+    }
+
+    public static function search($terms, $max_id = null, $minResults = 100) {
+        $access_token = self::getApplicationAccessToken();
+        $url = 'https://api.twitter.com/1.1/search/tweets.json';
+        $query = http_build_query(Array(
+            'q' => $terms,
+            'rpp' => $minResults,
+            'max_id' => $max_id,
+        ));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $access_token,
+        ));
+        $response = curl_exec($ch);
+        list($headers, $results) = explode("\r\n\r\n", $response, 2);
+        $headers = explode("\r\n", $headers);
+        foreach ($headers as $header) {
+            list($k, $v) = explode(':', $header);
+            $headers[$k] = $v;
+        }
+        $results = json_decode($results);
+        $results->rate_limit_remaining = (integer) $headers['x-rate-limit-remaining'];
+        $results->rate_limit_reset = (integer) $headers['x-rate-limit-reset'];
+        return $results;
+    }
+
+    public static function openStream($customTracks = false) {
+        $polls = ePoll::model()->with('pollAnswers')->current()->findAll();
+        foreach ($polls as $poll) {
+            foreach ($poll->pollAnswers as $pollAnswer) {
+                $track[] = $pollAnswer['hashtag'];
+            }
+        }
+        $questions = eQuestion::model()->ticker()->current()->findAll();
+        foreach ($questions as $question) {
+            $track[] = $question->hashtag;
+        }
+        if ($customTracks && is_array($customTracks)) {
+            foreach ($customTracks as $customTrack) {
+                $track[] = $customTrack;
+            }
+        }
+        if (empty($track)) {
+            return false;
+        }
+        ProcessUtility::killProcess('twitterstream');
+        $client = Yii::app()->params['client'];
+        $track = array_map('escapeshellarg', $track);
+        $track = implode(' ', $track);
+        ProcessUtility::startProcess("twitterstream {$track}");
+        return ProcessUtility::findProcess('twitterstream');
+    }
+
+    public static function openVoting() {
+        if (self::openStream()) {
+            ProcessUtility::killProcess('twitterscrapevotes');
+            ProcessUtility::startProcess('twitterscrapevotes');
+            return ProcessUtility::findProcess('twitterscrapevotes');
+        }
+        return false;
+    }
+
+    public static function closeVoting() {
+        ProcessUtility::killProcess('twitterstream');
+        ProcessUtility::killProcess('twitterscrapevotes');
+        return true;
+    }
+
+    public static function tweetAs($uID = false, $text) {
+        if (!$uID) {
+            return false;
+        }
+        if (is_numeric($uID)) {
+            $user = eUserTwitter::model()->findByAttributes(Array('user_id' => $uID));
+            if (is_null($user)) {
+                return false;
+            }
+            $oauth_token = $user->oauth_token;
+            $oauth_token_secret = $user->oauth_token_secret;
+        } else {
+            switch ($uID) {
+                case 'client':
+                    $oauth_token = Yii::app()->params['twitter']['adminAccessToken'];
+                    $oauth_token_secret = Yii::app()->params['twitter']['adminTokenSecret'];
+                    break;
+                default:
+                    break;
+            }
+        }
+        $twitter = Yii::app()->twitter->getTwitterTokened($oauth_token, $oauth_token_secret);
+        $result = $twitter->post("statuses/update", Array('status' => $text));
+        return $result;
+    }
+
+    public static function getLanguages($update = false) {
+        $twitterCache = Yii::app()->cache->get('twitterLanguages');
+        if ($update != false || empty($twitterCache)) {
+            $access_token = self::getApplicationAccessToken();
+            $url = 'https://api.twitter.com/1.1/help/languages.json';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Authorization: Bearer ' . $access_token,
+            ));
+            $response = curl_exec($ch);
+
+
+            $results = json_decode($response);
+
+            Yii::app()->cache->set('twitterLanguages', $results, 7200);
+            return $results;
+        } else {
+            return $twitterCache;
+        }
+    }
+
+    public static function parseTweet($tweet) {
+        $questions = Utility::resultToKeyValue(eQuestion::model()->ticker()->current()->findAll(), 'id', 'question');
+
+        foreach ($questions as $key => $value) {
+            $questionsBr[$key] = $value;
+            $questionsBr[$key . 'b'] = 'Breaking - ' . $value;
+        }
+
+        $ticker = eTicker::model()->findByAttributes(Array('source' => 'twitter', 'source_content_id' => $tweet->id_str));
+        $dropDownDisabled = (is_null($ticker)) ? '' : 'disabled';
+        $clean = LanguageUtility::filter($tweet->text);
+        $screenNameClean = LanguageUtility::filter($tweet->user->screen_name);
+        $nameClean = LanguageUtility::filter($tweet->user->name);
+        $bioClean = LanguageUtility::filter($tweet->user->description);
+        foreach ($tweet->entities->urls as $url) {
+            $tweet->text = str_replace($url->url, $url->expanded_url, $tweet->text);
+        }
+        foreach ($tweet->entities->media as $media) {
+            $tweet->text = str_replace($media->url, $media->expanded_url, $tweet->text);
+        }
+
+        $parsed = Array(
+            'avatar' => $tweet->user->profile_image_url_https,
+            'username' => $tweet->user->screen_name,
+            'name' => $tweet->user->name,
+            'userid' => $tweet->user->id,
+            'followers' => number_format($tweet->user->followers_count, 0, '.', ','),
+            'following' => number_format($tweet->user->friends_count, 0, '.', ','),
+            'questions' => CHtml::dropDownList('question', $ticker->question_id, $questionsBr, Array('prompt' => 'Choose a question', 'class' => 'storeSearch', 'disabled' => $dropDownDisabled)),
+            'timestamp' => strtotime($tweet->created_at),
+            'date' => date('Y/m/d H:i:s', strtotime($tweet->created_at)),
+            'content' => Utility::makeLinksFromText($tweet->text),
+            'id' => $tweet->id_str,
+            'source' => 'twitter',
+            'hashtag' => $response,
+            'language' => $tweet->lang,
+            'accountDescription' => $tweet->user->description,
+            'accountLanguage' => $tweet->user->lang,
+            'accountLink' => "http://www.twitter.com/" . $tweet->user->screen_name,
+            'clean' => Array(
+                'pattern' => $clean['filter']->pattern,
+                'pass' => $clean['result'],
+            ),
+            'accountClean' => Array(
+                'pattern' => Array(
+                    $screenNameClean['filter']->pattern,
+                    $nameClean['filter']->pattern,
+                    $bioClean['filter']->pattern,
+                ),
+                'pass' => ($screenNameClean['result'] && $nameClean['result'] && $bioClean['result']),
+            ),
+            'media' => (sizeof($tweet->entities->media) > 0) ? true : false,
+            'verified' => $tweet->user->verified,
+            'place' => (!empty($tweet->place->full_name)) ? $tweet->place->full_name . ', ' . $tweet->place->country_code : '',
+            'hasLocation' => (!empty($tweet->place->name)) ? true : false,
+            'tweetCoordinates' => (!empty($tweet->coordinates->coordinates)) ? $tweet->coordinates->coordinates : '',
+            'placeCoordinates' => (!empty($tweet->place->bounding_box->coordinates)) ? $tweet->place->bounding_box->coordinates : '',
+                //'tweet'=>$tweet,
+        );
+        return $parsed;
+    }
+
+    public static function isConnected($userID) {
+        $twitter = eUserTwitter::model()->findByAttributes(Array('user_id' => $userID));
+        return(!is_null($twitter));
+    }
+
+    public static function renderCardMetaTags($controller) {
+        $card = $controller->id . '.' . $controller->getAction()->id;
+        switch ($card) {
+            case 'video.play':
+                $video = eVideo::model()->findByAttributes($controller->getActionParams());
+                $tags = array(
+                    'twitter:card' => 'player',
+                    'twitter:title' => $video->title,
+                    'twitter:description' => $video->description,
+                    //'twitter:description' => !empty(Yii::app()->params['twitter_share_text']) ? Yii::app()->params['twitter_share_text'] : $video->description,
+                    'twitter:player' => 'https://' . $_SERVER['HTTP_HOST'] . '/twittercard/' . $video->view_key,
+                    'twitter:player:width' => '360',
+                    'twitter:player:height' => '200',
+                    'twitter:image' => 'https://' . $_SERVER['HTTP_HOST'] . '/uservideos/' . $video->filename . '.png',
+                    'twitter:player:stream' => 'https://' . $_SERVER['HTTP_HOST'] . '/uservideos/' . $video->filename . VIDEO_POST_FILE_EXT,
+                    'twitter:player:stream:content_type' => 'video/mp4',
+                );
+                break;
+            case 'image.view':
+                $image = eImage::model()->findByAttributes($controller->getActionParams());
+                $docroot = !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : Yii::app()->params['docroot'];
+                if ($link = realpath($docroot . PATH_USER_IMAGES . "/{$image->filename}")) {
+                    list($width, $height, $type) = getimagesize($link);
+                    $tags = array(
+                        'twitter:card' => 'photo',
+                        'twitter:title' => $image->title,
+                        'twitter:image' => 'https://' . $_SERVER['HTTP_HOST'] . '/userimages/' . $image->filename,
+                        'twitter:image:type' => image_type_to_mime_type($type),
+                        'twitter:image:width' => $width,
+                        'twitter:image:height' => $height,
+                    );
+                }
+                break;
+            default:
+                break;
+        }
+        if (isset($tags) && $tags && is_array($tags)) {
+            foreach ($tags as $property => $data) {
+                Yii::app()->clientScript->registerMetaTag($data, null, null, array('property' => $property));
+            }
+        }
+        return true;
+    }
+
+    public static function getTimeline($uID, $numberOfTweets) {
+        $access_token = self::getApplicationAccessToken();
+        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+        $query = http_build_query(Array(
+            'user_id' => $uID,
+            'count' => $numberOfTweets,
+        ));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $access_token,
+        ));
+        $response = curl_exec($ch);
+        list($headers, $results) = explode("\r\n\r\n", $response, 2);
+        $headers = explode("\r\n", $headers);
+        foreach ($headers as $header) {
+            list($k, $v) = explode(':', $header);
+            $headers[$k] = $v;
+        }
+        $results = json_decode($results);
+        $results->rate_limit_remaining = (integer) $headers['x-rate-limit-remaining'];
+        $results->rate_limit_reset = (integer) $headers['x-rate-limit-reset'];
+        return $results;
+    }
+
+}
+
+?>

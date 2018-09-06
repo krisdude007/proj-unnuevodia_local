@@ -1,0 +1,14 @@
+<?php
+?>
+<div style="text-align: center">
+	<h3>Payment Confirmation</h3>
+	<p>
+		Thank you for chooosing Actel payment gateway.
+	</p>
+        <p>
+            <?php echo 'Order-ID: ' .$orderId. ' , Transaction Status Code: ' .$transStatus ?>
+        </p>
+        <p>
+            <?php echo $transMsg; ?>
+        </p>
+</div>

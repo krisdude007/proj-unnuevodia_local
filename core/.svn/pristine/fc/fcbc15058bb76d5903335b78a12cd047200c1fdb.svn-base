@@ -1,0 +1,89 @@
+<?php
+
+class TickerUtility {
+
+    // gets values for ticker status dropdown
+    public static function getStatuses() {
+        return array('new' => 'New',
+                     'accepted' => 'Accepted',
+                     'denied' => 'Denied',
+        );
+    }
+    
+    public static function getPerPageOptions() {
+        return array('20' => '20',
+                     '50' => '50',
+                     '100' => '100',
+                     '200' => '200'
+        );
+    }
+
+    public static function getAvatar($ticker){
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $avatar = FacebookUtility::getAvatarFromID($ticker->source_user_id);
+                        break;
+                    case 'twitter':
+                        $avatar = TwitterUtility::getAvatarFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $avatar = PATH_USER_IMAGES.'/'.$ticker->entity->images[0]->filename;
+                break;
+            default:
+                $avatar = UserUtility::getAvatar($ticker->user);    
+                break;               
+        }
+        return $avatar;
+    }
+    
+    public static function getUsername($ticker){
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $username = FacebookUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                    case 'twitter':
+                        $username = TwitterUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $username = $ticker->entity->name;
+                break;
+            default:
+                $username = $ticker->user->username;    
+                break;               
+        }
+        return $username;
+    }
+
+    public static function getLink($ticker){                
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $link = "http://www.facebook.com/{$ticker->source_user_id}";
+                        break;
+                    case 'twitter':
+                        $link = "http://www.twitter.com/".TwitterUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $link = $ticker->entity->link;
+                break;
+            default:
+                $link = "/user/{$ticker->user_id}";    
+                break;               
+        }
+        return $link;
+    }
+    
+}
+
+?>

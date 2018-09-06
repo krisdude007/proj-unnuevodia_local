@@ -1,0 +1,57 @@
+<?php
+
+class clientAdminVideoController extends AdminVideoController {
+
+    function init() {
+        parent::init();
+    }
+    
+    public function actionAjaxVideoUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $currentStatus = trim($_POST['currentStatus']);
+        $videoId = trim($_POST['videoId']);
+
+        $video = eVideo::model()->findByPk($videoId);
+
+        if (!is_null($video)) {
+            if(VIDEO_FILTERS_EXTENDED)
+            {
+                $video->extendedStatus = Utility::updateExtendedStatus($currentStatus, $status, $video);
+            }
+            else
+            {
+                $video->status = $status;
+            }
+            $video->arbitrator_id = Yii::app()->user->id;
+            $video->status_date = date("Y-m-d H:i:s");
+            $video->save();
+            if($video->status == 'accepted' || VIDEO_FILTERS_EXTENDED && $video->extendedStatus['accepted']){
+                $brightcove = eBrightcove::model()->findByAttributes(Array('video_id'=>$video->id));
+                if(is_null($brightcove)){
+                    $brightcove = new eBrightcove();
+                    $brightcove->video_id = $video->id;
+                    $brightcove->brightcove_id = 'N/A';
+                    $brightcove->status = 'new';
+                    $brightcove->save();
+                }
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $video->view_key;
+                MailUtility::send('video approve',$email);
+            }
+            elseif ($video->status == 'denied') {
+            {
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $video->view_key;
+                MailUtility::send('video not approved',$email);
+            }
+        }
+            
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+}

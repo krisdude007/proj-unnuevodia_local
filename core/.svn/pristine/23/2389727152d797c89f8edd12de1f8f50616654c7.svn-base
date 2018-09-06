@@ -1,0 +1,162 @@
+<?php
+
+/*
+ * VCI import service
+ * gstringer - Nov 2013
+ */
+
+class importNetworkScheduleCommand extends CConsoleCommand {
+  CONST SLAVE_DB = 'ytt_initech_dev';
+  CONST START_DATE = '2013-01-01 00:00:00';
+
+  public function run($args) {
+    error_reporting(E_ERROR);
+    self::import();
+  }
+
+  private static function outputMessage($msg='') {
+    echo $msg . "\n";
+  }
+
+  private static function import() {
+
+
+    self::outputMessage("STARTING VCI IMPORT");
+    self::outputMessage("ATTEMPTING TO CONNECT DB");
+    
+    $con = mysql_connect(DATABASE_HOST, 'greg', 'g1mm34cc355');
+
+    if ($con) {
+      
+      self::outputMessage("CONNECTED TO DB");
+      mysql_select_db(self::SLAVE_DB);
+      self::outputMessage("CHECKING SLAVE DB FOR RECORDS");
+      
+      // first, see if we have records, and if we do, get the show_on date for the last record
+      $sql = "SELECT ".self::SLAVE_DB.".network_show_schedule.show_on FROM ".self::SLAVE_DB.".network_show_schedule ORDER BY ".self::SLAVE_DB.".network_show_schedule.show_on DESC LIMIT 1";
+      $res = mysql_query($sql);
+
+      if (!$res) {
+        self::outputMessage("Invalid query: " . mysql_error());
+        exit;
+      }
+      
+      if(mysql_num_rows($res) == 1) {
+        // we have records in the slave db, so only import those greater than the latest show_on date
+        $row = mysql_fetch_object($res);
+        $start_date = $row->show_on;
+        self::outputMessage("SLAVE DB HAS RECORDS. IMPORTING EVERYTHING AFTER " . $start_date);
+        $start_date = " > '" . $start_date . "'";
+        
+        
+      } else {
+        // since we dont have records in the slave db, do a full import of 2013 vci date
+        $start_date = self::START_DATE;
+        self::outputMessage("SLAVE DB HAS NO RECORDS. IMPORTING EVERYTHING AFTER " . $start_date);
+        $start_date = " >= '" . self::START_DATE . "'";
+      }
+      
+      // tear this down. it needs to be more granular. For instance, we also need to update existing
+      // records (by house number and show date respectively) as well as add new records.
+      // begin import
+      $sql = "INSERT INTO ".self::SLAVE_DB.".network_show_schedule (network_show_id, spot_type, spot_number, spot_length, spot_available, spot_order, show_on, spot_on, submitted_on, airs_on, created_on, updated_on)
+                SELECT 
+                ".self::SLAVE_DB.".network_show.id, 
+                LEFT(youludb.vci_spots.house_number, 2) AS spot_type,
+                SUBSTRING(youludb.vci_spots.house_number, 3, 10) AS spot_number, 
+                SEC_TO_TIME(TIME_TO_SEC(REPLACE(youludb.vci_spots.length, ':', ''))) AS spot_length,
+                youludb.vci_spots.available AS spot_available,
+                youludb.vci_spots.ev AS spot_order,
+                STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.blocktime, 'm'), '%m/%d/%Y %h:%i:%s %p') AS show_on,
+                STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.spot_time, 'm'), '%m/%d/%Y %h:%i:%s %p') AS spot_on,
+                youludb.vci_spots.placed AS submitted_on,
+                '00:00:00' AS airs_on, 
+                NOW() AS created_on,
+                '0000-00-00 00:00:00'  AS updated_on
+                FROM youludb.vci_spots 
+                LEFT JOIN ".self::SLAVE_DB.".network_show ON ".self::SLAVE_DB.".network_show.abbreviation = youludb.vci_spots.show_id 
+                WHERE 
+                ".self::SLAVE_DB.".network_show.id IS NOT NULL && 
+                LEFT(youludb.vci_spots.house_number, 2) IN ('FS','PM') AND
+                STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.blocktime, 'm'), '%m/%d/%Y %h:%i:%s %p') " . $start_date;
+
+      $res = mysql_query($sql);
+      
+      if(!$res) {
+        self::outputMessage("Invalid query: " . mysql_error());
+        exit;
+      }
+      
+      $total = mysql_affected_rows();
+      if($total == 0) {
+        self::outputMessage("THERE IS NOTHING TO UPDATE");
+      } else {
+        self::outputMessage("INSERTED " . $total . " RECORDS");
+        
+        // update airs_on time
+        $sql = "SELECT
+                DISTINCT show_on
+                FROM ".self::SLAVE_DB.".network_show_schedule
+                WHERE airs_on = '00:00:00'
+                ORDER BY show_on DESC";
+
+        $res = mysql_query($sql);
+        
+        while($row = mysql_fetch_object($res)) {
+          
+        }
+      }
+
+      self::outputMessage("DISCONNECTING FROM DB");
+      mysql_close($con);
+      
+    } else {
+      self::outputMessage("UNABLE TO CONNECT TO DB");
+    }
+
+    exit;
+
+
+    /**
+     * Get list of shows 
+     *  
+
+      SELECT
+      DISTINCT show_on,
+      network_show.name,
+      COUNT( network_show_schedule.id ) AS available_slots,
+      spot_available,
+      CONCAT(spot_type, spot_number) as house_number
+      FROM  `network_show_schedule`
+      LEFT JOIN network_show ON network_show.id = network_show_schedule.network_show_id
+      WHERE spot_type =  'FS' 
+      AND spot_available = 1 
+      AND DATE(DATE_ADD(show_on, INTERVAL 1 DAY)) > CURRENT_DATE
+      GROUP BY show_on
+      ORDER BY show_on ASC
+
+
+     * 
+     * Get list of spots for given show and datetime
+     * 
+
+      SELECT *
+      FROM  `network_show_schedule`
+      WHERE  `network_show_id` =11
+      AND  `spot_type` =  'FS'
+      AND  `show_on` =  '2013-11-25 15:00:00'
+      LIMIT 0 , 30
+
+
+
+         * 
+         * 
+         * 
+         */
+
+
+  }
+
+}
+
+?>

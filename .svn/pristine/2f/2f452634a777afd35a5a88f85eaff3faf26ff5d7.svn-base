@@ -1,0 +1,200 @@
+<?php
+
+class clientUserController extends UserController {
+
+    public function actionAjaxSetSessionBoolean(){
+        foreach($_POST as $k=>$v){
+            $$k = $v;
+        }
+        Yii::app()->session[$var] = 1;
+    }
+    
+    public function actionProfile() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userEmail = (is_null($userEmail)) ? new eUserEmail : $userEmail;
+        $userLocation = eUserLocation::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userLocation = (is_null($userLocation)) ? new eUserLocation : $userLocation;
+
+        $userPhone = eUserPhone::model()->findByAttributes(array('user_id' => $user_id, 'type' => 'primary'));
+        if (is_null($userPhone)) {
+            $userPhone = new eUserPhone;
+        }
+        $userPhone->setScenario('profile');
+
+        $userTwitter = eUserTwitter::model()->findByAttributes(array('user_id' => $user_id));
+        if ($userTwitter) {
+            $twitterUsername = TwitterUtility::getUsernameFromID($userTwitter->twitter_user_id);
+        }
+
+        $userFacebook = eUserFacebook::model()->findByAttributes(array('user_id' => $user_id));
+        if ($userFacebook) {
+            $facebookUsername = FacebookUtility::getUsernameFromID($userFacebook->facebook_user_id);
+        }
+
+        $user->setScenario('profile');
+        $userEmail->setScenario('profile');
+        $userLocation->setScenario('profile');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profile-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+            //echo CActiveForm::validate(array($user, $userEmail, $userLocation, $userPhone, $userTwitter, $userFacebook));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'], $_POST['eUserPhone'])) {
+            $user->attributes = $_POST['eUser'];
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->username = $_POST['eUserEmail']['email'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->user_id = $user->id;
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $userLocation->user_id = $user->id;
+            $userPhone->attributes = $_POST['eUserPhone'];
+            $userPhone->user_id = $user->id;
+            $userPhone->type = 'primary'; // this client only supports 1 phone
+
+            if ($user->validate() && $userEmail->validate() && $userLocation->validate() && $userPhone->validate()) {
+                $user->save();
+                $userEmail->save();
+                $userLocation->save();
+                $userPhone->save();
+
+                // We don't Twitter->save() or Facebook->save() directly.
+                // That is handled by the Connections page.
+
+                Yii::app()->user->setFlash('success', "User profile updated.");
+            }
+        }
+
+        $this->render('profile', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+            'userPhone' => $userPhone,
+            'twitterUsername' => $twitterUsername,
+            'facebookUsername' => $facebookUsername,
+        ));
+    }
+
+    public function actionRegister() {
+        if (!Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user = new clientUser;
+        $userEmail = new clientUserEmail;
+        $userLocation = new eUserLocation;
+        $user->setScenario('register');
+        $userEmail->setScenario('register');
+        $userLocation->setScenario('register');
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-register-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+            Yii::app()->end();
+        }
+        if (isset($_POST['clientUser'], $_POST['clientUserEmail'], $_POST['eUserLocation'])) {
+            $user->attributes = $_POST['clientUser'];
+            $userEmail->attributes = $_POST['clientUserEmail'];
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $user->username = $userEmail->email;
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->source = 'web';
+            $userEmail->type = 'primary';
+            $userEmail->active = 1;
+            $userLocation->type = 'primary';
+            if (UserUtility::register($user, $userEmail, $userLocation)) {
+                MailUtility::send('welcome', $userEmail->email);
+                $user->setScenario('register');
+                UserUtility::login($user);
+                $this->redirect('/');
+            }
+        }
+        $this->render('register', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+        ));
+    }
+
+    public function actionPassword() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+
+        $user_id = Yii::app()->user->getId();
+        $user = clientUser::model()->findByPK($user_id);
+        $user->setScenario('changePassword');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-password-form') {
+            echo CActiveForm::validate(array($user));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST[get_class($user)])) {
+            $user->attributes = $_POST[get_class($user)];
+            if ($user->validate()) {
+                $user->password = $user->newPassword;
+                if ($user->save()) {
+                    Yii::app()->user->setFlash('success', "User password updated.");
+                }
+            }
+        }
+
+        $this->render('password', array(
+            'user' => $user,
+        ));
+    }
+
+  public function actionForgot($key = false) {
+    if (!$key) {
+      $model = new eUser;
+      $model->setScenario('reset');
+      if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-login-form') {
+        echo CActiveForm::validate($model);
+        Yii::app()->end();
+      }
+      if (isset($_POST['eUser'])) {
+        $model->attributes = $_POST['eUser'];
+        if ($model->validate()) {
+          $userRecord = $model->findByAttributes(array('username' => $model->username));
+          $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $userRecord->id));
+          $reset = new eUserReset;
+          $reset->user_id = $userRecord->id;
+          $reset->key = sha1(uniqid());
+          $reset->expired = 0;
+          if ($reset->save()) {
+            $result = MailUtility::send('password', $userEmail->email, array('link' => "http://{$_SERVER['HTTP_HOST']}/forgot/{$reset->key}"));
+            if ($result) {
+              Yii::app()->user->setFlash('success', "<h2>Thank you for submitting a request</h2>An email will be sent shortly with instructions on how to reset your password.");
+            } else {
+              Yii::app()->user->setFlash('error', "We were unable to send a reset message to {$model->username}.");
+            }
+          } else {
+            Yii::app()->user->setFlash('error', "We were unable to send a reset message to {$model->username}.");
+          }
+        }
+      }
+      $this->render('forgot', array('model' => $model));
+    } else {
+      $reset = eUserReset::model()->active()->findByAttributes(array('key' => $key, 'expired' => 0));
+      if ($reset->user_id) {
+        $reset->expired = 1;
+        $reset->save();
+        $user = eUser::model()->findByPK($reset->user_id);
+        $user->scenario = 'reset';
+        if (UserUtility::login($user)) {
+          $this->redirect('/you/profile');
+        } else {
+          $this->redirect('/login');
+        }
+      } else {
+        $this->redirect(Yii::app()->createUrl('/user/login'));
+      }
+    }
+  }
+}
+
+?>

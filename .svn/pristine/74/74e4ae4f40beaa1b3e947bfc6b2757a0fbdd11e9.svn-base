@@ -1,0 +1,25 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+?>
+<div id="content">
+  <div>
+    <div style="width:70%;float:left;margin-top:5px;position:relative;height:275px">
+      <div style="float:left; clear:both; margin-left:84px; margin-top:15px;">
+
+        <div style="margin-bottom:30px; text-align: left; font-family: Arial; font-size:16px; width:670px; ">
+          <h1>SUBE UNA FOTO</h1>
+          Por favor seleccione una imagen para subir. Las imágenes deben ser .gif, .jpg or .png formato.
+          <?php
+          /* @var $image Image */
+          /* @var $form CActiveForm */
+               $this->renderPartial('_formUpload', array('uploadimage' => $uploadimage,
+                   ));
+
+          ?>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

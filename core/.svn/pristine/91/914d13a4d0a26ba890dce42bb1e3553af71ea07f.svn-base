@@ -1,0 +1,496 @@
+<?php
+
+class AdminImageController extends Controller
+{
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array(
+                    // IMAGE ACTIONS
+                    'index',
+                    'imageModal',
+                    'imageImportModal',
+                    'ajaxImageAddTags',
+                    'ajaxImageUpdateStatus',
+                    'ajaxImageGetUsers',
+                    'ajaxImageGetAdmins',
+                    'ajaxImageFTP',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * IMAGE ACTIONS
+     * This section contains everything required for the image section of the admin
+     * 
+     * 
+     */
+    
+    // FTP image to client server for 
+    // display on their network
+    public function actionAjaxImageFTP() {
+
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        
+        $image = eImage::model()->findByPk($id);
+
+        if (!is_null($image)) {
+
+            $fileName = $image->filename;
+            $fileLocal = Yii::app()->params['paths']['image'] . '/' . $fileName;
+            $fileExt = explode('.', $fileName);
+            $fileExt = "." . $fileExt[1];
+            
+            // get destination id
+            $destination = eDestination::model()->findByAttributes(array('destination' => 'client'));
+            if(is_null($destination)) {
+                echo json_encode(array('response' => 'Unable to locate client as a destination.'));
+                exit;
+            }
+            
+            // get latest count
+            $imageIncrementValue = eVideoDestination::model()->countByAttributes(array('destination_id' => $destination->id));
+            if(is_null($imageIncrementValue)) {
+              $imageIncrementValue = 0;
+            }
+            
+            if(defined('IMAGE_TO_TV_FILE_HAS_CUSTOM_FORMAT') && IMAGE_TO_TV_FILE_HAS_CUSTOM_FORMAT === true) {
+
+              if(defined('IMAGE_TO_TV_FILE_MUST_EVAL') && IMAGE_TO_TV_FILE_MUST_EVAL === true) {
+                $fileOutputTv = IMAGE_TO_TV_FILE_FORMAT_PREFIX . eval('return ' . str_replace('{INCREMENTED_VALUE}', $imageIncrementValue, IMAGE_TO_TV_FILE_FORMAT)) . $fileExt;
+              } else {
+                $fileOutputTv = IMAGE_TO_TV_FILE_FORMAT_PREFIX . str_replace('{INCREMENTED_VALUE}', $imageIncrementValue, IMAGE_TO_TV_FILE_FORMAT) . $fileExt;
+              }
+
+              $fileOutputRemoteTv = $fileOutputTv;
+            } else {
+              // use existing filename for remote file
+              $fileOutputRemoteTv = $fileName;
+            }
+            
+            $fileOutputLocalTv = $fileLocal;
+            
+            if (!file_exists($fileLocal)) {
+                echo json_encode(array('response' => 'Cannot find local file.'));
+                exit;
+            }
+
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $fileOutputLocalTv, $fileOutputRemoteTv);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $fileLocal));
+                exit;
+            }
+            
+            // get data for email
+            $user = eUser::model()->findByPk(Yii::app()->user->id);
+            $admin = $user->first_name . ' ' . $user->last_name;
+            $thumbnail = '<img src="'.Yii::app()->request->baseUrl . '/' . basename(Yii::app()->params['paths']['image']) . '/' . $fileName. '">';
+            $filename_original = $fileName;
+            $filename_new = $fileOutputTv;
+            $datetime = date('Y-m-d h:m:s');
+            $question = 'n/a';
+            $username = $image->user->first_name . ' ' . $image->user->last_name;
+            $title = $image->title;
+            
+            // generate & send xml
+            $xml_array = array (
+              'guid' => $filename_new,
+              'id' => $image->id,
+              'subject' => 'FTP',
+              'title' => $title,
+              'keywords' => 'n/a',
+              'author' => $admin,
+              'description' => $image->description,
+              'filename' => $filename_new
+            );
+
+            $xmlFile = str_replace($fileExt, '.xml', $fileOutputRemoteTv);
+            $xmlLocalFile = Yii::app()->params['paths']['image'] . '/' . $xmlFile;
+            $xml = new SimpleXMLElement('<asset/>');
+            $xml_array = array_flip($xml_array);
+            array_walk_recursive($xml_array, array ($xml, 'addChild'));
+            file_put_contents($xmlLocalFile, $xml->asXML());
+            
+            // todo - remove params secure and place in ftp util
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $xmlLocalFile, $xmlFile);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $xmlLocalFile));
+                exit;
+            }
+            
+            // store image_destination record
+            $imageDestination = new eImageDestination();
+            $imageDestination->image_id = $image->id;
+            $imageDestination->user_id = Yii::app()->user->id;
+            $imageDestination->destination_id = $destination->id;
+            $imageDestination->response = 'Image was successfully converted for tv and sent over to client';
+            $imageDestination->created_on = date("Y-m-d H:i:s");
+            $imageDestination->save();
+
+            // prep email
+            $replacements = array('admin' => $admin,
+                                  'thumbnail' => $thumbnail,
+                                  'filename_original' => $filename_original,
+                                  'filename_new' => $filename_new,
+                                  'datetime' => $datetime,
+                                  'question' => $question,
+                                  'username' => $username,
+                                  'title' => $title);
+
+            MailUtility::send('video_approved', Yii::app()->params['contacts']['ftp_file_transfer'], $replacements);
+            
+            // clean up
+            unlink($xmlLocalFile);
+            
+            $message = Yii::app()->user->getFlash('success');
+            echo json_encode(array('response' => $message));
+
+        } else {
+            echo json_encode(array('response' => 'Unable to find image by id.'));
+        }
+    }
+    
+    // FTP image to client server for 
+    // display on their network
+    /*
+    public function actionAjaxImageFTP() {
+
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+
+        $image = eImage::model()->findByPk($id);
+
+        if (!is_null($image)) {
+
+            $fileName = $image->filename;
+            $fileLocal = Yii::app()->params['paths']['image'] . '/' . $fileName;
+            
+            // get destination id
+            $destination = eDestination::model()->findByAttributes(array('destination' => 'client'));
+            if(is_null($destination)) {
+                echo json_encode(array('response' => 'Unable to locate client as a destination.'));
+                exit;
+            }
+            
+            // get latest count
+            $imageIncrementValue = eImageDestination::model()->countByAttributes(array('destination_id' => $destination->id));
+            if(is_null($imageIncrementValue)) {
+              $imageIncrementValue = 0;
+            }
+            
+            if (!file_exists($fileLocal)) {
+                echo json_encode(array('response' => 'Cannot find local file.'));
+            }
+
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $fileLocal, $fileName);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $fileLocal));
+            }
+            
+            // store image_destination record
+            $imageDestination = new eImageDestination();
+            $imageDestination->video_id = $image->id;
+            $imageDestination->user_id = Yii::app()->user->id;
+            $imageDestination->destination_id = $destination->id;
+            $imageDestination->response = 'Image was successfully converted for tv and sent over to client';
+            $imageDestination->created_on = date("Y-m-d H:i:s");
+            $imageDestination->save();
+            
+            $message = Yii::app()->user->getFlash('success');
+            echo json_encode(array('response' => $message));
+            
+        } else {
+            echo json_encode(array('response' => 'Unable to find image by id.'));
+        }
+    }
+     * 
+     */
+    
+    
+    public function actionIndex($perPage = '') {
+
+        // Ensure a per page value is set
+        if (empty($perPage)) {
+            $perPage = Yii::app()->params['imageAdmin']['perPage'];
+            //$this->redirect('/adminImage?perPage=' . Yii::app()->params['imageAdmin']['perPage']);
+        }
+
+        // set to null
+        $images = null;
+
+        // create image filter form
+        $filterImageModel = new FormFilterImage;
+        $statuses = ImageUtility::getStatuses();
+        $perPageOptions = ImageUtility::getPerPageOptions();
+        $criteria = new CDbCriteria;
+
+        if (isset($_GET['FormFilterImage'])) {
+
+            $filterImageModel->attributes = $_GET['FormFilterImage'];
+
+            if ($filterImageModel->validate()) {
+
+                $columnConditions = array();
+                
+                $status = $filterImageModel->status;
+
+                if (!empty($filterImageModel->user_id)) {
+                    $columnConditions['user_id'] = $filterImageModel->user_id;
+                }
+
+                /*if (!empty($filterImageModel->admin)) {
+                    //$columnConditions['admin'] = $filterImageModel->admin;
+                }*/
+                if (!empty($filterImageModel->tags)) {
+                    $tags = explode(' ', $filterImageModel->tags);
+                    $criteriaImg = new CDbCriteria;
+                    $criteriaImg->addInCondition('title', $tags);
+                    $tags = eTag::model()->with('tagImages')->findAll($criteriaImg);
+                    
+                    $tagImageArr = array();
+                    if(!is_null($tags)) {
+                        foreach($tags as $tag) {
+                            foreach($tag->tagImages as $tagImages) {
+                                $tagImageArr[] = $tagImages->image_id;
+                            }
+                        }
+                    }
+                    
+                    if(count($tagImageArr) > 0) {
+                        $criteria->addInCondition('id', $tagImageArr);
+                    }
+                }
+                
+                if(count($columnConditions) > 0) { 
+                    $criteria->addColumnCondition($columnConditions); 
+ 		                }
+                //$criteria->addColumnCondition($columnConditions);
+
+                if (!empty($filterImageModel->dateStart) && !empty($filterImageModel->dateStop)) {
+                    $fmtStartDate = date('Y-m-d H:i:s', strtotime($filterImageModel->dateStart));
+                    $fmtStopDate = date('Y-m-d H:i:s', strtotime($filterImageModel->dateStop));
+                    $criteria->addBetweenCondition('created_on', $fmtStartDate, $fmtStopDate);
+                }
+
+                $perPage = $filterImageModel->perPage;
+            }
+        } else {
+            $defaultStatus = ImageUtility::getDefaultStatus();
+            
+            $filterImageModel->perPage = $perPage;
+            $filterImageModel->status = $defaultStatus;            
+            //$columnConditions['status'] = 'new';
+            //$criteria->addColumnCondition($columnConditions);
+            $status = $defaultStatus;
+        }
+
+        $model = new eImage;
+        $imagesTotal = $model->{$status}()->count($criteria);
+        $pages = new CPagination($imagesTotal);
+        $pages->pageSize = $perPage;
+        $pages->applyLimit($criteria);
+        
+        $images = $model->recent()->{$status}()->findAll($criteria);
+        $this->render('index', array(
+            'statuses' => $statuses,
+            'perPageOptions' => $perPageOptions,
+            'filterImageModel' => $filterImageModel,
+            'images' => $images,
+            'imagesTotal' => $imagesTotal,
+            'pages' => $pages,
+        ));
+    }
+    
+    public function actionImageModal($id, $currentStatus) {
+        $this->layout = false;
+        $image = eImage::model()->findByPk($id);
+        $imageTags = eTagImage::model()->findAllByAttributes(array('image_id' => $id));
+
+        $tagArr = array();
+        foreach ($imageTags as $imageTag) {
+            $tagArr[] = $imageTag->tag->title;
+        }
+
+        $tagModel = new eTag();
+        $tagModel->title = implode(',', $tagArr);
+        $this->render('imageModal', array('id' => $id,
+            'currentStatus' => $currentStatus,
+            'image' => $image,
+            'imageTags' => $imageTags,
+            'tagModel' => $tagModel));
+    }
+    
+    public function actionAjaxImageUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $currentStatus = trim($_POST['currentStatus']);
+        $imageId = trim($_POST['imageId']);
+
+        $image = eImage::model()->findByPk($imageId);
+
+        if (!is_null($image)) {
+            if(IMAGE_FILTERS_EXTENDED)
+            {
+                $video->extendedStatus = Utility::updateExtendedStatus($currentStatus, $status, $video);
+            }
+            else
+            {
+                $image->status = $status;
+            }
+            
+            $image->arbitrator_id = Yii::app()->user->id;
+            $image->status_date = date("Y-m-d H:i:s");
+            $image->save();
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+    
+    public function actionAjaxImageAddTags() {
+
+        $this->layout = false;
+        $tags = trim($_POST['tags']);
+        $imageId = trim($_POST['imageId']);
+
+        // since $tags will always be set, check for data the old fashioned way 
+        if ($tags != '') {
+
+            // if more than one tag was passed, explode them into an array
+            if (strstr($tags, ',')) {
+                $tags = explode(',', $tags);
+            }
+            // otherwise handle a single tag
+            else {
+                $tags = array($tags);
+            }
+
+            // we need to delete any image tags that exist in the db, but were deleted 
+            // from this request
+            $taggedImages = TagImage::model()->with('tag')->findAllByAttributes(array('image_id' => $imageId));
+
+            if (!is_null($taggedImages)) {
+                foreach ($taggedImages as $tagImage) {
+                    if (!in_array($tagImage->tag->title, $tags)) {
+                        // delete tagImage record since it was deleted from the input field
+                        $tagImage->delete();
+                    }
+                }
+            }
+
+            foreach ($tags as $tag) {
+
+                // see if tag already exist. If it does, grab its id
+                $tagModel = Tag::model()->findByAttributes(array('title' => $tag));
+
+                if (!is_null($tagModel)) {
+                    $tagId = $tagModel->id;
+
+                    // see if it already exist in the tag image table. If not, add it.
+                    $tagImage = TagImage::model()->findByAttributes(array('tag_id' => $tagId, 'image_id' => $imageId));
+
+                    if (is_null($tagImage)) {
+                        // add record to tag image
+                        $tagImageModel = new TagImage();
+                        $tagImageModel->tag_id = $tagId;
+                        $tagImageModel->image_id = $imageId;
+                        $tagImageModel->save();
+                    }
+                } else {
+                    // If not, create a new tag and grab id
+                    $tagModel = new Tag();
+                    $tagModel->title = $tag;
+                    $tagModel->save();
+
+                    // add record to tag image
+                    $tagImageModel = new TagImage();
+                    $tagImageModel->tag_id = $tagModel->id;
+                    $tagImageModel->image_id = $imageId;
+                    $tagImageModel->save();
+                }
+            }
+        } else {
+            // remove all tags for image
+            TagImage::model()->deleteAllByAttributes(array('image_id' => $imageId));
+        }
+    }
+    
+    // ajax method for user filter
+    public function actionAjaxImageGetUsers() {
+
+        $this->layout = null;
+        $email = trim($_GET['term']);
+        $criteria = new CDbCriteria();
+        $criteria->addSearchCondition('username', $email, true);
+        $users = eUser::model()->findAll($criteria);
+        $rows = array();
+
+        if ($users) {
+            foreach ($users as $u) {
+                $rows[] = array('label' => $u->username,
+                    'id' => $u->id);
+            }
+        }
+
+        echo json_encode($rows);
+    }
+
+    // ajax method for admin filter
+   /* public function actionAjaxImageGetAdmins() {
+
+        $this->layout = null;
+        $email = trim($_GET['term']);
+        $criteria = new CDbCriteria();
+        $criteria->addSearchCondition('username', $email, true);
+        $users = eUser::model()->isAdmin()->findAll($criteria);
+        $rows = array();
+
+        if ($users) {
+            foreach ($users as $u) {
+                $rows[] = array('label' => $u->username,
+                    'id' => $u->id);
+            }
+        }
+
+        echo json_encode($rows);
+    }*/
+}

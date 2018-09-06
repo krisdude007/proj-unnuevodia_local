@@ -1,0 +1,60 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.jscrollpane.min.js', CClientScript::POS_END);
+$cs->registerScriptFile('/webassets/js/jquery.mousewheel.js', CClientScript::POS_END);
+$cs->registerScriptFile('/webassets/js/mwheelIntent.js', CClientScript::POS_END);
+$cs->registerScript('scrollpane', "$('.scroll-pane').jScrollPane({scrollbarWidth:18,verticalDragMinHeight: 60,verticalDragMaxHeight: 60,horizontalDragMinWidth: 18,horizontalDragMaxWidth: 18,hideFocus: true});");
+?>
+
+<div id="content">
+    <div style="padding-top:20px;margin-bottom:20px;margin-left:auto;margin-right:auto;width:810px;display:inline-block">
+        <div style="text-align: center;">
+            <?php if(Yii::app()->user->isGuest): ?>
+                        <b style="font:19px; margin-left: 140px">Sign In to join the Social Activity!</b>
+                    <br/>
+                    <div class="uploadButton" style="margin-left: 130px;"><a href="<?php echo Yii::app()->request->baseurl; ?>/login" style="text-decoration: none;"><b style="color:#fff;">SIGN IN</b></a></div>
+            <?php else: ?>
+                    <?php $this->renderPartial('_formTicker',Array('tickerModel'=>$tickerModel)); ?> 
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php if(!Yii::app()->user->isGuest): ?>
+    <div class="tright" style="font-family:Helvetica; font-size:12px; width:673px;margin-bottom:5px;">
+        <span style="font-size:10px"><span class="charleft">140</span> char max</span>
+    </div>
+    <?php endif; ?>
+    <div style="margin-left:auto;margin-right:auto;width:790px; margin-top: 20px; margin-bottom: 40px ">
+        <div class="jspScrollable scroll-pane" style="padding:10px; background-color: #dfdfdf; width:770px; height:295px; overflow:auto;">
+            <div id="shoutList">
+                <?php
+                    $tickerFormat = '
+                        <div class="shoutListItem">
+                            <div>
+                                <img style="font-size:12pt;width:50px;height:50px;" src="%s" />
+                            </div>
+                            <div>
+                                <div style="font-size:12px;margin-left:10px;padding-top:5px;width:540px;text-align:left;">
+                                    <span class="bold">%s</span>
+                                </div>
+                                <div style="text-overflow:ellipsis;overflow:hidden;font-size:12px;margin-left:10px;padding-top:5px;width:540px;text-align:left;">
+                                    %s
+                                </div>
+                            </div>
+                            <div style="font-size:12px; padding-top:5px;text-align:center;width:140px;">
+                                %s
+                            </div>
+                        </div>
+                    ';
+                    foreach($tickers as $ticker){
+                        echo sprintf($tickerFormat,
+                                UserUtility::getAvatar($ticker->user),
+                                $ticker->user->first_name.' '.$ticker->user->last_name,
+                                $ticker->ticker,
+                                date('l M d<b\r>g:ia',strtotime($ticker->created_on))
+                        );
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

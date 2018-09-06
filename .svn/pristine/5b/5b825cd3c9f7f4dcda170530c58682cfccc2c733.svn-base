@@ -1,0 +1,40 @@
+<?php
+/* @var $this TickerController */
+/* @var $model Ticker */
+/* @var $form CActiveForm */
+?>
+<div class="form">
+    <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'ticker-form',
+            'enableAjaxValidation' => true,
+        ));
+    ?>
+    <div class="clearfix" style="margin-top: 10px;">
+        <div style="float:left;text-align:left;">
+            <div class="row" style="margin-right: 10px;">
+                <?php echo $form->labelEx($tickerModel, 'ticker'); ?>
+                <?php echo $form->textField($tickerModel, 'ticker',Array('style'=>'width:560px')); ?>
+                <?php echo $form->error($tickerModel, 'ticker'); ?>
+            </div>
+            <div class="clearfix" style="padding-top:10px;">
+                <div class="row" style="margin-right: 10px;">
+                    <?php echo $form->checkbox($tickerModel, 'to_facebook'); ?>
+                    <?php echo $form->labelEx($tickerModel, 'to_facebook'); ?>
+                    <?php echo $form->error($tickerModel, 'to_facebook'); ?>
+                </div>
+                <div class="row" style="margin-right: 10px;">
+                    <?php echo $form->checkbox($tickerModel, 'to_twitter'); ?>
+                    <?php echo $form->labelEx($tickerModel, 'to_twitter'); ?>
+                    <?php echo $form->error($tickerModel, 'to_twitter'); ?>
+                </div>
+            </div>
+        </div>
+        <div class="row buttons" style="float:left;">
+            <?php echo $form->hiddenField($tickerModel,'source',Array('value'=>'web')); ?>                        
+            <?php echo CHtml::submitButton(''); ?>
+        </div>
+    </div>
+<?php $this->endWidget(); ?>
+
+</div><!-- form -->

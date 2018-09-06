@@ -1,0 +1,37 @@
+<?php
+
+class PreviewController extends Controller {
+
+    public $layout = false;
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+    }
+    
+    public function actionQuestionTicker($id = 0) {
+        $question = eQuestion::model()->findByPK($id);
+        
+        if(VIDEO_FILTERS_EXTENDED)
+        {
+            $tickers = eTicker::model()->with('user')->acceptedtv()->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id), Array('order'=>'ifnull(ordinal, "1000"), ordinal ASC'));
+            $entityTickers = eTicker::model()->findAllByAttributes(Array('status'=>'acceptedtv', 'type'=>'entity'));
+        }
+        else
+        {
+            $tickers = eTicker::model()->with('user')->accepted()->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id), Array('order'=>'ifnull(ordinal, "1000"), ordinal ASC'));
+            $entityTickers = eTicker::model()->findAllByAttributes(Array('status'=>'accepted', 'type'=>'entity'));
+        }
+        
+        $combinedTickers = TickerUtility::combineTickerWithEntityTickers($tickers, $entityTickers);
+        
+        $this->render('index', 
+                array(
+                    'question'=>$question,
+                    'tickers'=>$combinedTickers,
+                )
+        );
+    }
+}

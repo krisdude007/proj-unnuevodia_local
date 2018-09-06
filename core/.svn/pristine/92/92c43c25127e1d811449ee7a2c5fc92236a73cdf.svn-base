@@ -1,0 +1,134 @@
+/*  adminvideo.css -- stylesheet for adminvideo view  */
+
+#admin_video_player_wrapper {
+    /* force size to prevent collapse/non-display issue */
+    width:700px;
+    height:400px;
+    margin:auto;
+    margin-top:20px;
+}
+
+.admin_video_list {
+    margin:20px;
+}
+
+.admin_video_category {
+    margin-bottom:20px;
+}
+
+.admin_video_category_name {
+}
+
+.admin_video_item {
+    display:inline-block;
+    margin:0 10px 20px 0;
+    padding:5px;
+    background:#ddd;
+}
+
+.admin_video_display_name {
+    display:block;
+    margin-bottom:5px;
+}
+
+.admin_video_thumb {
+    width:160px;
+    height:auto;
+}
+
+h1 {
+    /* todo */
+    margin:0;
+    font-size:1.5em;
+}
+
+h2 {
+    margin:25px 0 10px 0;
+    font-size:1.3em;
+}
+
+#fileUploadOverlay {
+
+  /* must be initially hidden */
+  display:none;
+
+  /* place overlay on top of other elements */
+  z-index:10000;
+
+  /* styling */
+  background-color: rgba(255, 255, 255, 0.6);
+
+  width:500px;
+  min-height:250px;
+  border: 0 !important;
+
+  /* CSS3 styling for latest browsers */
+  -moz-box-shadow:0 0 90px 5px #000;
+  -webkit-box-shadow: 0 0 90px #000;
+  color: #fff;
+}
+
+#fileUploadOverlay .close {
+  background-image:url('/core/webassets/images/close.png');
+  position:absolute;
+  right:-15px;
+  top:-15px;
+  cursor:pointer;
+  height:35px;
+  width:35px;
+}
+
+#fileUploadOverlayContent {
+  padding: 0 10px 10px 10px;
+}
+
+.fileModalContent{
+  padding: 0 10px 10px 10px;
+}
+
+/* the overlayed element */
+.fileModal {
+
+  /* must be initially hidden */
+  display:none;
+
+  /* place overlay on top of other elements */
+  z-index:10000;
+
+  /* styling */
+  background-color: rgba(255, 255, 255, 0.6);
+
+  width:980px;
+  min-height:700px;
+  border: 0 !important;
+
+  /* CSS3 styling for latest browsers */
+  -moz-box-shadow:0 0 90px 5px #000;
+  -webkit-box-shadow: 0 0 90px #000;
+}
+
+/* close button positioned on upper right corner */
+.fileModal .close {
+  background-image:url('/core/webassets/images/close.png');
+  position:absolute;
+  right:-15px;
+  top:-15px;
+  cursor:pointer;
+  height:35px;
+  width:35px;
+}
+
+#fab-upload-file-button {
+  padding-left     : 10px;
+  padding-right    : 10px;
+  padding-top      : 4px;
+  padding-bottom   : 4px;
+  color            : white;
+  border           : 0;
+  width            : 140px;
+  margin-top       : 29px;
+  margin-left      : 20px;
+  background-color : #D0CFCF;
+  cursor           : pointer;
+  height           : 34px;
+}

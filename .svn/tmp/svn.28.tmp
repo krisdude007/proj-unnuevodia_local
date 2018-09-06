@@ -1,0 +1,6 @@
+<h1>Profile Settings</h1>
+<div class="sorter">
+    <a href="<?php echo Yii::app()->request->baseurl; ?>/profile">Basic Info</a>
+    <a href="<?php echo Yii::app()->request->baseurl; ?>/password">Password</a>
+    <a href="<?php echo Yii::app()->request->baseurl; ?>/avatar">Photo</a>
+</div>

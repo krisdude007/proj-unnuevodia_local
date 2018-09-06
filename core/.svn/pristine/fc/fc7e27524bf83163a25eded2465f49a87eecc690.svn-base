@@ -1,0 +1,81 @@
+
+
+$(document).ready(function() {
+    sliderHandler();
+    //voteHandlers();
+});
+
+function getGraphData(pID) {
+    var request = $.ajax({
+        url: "/poll/ajaxGetData",
+        type: 'POST',
+        data: ({
+            'id': pID,
+            'CSRF_TOKEN': getCsrfToken()
+        }),
+        success: function(data) {
+            var data = $.parseJSON(data);
+            $.each(data.labels, function(i, e) {
+                drawGraph('cvs' + i, [data.values[i]], [data.labels[i]], [data.colors[i]]);
+            });
+        }
+    });
+}
+
+var getCsrfToken = function() {
+    return $("#csrfToken").html();
+}
+
+function drawGraph(canvas, v, l, c) {
+    console.log(canvas);
+    console.log(v);
+    console.log(l);
+    console.log(c);
+    RGraph.Clear(document.getElementById(canvas));
+    var graph = new RGraph.HBar(canvas, v);
+    console.log(graph);
+    graph.Set('chart.labels', l);
+    graph.Set('chart.colors', c);
+//    graph.Set('chart.units.post', '%');
+//    graph.Set('chart.labels.above', true);
+    graph.Set('chart.xmax', 100);
+    graph.Set('chart.background.barcolor1', 'transparent');
+    graph.Set('chart.background.barcolor2', 'transparent');
+    graph.Set('chart.text.size', 17);
+    graph.Set('chart.text.color', 'white');
+    graph.Set('chart.strokestyle', 'white');
+    graph.Set('chart.xlabels', false);
+    graph.Set('chart.gutter.left', 0);
+    graph.Set('chart.gutter.top', 0);
+    graph.Set('chart.gutter.bottom', 0);
+    graph.Set('chart.background.grid', false);
+    graph.Set('chart.colors.sequential', true);
+    graph.Set('chart.noaxes', true);
+    graph.Set('chart.axis.color', 'transparent');
+    graph.Draw();
+}
+
+var sliderHandler = function() {
+
+    var slider_w = 0;
+
+    $('#sliderContainer .sliders').css('left', $(window).width() + 'px');
+
+    $('#sliderContainer .sliders .slider').each(function(i, e) {
+        slider_w = slider_w + $(this).width() + 60;
+    });
+
+    $('#sliderContainer .sliders').css('width', slider_w + 'px');
+    $('#sliderContainer .sliders').animate({
+        left: -$(".sliders").width()},
+    {duration: slider_w * 30,
+        easing: "linear",
+        complete: function() {
+            sliderHandler();
+        }
+    });
+
+}
+
+
+

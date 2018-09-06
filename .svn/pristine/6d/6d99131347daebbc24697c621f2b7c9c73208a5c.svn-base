@@ -1,0 +1,124 @@
+<?php
+$cs = Yii::app()->getClientScript();
+
+?>
+<div class="homeTop">
+    <h4>Interactuando con <b style="font-weight: 300;">Un Nuevo Dia</b></h4>
+</div>
+<div class="fabmob_content-container">
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'image-upload-form',
+        'enableClientValidation' => true,
+        'enableAjaxValidation' => false,
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'afterValidate'=>'js:function(form,data,hasError){
+                        if(!hasError){
+                            ajaxUploadFile();
+                        }
+                        return false;//disable submit with no Error
+            }'
+        ),
+    ));
+    $infoFieldFileID = CHtml::activeId($uploadimage, 'image');
+    ?>
+    <label style="font-size: 11px;">(Las imágenes deben ser .gif, .jpg or .png formato.)</label><br/>
+    <?php echo $form->fileField($uploadimage, 'image', array('class' => 'form-control','accept'=>'image/jpeg,image/png,image/gif')); ?>
+    <video id='player' controls autoplay style="display:none;width:100%;"></video>
+    <?php echo $form->error($uploadimage, 'image', array('clientValidation' => 'return customValidateFile(messages);')); ?>
+    <label>Titulo</label>
+    <?php echo $form->textField($uploadimage, 'title', array('class' => 'form-control', 'placeholder' => 'Titulo (Requerido)')); ?>
+    <?php echo $form->error($uploadimage, 'title'); ?>
+    <span class="help-block hidden"></span>
+    <label>Descripción</label>
+    <?php echo $form->textArea($uploadimage, 'description', array('class' => 'form-control', 'placeholder' => 'Describe tu image.')); ?>
+    <?php echo $form->error($uploadimage, 'description'); ?>
+    <br/>
+    <div><progress id='p' max="100" value='0' style="display:none;"></progress></div>
+    <br/>
+    <button class="btn fabmob_auth-flow-btn" style='max-width: 140px; border-color: #ffffff !important; color: #ffffff !important; min-height: 45px !important;'>Enviar</button>
+    <?php $this->endWidget(); ?>
+<div id="progressNumber"></div>
+</div>
+<?php
+    $cs->registerScript('imageSelect', "
+    function customValidateFile(messages) {
+        var nameC = '#".$infoFieldFileID."';
+
+        var control = $(nameC).get(0);
+
+        //simulates the required validator and allowEmpty setting of the file validator
+        if (control.files.length == 0) {
+            messages.push('Image cannot be blank');
+            return false;
+        }
+
+        file = control.files[0];
+
+        //simulates the maxSize setting of the file validator
+        if (file.size >  31457280) {
+            messages.push('The file is too large to be uploaded. Maximum is 30 Mb');
+            return false;
+        }
+
+        //simulates the format type (extra checking) see also http://en.wikipedia.org/wiki/Internet_media_type
+
+        if (file.type != 'image/jpeg' && file.type != 'image/png') {
+            messages.push('Invalid file type. Only .jpg, .png files can be uploaded');
+            return false;
+        }
+        return true;
+    }
+    ", CClientScript::POS_END);
+?>
+<?php
+    $cs->registerScript('fileupload', "
+      function ajaxUploadFile() {
+        var fd = new FormData();
+
+        //fd.append(document.forms[0].elements[0].name, document.forms[0].elements[0].value);
+        fd.append(document.forms[0].elements[1].name, document.forms[0].elements[1].files[0]);
+        fd.append(document.forms[0].elements[2].name, document.forms[0].elements[2].value);
+        fd.append(document.forms[0].elements[3].name, document.forms[0].elements[3].value);
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('loadstart', uploadStart, false);
+        xhr.upload.addEventListener('progress', uploadProgress, false);
+        xhr.upload.addEventListener('load', uploadComplete, false);
+        xhr.upload.addEventListener('error', uploadFailed, false);
+        xhr.upload.addEventListener('abort', uploadCanceled, false);
+        xhr.open('POST', document.forms[0].action);
+        xhr.send(fd);//submit
+      }
+
+      function uploadStart(evt) {
+        var p = document.getElementById('p');
+        p.style.display = 'block';
+      }
+
+      function uploadProgress(evt) {
+        var p = document.getElementById('p');
+        if (evt.lengthComputable) {
+          p.value = Math.round(evt.loaded * 100 / evt.total);
+        }
+      }
+
+      function uploadComplete(evt) {
+        /* This event is raised when the server send back a response */
+        var p = document.getElementById('p');
+        p.style.display = 'none';
+        var arg = document.URL.match(/id=([0-9]+)/)
+        var id = arg[1];
+        window.location = '/thanks?id='+id;
+
+      function uploadFailed(evt) {
+        alert('There was an error attempting to upload the file.');
+      }
+
+      function uploadCanceled(evt) {
+        alert('The upload has been canceled by the user or the browser dropped the connection.');
+      }
+
+    ", CClientScript::POS_END);
+?>

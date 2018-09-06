@@ -1,0 +1,24 @@
+<?php
+
+class FormManualUpload extends CFormModel {
+
+    public $uploadfile;
+
+    public function rules()
+    {
+        return array(
+        array('uploadfile', 'file', 'types'=>'pdf','maxSize'=>10*1024*1024),
+        );
+    }
+
+    /**
+     * Declares attribute labels.
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'uploadfile'=>'Upload File',
+        );
+    }
+
+}

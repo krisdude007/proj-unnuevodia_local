@@ -1,0 +1,52 @@
+
+<div class="login" style="width:55%; float:left; margin-left: 50px; margin-top:50px;position:relative;height:275px;margin-right:80px;">
+    <h1>sign in</h1>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-login-form',
+        'enableAjaxValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+            'validateOnType' => false,
+        )
+            ));
+    ?>    
+    <?php echo $form->errorSummary($model); ?>
+    <div>   
+        <div style="float:left; width: 300px;">
+            <h4>What is your email address?</h4>
+            <label style="margin-left: 20px;">
+                Email: <?php echo $form->textField($model, 'username'); ?>
+                <?php echo $form->error($model, 'username'); ?>
+            </label>
+        </div>
+        <div style="float:left; width: 420px;">
+            <h4>Do you have an account?</h4>
+            <label style="margin-left: 20px;">
+                <input id="createNewAccount" type="radio" name="createAccount" value="1">No, I am a new customer.
+            </label>
+            
+            <label style="margin-left: 20px;">
+                Yes, I have a password: <?php echo $form->passwordField($model, 'password'); ?>
+                <?php echo $form->error($model, 'password'); ?>
+                <div style="margin-left: 170px;">
+                    <a style="color: #fff; text-decoration: underline; font-size: 12px;" href="/forgot">Forgot your Password?</a>
+                </div>
+            </label>
+            <div>&nbsp;</div>
+        </div>                
+    </div>
+    <div style="margin-left: 25px; clear:both;padding-top:0px">
+        <?php echo $form->hiddenField($model, 'source', array('value' => 'web')); ?>            
+        <input id="screen_width" type="hidden" name="screen_width" value="" />
+        <input id="screen_height" type="hidden" name="screen_height" value="" />            
+        <?php echo CHtml::submitButton(''); ?>
+    </div>
+    <div style="margin-top:-40px;margin-left:210px;font-size:20px;">
+        sign in with
+        <a href="#" class="twreg"><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/buttons/Twitter-deselected.png"></a>                    
+        <a href="#" class="fbreg"><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/facebook.png"></a>                    
+    </div>
+    <?php $this->endWidget(); ?>
+</div>    

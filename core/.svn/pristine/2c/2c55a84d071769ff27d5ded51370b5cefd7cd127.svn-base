@@ -1,0 +1,111 @@
+//jQuery.noConflict();
+
+var tabHandlers = function() {
+    $('#videoSchedulerModalTabs').tabs();
+}
+
+var datePickerHandler = function() {
+    // datepickers for datestart datestop on video filters
+    $( "#datepickerVideoSchedulerFilter" ).datepicker({
+        //maxDate: "0"
+        });
+}
+
+var showTable;
+var spotTable;
+
+
+$(document).ready(function () {
+    tabHandlers();
+    datePickerHandler();
+    
+    $("#datatableScheduler tbody").click(function(event) {
+             
+        $(showTable.fnSettings().aoData).each(function() {
+            $(this.nTr).removeClass('row_selected');
+        });
+        $(event.target.parentNode).addClass('row_selected');
+             
+    });
+         
+    $("#datatableScheduler tbody tr").live('click', function(event) {
+        var aPos = showTable.fnGetPosition(this);
+        var aData = showTable.fnGetData(aPos);
+        var show_on = aData[6];
+        var network_show_id = aData[7];
+        $('#datatableSpotScheduler').show();
+        
+        // populate spots
+        spotTable = $('#datatableSpotScheduler').dataTable({
+            "bProcessing": true,
+            "sScrollY": "185px",
+            "bPaginate": false,
+            "sAjaxSource": '/adminVideo/ajaxVideoGetNetworkSpotSchedule?show_on='+show_on+'&spot_type=FS&network_show_id='+network_show_id,
+            "bFilter": false,
+            "bSort": false,
+            "aoColumns": [
+            {
+                "sWidth": "25%"
+            },
+            {
+                "sWidth": "25%"
+            },
+            {
+                "sWidth": "20%"
+            },
+            {
+                "sWidth": "20%"
+            },
+            {
+                "sWidth": "5%"
+            },
+            {
+                "sWidth": "5%"
+            },
+            {
+                "bVisible": false
+            },
+            
+            ]
+        });
+
+    });
+  
+  
+    showTable = $('#datatableScheduler').dataTable({
+        "bProcessing": true,
+        "sScrollY": "185px",
+        "bPaginate": false,
+        "sAjaxSource": '/adminVideo/ajaxVideoGetNetworkShowSchedule?spot_type=FS',
+        "bFilter": false,
+        "bSort": false,
+        "aoColumns": [
+        {
+            "sWidth": "25%"
+        },
+        {
+            "sWidth": "25%"
+        },
+        {
+            "sWidth": "20%"
+        },
+        {
+            "sWidth": "20%"
+        },
+        {
+            "sWidth": "5%"
+        },
+        {
+            "sWidth": "5%"
+        },
+        {
+            "bVisible": false
+        },
+        {
+            "bVisible": false
+        },
+        ]
+    });
+
+});
+

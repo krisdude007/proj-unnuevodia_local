@@ -1,0 +1,54 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminAudit/index.css');
+//$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminReport/_weekly.js', CClientScript::POS_HEAD);
+?>
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/reports-image.png">Question Report</h2>
+    </div>
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <div class="fab-row-fluid">
+            <div style="margin-bottom:10px">
+                <?php $this->widget('CLinkPager',array('pages'=>$pages, 'header' => '')); ?>
+            </div>
+            <table class="dtStyle">
+                <tr><th>ID</th><th>Question</th><th>Start Time</th><th>End Time</th><th>Video Submitions</th><th>Videos Accepted</th><th>Ticker Submitions</th><th>Tickers Accepted</th></tr>
+                <?php
+                $format = '<tr><td>%s</td><td>%s</td><td style="min-width:150px">%s</td><td style="min-width:150px">%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>';
+                foreach($questions as $question){ 
+                    $videoSubmitted = 0;
+                    $videoAccepted = 0;
+                    foreach($question->videos as $video){
+                        $videoSubmitted++;
+                        if(($video->extendedStatus['accepted_tv'] == true))
+                            $videoAccepted++;
+                    }
+                    $tickerSubmitted = 0;
+                    $tickerAccepted = 0;
+                    foreach($question->tickers as $ticker){
+                        $tickerSubmitted++;
+                        if(($ticker->extendedStatus['accepted_tv'] == true))
+                            $tickerAccepted++;
+                    }
+                    echo sprintf($format,
+                        $question->id, 
+                        $question->question, 
+                        ($question->start_time == '0000-00-00 00:00:00')? 'Not Set' : date('M jS, Y - H:i:s', strtotime($question->start_time)), 
+                        ($question->end_time == '0000-00-00 00:00:00')? 'Not Set' : date('M jS, Y - H:i:s', strtotime($question->end_time)),
+                        $videoSubmitted,
+                        $videoAccepted,
+                        $tickerSubmitted,
+                        $tickerAccepted
+                    );
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+</div>

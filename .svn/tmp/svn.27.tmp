@@ -1,0 +1,53 @@
+
+<div id="content">
+    <div class="you">
+    <?php if(!(Yii::app()->user->isGuest)): ?>
+    
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+    <?php else: { } ?>
+        <?php endif; ?>
+        <div class="verticalRule">
+            <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/you/profile.divider.png" />
+        </div>
+        <div class="youContent" style="text-align:left;">
+            <h1 style="margin-bottom: 0px;">NEED HELP?</h1>
+            <div class="textBox">
+                <div class="textBorder">
+                        <div class="steps">
+                    <div class="textHead">STEP 1</div>
+                </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        Do you want us to hear you?
+                        Great - please turn down your TV and turn up your microphone!
+                    </div>
+                </div>
+                <div class="textBorder">
+                <div class="steps">
+                   <div class="textHead">STEP 2</div>
+                </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        Please speak up and speak clearly into the microphone - and
+                        please keep it as clean as you can.
+                    </div>
+                </div>
+                <div class="textBorder">
+                <div class="steps">
+                    <div class="textHead">STEP 3</div>
+                </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        MOST IMPORTANTLY - BE YOURSELF!! Have fun, but don't do anything that might land you in jail!
+                    </div>
+                </div> 
+            </div>
+            </div> 
+            <div style="margin-top:20px;margin-right:10px; float:right;">
+                <a href="mailto:<?php echo CLIENT_SUPPORT_EMAIL;?>" style="color: #2d7abe">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</div>

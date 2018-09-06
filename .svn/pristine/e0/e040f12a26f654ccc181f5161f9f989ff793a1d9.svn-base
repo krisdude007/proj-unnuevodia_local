@@ -1,0 +1,109 @@
+<div class="signup" style="float:left; margin-left: 50px; margin-top:30px;position:relative;height:275px;margin-right:30px;">
+    <img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/you/header-register.png">
+    <br><br>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-register-form',
+        'enableAjaxValidation' => true,
+            ));
+    ?>
+    <div style="clear:both;padding-top:10px;">
+        <div style="float:left;">
+            <label for="username">
+                <?php echo $form->labelEx($userEmail, 'email'); ?>
+            </label>
+            <div>                    
+                <?php echo $form->textField($userEmail, 'email'); ?>
+                <?php echo $form->error($userEmail, 'email'); ?>
+            </div>
+        </div>
+        <div style="float:left;margin-left:70px;">
+            <label for="password">
+                <?php echo $form->labelEx($user, 'password'); ?>
+            </label>
+            <div>                    
+                <?php echo $form->passwordField($user, 'password'); ?>
+                <?php echo $form->error($user, 'password'); ?>
+            </div>
+        </div>                
+    </div>
+    <div style="clear:both;padding-top:10px;">
+        <div style="float:left;">
+            <label for="firstname">
+                <?php echo $form->labelEx($user, 'first_name'); ?>
+            </label>
+            <div>                    
+                <?php echo $form->textField($user, 'first_name'); ?>
+                <?php echo $form->error($user, 'first_name'); ?>
+            </div>
+        </div>
+        <div style="float:left;margin-left:70px;">
+                <?php echo $form->labelEx($user, 'last_name'); ?>
+            <div>
+                <?php echo $form->textField($user, 'last_name'); ?>
+                <?php echo $form->error($user, 'last_name'); ?>
+            </div>
+        </div>                
+    </div>            
+    <div style="clear:both;padding-top:10px;">
+        <div style="float:left;">
+            <label>
+                <?php echo $form->labelEx($user, 'birthday'); ?>
+            </label>
+            <div>
+                <?php echo $form->dropDownList($user,'birthMonth',  DateTimeUtility::monthsOfYear()); ?>                
+                <?php echo $form->dropDownList($user,'birthDay', DateTimeUtility::daysOfMonth()); ?>
+                <?php echo $form->dropDownList($user,'birthYear',  DateTimeUtility::yearsOfCentury()); ?>
+                <?php echo $form->error($user, 'birthday'); ?>
+            </div>                
+        </div>
+        <div style="float:left;margin-left:70px;">
+            <label for="postal_code">
+                <?php echo $form->labelEx($userLocation, 'postal_code'); ?>
+            </label>
+            <div>                    
+                <?php echo $form->textField($userLocation, 'postal_code'); ?>
+                <?php echo $form->error($userLocation, 'postal_code'); ?>
+            </div>
+        </div>                
+    </div>
+    <div style="clear:both;padding-top:10px;">
+        <div style="float:left;">
+                <?php echo $form->labelEx($user, 'gender'); ?>
+            <div>
+                <?php                    
+                $accountStatus = array('M'=>'Male', 'F'=>'Female');
+                echo $form->radioButtonList($user,'gender',$accountStatus,array('separator'=>' '));
+                echo $form->error($user, 'gender'); ?>
+            </div>
+        </div>        
+    </div>
+    <div style="clear:both;padding-top:10px;">
+        <div style="float:left;">
+            <input type="checkbox" id="terms" name="terms" value="1"> 
+            <a rel="#termsOverlayTrigger" href="<?php echo Yii::app()->request->baseurl; ?>/terms" class="fab-link">I agree to Terms of Use &amp; Privacy Policy</a>
+        </div>
+    </div>                        
+
+    <div style="clear:both; float: right; padding-top:10px; margin-right: 30px;">
+        <?php echo CHtml::submitButton(''); ?>
+    </div>
+
+    <div style="margin-top:30px;font-size:20px;">        
+        register with 
+        <a href="#" class="twreg"><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/buttons/Twitter-deselected.png"></a>                            
+        <a href="#" class="fbreg"><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/facebook.png"></a>
+    </div>
+
+    <?php echo $form->hiddenField($user, 'source', array('value' => 'web')); ?>            
+    <input id="screen_width" type="hidden" name="screen_width" value="" />
+    <input id="screen_height" type="hidden" name="screen_height" value="" />
+    <?php $this->endWidget(); ?>
+</div>
+
+
+<!-- TERMS MODAL -->
+<div class="termsOverlay" id="termsOverlayTrigger">
+    <div class="termsOverlayContent" ></div>
+</div>
+<!-- TERMS MODAL -->

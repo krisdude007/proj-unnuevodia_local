@@ -1,0 +1,232 @@
+<?php
+
+class XMLController extends Controller {
+
+    function init() {
+        parent::init();
+    }
+
+    public function actionVoting($id = 0) {
+        $model = ePoll::model()->with('pollAnswers', 'pollAnswers:tally', 'tally')->findByPK($id);
+        header("Content-Type: application/xml");
+        $doc = new DOMDocument("1.0", "ISO-8859-1");
+        $data = $doc->createElement('data');
+        if (!is_null($model)) {
+            $poll = $doc->createElement('poll');
+            $poll->appendChild($doc->createElement('id', $model->id));
+            $poll->appendChild($doc->createElement('question', $model->question));
+            $poll->appendChild($doc->createElement('date', $model->created_on));
+            $data->appendChild($poll);
+            foreach ($model['pollAnswers'] as $t) {
+                $answer = $doc->createElement('answer');
+                $answer->appendChild($doc->createElement('id', $t->id));
+                $answer->appendChild($doc->createElement('answer', $t->answer));
+                $answer->appendChild($doc->createElement('date', $t->created_on));
+                $answer->appendChild($doc->createElement('total', $t->tally));
+                $answer->appendChild($doc->createElement('percentage', round(($t->tally / $model->tally) * 100)));
+                $poll->appendChild($answer);
+            }
+        }
+        $doc->appendChild($data);
+        echo $doc->saveXML();
+    }
+
+    public function actionVotingRSS($id = 0) {
+        $model = ePoll::model()->with('pollAnswers', 'pollAnswers:tally', 'tally')->findByPK($id);
+
+        header("Content-Type: application/rss+xml");
+        $doc = new DOMDocument("1.0", "UTF-8");
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput = true;
+        $rss = $doc->createElement("rss");
+        $version = $doc->createAttribute("version");
+        $rss->appendChild($version);
+        $versionValue = $doc->createTextNode("2.0");
+        $version->appendChild($versionValue);
+
+        if (!is_null($model)) {
+            $channel = $doc->createElement('channel');
+            $channel->appendChild($doc->createElement('title', $model->question));
+            $channel->appendChild($doc->createElement('description', $model->id));
+            $date = date('r', strtotime($model->created_on));
+            $channel->appendChild($doc->createElement('pubDate', $date));
+
+            foreach ($model['pollAnswers'] as $t) {
+                $user = eUser::model()->findByPK($t->user_id);
+
+                $item = $doc->createElement('item');
+                $item->appendChild($doc->createElement('title', $t->answer));
+                $item->appendChild($doc->createElement('guid', $t->tally . ' votes'));
+                $item->appendChild($doc->createElement('category', $t->color));
+                if ($model->tally != 0) {
+                    $percentage = round(($t->tally / $model->tally) * 100);
+                } else {
+                    $model->tally = 1;
+                    $percentage = round(($t->tally / $model->tally) * 100);
+                }
+                $item->appendChild($doc->createElement('description', $percentage . '%'));
+                $item->appendChild($doc->createElement('pubDate', date('r', strtotime($t->created_on))));
+                $image = $doc->createElement('image');
+                $image->appendChild($doc->createElement('url', UserUtility::getAvatar($user)));
+                $item->appendChild($image);
+                $channel->appendChild($item);
+            }
+
+            $rss->appendChild($channel);
+            $doc->appendChild($rss);
+            if (is_null($model)) {
+                $item = $doc->createElement('item');
+                $item->appendChild($doc->createElement('title', 'No Poll Submitted'));
+                $channel->appendChild($item);
+                $rss->appendChild($channel);
+                $doc->appendChild($rss);
+            }
+        } else {
+            $channel = $doc->createElement('channel');
+            $item = $doc->createElement('item');
+            $item->appendChild($doc->createElement('title', 'No Poll Submitted'));
+            $channel->appendChild($item);
+            $rss->appendChild($channel);
+            $doc->appendChild($rss);
+        }
+        echo $doc->saveXML();
+    }
+
+    public function actionQuestionTicker($id = 0) {
+
+        $questionModel = eQuestion::model()->findByPK($id);
+        //$tickersModel = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id));
+        if (TICKER_FILTERS_EXTENDED) {
+            $tickersModel = eTicker::model()->with('user')->acceptedtv()->findAllByAttributes(Array('question_id' => $questionModel->id));
+        } else {
+            $tickersModel = eTicker::model()->with('user')->accepted()->findAllByAttributes(Array('question_id' => $questionModel->id));
+        }
+        $entityTickers = eTicker::model()->accepted()->findAllByAttributes(Array('type' => 'entity'));
+
+        $combinedTickers = TickerUtility::combineTickerWithEntityTickers($tickersModel, $entityTickers);
+
+        header("Content-Type: application/xml");
+
+        $doc = new DOMDocument("1.0", "ISO-8859-1");
+
+        $data = $doc->createElement('data');
+
+        $doc->appendChild($data);
+
+        if (count($questionModel) != 0) {
+            $question = $doc->createElement('question');
+            $data->appendChild($question);
+
+            $question->appendChild($doc->createElement('id', $questionModel->id));
+            $question->appendChild($doc->createElement('question', $questionModel->question));
+            $question->appendChild($doc->createElement('hashtag', $questionModel->hashtag));
+            $question->appendChild($doc->createElement('date', $questionModel->created_on));
+
+            $answers = $doc->createElement('answers');
+            $data->appendChild($answers);
+
+            foreach ($combinedTickers as $t) {
+                $user = eUser::model()->findByPK($t->user_id);
+
+                $ticker = $doc->createElement('ticker');
+                $ticker->appendChild($doc->createElement('id', $t->id));
+                $ticker->appendChild($doc->createElement('answer', $t->ticker));
+                $ticker->appendChild($doc->createElement('date', $t->created_on));
+                $ticker->appendChild($doc->createElement('username', $user->username));
+                $ticker->appendChild($doc->createElement('first_name', $user->first_name));
+                $ticker->appendChild($doc->createElement('last_name', $user->last_name));
+                $ticker->appendChild($doc->createElement('avatar', TickerUtility::getAvatar($t)));
+                $ticker->appendChild($doc->createElement('avatar', $user->id));
+                $ticker->appendChild($doc->createElement('source', $t->source));
+                $answers->appendChild($ticker);
+            }
+
+            if (count($combinedTickers) == 0) {
+                $ticker = $doc->createElement('ticker');
+                $ticker->appendChild($doc->createElement('id', 'No tickers approved'));
+                $answers->appendChild($ticker);
+            }
+        } else {
+            $question = $doc->createElement('question');
+            $question->appendChild($doc->createElement('id', 'No tickers approved'));
+            $data->appendChild($question);
+        }
+
+        echo $doc->saveXML();
+    }
+
+    public function actionQuestionTickerRSS($id = 0) {
+
+        $questionModel = eQuestion::model()->findByPK($id);
+        //$tickersModel = eTicker::model()->with('user')->findAllByAttributes(Array('status'=>'accepted', 'question_id'=>$id));
+        if (TICKER_FILTERS_EXTENDED) {
+            $tickersModel = eTicker::model()->with('user')->acceptedtv()->findAllByAttributes(Array('question_id' => $questionModel->id));
+        } else {
+            $tickersModel = eTicker::model()->with('user')->accepted()->findAllByAttributes(Array('question_id' => $questionModel->id));
+        }
+        $entityTickers = eTicker::model()->accepted()->findAllByAttributes(Array('type' => 'entity'));
+
+        $combinedTickers = TickerUtility::combineTickerWithEntityTickers($tickersModel, $entityTickers);
+
+        header("Content-Type: application/rss+xml");
+
+        $doc = new DOMDocument("1.0", "UTF-8");
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput = true;
+        $rss = $doc->createElement("rss");
+        $version = $doc->createAttribute("version");
+        $rss->appendChild($version);
+        $versionValue = $doc->createTextNode("2.0");
+        $version->appendChild($versionValue);
+
+        $channel = $doc->createElement('channel');
+
+        if (count($questionModel) != 0) {
+
+            $channel->appendChild($doc->createElement('title', $questionModel->question));
+            $channel->appendChild($doc->createElement('description', $questionModel->hashtag));
+            $date = date('r', strtotime($questionModel->created_on));
+            $channel->appendChild($doc->createElement('pubDate', $date));
+
+            foreach ($combinedTickers as $t) {
+                $user = eUser::model()->findByPK($t->user_id);
+
+                $item = $doc->createElement('item');
+                if (Yii::app()->params['rss_divide_title_desc'] === true) {
+                    $item->appendChild($doc->createElement('title', isset($user->username) ? $user->username : TickerUtility::getUsername($t)));
+                    $item->appendChild($doc->createElement('description', strip_tags($t->ticker, '')));
+                } else {
+                    $item->appendChild($doc->createElement('title', isset($user->username) ? $user->username : TickerUtility::getUsername($t) . ' - ' . strip_tags($t->ticker, '')));
+                }
+                $date = date('r', strtotime($t->created_on));
+                $item->appendChild($doc->createElement('pubDate', $date));
+
+                $image = $doc->createElement('image');
+                $image->appendChild($doc->createElement('url', TickerUtility::getAvatar($t)));
+                $item->appendChild($image);
+                $channel->appendChild($item);
+            }
+            $rss->appendChild($channel);
+            $doc->appendChild($rss);
+
+            if (count($combinedTickers) == 0) {
+                $item = $doc->createElement('item');
+                $item->appendChild($doc->createElement('title', 'No tickers approved'));
+                $channel->appendChild($item);
+                $rss->appendChild($channel);
+                $doc->appendChild($rss);
+            }
+        } else {
+            $item = $doc->createElement('item');
+            $item->appendChild($doc->createElement('title', 'No tickers approved'));
+            $channel->appendChild($item);
+            $rss->appendChild($channel);
+            $doc->appendChild($rss);
+        }
+
+        echo $doc->saveXML();
+    }
+
+}
+
+?>

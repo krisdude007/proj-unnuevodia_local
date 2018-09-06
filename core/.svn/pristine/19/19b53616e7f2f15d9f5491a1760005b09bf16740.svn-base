@@ -1,0 +1,258 @@
+<?php
+
+class Utility {
+
+    // takes record set and converts it to key value pairs for dropdowns
+    public static function resultToKeyValue($result, $keyColumn, $valueColumn) {
+
+        $array = array();
+
+        foreach ($result as $r) {
+            $array[$r->$keyColumn] = $r->$valueColumn;
+        }
+
+        return $array;
+    }
+
+    public static function concatFirstLastName($user) {
+        return $user->first_name . ' ' . $user->last_name;
+    }
+
+    public static function makeLinksFromText($text) {
+        return preg_replace('/(https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w\/_\.-]*(\?\S+)?)?)?)/', '<a target="_blank" href="\\1">\\1</a>', $text);
+    }
+
+    public static function getDefaultStatus($labels) {
+        $extendedLabels = unserialize($labels);
+        $defaultStatus = key($extendedLabels[0]);
+
+        foreach ($extendedLabels as &$value) {
+            if (Yii::app()->user->hasPermission(key($value))) {
+                $defaultStatus = key($value);
+                break;
+            }
+        }
+
+        return $defaultStatus;
+    }
+
+    public static function getAcceptedTVScope($labels, $tbName = "t") {
+        switch (sizeof(unserialize($labels))) {
+            case 1:
+                $acceptedtv = array('condition' => "");
+                break;
+            case 2:
+                $acceptedtv = array('condition' => "`$tbName`.statusbit & " . STATUS_ACCEPTED_TV_I . "
+                                                 AND (`$tbName`.statusbit & " . STATUS_DENIED_TV_I . ") = 0");
+                break;
+            case 3:
+                $acceptedtv = array('condition' => "`$tbName`.statusbit & " . STATUS_ACCEPTED_TV_I . "
+                                                 AND `$tbName`.statusbit & " . STATUS_ACCEPTED_SUP1_I . "
+                                                 AND (`$tbName`.statusbit & " . STATUS_DENIED_TV_I . ") = 0");
+                break;
+            case 4:
+                $acceptedtv = array('condition' => "`$tbName`.statusbit & " . STATUS_ACCEPTED_TV_I . "
+                                                 AND `$tbName`.statusbit & " . STATUS_ACCEPTED_SUP1_I . "
+                                                 AND `$tbName`.statusbit & " . STATUS_ACCEPTED_SUP2_I . "
+                                                 AND (`$tbName`.statusbit & " . STATUS_DENIED_TV_I . ") = 0");
+                break;
+            default:
+                $acceptedtv = array('condition' => "");
+        }
+
+        return $acceptedtv;
+    }
+
+    public static function getStatusTVScope($labels) {
+        switch (sizeof(unserialize($labels))) {
+            case 1:
+            case 2:
+                $statustv = array('condition' => "");
+                break;
+            case 3:
+                $statustv = array('condition' => "`t`.statusbit & " . STATUS_ACCEPTED_TV_I . "
+                                               AND (`t`.statusbit & " . STATUS_ACCEPTED_SUP1_I . ") = 0");
+                break;
+            case 4:
+                $statustv = array('condition' => "`t`.statusbit & " . STATUS_ACCEPTED_TV_I . "
+                                               AND ((`t`.statusbit & " . STATUS_ACCEPTED_SUP1_I . ") = 0
+                                               OR (`t`.statusbit & " . STATUS_ACCEPTED_SUP2_I . ") = 0)");
+                break;
+            default:
+                $statustv = array('condition' => "");
+        }
+
+        return $statustv;
+    }
+
+    public static function setExtendedStatus($that) {
+        $that->extendedStatus['new'] = false;
+        $that->extendedStatus['accepted'] = false;
+        $that->extendedStatus['denied'] = false;
+
+        $that->extendedStatus['new_tv'] = false;
+        $that->extendedStatus['accepted_tv'] = false;
+        $that->extendedStatus['denied_tv'] = false;
+
+        $that->extendedStatus['accepted_sup1'] = false;
+        $that->extendedStatus['accepted_sup2'] = false;
+
+        $bits = $that->statusbit;
+        $that->extendedStatus['bit'] = $bits;
+
+        //status web
+        if (($bits & STATUS_NEW_I) == STATUS_NEW_I) {
+            $that->extendedStatus['new'] = true;
+        }
+        if (($bits & STATUS_ACCEPTED_I) == STATUS_ACCEPTED_I) {
+            $that->extendedStatus['accepted'] = true;
+        }
+        if (($bits & STATUS_DENIED_I) == STATUS_DENIED_I) {
+            $that->extendedStatus['denied'] = true;
+        }
+
+        //status tv
+        if (($bits & STATUS_NEW_TV_I) == STATUS_NEW_TV_I) {
+            $that->extendedStatus['new_tv'] = true;
+        }
+        if (($bits & STATUS_ACCEPTED_TV_I) == STATUS_ACCEPTED_TV_I) {
+            $that->extendedStatus['accepted_tv'] = true;
+        }
+        if (($bits & STATUS_DENIED_TV_I) == STATUS_DENIED_TV_I) {
+            $that->extendedStatus['denied_tv'] = true;
+        }
+
+        //status super
+        if (($bits & STATUS_ACCEPTED_SUP1_I) == STATUS_ACCEPTED_SUP1_I) {
+            $that->extendedStatus['accepted_sup1'] = true;
+        }
+        if (($bits & STATUS_ACCEPTED_SUP2_I) == STATUS_ACCEPTED_SUP2_I) {
+            $that->extendedStatus['accepted_sup2'] = true;
+        }
+
+        return $that->extendedStatus;
+    }
+
+    public static function updateExtendedStatus($currentStatus, $status, $obj) {
+        switch ($currentStatus) {
+            case "new":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['new'] = false;
+                    $obj->extendedStatus['accepted'] = true;
+                } else {
+                    $obj->extendedStatus['new'] = false;
+                    $obj->extendedStatus['denied'] = true;
+                }
+                break;
+            case "accepted":
+                if ($status == "denied") {
+                    $obj->extendedStatus['new'] = false;
+                    $obj->extendedStatus['denied'] = true;
+                }
+                break;
+            case "denied":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['accepted'] = true;
+                    $obj->extendedStatus['denied'] = false;
+                }
+                break;
+            case "newtv":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['new_tv'] = false;
+                    $obj->extendedStatus['accepted_tv'] = true;
+                } else {
+                    $obj->extendedStatus['new_tv'] = false;
+                    $obj->extendedStatus['denied_tv'] = true;
+                }
+                break;
+            case "acceptedtv":
+                if ($status == "denied") {
+                    $obj->extendedStatus['new_tv'] = false;
+                    $obj->extendedStatus['denied_tv'] = true;
+                }
+            case "deniedtv":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['accepted_tv'] = true;
+                    $obj->extendedStatus['denied_tv'] = false;
+                }
+                break;
+            case "newsup1":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['accepted_sup1'] = true;
+                } else {
+                    $obj->extendedStatus['denied_tv'] = true;
+                }
+                break;
+            case "newsup2":
+                if ($status == "accepted") {
+                    $obj->extendedStatus['accepted_sup2'] = true;
+                } else {
+                    $obj->extendedStatus['denied_tv'] = true;
+                }
+                break;
+            default:
+                break;
+        }
+
+        return $obj->extendedStatus;
+    }
+
+    public static function setStatusbit($that) {
+        if ($that->scenario != 'insert' || $that->extendedStatus['accepted']) {
+            //web
+            if ($that->extendedStatus['new']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_NEW_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_NEW_I);
+            }
+
+            if ($that->extendedStatus['accepted']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_ACCEPTED_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_ACCEPTED_I);
+            }
+
+            if ($that->extendedStatus['denied']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_DENIED_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_DENIED_I);
+            }
+
+            //status tv
+            if ($that->extendedStatus['new_tv']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_NEW_TV_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_NEW_TV_I);
+            }
+
+            if ($that->extendedStatus['accepted_tv']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_ACCEPTED_TV_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_ACCEPTED_TV_I);
+            }
+
+            if ($that->extendedStatus['denied_tv']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_DENIED_TV_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_DENIED_TV_I);
+            }
+
+            //status super
+            if ($that->extendedStatus['accepted_sup1']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_ACCEPTED_SUP1_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_ACCEPTED_SUP1_I);
+            }
+
+            if ($that->extendedStatus['accepted_sup2']) {
+                $that->statusbit = (string) ($that->statusbit | STATUS_ACCEPTED_SUP2_I);
+            } else {
+                $that->statusbit = (string) ($that->statusbit & ~ STATUS_ACCEPTED_SUP2_I);
+            }
+        }
+
+        return $that->statusbit;
+    }
+
+}
+

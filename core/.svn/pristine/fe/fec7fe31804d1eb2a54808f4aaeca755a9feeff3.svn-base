@@ -1,0 +1,325 @@
+/*
+    Document   : preview
+    Created on : Nov 27, 2013, 10:18:27 AM
+    Author     : pgura
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+@font-face {
+    font-family: hnbc;
+    src: local(hnbc), url('/webassets/fonts/HelveticaNeueBoldCon.otf') format('opentype');
+}
+
+@font-face {
+    font-family: hnb;
+    src: local(hnb), url('/webassets/fonts/HelveticaNeueBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: hn;
+    src: local(hn), url('/webassets/fonts/HelveticaNeue.otf') format('opentype');
+}
+
+
+.message {
+    position: absolute;
+    top: calc(50% - 50px);
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 25pt;
+    font-style: bold;
+}
+
+.Row
+{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 10px;
+}
+
+.Column
+{
+    display: table-cell;
+}
+
+#sliderContainer {
+    position: absolute;
+    width:100%;
+    height: 70px;
+    bottom: 0px;
+}
+
+.sliderKOORA {
+    background: -webkit-linear-gradient(#f6aa27, #000000); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#f6aa27, #000000); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#f6aa27, #000000); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#f6aa27, #000000); /* Standard syntax */
+     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f6aa27, endColorstr=#000000);
+        /* For Internet Explorer 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#f6aa27, endColorstr=#000000)";
+}
+
+.sliderYAHALA {
+    background: -webkit-linear-gradient(#00c6ff, #fa00ff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00c6ff, #fa00ff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00c6ff, #fa00ff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00c6ff, #fa00ff); /* Standard syntax */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00c6ff, endColorstr=#fa00ff);
+        /* For Internet Explorer 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00c6ff, endColorstr=#fa00ff)";
+}
+
+.sliderFEESAMEEM {
+    background: -webkit-linear-gradient(#ffffff, #fa7271); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ffffff, #fa7271); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ffffff, #fa7271); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ffffff, #fa7271); /* Standard syntax */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#00c6ff, endColorstr=#fa00ff);
+        /* For Internet Explorer 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00c6ff, endColorstr=#fa00ff)";
+}
+
+.sliderALRISALA {
+    background: -webkit-linear-gradient(#42d0d9, #0e95a3); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#42d0d9, #0e95a3); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#42d0d9, #0e95a3); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#42d0d9, #0e95a3); /* Standard syntax */
+}
+
+
+#sliderContainer .slidersRev {
+    position: relative;
+    height: 50px;
+    margin: 10px 0px 0px 0px;
+}
+
+#sliderContainer .slidersRev .sliderRev {
+    float: right;
+    height: 50px;
+    margin: 0px 50px 0px 0px;
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+#sliderContainer .sliders {
+    position: relative;
+    height: 50px;
+    margin: 10px 0px 0px 0px;
+}
+
+#sliderContainer .sliders .slider {
+    float: right;
+    height: 50px;
+    margin: 0px 50px 0px 0px;
+    background: rgba(0, 0, 0, 0.0);
+}
+
+.votegraphBG{
+    width:480px;
+    display: inline-block;
+    /*float:right;*/
+    margin-top:5px;
+    background-color: rgba(0, 0, 0, 0.0);
+    /*border: 1px solid #D6D5D3;*/
+}
+
+.voteLabels{
+    margin-top:10px;
+    font-size:20px;
+    text-transform:uppercase;
+    font-family: 'hnbc, Arial';
+}
+.voteButtons
+{
+    width:147px;
+}
+
+.vote_footer
+{font-size:15px; background-color:#000000; color:#000000; height: 37px; padding-top:9px;}
+
+.vote_buttons
+{
+    margin-top:20px;
+}
+.vote_div
+{
+	background-color: rgba(0, 0, 0, 0.0);
+	margin-right:20px;
+	padding-top:20px;
+	font-size:17px;
+}
+
+.vote_div .progress
+{
+	background-color:#d7d7d7;
+	height:36px;
+	overflow:none;
+	margin-left:-1px;
+	width:100% !important;
+	border-radius:0px;
+}
+
+/*@-moz-document url-prefix() {
+    .vote_div .progress {
+    }
+}*/
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   .vote_div .progress {
+        position: relative;
+        left: 150px;
+        top: -10px;
+   }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .vote_div .progress {
+        position: relative;
+        left: 150px;
+        top: -10px;
+   }
+}
+
+.vote_div .vote_label
+{
+	 background-color: #ededed;
+	 margin-bottom:0px;
+	 border:none;
+	 height:20px;
+	 width:100%;
+	 color:#000000;
+	 font-size:17px !important;
+}
+
+.vote_div .progress-bar-info
+{
+	background-color:#00d6ff;
+}
+.linkButton {
+    border:0px;
+    width:152px;
+    height: 23px;
+    background-color: #000000;
+    display:inline-block;
+    color:rgba(0, 0, 0, 0.0);
+    font-weight: 100;
+    padding:6px 10px;
+    margin: 5px;
+    text-decoration:none;
+    text-align: center;
+    /*text-shadow:1px 1px 0px #528ecc;*/
+}
+.linkButton:hover {
+
+}
+.linkButton:active {
+    position:relative;
+    top:1px;
+}
+.linkButton:visited {
+    position:relative;
+    top:1px;
+}
+
+#sliderContainer .sliders .slider .avatar {
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+}
+
+#sliderContainer .sliders .slider .avatar img {
+    width: 50px;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+}
+
+#sliderContainer .sliders .slider .text {
+    float: left;
+    height: 50px;
+    margin: 10px 10px 0px 10px;
+    text-align: left;
+    text-height: 100%;
+}
+
+#sliderContainer .slidersRev .sliderRev .avatar {
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+}
+
+#sliderContainer .slidersRev .sliderRev .avatar img {
+    width: 50px;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+}
+
+#sliderContainer .slidersRev .sliderRev .text {
+    float: left;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+    text-align: left;
+    text-height: 100%;
+}
+
+@media all and (min-width: 980px) {
+    .main{ width: 980px;min-height:599px;}
+    .container{width:980px;min-height:496px;}
+    .home_left{width: 498px;}
+    .home_right{width: 408px; margin-left:40px;margin-top:80px;}
+/*    .vote_div{width: 292px;}*/
+    .contact .footer{position:absolute;top: 575px;}
+    .about, .about .scroll-pane{width:523px;    margin: 0 auto;}
+    .press_contact{width: 563px;}
+    .help{  margin: 0 auto !important;  float:none; width: 60%;}
+    .help .step{height:92px;width:93px; padding-top:35px;}
+    .help .content{width:455px; height:92px;}
+    .videoWindow{width:426px;height:240px;}
+
+    .process_video{ margin-top: 5px; margin-left:20px;}
+    .video{width:547px;height:363px;}
+    .player{width:518px; height:297px;}
+    .pInfo{ width:547px;    height:41px;}
+    .pShare{width:547px;height:20px;}
+    .recorder{ width:830px; margin-left:auto;margin-right:auto; height:350px;}
+    .recorder .upload_button{ margin-top:0px; margin-left:20px;}
+    .social{width:770px;height: 257px;}
+    .socialpost { width:770px;}
+    .socialpost .left {margin-left:-15px;}
+    .socialpost .post_to_social {padding-left:0px;padding-right:0px; }
+    .socialpost input[type=text]{width:670px;height:32px;}
+    .vote_buttons{  margin-top: 0px;}
+    .short_sidebar{height:281px;}
+    .sidebar .username{margin-top:20px;}
+    .sidebar{height:394px;}
+    .upload_div{width:581px;padding-left:15px;}
+    .upload_div .upload_row{width:401px;margin-left:0px;margin-right:0px;}
+
+@media all and (min-width: 577px) {
+    .questions {width: 576px;}
+    .questions .header{height:78px;}
+    .questions .header .first{width:165px;margin-left:15px;}
+    .questions .header .first .pick, .questions .header .first .medium, .questions .header .first .small {width:120px;}
+    .questions .subtitle{height:60px;line-height:60px;}
+    .questions .question_div{width:576px ;}
+}
+
+@media all and (min-width: 600px) {
+    .videoBlocks{width:590px; height:362px;}
+    .register_modal .term_popup{ width:540px; }
+    .register_modal  .header{ width:542px;}
+    .register_modal  .modal-content{width:542px; background-color:#636363;margin-top:43px;}
+}
+
+@media all and (min-width: 412px) and (max-width:600px) {
+    .videoBlocks{width:400px; height:362px;}
+}
+
+@media all and (max-width: 412px) {
+    .videoBlocks{width:210px; height:362px;}
+    .view_by{display:none;}
+}

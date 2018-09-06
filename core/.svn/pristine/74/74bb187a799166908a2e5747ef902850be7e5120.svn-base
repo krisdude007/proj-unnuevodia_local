@@ -1,0 +1,24 @@
+<?php
+
+class eSweepStakes extends SweepStakes
+{
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('start_date, end_date', 'required', 'on' => 'insert'),
+                        array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),                                        
+			array('sweepstakes_id, user_id, is_sweepstakes', 'numerical', 'integerOnly'=>true),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, sweepstakes_id, user_id, is_sweepstakes, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+}

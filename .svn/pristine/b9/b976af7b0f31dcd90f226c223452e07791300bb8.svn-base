@@ -1,0 +1,17 @@
+<div class="homeFooter text-center">
+    <h5 class="text-center" style="text-align:center;">
+    <p style="line-height: 1.6em; margin-bottom: 30px;font-size: 15px; ">Gracias por interactuar con el show Un Nuevo Día de Telemundo. Para acceder a la mejor experiencia como usuario, haga
+<?php if (stripos($_SERVER['HTTP_USER_AGENT'],"Android")): ?>
+    <a style="margin:10px 0px 10px 0px; font-size: 15px; color: #fdb514" href="https://play.google.com/store/apps/details?id=com.youtoo.android.tutelemundo" class="btn btn-default btn-block">clic aquí</a>
+    <?php endif; ?>
+    <?php if (stripos($_SERVER['HTTP_USER_AGENT'],"iPad") || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone")): ?>
+    <a style="margin:10px 0px 10px 0px; font-size: 15px; color: #fdb514" href="https://itunes.apple.com/us/app/tu-telemundo/id881132870?mt=8" class="btn btn-default btn-block">clic aquí</a>
+    <?php endif; ?>
+    para descargar Tu Telemundo, la aplicación gratuita para su dispositivo iPhone o Android.</p>
+    <?php //echo Yii::app()->session['mobile']?>
+    <p style="line-height: 1.6em; font-size: 15px; ">Este sitio no está optimizado para el uso en móviles, pero si desea continuar, cierre este mensaje por favor. También puede vivir la experiencia completa, ingresando a
+    <a style="margin:10px 0px 10px 0px; font-size: 15px; color: #fdb514" href="http://telemundo.com/tutelemundo" class="btn btn-default btn-block">Telemundo.com/TuTelemundo</a>
+    desde su computadora móvil o de escritorio.</p>
+    <p style="line-height: 1.6em; font-size: 15px; ">¡Esperamos contar con usted en nuestro programa! </p>
+    </h5>
+</div>

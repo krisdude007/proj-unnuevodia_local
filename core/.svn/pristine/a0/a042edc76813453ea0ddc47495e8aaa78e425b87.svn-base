@@ -1,0 +1,136 @@
+<?php
+/* @var $this AdminController */
+/* @var $model Language */
+/* @var $form CActiveForm */
+?>
+
+<div class="form">
+    <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'admin-user-form',
+            'enableAjaxValidation' => true,
+            'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        ));
+    ?>
+    <?php echo $form->errorSummary(Array($user,$userEmail,$userLocation,$userPhoto)); ?>
+    <?php
+        $accessLevels = Array();
+        switch(Yii::app()->user->role){
+            case 'super admin':
+                $accessLevels['super admin'] = 'Super Admin';
+            case 'site admin':
+                $accessLevels['site admin'] = 'Site Admin';
+            case 'producer admin':
+                $accessLevels['producer admin'] = 'Producer Admin';
+            default:
+                $accessLevels['user'] = 'User';
+                break;
+        }
+    ?>
+    <div class="floatLeft" style="width:48%;">
+        <div class="clearfix" style="margin-top: 10px;">
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($user, 'role'); ?>
+                <?php echo $form->dropDownList($user,'role',$accessLevels); ?>
+                <?php echo $form->error($user, 'role'); ?>
+            </div>
+        </div>
+        <div class="clearfix" style="margin-top: 10px;">
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($user, 'username'); ?>
+                <?php echo $form->textField($user, 'username'); ?>
+                <?php echo $form->error($user, 'username'); ?>
+            </div>
+        </div>
+        <div class="clearfix" style="margin-top: 10px;">
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($userEmail, 'email'); ?>
+                <?php echo $form->textField($userEmail, 'email'); ?>
+                <?php echo $form->error($userEmail, 'email'); ?>
+            </div>
+            <div class="row" class="floatLeft marginRight10">
+                <?php $user->password = '' ?>
+                <?php echo $form->labelEx($user, 'password'); ?>
+                <?php echo $form->passwordField($user, 'password'); ?>
+                <?php echo $form->error($user, 'password'); ?>
+            </div>
+        </div>
+        <div class="clearfix" style="margin-top: 10px;">
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($user, 'first_name'); ?>
+                <?php echo $form->textField($user, 'first_name'); ?>
+                <?php echo $form->error($user, 'first_name'); ?>
+            </div>
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($user, 'last_name'); ?>
+                <?php echo $form->textField($user, 'last_name'); ?>
+                <?php echo $form->error($user, 'last_name'); ?>
+            </div>
+        </div>
+        <div class="clearfix" style="margin-top: 10px;">
+            <div class="row" class="floatLeft marginRight10">
+                <?php echo $form->labelEx($user,'birthday',Array('class'=>'floatLeft')); ?>
+                <div class="floatLeft">
+                    <?php echo $form->dropDownList($user,'birthMonth',  DateTimeUtility::monthsOfYear(),Array('style'=>'width:auto')); ?>
+                    <?php echo $form->dropDownList($user,'birthDay', DateTimeUtility::daysOfMonth(),Array('style'=>'width:auto')); ?>
+                    <?php echo $form->dropDownList($user,'birthYear',  DateTimeUtility::yearsOfCentury(),Array('style'=>'width:auto')); ?>
+                    <?php echo $form->error($user, 'birthday'); ?>
+                </div>
+            </div>
+            <div class="row" class="floatLeft">
+                <?php echo $form->labelEx($userLocation, 'postal_code'); ?>
+                <?php echo $form->textField($userLocation, 'postal_code'); ?>
+                <?php echo $form->error($userLocation, 'postal_code'); ?>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="row">
+                <?php
+                    $gender = array('M'=>'Male', 'F'=>'Female');
+                    echo $form->radioButtonList($user,'gender',$gender,array('separator'=>' '));
+                ?>
+                <?php echo $form->error($user, 'gender'); ?>
+            </div>
+        </div>
+        <div class="clearfix" style="padding-top:20px;">
+            <?php echo $form->labelEx($userPhoto, 'image'); ?>
+        </div>
+        <div class="clearfix">
+            <div class="row">
+            <?php $avatar = UserUtility::getAvatar($user); ?>
+            <img style="width:50px; height:50px;" src="<?php echo $avatar ?>" />
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="row">
+                <?php echo $form->fileField($userPhoto, 'image'); ?>
+                <?php echo $form->error($userPhoto, 'image'); ?>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="row buttons" style="margin-top:12px;margin-right:7px;">
+                <?php echo $form->hiddenField($user,'source',Array('value'=>'web')); ?>
+                <?php echo CHtml::submitButton('Submit'); ?>
+            </div>
+            <div class="row buttons" style="margin-top:12px;margin-right:7px;">
+                <button type='button' onclick="window.location.href = '/adminUser/index';">Clear</button>
+            </div>
+        </div>
+    </div>
+    <div style="width:48%;float:left">
+        <?php
+            $selections = array();
+            foreach($permissions as $k=>$v){
+                foreach($userPermissions as $userPermission){
+                    if($userPermission->controller == $k){
+                        $selections[] = $k;
+                    }
+                }
+            }
+            echo CHtml::checkBoxList('permissions',$selections,$permissions);
+        ?>
+    </div>
+<?php $this->endWidget(); ?>
+
+
+</div><!-- form -->

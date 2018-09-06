@@ -1,0 +1,25 @@
+<?php
+
+class ImageUtility {
+    
+
+    // gets values for image status dropdown
+    public static function getStatuses() {
+        return array('all' => 'All',
+            'new' => 'New',
+            'accepted' => 'Accepted',
+            'denied' => 'Deleted'
+        );
+    }
+    
+    public static function getPerPageOptions() {
+        return array('12' => '12',
+            '24' => '24',
+            '36' => '36',
+            '48' => '48'
+        );
+    }
+
+}
+
+?>

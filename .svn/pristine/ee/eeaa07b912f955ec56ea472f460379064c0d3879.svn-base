@@ -1,0 +1,26 @@
+<div id="content">
+
+<div class="signup" style="width:34%;float:left;position:relative; padding-left: 100px; height:275px;margin-right:30px;margin-top:50px">
+    <div><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/user/header-forgot-password.png" /></div>
+    <div>&nbsp;</div>
+    <?php
+        $this->renderPartial('_formReset',
+            array(
+                'model'=>$model,
+            )
+        );
+    ?>
+    <div style="padding-top:20px;color:#FFF;font-size:12px" class="clearfix">
+        Already Have an Account?  
+        <a href="<?php echo Yii::app()->request->baseurl; ?>/login">
+            Login Here
+        </a>
+    </div>    
+    <div style="padding-top:20px;color:#FFF;font-size:12px" class="clearfix">
+        New to <?php echo SITE_NAME;?>?  
+        <a href="<?php echo Yii::app()->request->baseurl; ?>/register">
+            Get Started Here
+        </a>
+    </div>
+</div>
+</div>

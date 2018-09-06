@@ -1,0 +1,634 @@
+<?php
+
+class UserController extends Controller {
+
+    public $layout = '//layouts/main';
+    public $user;
+    public $ticker;
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        }
+    }
+
+    /*
+      public static function cacheRules() {
+      return (!Yii::app()->user->isGuest) ? 0 : 3600;
+      }
+
+      public function filters() {
+      return array(
+      array(
+      'COutputCache + login + register',
+      'duration' => self::cacheRules(),
+      'requestTypes' => array('GET'),
+      'cacheID' => 'cache',
+      ),
+      );
+      }
+     */
+
+    public function actionIndex($order = 'recent') {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/user/login'));
+        }
+        $id = Yii::app()->user->getId();
+        $criteria = new CDbCriteria();
+        $pages = null;
+        $total = 0;
+        //$criteria->condition = Yii::app()->params['video']['useExtendedFilters'] ? ("t.statusbit & " . Yii::app()->params['statusBit']['accepted'] . " AND (t.statusbit & " . Yii::app()->params['statusBit']['denied'] . ") = 0") : 't.status="accepted"';
+        $criteria->condition = 't.user_id=' . $id;
+        if (Yii::app()->params['pagination']['enablePagination'] == true) {
+            $total = eVideo::model()->accepted()->count($criteria);
+            $pages = new CPagination($total);
+            $pages->setPageSize(Yii::app()->params['pagination']['listPerPage']);
+            $pages->applyLimit($criteria);
+        } else {
+            $criteria->limit = 48;
+        }
+        if ($order == 'recent')
+            $order = "t.id";
+        $criteria->select = '*, COUNT(videoViews.id) AS views, (SELECT AVG(rating) FROM video_rating WHERE video_id= t.id) as rating';
+        $criteria->with = array('user', 'videoViews');
+        $criteria->together = true;
+        $criteria->group = 't.id';
+        $criteria->order = $order . ' DESC';
+        $videos = eVideo::model()->accepted()->findAll($criteria);
+        $question = '';
+        if ($question_model = eQuestion::model()->video()->current()->find()) {
+            $question = $question_model->question;
+        }
+        $this->render('index', array(
+            'user' => $this->user,
+            'videos' => $videos,
+            'question' => $question,
+            'pages' => $pages,
+            'page_size' => Yii::app()->params['pagination']['listPerPage'],
+            'items_count' => $total,
+        ));
+    }
+
+    public function actionForgot($key = false) {
+        if (!$key) {
+            $model = new eUser;
+            $model->setScenario('reset');
+            if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-login-form') {
+                echo CActiveForm::validate($model);
+                Yii::app()->end();
+            }
+            if (isset($_POST['eUser'])) {
+                $model->attributes = $_POST['eUser'];
+                if ($model->validate()) {
+                    $userRecord = $model->findByAttributes(array('username' => $model->username));
+                    if (!empty($userRecord)) {
+                        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $userRecord->id));
+                        $reset = new eUserReset;
+                        $reset->user_id = $userRecord->id;
+                        $reset->key = sha1(uniqid());
+                        $reset->expired = 0;
+                        if ($reset->save()) {
+                            $result = MailUtility::send('password', $userEmail->email, array('link' => Yii::app()->createAbsoluteUrl("forgot/{$reset->key}", array())), false);
+                            if ($result) {
+                                Yii::app()->user->setFlash('success', Yii::app()->params['flashMessage']['resetPasswordSuccess']);
+                            } else {
+                                Yii::app()->user->setFlash('error', Yii::app()->params['flashMessage']['resetPasswordError']);
+                            }
+                        } else {
+                            Yii::app()->user->setFlash('error', Yii::app()->params['flashMessage']['resetPasswordError']);
+                        }
+                    } else {
+                        Yii::app()->user->setFlash('error', Yii::app()->params['flashMessage']['resetPasswordError']);
+                    }
+                }
+            }
+            $this->render('forgot', array('model' => $model));
+        } else {
+            if ($reset = eUserReset::model()->active()->findByAttributes(array('key' => $key, 'expired' => 0))) {
+                $reset->expired = 1;
+                $reset->save();
+                $user = eUser::model()->findByPK($reset->user_id);
+                $user->scenario = 'reset';
+                if (UserUtility::login($user)) {
+                    $this->redirect(array('/user/profile', 'reset' => 'password'));
+                } else {
+                    $this->redirect('/login');
+                }
+            } else {
+                $this->redirect(Yii::app()->createUrl('/user/login'));
+            }
+        }
+    }
+
+    public function actionAjaxAcceptTerms() {
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        if (!Yii::app()->user->isGuest) {
+
+            $userRecord = eUser::model()->findByPK(Yii::app()->user->getId());
+            $userRecord->setScenario('terms');
+            $userRecord->terms_accepted = $choice;
+            $userRecord->save();
+        }
+    }
+
+    public function actionTwitterConnect() {
+        $twitter = Yii::app()->twitter->getTwitter();
+        if (empty($_REQUEST['oauth_token'])) {
+            $request_token = $twitter->getRequestToken('http://' . $_SERVER['HTTP_HOST'] . '/user/twitterConnect');
+            if ($twitter->http_code == 200) {
+                $url = $twitter->getAuthorizeURL($request_token);
+                $this->redirect($url);
+            }
+        } else {
+            $twitter = Yii::app()->twitter->getTwitterTokened($_REQUEST['oauth_token'], Yii::app()->twitter->consumer_secret);
+            $access_token = $twitter->getAccessToken($_REQUEST['oauth_verifier']);
+            if (200 == $twitter->http_code) {
+                Yii::app()->session['status'] = 'verified';
+                $twitter = Yii::app()->twitter->getTwitterTokened($access_token['oauth_token'], $access_token['oauth_token_secret']);
+                $twuser = $twitter->get("account/verify_credentials");
+                if (!$twitter = eUserTwitter::model()->findByAttributes(array('user_id' => Yii::app()->user->getId()))) {
+                    $twitter = new eUserTwitter; //only insert when user_twitter not found.
+                }
+                $twitter->user_id = Yii::app()->user->getId();
+                $twitter->twitter_user_id = $twuser->id;
+                $twitter->oauth_token = $access_token['oauth_token'];
+                $twitter->oauth_token_secret = $access_token['oauth_token_secret'];
+                $twitter->save();
+            }
+            $this->render('_twitter', Array('connected' => true));
+        }
+    }
+
+    public function actionAjaxTwitterDisconnect() {
+        $twitter = eUserTwitter::model()->deleteAllByAttributes(array('user_id' => Yii::app()->user->getId()));
+    }
+
+    public function actionTwitter() {
+        // TODO: Revisit this; it's messy right now.
+        $this->layout = '//layouts/oAuth';
+        $twitter = Yii::app()->twitter->getTwitter();
+        if (empty($_REQUEST['oauth_token'])) {
+            $request_token = $twitter->getRequestToken('http://' . $_SERVER['HTTP_HOST'] . '/user/twitter');
+            if ($twitter->http_code == 200) {
+                $url = $twitter->getAuthorizeURL($request_token);
+                $this->redirect($url);
+            }
+        } else {
+            $user = new eUser();
+            $user->setScenario('twitter');
+            $userEmail = new eUserEmail();
+            $userEmail->setScenario('twitter');
+            $userLocation = new eUserLocation();
+            $userLocation->setScenario('twitter');
+            if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-twitter-form') {
+                echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+                Yii::app()->end();
+            }
+            if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+                $user->attributes = $_POST['eUser'];
+                $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+                $userEmail->attributes = $_POST['eUserEmail'];
+                $userLocation->attributes = $_POST['eUserLocation'];
+                if ($user->validate() && $userEmail->validate() && $userLocation->validate()) {
+                    $user->username = $userEmail->email;
+                    $password = $user->password;
+                    $user->source = 'twitter';
+                    $user->save();
+                    $userEmail->user_id = $user->id;
+                    $userEmail->type = 'primary';
+                    $userEmail->active = 1;
+                    $userLocation->user_id = $user->id;
+                    $userLocation->type = 'primary';
+                    $userEmail->save();
+                    $userLocation->save();
+                    $identity = new UserIdentity($user->username, $password, $user->scenario);
+                    $userLogin = new eUserLogin;
+                    $userLogin->user_id = $user->id;
+                    $userLogin->source = $user->source;
+                    if ($identity->authenticate()) {
+                        Yii::app()->user->login($identity, 86400);
+                        $twitter = new eUserTwitter;
+                        $twitter->user_id = $user->id;
+                        $twitter->twitter_user_id = $_POST['twuser'];
+                        $twitter->oauth_token = $_POST['token'];
+                        $twitter->oauth_token_secret = $_POST['secret'];
+                        $twitter->save();
+                        $userLogin->result = 'PASS';
+                        $userLogin->save();
+                        $userTech = new eUserTech();
+                        $userTech->user_id = Yii::app()->user->getId();
+                        $userTech->login_id = $userLogin->id;
+                        $userTech->user_agent = $_SERVER['HTTP_USER_AGENT'];
+                        //TODO: Get screen width and height from JS
+                        $userTech->screen_height = 0;
+                        $userTech->screen_width = 0;
+                        $userTech->save();
+                        $connected = TRUE;
+                    } else {
+                        $userLogin->result = 'FAIL';
+                        $userLogin->save();
+                        $connected = FALSE;
+                    }
+                }
+            }
+            if (!isset($connected)) {
+                $twitter = Yii::app()->twitter->getTwitterTokened($_REQUEST['oauth_token'], Yii::app()->twitter->consumer_secret);
+                $access_token = $twitter->getAccessToken($_REQUEST['oauth_verifier']);
+                if (200 == $twitter->http_code) {
+                    Yii::app()->session['status'] = 'verified';
+                    $twitter = Yii::app()->twitter->getTwitterTokened($access_token['oauth_token'], $access_token['oauth_token_secret']);
+                    $twuser = $twitter->get("account/verify_credentials");
+                    if (!$twitter = eUserTwitter::model()->findByAttributes(Array('twitter_user_id' => $twuser->id))) {
+                        $connected = FALSE;
+                    } else {
+                        $connected = TRUE;
+                        $userRecord = $user->findByPK($twitter->user_id);
+                        $identity = new UserIdentity($userRecord->username, $userRecord->password, $user->scenario);
+                        $userLogin = new eUserLogin;
+                        $userLogin->source = 'web';
+                        $userLogin->user_id = $userRecord->id;
+                        if ($identity->authenticate()) {
+                            Yii::app()->user->login($identity, 86400);
+                            $userLogin->result = 'PASS';
+                            $userLogin->save();
+                            $userTech = new eUserTech();
+                            $userTech->user_id = Yii::app()->user->getId();
+                            $userTech->login_id = $userLogin->id;
+                            $userTech->user_agent = $_SERVER['HTTP_USER_AGENT'];
+                            //TODO: Get screen width and height from JS
+                            $userTech->screen_height = 0;
+                            $userTech->screen_width = 0;
+                            $userTech->save();
+                        } else {
+                            $userLogin->result = 'FAIL';
+                            $userLogin->save();
+                        }
+                    }
+                }
+            }
+            $this->render('_twitter', Array(
+                'connected' => $connected,
+                'access_token' => $access_token,
+                'user' => $user,
+                'userEmail' => $userEmail,
+                'userLocation' => $userLocation,
+            ));
+        }
+    }
+
+    public function actionAjaxFacebookConnect() {
+        if (!$userFacebook = eUserFacebook::model()->findByAttributes(array('user_id' => Yii::app()->user->getId()))) {
+            $userFacebook = new eUserFacebook;
+        }
+        FacebookUtility::connect($userFacebook);
+    }
+
+    public function actionAjaxFacebookDisconnect() {
+        //TODO: Revisit this; facebook requires we deauth via API as well.
+        $facebook = eUserFacebook::model()->findByAttributes(array('user_id' => Yii::app()->user->getId()));
+        $facebook->delete();
+    }
+
+    public function actionAjaxFacebook() {
+        $facebook = Yii::app()->facebook;
+        $facebookData = $facebook->api('/me');
+        if ($userFacebook = eUserFacebook::model()->findByAttributes(array('facebook_user_id' => $facebookData['id']))) {
+            $user = eUser::model()->findByPK($userFacebook->user_id);
+        } else {
+            $userFacebook = new eUserFacebook;
+            $user = eUser::Model()->findByAttributes(Array('username' => $facebookData['email']));
+        }
+        if (!$user) {
+            $user = new eUser;
+            $userEmail = new eUserEmail;
+            $userLocation = new eUserLocation;
+            $user->setScenario('facebook');
+            $userLocation->setScenario('facebook');
+            $user->username = (!empty($facebookData['email'])) ? $facebookData['email'] : $facebookData['id'];
+            $user->password = uniqid('', true);
+            $user->birthday = date('Y-m-d', strtotime($facebookData['birthday']));
+            $user->gender = ($facebookData['gender'] == 'male') ? 'M' : 'F';
+            $user->first_name = $facebookData['first_name'];
+            $user->last_name = $facebookData['last_name'];
+            $user->source = 'facebook';
+            $userEmail->user_id = $user->id;
+            $userEmail->email = $user->username;
+            $userEmail->type = 'primary';
+            $location = preg_split('/, /', $facebookData['location']['name']);
+            $userLocation->user_id = $user->id;
+            $userLocation->city = $location[0];
+            $userLocation->state = $location[1];
+            $userLocation->timezone = $facebookData['timezone'];
+            $userLocation->type = 'primary';
+            UserUtility::register($user, $userEmail, $userLocation);
+            MailUtility::send('welcome', $userEmail->email);
+        }
+        $user->setScenario('facebook');
+        UserUtility::login($user);
+        FacebookUtility::connect($userFacebook);
+    }
+
+    public function actionTerms() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/user/login'));
+        } else {
+            $user_id = Yii::app()->user->getId();
+            //$user = eUser::model()->with('userPhotos:primary')->findByPK($user_id);
+            $this->render('terms', array(
+                'user' => $this->user,
+                    )
+            );
+        }
+    }
+
+    public function actionAbout() {
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $this->render('about', array(
+            'user' => $user,
+                )
+        );
+    }
+
+    public function actionHelp() {
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $this->render('help', array(
+            'user' => $user,
+                )
+        );
+    }
+
+    public function actionConnections() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createURL('site/index'));
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->with('userFacebooks', 'userTwitters')->findByPK($user_id);
+        if (isset($user->userFacebooks[0]->access_token) && $user->userFacebooks[0]->access_token) {
+            Yii::app()->facebook->setAccessToken($user->userFacebooks[0]->access_token);
+            $facebook = Yii::app()->facebook->api('/me');
+        }
+        if (isset($user->userTwitters[0]->oauth_token) && $user->userTwitters[0]->oauth_token) {
+            $twitter = Yii::app()->twitter->getTwitterTokened($user->userTwitters[0]->oauth_token, $user->userTwitters[0]->oauth_token_secret);
+            $twuser = $twitter->get("account/verify_credentials");
+        }
+        $this->render('connections', array(
+            'user' => $user,
+            'facebook' => isset($facebook) ? $facebook : false,
+            'twuser' => isset($twuser) ? $twuser : false,
+                )
+        );
+    }
+
+    public function actionProfile() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createURL('site/index'));
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userEmail = (is_null($userEmail)) ? new eUserEmail : $userEmail;
+        $userLocation = eUserLocation::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userLocation = (is_null($userLocation)) ? new eUserLocation : $userLocation;
+        $image = new eImage;
+
+        $user->setScenario('profile');
+        $userEmail->setScenario('profile');
+        $userLocation->setScenario('profile');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profile-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation, $image));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'], $_POST['eImage'])) {
+            $user->attributes = $_POST['eUser'];
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->username = $_POST['eUserEmail']['email'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->user_id = $user->id;
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $userLocation->user_id = $user->id;
+
+            $image->attributes = $_POST['eImage'];
+            $image->user_id = $user->id;
+            $image->image = CUploadedFile::getInstance($image, 'image');
+            $image->title = 'Avatar';
+            $image->description = 'User avatar image.';
+            $image->source = 'web';
+            $image->to_facebook = 0;
+            $image->to_twitter = 0;
+            $image->status = (Yii::app()->params['image']['autoApproveAvatar']) ? 'accepted' : 'new';
+            $image->arbitrator_id = $user->id;
+            $image->is_avatar = 1;
+
+            if ($user->validate() && $userEmail->validate() && $userLocation->validate()) {
+
+                $user->save();
+                $userEmail->save();
+                $userLocation->save();
+
+                if ($image->validate()) {
+                    //eImage::model()->updateAll(array('is_avatar' => 0), 'user_id=' . $user->id);
+                    if (!empty($image->image)) {
+                        preg_match('/\..{3,4}$/', $image->image->getName(), $matches);
+                        $filetype = $matches[0];
+                        $image->filename = $filename = "{$user->id}_" . uniqid('', true) . $filetype;
+                        $image->image->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+                        $image->save();
+                    }
+                }
+
+                Yii::app()->user->setFlash('success', Yii::app()->params['flashMessage']['profileUpdateSuccess']);
+            }
+        }
+
+        $this->render('profile', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+            'image' => $image,
+                )
+        );
+    }
+
+    public function actionView($id, $order = 'recent') {
+        if (Yii::app()->user->getId() == $id) {
+            $this->redirect(Yii::app()->createURL('/you'));
+        }
+        $criteria = new CDbCriteria();
+        $pages = null;
+        $total = 0;
+        //$criteria->condition = Yii::app()->params['video']['useExtendedFilters'] ? ("t.statusbit & " . Yii::app()->params['statusBit']['accepted'] . " AND (t.statusbit & " . Yii::app()->params['statusBit']['denied'] . ") = 0") : 't.status="accepted"';
+        $criteria->condition = 't.user_id=' . $id;
+        if (Yii::app()->params['pagination']['enablePagination'] == true) {
+            $total = eVideo::model()->accepted()->count($criteria);
+            $pages = new CPagination($total);
+            $pages->setPageSize(Yii::app()->params['pagination']['listPerPage']);
+            $pages->applyLimit($criteria);
+        } else {
+            $criteria->limit = 48;
+        }
+
+        if ($order == 'recent')
+            $order = "t.id";
+        $criteria->select = '*, COUNT(videoViews.id) AS views, (SELECT AVG(rating) FROM video_rating WHERE video_id= t.id) as rating';
+        $criteria->with = array('user', 'brightcoves', 'videoViews');
+        $criteria->together = true;
+        $criteria->group = 't.id';
+        $criteria->order = $order . ' DESC';
+        $videos = eVideo::model()->accepted()->findAll($criteria);
+        $user = eUser::model()->findByPK($id);
+        if (is_null($user)) {
+            throw new CHttpException(404, 'The specified user cannot be found.');
+        }
+        $this->render('view', array(
+            'user' => $user,
+            'videos' => $videos,
+            'pages' => $pages,
+            'page_size' => Yii::app()->params['pagination']['listPerPage'],
+            'items_count' => $total,
+        ));
+    }
+
+    public function actionLogin() {
+
+        if (!Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createURL('site/index'));
+        }
+
+        $user = new eUser;
+        $user->setScenario('login');
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-login-form') {
+            echo CActiveForm::validate($user);
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUser'])) {
+            $user->attributes = $_POST['eUser'];
+            if (UserUtility::login($user)) {
+                $userRecord = $user->findByAttributes(array('username' => $user->username));
+                AuditUtility::save($this, $_REQUEST);
+                Yii::app()->user->setFlash('success', Yii::app()->params['flashMessage']['loginSuccess'] . " {$userRecord->first_name}");
+                $this->redirect(Yii::app()->user->returnUrl);
+            } else {
+                Yii::app()->user->setFlash('error', Yii::app()->params['flashMessage']['loginError']);
+                $this->redirect('/login');
+            }
+        }
+
+        $this->render('login', array('model' => $user));
+    }
+
+    public function actionEmailAssistance() {
+        $formEmailAssistanceModel = new FormEmailAssistance;
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'email-assistance-form') {
+            echo CActiveForm::validate($formEmailAssistanceModel);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['FormEmailAssistance'])) {
+            $formEmailAssistanceModel->attributes = $_POST['FormEmailAssistance'];
+
+            if ($formEmailAssistanceModel->validate()) {
+                $from = $formEmailAssistanceModel->email;
+                $to = "heidi.miller@youtootech.com,danny.ohman@youtootech.com";
+                //Danny.ohman@youtootech.com
+                //Heidi.miller@youtootech.com
+                //Craig.velez@youtootech.com
+                $body = "A user requires technical assistance.\r\n";
+                $body .= "Name: " . $formEmailAssistanceModel->name . "\n";
+                $body .= "Email: " . $from . "\n";
+                $body .= "Phone: " . $formEmailAssistanceModel->phone . "\n";
+                $body .= "Description: " . $formEmailAssistanceModel->description . "\n";
+                //$headers  = 'MIME-Version: 1.0' . "\r\n";
+                //$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                $headers = 'From: ' . $from . "\r\n" . 'Reply-To: ' . $from . "\r\n";
+                mail($to, 'Assistance Required', $body, $headers);
+                Yii::app()->user->setFlash('success', 'Thank you, a Technical Support Representative will contact you shortly.');
+            }
+        }
+        $this->render('emailAssistance', array('formEmailAssistanceModel' => $formEmailAssistanceModel));
+    }
+
+    public function actionLogout() {
+        if (!Yii::app()->user->isGuest) {
+            UserUtility::logout();
+        }
+        $this->redirect(Yii::app()->createURL('site/index'));
+    }
+
+    public function actionRegister() {
+        if (!Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createURL('site/index'));
+        }
+        $user = new eUser;
+        $userEmail = new eUserEmail;
+        $userLocation = new eUserLocation;
+        $user->setScenario('register');
+        $userEmail->setScenario('register');
+        $userLocation->setScenario('register');
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-register-form') {
+            echo CActiveForm::validate(array($user, $userEmail, $userLocation));
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUser'], $_POST['eUserEmail'], $_POST['eUserLocation'])) {
+            $user->attributes = $_POST['eUser'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userLocation->attributes = $_POST['eUserLocation'];
+            $user->username = $userEmail->email;
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->source = 'web';
+            $userEmail->type = 'primary';
+            $userEmail->active = 1;
+            $userLocation->type = 'primary';
+            if (UserUtility::register($user, $userEmail, $userLocation)) {
+                MailUtility::send('welcome', $userEmail->email);
+                $user->setScenario('register');
+                UserUtility::login($user);
+                $this->redirect(Yii::app()->createURL('site/index'));
+            }
+        }
+        $this->render('register', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+            'userLocation' => $userLocation,
+        ));
+    }
+
+    public function actionTermsOverlay() {
+        $this->layout = null;
+        $this->render('termsOverlay', array());
+    }
+
+    public function actionPrivacy() {
+        $this->render('privacy', array());
+    }
+
+    public function actionRules() {
+        $this->render('rules', array());
+    }
+
+    public function actionMobilePrivacy() {
+        $this->render('privacy', array());
+    }
+
+    public function actionMobileTerms() {
+        $this->render('terms', array());
+    }
+
+    public function actionMobileRules() {
+        $this->render('rules', array());
+    }
+
+}

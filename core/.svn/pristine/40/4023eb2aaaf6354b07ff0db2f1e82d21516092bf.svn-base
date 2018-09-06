@@ -1,0 +1,182 @@
+/* 
+    Document   : _social
+    Created on : Jun 20, 2013, 11:43:08 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the ticker page should take place here.
+*/
+
+
+.fab-detail-table{
+    width:100%
+}
+.fab-detail-table th{
+    background: #8f8e8e;
+    color:white;
+    border-right:1px solid white;
+    text-align: left;
+    padding-left:10px;
+    padding-top:12px;
+    padding-bottom:12px;
+    font-size: 11px;
+}
+.fab-detail-table td{
+    border:1px solid #e3e2e2;
+    padding-left: 10px;
+    padding-top:2px;
+    padding-bottom:2px;
+    font-size: 10px;
+}
+.fab-ticker-container .fab-detail-table tr.fab-over:hover{
+    background:#fce5b1;
+}
+.fab-detail-table td.fab-first-cell{
+    padding:5px;
+}
+.moderate-container{
+    max-width:1033px;
+    line-height: 15px;
+}
+.moderate-container .fab-detail-table tr.fab-over:hover{
+    background:#c4f7c0;
+    color:#333333;
+}
+.fab-social-search-text {
+    width:238px;
+    margin-right: 7px;
+}
+#fab-social-select{
+    margin-right: 7px;
+    width:63px
+}
+.fab-s-margin{
+    margin-right: 7px;
+}
+.fab-social-text{
+    color:#00A654;
+    padding-top:10px;
+}
+#fab-tabs-container {
+    padding-top: 5px;
+    width:100%;
+    background:#fff;
+}
+
+.fab-tabs{
+    margin-left:0px;
+    height:32px;
+}
+.fab-tabs li {
+    list-style:none;
+    display:inline;
+    width:100px;
+    padding-bottom: 10px;
+    padding-top:10px;
+    border: 1px solid #e3e2e2;    
+}
+
+.fab-tabs a {
+    /*    padding:5px 10px;*/
+    padding:10px 0px;
+    width:100px;
+    text-align: center;
+    display:inline-block;
+    font-size:14px;
+    color:#a8a7a7;
+    text-decoration:none;
+    /*    border:1px solid #e3e2e2;*/
+}
+
+.fab-tabs li.fab-active {
+    color:#2f823b;
+    border-top:3px solid #4bb55a;
+}
+.fab-tabs li.fab-active a{
+    color:#2f823b;
+}
+
+#fab-tab1, #fab-tab2 {
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    border-left: 1px solid #dedede;
+    border-right: 1px solid #dedede;
+}
+
+table{
+    border-collapse:collapse;
+    margin-bottom:60px;
+}    
+.frame input[type=checkbox]{
+    display: inline;
+}
+.frame select{
+    border:1px solid black
+}   
+td,th{
+    text-align:center;
+    padding:3px;
+    border:1px solid black;
+    color:#FFF;        
+}
+th{
+    color:#000;
+}
+.tleft{
+    text-align:left;
+}
+table.dataTable thead th{
+    padding: 3px 3px 3px 3px !important;
+}
+a{
+    color:#FFF;
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}    
+.trunc{
+    height:60px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+form .row
+{
+	width:100%;
+	margin-left:0px;
+}
+
+form .row span select
+{
+	width:80px;
+}
+
+.keyword{
+	margin-top:30px;
+	margin-bottom:-10px;
+	font-size:18px;
+	cursor:pointer;
+	font-weight:bold;
+	width:200px;
+	 
+}
+.keyword .caret
+{
+	margin-top:8px;
+	margin-left:5px;
+}
+
+#resultsDiv .dataTables_paginate, #resultsDiv .dataTables_info
+{
+	padding-top:0px !important;
+}
+#resultsDiv .dataTables_filter
+{
+	padding-bottom:0px !important;
+}
+
+.hint
+{
+	color: #4B4242;
+	margin-top:-10px;
+}

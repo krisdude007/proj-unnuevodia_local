@@ -1,0 +1,14 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/vendor/RGraph/libraries/RGraph.common.core.js', CClientScript::POS_END);
+$cs->registerScriptFile('/webassets/vendor/RGraph/libraries/RGraph.common.tooltips.js', CClientScript::POS_END);
+$cs->registerScriptFile('/webassets/vendor/RGraph/libraries/RGraph.hbar.js', CClientScript::POS_END);
+$cs->registerScript('graph',"getGraphData({$poll->id});setInterval('getGraphData({$poll->id})',1000);",CClientScript::POS_READY);
+$cs->registerScriptFile('/core/webassets/js/preview/preview.js', CClientScript::POS_END);
+
+?>
+<?php foreach($poll['pollAnswers'] as $i=>$answer): ?>
+    <div class="voteLabels"><?php echo $answer->answer; ?></div>
+    <canvas class="cvs" id="cvs<?php echo $i; ?>" width="450" height="25">[No canvas support]</canvas>
+<?php endforeach; ?>
+

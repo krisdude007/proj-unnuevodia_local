@@ -1,0 +1,45 @@
+<?php $this->renderPartial('/csrf/_csrfToken'); ?> 
+<div id="content">
+    <div class="tleft centerBlock">
+        <div id="voteDetail">
+            <?php if (!is_null($activePoll)): ?>
+                <div id="voteHead" style="padding-top:20px"> 
+                    <h1>
+                        <?php if (strtotime($activePoll->end_time) <= time()): ?>
+                            Voting Closed!
+                        <?php else: ?>
+                            <div style="padding-top:20px; text-align:center">
+                                <img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/vote/header.png">
+                            </div>                
+                        <?php endif; ?>
+                    </h1>            
+                    <div id="question" style="font-family: Helvetica, Arial, sans-serif;font-size:24px;font-weight:100;">
+                        <?php echo $activePoll->question; ?>                        
+                    </div>
+                </div>
+                <div class="afterVote" <?php echo (strtotime($activePoll->end_time) <= time()) ? 'style="display:none"' : ''; ?>>
+                    <?php
+                    $this->renderPartial('_voteButtons', array('answers' => $activePoll->pollAnswers));
+                    ?>
+                </div>
+                <div class="afterVote" <?php echo (strtotime($activePoll->end_time) <= time()) ? '' : 'style="display:none"'; ?>>
+                    <?php $this->renderPartial('_voteGraph', array('poll' => $activePoll), false, true); ?>
+                    <div>
+                        <div id="buttonsafter" style="width:428px;margin-top:10px;margin-left:auto;margin-right:auto;height:40px;">
+                            <?php if (strtotime($activePoll->end_time) <= time()): ?>                    
+                                <div style="width:125px;float:left;"><a href="/vote"><img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/vote/vote-button.png" /></a></div>                    
+                            <?php else: ?>
+                                <div style="width:125px;float:left;"><a href="#" class="voteAgain"><img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/buttons/vote-again.png" border="0"></a></div>
+                            <?php endif; ?>                    
+                            <div style="width:125px;float:right;"><a href="<?php echo Yii::app()->request->baseurl;?>/videos/recent"><img src="<?php echo Yii::app()->request->baseurl;?>/webassets/images/buttons/watch-videos.png" border="0"></a></div>
+                        </div>                
+                    </div>
+                </div>
+            <?php else: ?>
+                <div style="padding-top:20px;">
+                    No Polls Open!
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

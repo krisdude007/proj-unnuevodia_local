@@ -1,0 +1,18 @@
+<div id="content">
+    <div style="text-align:left;width:545px;margin-left:auto;margin-right:auto;padding-top:20px;">
+        <div style="text-align:center">
+            <h1>VIEWER IMAGES</h1>
+            <div class="sorter" style="font-size:12px;margin-bottom:5px;">View By: &nbsp;&nbsp;
+                <a class="activeLink" href="<?php echo Yii::app()->request->baseurl; ?>/images/recent">Most Recent</a> &nbsp;&nbsp;&nbsp;
+                <a href="<?php echo Yii::app()->request->baseurl; ?>/images/views">Most Viewed</a> &nbsp;&nbsp;&nbsp;
+                <a href="<?php echo Yii::app()->request->baseurl; ?>/images/rating">Highest Rated</a>
+            </div>
+        </div>
+        <div class="videoBlocks scroll-pane jspScrollable">
+            <?php
+            $this->renderPartial('/image/_blocks', array('images' => $images)
+            );
+            ?>
+        </div>
+    </div>    
+</div>

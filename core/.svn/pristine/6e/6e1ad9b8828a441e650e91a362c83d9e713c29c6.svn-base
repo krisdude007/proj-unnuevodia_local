@@ -1,0 +1,65 @@
+.fab-select-num {
+    width: 125px;
+}
+
+.submitButton {
+    padding-left     : 0px;
+    padding-right    : 10px;
+    padding-top      : 4px;
+    padding-bottom   : 4px;
+    color            : white;
+    border           : 0;
+    width            : 140px !important;
+    margin-top       : 21px;
+    margin-left      : 0px;
+    background-color : #2e69db;
+    cursor           : pointer;
+    height           : 34px;
+}
+
+#videoImportModalTabs { 
+
+    border: none; 
+    padding: 0px;
+    margin: 0px;
+} 
+
+#videoImportModalTabs .ui-widget-header { 
+    background: transparent; 
+    border: none; 
+    border-bottom: 1px solid #c0c0c0; 
+    -moz-border-radius: 0px; 
+    -webkit-border-radius: 0px; 
+    border-radius: 0px; 
+    padding: 0px;
+    margin: 0px;
+} 
+
+#videoImportModalTabs .ui-tabs-nav .ui-state-default { 
+    background: transparent; 
+    border: none; 
+} 
+
+#videoImportModalTabs .ui-tabs-nav .ui-state-active { 
+    /*background: transparent url(img/uiTabsArrow.png) no-repeat bottom center; */
+    border: none; 
+} 
+
+#videoImportModalTabs .ui-tabs-nav .ui-state-default a { 
+    color: #c0c0c0; 
+} 
+
+#videoImportModalTabs .ui-tabs-nav .ui-state-active a { 
+    color: #363636;
+    font-weight: bold;
+}
+
+#videoImportModalTabs .ui-tabs-nav li { 
+    padding:0px;
+    margin: 0px;
+}
+
+#tab-vine, #tab-youtube {
+    color: #fff;
+    background: #c0c0c0;
+}

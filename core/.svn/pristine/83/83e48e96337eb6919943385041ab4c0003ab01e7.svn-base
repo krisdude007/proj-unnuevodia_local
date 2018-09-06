@@ -1,0 +1,170 @@
+<?php
+class eUser extends User
+{
+    public $birthDay;
+    public $birthMonth;
+    public $birthYear;
+    
+    public static function model($className=__CLASS__)
+    {
+            return parent::model($className);
+    }
+
+    public function ageOfMajority($attribute,$params){
+        if(strtotime($this->birthday) > strtotime('18 years ago')){
+            $this->addError($attribute,'You must be 18 or older.');
+        }
+    }
+        
+    public function rules()
+    {
+            // NOTE: you should only define rules for those attributes that
+            // will receive user inputs.
+            return array(
+                array('birthday, gender, first_name, last_name', 'required','on'=>'register,profile,twitter'),
+                array('password, source','required','on'=>'register,twitter'),
+                array('birthday','date','format'=>'yyyy-MM-dd'),
+                array('birthYear','date','format'=>'yyyy'),
+                array('birthMonth','date','format'=>'MM'),
+                array('birthDay','date','format'=>'dd'),
+                array('birthday','ageOfMajority','on'=>'register,profile,twitter'),
+                array('username,source,password','required','on'=>'login'),                    
+                array('username','required','on'=>'reset'),                    
+                array('username','unique','on'=>'register,profile,twitter'),
+                array('terms_accepted', 'numerical', 'integerOnly'=>true),
+                array('username, password, first_name, last_name, source', 'length', 'max'=>255),
+                array('gender', 'length', 'max'=>1),
+                array('role', 'length', 'max'=>14),
+                array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'insert, register, twitter, facebook'),
+                array('updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'update, profile'),
+                // The following rule is used by search().
+                // Please remove those attributes that should not be searched.
+                array('id, username, password, birthday, gender, first_name, last_name, terms_accepted, source, created_on, updated_on', 'safe', 'on'=>'search'),
+            );
+    }
+
+    public function validatePassword($password,$scenario)
+    {
+        if(crypt($password,$this->salt)===$this->password){
+            return true;
+        } else {
+            switch ($scenario) {
+                case 'facebook':
+                case 'twitter':
+                case 'reset':
+                case 'register':
+                    if($password === $this->password){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    break;
+                default:
+                    return false;                    
+                    break;
+            }
+        }
+   }
+
+   public function afterFind(){
+       list($this->birthYear,$this->birthMonth,$this->birthDay) = preg_split('/-/',$this->birthday);
+   }
+   
+    public function beforeSave()
+    {
+        if(($this->scenario != 'terms' && $this->scenario != 'profile') || ($this->scenario == 'profile' && !empty($this->password))){            
+            $this->salt = '$6$'.hash('sha512',uniqid('',true));
+            $pass = crypt($this->password,$this->salt);
+            $this->password = $pass;
+        } else {
+            $user = self::model()->findByPK($this->id);
+            $this->password = $user->password;
+        }
+        return true;            
+    }
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+            return array(
+                'audits' => array(self::HAS_MANY, 'eAudit', 'user_id'),
+                'images' => array(self::HAS_MANY, 'eImage', 'user_id'),
+                'imagesArbitrated' => array(self::HAS_MANY, 'eImage', 'arbitrator_id'),
+                'imageDestinations' => array(self::HAS_MANY, 'eImageDestination', 'user_id'),
+                'imageRatings' => array(self::HAS_MANY, 'eImageRating', 'user_id'),
+                'imageViews' => array(self::HAS_MANY, 'eImageView', 'user_id'),
+                'languageFilters' => array(self::HAS_MANY, 'eLanguageFilter', 'user_id'),
+                'notifications' => array(self::HAS_MANY, 'eNotification', 'user_id'),
+                'polls' => array(self::HAS_MANY, 'ePoll', 'user_id'),
+                'pollAnswers' => array(self::HAS_MANY, 'ePollAnswer', 'user_id'),
+                'pollResponses' => array(self::HAS_MANY, 'ePollResponse', 'user_id'),
+                'questions' => array(self::HAS_MANY, 'eQuestion', 'user_id'),
+                'questionDestinations' => array(self::HAS_MANY, 'eQuestionDestination', 'user_id'),
+                'tickers' => array(self::HAS_MANY, 'eTicker', 'user_id'),
+                'tickersArbitrated' => array(self::HAS_MANY, 'eTicker', 'arbitrator_id'),
+                'tickerDestinations' => array(self::HAS_MANY, 'eTickerDestination', 'user_id'),
+                'tickerImpressions' => array(self::HAS_MANY, 'eTickerImpression', 'user_id'),
+                'tickerRuns' => array(self::HAS_MANY, 'eTickerRun', 'user_id'),
+                'userEmails' => array(self::HAS_MANY, 'eUserEmail', 'user_id'),
+                'userFacebooks' => array(self::HAS_MANY, 'eUserFacebook', 'user_id'),
+                'userLocations' => array(self::HAS_MANY, 'eUserLocation', 'user_id'),
+                'userLogins' => array(self::HAS_MANY, 'eUserLogin', 'user_id'),
+                'userPermissions' => array(self::HAS_MANY, 'eUserPermission', 'user_id'),
+                'userPhones' => array(self::HAS_MANY, 'eUserPhone', 'user_id'),
+                //'userPhotos' => array(self::HAS_MANY, 'eUserPhoto', 'user_id'),
+                'userResets' => array(self::HAS_MANY, 'eUserReset', 'user_id'),
+                'userTeches' => array(self::HAS_MANY, 'eUserTech', 'user_id'),
+                'userTwitters' => array(self::HAS_MANY, 'eUserTwitter', 'user_id'),
+                'videos' => array(self::HAS_MANY, 'eVideo', 'user_id'),
+                'videosArbitrated' => array(self::HAS_MANY, 'eVideo', 'arbitrator_id'),
+                'videoDestinations' => array(self::HAS_MANY, 'eVideoDestination', 'user_id'),
+                'videoRatings' => array(self::HAS_MANY, 'eVideoRating', 'user_id'),
+                'videoViews' => array(self::HAS_MANY, 'eVideoView', 'user_id'),
+                'votesByUserId' => array(self::HAS_MANY, 'ePollResponse', 'user_id'),
+                'countVotesByUserId' => array(self::STAT, 'ePollResponse', 'user_id', 'select'=>'COUNT(id)', 'group'=>'user_id'),                                                            
+                'countVideosByUserId' => array(self::STAT, 'eVideo', 'user_id', 'select'=>'COUNT(id)', 'group'=>'user_id','condition'=>'status="accepted"'),                                                            
+                //'avatar' => array(self::HAS_MANY, 'eUserPhoto', 'user_id', 'condition'=>'avatar.type="primary"'),
+                'avatarImage' => array(self::HAS_MANY, 'eImage', 'user_id', 'condition'=>'image.is_avatar=1')
+            );
+	}
+        
+        public function filterByDate($filterDate) {
+            return DateTimeUtility::filterByDate($this, $filterDate);
+        }
+        
+        public function filterByWeek($filterDate) {
+            return DateTimeUtility::filterByWeek($this, $filterDate);
+        }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'username' => 'Email',
+            'password' => 'Password',
+            'birthday' => 'Birthday',
+            'gender' => 'Gender',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'terms_accepted' => 'Terms Accepted',
+            'source' => 'Source',
+            'created_on' => 'Created',
+            'updated_on' => 'Updated',
+        );
+    }
+    
+    public function scopes() {
+        // todo - fix this so that it looks for specific roles
+        // instead of anything that is not user
+        return array(
+            'isAdmin' => array('condition' => 'role != "user"'),
+        );
+    }
+
+}

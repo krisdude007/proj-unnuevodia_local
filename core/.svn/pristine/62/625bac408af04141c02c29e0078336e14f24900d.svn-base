@@ -1,0 +1,583 @@
+<?php
+$cs = Yii::app()->clientScript;
+// page specific css
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/chosen.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery.tagsinput.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery-ui-1.10.0.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/jquery.modal.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminTicker/index.css');
+
+// page specific js
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.blockui.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.flot.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.flot.resize.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.gritter.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.pulsate.min.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery-ui-timepicker-addon.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/jquery.modal.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminTicker/index.js', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+?>
+
+<?php $this->renderPartial('/admin/_csrfToken', array()); ?> 
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div style="background:#fcb922" id="fab-top">
+        <h2 style="color:white" class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/ticker-image.png">Ticker Admin - <?php echo $statuses[$status]; ?></h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- END PAGE HEADER-->
+        <div class="fab-row-fluid">
+
+            <div class="fab-ticker-container">
+                <div id="fab-ticker-filter-form">
+                    <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'ticker-form',
+                        ));
+                    ?>
+                    <div class="fab-clear" style="height:6px;"></div>
+                    <div class="fab-box fab-left" style="margin-left:0px">
+                        <label class="fab-left">Question:</label>
+                        <?php echo CHtml::dropDownList('question', $question, $questions,Array('prompt'=>'All')); ?>
+                    </div>
+                    <div class="fab-box fab-left" style="margin-left:10px;">
+                        <label class="fab-left">Status:</label>
+                        <?php echo CHtml::dropDownList('status', $status, $statuses); ?>
+                    </div>
+                    <div  class="fab-box fab-left" style="clear:both">
+                        <input style="margin-top:-3px" type="checkbox" name='failedLanguage' id='failedLanguage' />
+                        <span>show only tickers with bad language</span>
+                    </div>
+                    <input type="submit" style="margin: 0px 0px 0px 20px !important" class="fab-right-filter" value="Submit">
+                    <?php $this->endWidget(); ?>
+                    <div style="clear:right;height:10px;"></div>
+                    
+                </div>
+                
+                <?php if(ADMIN_TICKER_ENTITY): ?>
+                <div style="border:1px solid black;margin-bottom:20px;padding:5px;">
+                    <h2>Create Ticker as Entity</h2>
+                    <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'entity-ticker-form',
+                            'enableAjaxValidation' => true,
+                        ));
+                    ?>
+                    <div>
+                        <div>
+                            <div>
+                                <?php echo $form->labelEx($entity, 'name'); ?>
+                                <?php echo $form->dropDownList($entity,'name', $entities, array('prompt'=>'Select Entity')); ?>
+                                or <a href="/admin/entity">Add new entity</a>
+                            </div>
+                            <div>
+                                <?php echo $form->labelEx($entityTicker, '[entity]ticker'); ?>
+                                <?php echo $form->textField($entityTicker, '[entity]ticker',array('maxlength' => '140', 'class' => 'counter', 'style'=>'width:560px')); ?>
+                                <?php echo $form->error($entityTicker, '[entity]ticker'); ?>
+                            </div>
+                        </div>
+                        <div style="clear:both">
+                            <?php echo $form->hiddenField($entityTicker,'[entity]source',Array('value'=>'web')); ?>     
+                            <?php echo CHtml::hiddenField('status',$status); ?>                        
+                            <?php echo CHtml::hiddenField('question',$question); ?>                                                    
+                            <?php echo CHtml::submitButton('Submit'); ?>
+                        </div>
+                    </div>
+                    <?php $this->endWidget(); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+
+
+        </div>
+        <div class="fab-ticker-container">
+            <div class="fab-row-fluid">
+            <?php
+            $form = $this->beginWidget('CActiveForm', array(
+                'id' => 'admin-ticker-form',
+                'enableAjaxValidation' => false,
+            ));
+            ?>                                
+                <table id="tickerTable" border="1">
+                    <thead>
+                        <?php if($status == 'accepted'): ?>
+                            <tr>
+                                <th colspan="4"></th>
+                                <th colspan="2">Set Runs</th>
+                                <th>TV Control</th>
+                                <th colspan="2">Times Run</th>
+                                <th colspan="2">Remaining Runs</th>
+                                <th colspan="4"></th>
+                            </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <th style="width:60px">Avatar</th>
+                            <th>User Text</th>
+                            <th>Username</th>
+                            <th>Date/Time</th>
+                            
+                            <?php if($status == 'accepted'): ?>            
+                                <th>Web</th>
+                                <th>Mobile</th>
+                                
+                                <?php if($question > 0): ?>
+                                    <th>Order</th>
+                                <?php else: ?>
+                                    <th>Frequency</th>
+                                <?php endif; ?>
+                            
+                                <th>Web</th>
+                                <th>Mobile</th>
+                            
+                                <th>Web</th>
+                                <th>Mobile</th>
+                            <?php endif; ?>
+                                
+                            <th>Email</th>
+                            
+                            <?php if($status == 'accepted' || $status == 'acceptedtv'): ?>            
+                                <th>Share</th>
+                            <?php endif; ?>
+                                
+                            <?php if($status == 'statustv'): ?>   
+                                <th>Status</th>
+                            <?php else: ?>
+                                <th><?php echo CHtml::submitButton('Submit'); ?></th>
+                            <?php endif; ?>
+                                
+                        </tr>
+                    </thead>
+                    <tbody class="valignTop">
+                            <?php
+                            $rowFormats = Array();               
+                            $rowFormat['entity']['accepted'] = '
+                            <tr>
+                                <td class="fab-first-cell"><img style="width: 60px; height: 60px;" src="%s" /></td>
+                                <td>
+                                    <div class="text-message" style="%s" %s>%s</div>
+                                </td>
+                                <td>
+                                    <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                                </td>
+                                <td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td>
+                                <td>
+                                    <div style="width:70px;">
+                                        <a rel="%d" href="#" class="shareToClientFacebook">
+                                            <img src="/core/webassets/images/facebook-round.png" />
+                                        </a>
+                                        <a rel="%d" href="#" class="shareToClientTwitter">
+                                            <img src="/core/webassets/images/twitter-round.png" />
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="radioList">
+                                        %s
+                                        %s
+                                    </div>
+                                </td>
+                            </tr>';
+                            
+                            $rowFormat['accepted'] = '
+                            <tr>
+                                <td class="fab-first-cell"><img style="width: 60px; height: 60px;" src="%s" /></td>
+                                <td>
+                                    <div class="text-message" style="%s" %s>%s</div>
+                                </td>
+                                <td>
+                                    <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                                </td>
+                                <td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td><td>%s</td>
+                                <td>%s</td>
+                                <td>
+                                    <div style="width:70px;">
+                                        <a rel="%d" href="#" class="shareToClientFacebook">
+                                            <img src="/core/webassets/images/facebook-round.png" />
+                                        </a>
+                                        <a rel="%d" href="#" class="shareToClientTwitter">
+                                            <img src="/core/webassets/images/twitter-round.png" />
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="radioList">
+                                        %s
+                                        %s
+                                    </div>
+                                </td>
+                            </tr>';
+                            
+                        $rowFormat['new'] = $rowFormat['denied'] = $rowFormat['newtv'] = $rowFormat['deniedtv'] = $rowFormat['newsup1'] = $rowFormat['newsup2'] = '
+                        <tr>
+                            <td class="fab-first-cell">
+                                <img style="width: 60px; height: 60px;" src="%s" />
+                            </td>
+                            <td>
+                                <div class="text-message" style="%s" %s>%s</div>
+                            </td>
+                            <td>
+                                <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                            </td>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>
+                                <div class="radioList">%s</div>
+                                %s
+                            </td>
+                        </tr>';       
+                        
+                        $rowFormat['newsup1'] = $rowFormat['newsup2'] = '
+                        <tr>
+                            <td class="fab-first-cell">
+                                <img style="width: 60px; height: 60px;" src="%s" />
+                            </td>
+                            <td>
+                                <div class="text-message" style="%s" %s>%s</div>
+                            </td>
+                            <td>
+                                <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                            </td>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>
+                                <div class="radioList">%s</div>
+                            </td>
+                        </tr>';       
+                        
+                        $rowFormat['acceptedtv'] = '
+                        <tr>
+                            <td class="fab-first-cell">
+                                <img style="width: 60px; height: 60px;" src="%s" />
+                            </td>
+                            <td>
+                                <div class="text-message" style="%s" %s>%s</div>
+                            </td>
+                            <td>
+                                <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                            </td>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>
+                                <div style="width:70px;">
+                                    <a rel="%d" href="#" class="shareToClientFacebook">
+                                        <img src="/core/webassets/images/facebook-round.png" />
+                                    </a>
+                                    <a rel="%d" href="#" class="shareToClientTwitter">
+                                        <img src="/core/webassets/images/twitter-round.png" />
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radioList">%s</div>
+                                %s
+                            </td>
+                        </tr>';       
+                        
+                        $rowFormat['statustv'] = '
+                         <tr>
+                            <td class="fab-first-cell">
+                                <img style="width: 60px; height: 60px;" src="%s" />
+                            </td>
+                            <td>
+                                <div class="text-message" style="%s" %s>%s</div>
+                            </td>
+                            <td>
+                                <div class="ticker-username"><a target="_blank" href="%s">%s</a></div>
+                            </td>
+                            <td>%s</td>
+                            <td>%s</td>
+                            <td>%s</td>
+                        </tr>';     
+                        
+                        $format = ($ticker->type == 'entity') ? $rowFormat['entity'][$status] : $rowFormat[$status];
+                        foreach($tickers as $i=>$ticker){
+                            switch($ticker->type){
+                                case 'entity':
+                                    switch($status){
+                                        case 'denied':
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $form->radioButtonList($ticker,"[$i]status",Array('accepted'=>'Accept'),Array('separator'=>'','style'=>'float:left;')),                                                    
+                                            );
+                                            break;
+                                        case 'accepted':
+                                            $timesToRun = Array();
+                                            $timesRan = Array('web'=>0,'mobile'=>0);
+                                            $remainingRuns = Array();
+                                            foreach($ticker->tickerRuns as $tickerRun){
+                                                $timesRan['web'] += $tickerRun->web_ran;
+                                                $timesRan['mobile'] += $tickerRun->mobile_ran;
+                                                if($tickerRun->stopped == 0){
+                                                    $timesToRun['web'] += $tickerRun->web_runs;
+                                                    $timesToRun['mobile'] += $tickerRun->mobile_runs;
+                                                    $remainingRuns['web'] += ($tickerRun->web_runs - $tickerRun->web_ran);
+                                                    $remainingRuns['mobile'] += ($tickerRun->mobile_runs - $tickerRun->mobile_ran);
+                                                }
+                                            }                                    
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                $form->textField($tickerRuns[$i],"[$i]web_runs"),
+                                                $form->textField($tickerRuns[$i],"[$i]mobile_runs"),
+                                                ($question == 0) 
+                                                    ? $form->textField($ticker,"[$i]frequency")
+                                                    : '',
+                                                $timesRan['web'],
+                                                $timesRan['mobile'],
+                                                $remainingRuns['web'] > 0 ? $remainingRuns['web'] : 0,
+                                                $remainingRuns['mobile'] > 0 ? $remainingRuns['mobile'] : 0,
+                                                'N/A',
+                                                $ticker->id,$ticker->id,            
+                                                $form->radioButtonList($ticker,"[$i]status",Array('denied'=>'Deny'),Array('separator'=>'','style'=>'float:left;')),
+                                                ($remainingRuns['web'] > 0 || $remainingRuns['mobile'] > 0) 
+                                                    ? $form->checkbox($ticker,"[$i]stop",Array('style'=>'float:left')).$form->labelEx($ticker,"[$i]stop")
+                                                    : '',
+                                            );          
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    switch($status){
+                                        case 'new':
+                                        case 'newtv':
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),                                        
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $form->radioButtonList($ticker,"[$i]status",Array('accepted'=>'Accept','denied'=>'Deny'),Array('separator'=>'','style'=>'float:left;')),
+                                                CHtml::dropDownList('question_'.$ticker->id, $ticker->question_id, $questions,Array('prompt'=>'Change Question'))                                                                                            
+                                            );
+                                            break;
+                                        case 'newsup1':
+                                        case 'newsup2': 
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),                                        
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $form->radioButtonList($ticker,"[$i]status",Array('accepted'=>'Accept','denied'=>'Deny'),Array('separator'=>'','style'=>'float:left;')),
+                                                '',                                                        
+                                            );
+                                            break;
+                                        case 'statustv':
+                                            $statusColor = '<div style="font-size: 10px;">';
+                                            if($ticker->extendedStatus['accepted_sup1'])
+                                            {
+                                                $statusColor .= '<span title="approved" style="color: green">S&P</span> - ';
+                                            }
+                                            else
+                                            {
+                                                $statusColor .= '<span title="no action taken" style="color: orange">S&P</span> - ';
+                                            }
+
+                                            if($ticker->extendedStatus['accepted_sup2'])
+                                            {
+                                                $statusColor .= '<span title="approved" style="color: green">Legal</span> - ';
+                                            }
+                                            else
+                                            {
+                                                $statusColor .= '<span title="no action taken" style="color: orange">Legal</span> - ';
+                                            }
+
+                                            if($ticker->extendedStatus['denied_tv'])
+                                            {
+                                                $statusColor .= '<span title="denied" style="color: red">DenyTV</span> - ';
+                                            }
+                                            else
+                                            {
+                                                $statusColor .= '<span title="no action taken" style="color: orange">DenyTV</span> - ';
+                                            }
+
+                                            if($ticker->extendedStatus['denied'])
+                                            {
+                                                $statusColor .= '<span title="denied" style="color: red">DenyWeb</span>';
+                                            }
+                                            else
+                                            {
+                                                $statusColor .= '<span title="no action taken" style="color: orange">DenyWeb</span>';
+                                            }
+                                            $statusColor .= '</div>';
+                                            
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),                                        
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),                                                            
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $statusColor
+                                            );
+                                            break;
+                                        case 'denied':
+                                        case 'deniedtv':
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $form->radioButtonList($ticker,"[$i]status",Array('accepted'=>'Accept'),Array('separator'=>'','style'=>'float:left;')),                                                    
+                                                '',
+                                            );
+                                            break;
+                                        case 'acceptedtv':
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),                                        
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $ticker->id,$ticker->id,
+                                                $form->radioButtonList($ticker,"[$i]status",Array('denied'=>'Deny'),Array('separator'=>'','style'=>'float:left;')),
+                                                '',                                                                                            
+                                            );
+                                            break;
+                                        case 'accepted':
+                                            $timesToRun = Array();
+                                            $timesRan = Array('web'=>0,'mobile'=>0);
+                                            $remainingRuns = Array();
+                                            foreach($ticker->tickerRuns as $tickerRun){
+                                                $timesRan['web'] += $tickerRun->web_ran;
+                                                $timesRan['mobile'] += $tickerRun->mobile_ran;
+                                                if($tickerRun->stopped == 0){
+                                                    $timesToRun['web'] += $tickerRun->web_runs;
+                                                    $timesToRun['mobile'] += $tickerRun->mobile_runs;
+                                                    $remainingRuns['web'] += ($tickerRun->web_runs - $tickerRun->web_ran);
+                                                    $remainingRuns['mobile'] += ($tickerRun->mobile_runs - $tickerRun->mobile_ran);
+                                                }
+                                            }                                    
+                                            $args = Array(
+                                                TickerUtility::getAvatar($ticker),
+                                                ($ticker['clean']['result']) 
+                                                    ? ''
+                                                    : 'color:#F00',
+                                                ($ticker['clean']['result']) 
+                                                    ? ""
+                                                    : "title='Fails language filter: {$ticker['clean']['filter']->pattern}'",                                        
+                                                $ticker['ticker'],
+                                                TickerUtility::getLink($ticker),
+                                                TickerUtility::getUsername($ticker),
+                                                date('Y-m-d a h:i:s',strtotime($ticker['created_on']))." ".date("T"),
+                                                $form->textField($tickerRuns[$i],"[$i]web_runs"),
+                                                $form->textField($tickerRuns[$i],"[$i]mobile_runs"),
+                                                ($question > 0) 
+                                                    ? $form->textField($ticker,"[$i]ordinal")
+                                                    : '',
+                                                $timesRan['web'],
+                                                $timesRan['mobile'],
+                                                $remainingRuns['web'] > 0 ? $remainingRuns['web'] : 0,
+                                                $remainingRuns['mobile'] > 0 ? $remainingRuns['mobile'] : 0,
+                                                isset($ticker->user_id)
+                                                    ? '<a href="mailto:'.$ticker->user->userEmails[0]->email.'"><img src="/core/webassets/images/email-icon.png"></a>'
+                                                    : 'N/A',
+                                                $ticker->id,$ticker->id,            
+                                                $form->radioButtonList($ticker,"[$i]status",Array('denied'=>'Deny'),Array('separator'=>'','style'=>'float:left;')),
+                                                ($remainingRuns['web'] > 0 || $remainingRuns['mobile'] > 0) 
+                                                    ? $form->checkbox($ticker,"[$i]stop",Array('style'=>'float:left')).$form->labelEx($ticker,"[$i]stop")
+                                                    : '',
+                                            );          
+                                            break;
+                                    }  
+                                    break;
+                            }
+                            vprintf($format,$args);                                
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <div style="text-align:right;clear:both;">
+                    <?php echo CHtml::hiddenField('status',$status); ?>                        
+                    <?php echo CHtml::hiddenField('question',$question); ?>                                                                        
+                    <?php echo CHtml::submitButton('Submit'); ?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->
+<?php $this->endWidget(); ?>

@@ -1,0 +1,46 @@
+
+table th {
+    border: 1px solid gray;
+}
+
+table td {
+    color: #000000;
+    border: 1px solid gray;
+}
+
+table .odd {
+    background-color: #FFFFFF;
+}
+
+table a {
+    color: #000000;
+}
+
+
+#weekWinnerTable .odd td {
+    background-color: #FFFFFF;
+}
+
+table .even {
+    background-color: #EEEEEE;
+}
+
+#weekWinnerTable .even td {
+    background-color: #EEEEEE;
+}
+
+#monthWinnerTable .odd td {
+    background-color: #FFFFFF;
+}
+
+#monthWinnerTable .even td {
+    background-color: #EEEEEE;
+}
+
+#weekWinnerTable th {
+    background-color: #C9DAF8;
+}
+
+#monthWinnerTable th {
+    background-color: #C9DAF8;
+}

@@ -1,0 +1,19 @@
+<div id="content">
+
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+        <div class="verticalRule">
+        </div>
+        <div class="youContent" style="text-align: left;">
+            <h1>ACERCA DE</h1>
+            <div class="aboutTextBox" >
+                UNNUEVODIA is a leading source of TV news and entertainment in Los Angeles.  UNNUEVODIA produces more hours of local news in L.A. than any other TV station in the city.  Channel 5 is also home of the award-winning UNNUEVODIA Morning News, the #1 local morning news show in L.A. UNNUEVODIA is also home to many special events like the L.A. Marathon, Red Carpet coverage of the Emmys and Academy Awards and its long-running award-winning annual coverage of the Tournament of Roses Parade. 
+            </div>  
+        </div>
+    </div>
+</div>

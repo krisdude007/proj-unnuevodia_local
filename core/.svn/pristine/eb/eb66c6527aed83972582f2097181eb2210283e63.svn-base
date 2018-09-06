@@ -1,0 +1,438 @@
+<?php
+
+/**
+ * VCI API Controller
+ *
+ * Responsible as main interface for importing schedule data.
+ *
+ * @author <greg.stringer@gmail.com>
+ */
+class VciController extends Controller {
+
+    /**
+     * Initialize. Here we set a custom error handler so that we do not 
+     * output default html.
+     */
+    public function init() {
+        parent::init();
+        //Yii::app()->errorHandler->errorAction = 'vci/error';
+    }
+
+    public function filters() {
+        return array();
+    }
+    
+    public function actionImportVci() {
+
+        $uploaded = 0;
+        $mailMsg = 'No file was processed.';
+        if (isset($_FILES) && count($_FILES) > 0) {
+            if ($_FILES["file"]["error"] > 0) {
+                $mailMsg = 'FAIL: ' . $_FILES["file"]["error"];
+            } else {
+                $targetPath = "vciuploads/" . $_FILES["file"]["name"];
+                $moved = move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath);
+                if ($moved) {
+                    $uploaded = 1;
+                    $mailMsg = 'SUCCESS: File stored ' . "vciuploads/" . $_FILES["file"]["name"];
+                }
+            }
+        }
+        
+        mail('greg.stringer@gmail.com', 'VCI Import', $mailMsg);
+        
+        if ($uploaded == 1) {
+            $handle = fopen($targetPath, "r");
+            $row = 1;
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                if ($row > 1) {
+                    $house_number = substr($data[0], 0, 2);
+                    if ($house_number != '') {
+                        $spot_time = $data[1];
+                        $date = explode("-", $data[2]);
+                        $date = $date[1] . "/" . $date[2] . "/" . $date[0];
+                        $length = $data[3];
+                        $blocktime = trim($data[4]);
+                        $blocktime = rtrim($blocktime);
+                        if ($blocktime == "") { $blocktime = $spot_time; }
+                        $showname = addslashes($data[5]);
+                        $spot_order = $data[6];
+
+                        // convert from old to new
+                        // date 
+                        // house number X
+                        // length
+                        // spot_time
+                        // available
+                        // showname
+                        // blocktime
+                        // ev / spot_order
+                        // network_show_id, 
+                        // spot_type, 
+                        // spot_number, 
+                        // spot_length, 
+                        // spot_available, 
+                        // spot_order, 
+                        // show_on, 
+                        // spot_on, 
+                        // submitted_on, 
+                        // airs_on, 
+                        // created_on, 
+                        // updated_on
+
+                        print $date . "<br>";
+                        /*
+                          //insert into db
+                          $db = new Database();
+                          $sql = "select * from vci_spots where house_number='$house_number' AND date='$date' ";
+
+                          $result = $db->query($sql);
+                          $count = $result->count();
+                          if ($count == 0) {
+                          $sql = "insert into vci_spots (`date`,`house_number`,`length`,`spot_time`,`available`,`showname`,`blocktime`,`ev`) values ('$date','$house_number','$length','$spot_time','1','$showname','$blocktime','$ev')";
+                          } else {
+                          $sql = "update vci_spots set date='$date',ev='$ev', length='$length', spot_time='$spot_time', blocktime='$blocktime',showname='$showname' where house_number='$house_number' AND spot_time='$spot_time'";
+                          }
+
+                          if ($house_number != '' && $length != ':01') {  //have to have spot time and house number
+                          $result = $db->query($sql);
+                          }
+                         * 
+                         */
+                    }
+                }
+                $row++;
+            }
+            fclose($handle);
+
+            //videoadmin::updateVCIWithShowID();
+            //videoadmin::updateVCIWithBatchNumber();
+            //videoadmin::updateAirTime();
+        }
+    }
+
+    public function actionImportSims() {
+        $uploaded = 0;
+        $mailMsg = 'No file was processed.';
+        if (isset($_FILES) && count($_FILES) > 0) {
+            if ($_FILES["schedule"]["error"] > 0) {
+                $mailMsg = 'FAIL: ' . $_FILES["schedule"]["error"];
+            } else {
+                $targetPath = "vciuploads/" . $_FILES["schedule"]["name"];
+                $moved = move_uploaded_file($_FILES["schedule"]["tmp_name"], $targetPath);
+                if ($moved) {
+                    $uploaded = 1;
+                    $mailMsg = 'SUCCESS: File stored ' . "vciuploads/" . $_FILES["schedule"]["name"];
+                }
+            }
+        }
+        
+        //mail('greg.stringer@gmail.com', 'SIMS Import', $mailMsg);
+
+        if ($uploaded == 1) {
+            $lastDate="";
+            // remove current data
+            NetworkSimsSchedule::model()->deleteAll();
+            //Yii::app()->db->createCommand()->truncateTable(NetworkSimsSchedule::model()->tableName());
+            
+
+            $timezone = "America/New_York";
+            date_default_timezone_set($timezone);
+            putenv('TZ=America/New_York');
+            ini_set('date.timezone', $timezone);
+
+            $fileName = $targetPath;
+            $row = 0;
+            $fp = fopen($fileName, "r");
+            $insertData = array();
+
+            while ($data = fgetcsv($fp, 10000, "\t")) {
+                $num = count($data) - 1;
+                if ($num >= 5) {
+                    $date = chunk_split($data[1], 2, '/');
+                    $start_time = chunk_split($data[2], 2, ':') . "00";
+                    $end_time = chunk_split($data[3], 2, ':') . "00";
+                    list ($month, $day, $year) = explode('/', $date);
+                    list ($start_hour, $start_minute, $start_second) = explode(':', $start_time);
+                    list ($end_hour, $end_minute, $end_second) = explode(':', $end_time);
+                    $showname = $data[5];
+                    $episodename = $data[8];
+                    $episodeid = $data[10];
+                    //$this->epTable($showname, $episodeid, $episodename);
+                    $thisTime = mktime($start_hour, $start_minute, $start_second, $month, $day, $year);
+                    $startDateTime = mktime($start_hour, $start_minute, $start_second, $month, $day, $year);
+                    $endDateTime = mktime($end_hour, $end_minute, $end_second, $month, $day, $year);
+
+                    if ($endDateTime < $startDateTime) {
+                        $endDateTime = mktime($end_hour, $end_minute, $end_second, $month, $day + 1, $year);
+                    } else {
+                        $endDateTime = mktime($end_hour, $end_minute, $end_second, $month, $day, $year);
+                    }
+                    $startDate = date("H:i:s	m/d/y    ", $startDateTime);
+                    $endDate = date("H:i:s	m/d/y ", $endDateTime);
+                    
+                    if ($row == 0) {
+                        $firstDate = $startDateTime;
+                    }
+
+                    if ($startDateTime) {
+                        if ($firstDate > $startDateTime) {
+                            $firstDate = $startDateTime;
+                        }
+                    }
+
+                    if ($endDate) {
+                        if ($lastDate < $endDateTime) {
+                            $lastDate = $endDateTime;
+                        }
+                    }
+                    
+                    $insertData[$row][] = '';
+                    $insertData[$row][] = $startDateTime;
+                    $insertData[$row][] = $endDateTime;
+                    for ($c = 4; $c < $num; $c++) {
+                        if ($c == 8) {
+                            $temp = $data[$c];
+                            $temp2 = explode('\\', $temp);
+                            $final = $temp2[0];
+                            $insertData[$row][] = addslashes($final);
+                        } else {
+                            $insertData[$row][] = addslashes($data[$c]);
+                        }
+                    }
+                    $row++;
+                }
+            }
+
+            fclose($fp);
+            unlink($fileName);
+            
+            for ($c = 0; $c < $row; $c++) {
+                $nss = new NetworkSimsSchedule;
+                $ii=0;
+                foreach($nss->getAttributes() as $key=>$val) {
+                    $nss->{$key} = $insertData[$c][$ii];
+                    ++$ii;
+                }
+                $nss->save();
+            }
+        }
+
+        
+        //fix missing id's
+        //echo "\r\n";
+        //echo "Fixing missing IDs";
+        //$this->fixID();
+        //relink missing shows
+        //echo "\r\n";
+        //echo "Fixing missing programs";
+        //$this->fixPrograms();
+    }
+    
+    public function epTable($showname,$episodeid, $episodename){
+
+        //is this in the db already? if not, add it
+        $db = new Database();
+        if($episodeid!=''){
+            $sql="select * from episode_list where episodeid='$episodeid'";
+            echo $sql."\n\r";
+            $result=$db->query($sql);
+            if($result->count()==0){
+                $episodename=mysql_real_escape_string($episodename);
+                $showname=mysql_escape_string($showname);
+
+                $vowels = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", " ");
+                $showid = str_replace($vowels, '', $episodeid);
+                $sql="insert into episode_list (`showname`,`episodename`,`episodeid`,`programid`) values ('$showname','$episodename','$episodeid','$showid')";
+                $result=$db->query($sql);
+            }
+        }
+
+
+    }
+
+    public function fixPrograms() {
+        $db = new Database();
+
+        //get all the distinct programs in the schedule
+        $sql = "select distinct block6,block11 from gtvschedule where block24!='Infomercial' and block24!='Movie' group by block6";
+        $result = $db->query($sql);
+        foreach ($result as $row) {
+            //is this show in the program table?
+            $title = addslashess($row->block6);
+            $sql = "select * from program where showname='$title'";
+            $result2 = $db->query($sql);
+            $count = $result2->count();
+
+            $programid = $row->block11;
+            $vowels = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", " ");
+            $programid = str_replace($vowels, '', $programid);
+
+
+
+            if ($count == 0) {
+                //this show needs to be added
+                $title = stripslashes($title);
+                if ($title != 'Sponsored Programming' && $title != 'Paid Programming') {
+                    //insert this into the program table
+                    $title = addslashes($title);
+                    $sqlin = "insert into program (`showname`,`programid`) values ('$title','$programid')";
+                    echo "<br>$sqlin<BR>";
+                    $db->query($sqlin);
+                }
+            }
+        }
+
+
+        //of these, which are not in the programs table?
+        //add the ones that are missing... (not sure what data to use)
+        //email us about these programs
+        //fix the shows that have had their name changed in sims
+
+
+        $sql = "SELECT DISTINCT * FROM `gtvschedule` GROUP BY block6";
+        $result = $db->query($sql);
+        foreach ($result as $row) {
+            $showname = $row->block6;
+            $programcode = $row->block11;
+
+            //get 2 digit program code
+            //if the program name in programs doesnt match showname, update it
+        }
+    }
+
+    
+    
+
+    public static function updateVCIWithShowID() {
+        $db = new Database();
+
+        $sql2 = "SELECT id, blocktime, date FROM vci_spots WHERE available = '1' AND (show_id = '0' OR show_id = '')";
+        $result2 = $db->query($sql2);
+        $showArray = Array();
+        foreach ($result2 as $row) {
+            $id = $row->id;
+            $showArray = videoadmin::getShowFromBlock($row->blocktime, $row->date);
+            $showID = $showArray[0]['programid'];
+            if ($showID == '' || $showID == ' ') {
+                $showID = 'PP';
+            }
+
+            $sql3 = "UPDATE vci_spots SET show_id = '$showID' WHERE id = '$id' LIMIT 1";
+            $result3 = $db->query($sql3);
+        }
+    }
+
+    public static function updateVCIWithBatchNumber() {
+        $db = new Database();
+
+        $sql = "SELECT id, blocktime, date FROM vci_spots WHERE available = '1' AND (batch = '0' OR batch = '')";
+        $result = $db->query($sql);
+
+        foreach ($result as $row) {
+            $id = $row->id;
+            $batchNumber = videoadmin::generateBatchNumber($row->date, $row->blocktime);
+
+            $sql2 = "UPDATE vci_spots SET batch = '$batchNumber' WHERE id = '$id' LIMIT 1";
+            $result2 = $db->query($sql2);
+        }
+    }
+
+    public function generateBatchNumber($date, $blocktime) {
+        $batchNumber = str_replace('/', '', $date) . str_replace(':', '', $blocktime);
+
+        $batchNumber = str_replace(' ', '', $batchNumber);
+        $batchNumber = str_replace('p', '1', $batchNumber);
+        $batchNumber = str_replace('a', '0', $batchNumber);
+
+        return $batchNumber;
+    }
+
+    public function updateAirTime() {
+        $db = new Database();
+
+        $sql = "SELECT V.id, V.spot_time, V.date, V.house_number
+                FROM vci_spots AS V
+                WHERE available = '1' AND V.house_number LIKE 'FS%' AND V.air_time = ''";
+
+        $result = $db->query($sql);
+
+        foreach ($result as $row) {
+            $id = $row->id;
+            $airtime = showhelper::getAirTime($row->spot_time, $row->date, $row->house_number);
+
+            $sql3 = "UPDATE vci_spots SET air_time = '" . $airtime . "' WHERE id = '$id' LIMIT 1";
+            $result3 = $db->query($sql3);
+        }
+    }
+
+    public static function getShowFromBlock($block, $date) {
+        //gets the showname from the block start time out of the aln db
+        //convert block and date into timestamp
+        //06:30:00 p is an example
+
+        $timezone = "America/New_York";
+        date_default_timezone_set($timezone);
+        putenv('TZ=America/New_York');
+        ini_set('date.timezone', $timezone);
+        $block = str_replace("p", "pm", $block);
+        $block = str_replace("a", "am", $block);
+        $start = strtotime("$block $date");
+        $parts = explode(" ", $block);
+        $ampm = $parts[1];
+        $starthour = substr($block, 0, 2);
+        $parts2 = explode(":", $block);
+        $min = $parts2[2];
+
+        if ($ampm == "am") {
+            $dayseconds = 86340;
+            if ($starthour == "12") {
+                $starthour = 0;
+            }
+            
+            if ($starthour >= 0 && $starthour < 7) {
+                $newblocktime = $blocktime;
+                $time = strtotime("$newblocktime $date");
+                $min = str_replace(" am", "", $min);
+                if ($starthour == 0 && $min > 30) {
+                    $start = ($start - $dayseconds);
+                } else {
+                    $start = ($start - $dayseconds);
+                }
+            }
+        }
+
+        $db = new Database('');
+        //get show name
+        $sql = "select * from gtvschedule where block3 <='$start' and block4 > '$start' limit 1";
+        $x = 0;
+        $shows = array();
+        $shows[$x]['sql'] = $sql;
+        $result = $db->query($sql);
+        $count = $result->count();
+        
+        if ($count > 0) {
+            foreach ($result as $row) {
+                $showname = $row->block6;
+                $programid = $row->block11;
+                //get program info
+                $vowels = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", " ");
+                $programid = str_replace($vowels, '', $programid);
+                $shows[$x]['showname'] = $showname;
+                $shows[$x]['programid'] = $programid;
+                $x++;
+            }
+
+            //return show name
+            return $shows;
+        } else {
+            $start = ($start - 1800);
+            //create a new block time and date
+            $date = date("m/d/Y", $start);
+            $block = date("h:i:00", $start);
+            return $shows;
+        }
+    }
+
+}

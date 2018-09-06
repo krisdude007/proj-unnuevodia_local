@@ -1,0 +1,32 @@
+<div class="text">
+    <div class='help'>
+        <br/>
+        <div class='row'>
+            <div class='col-sm-2 col-sm-offset-1 step'><h4>STEP 1</h4></div>
+            <div class='col-sm-8 content'>
+                <h5 class="active">Click "Record" Lights, Camera, Action!</h5>
+                Look towards the webcam, speak up clearly, smile and
+                have fun recording your video.
+            </div>
+        </div>
+        <br/>
+        <div class='row'>
+            <div class='col-sm-2 col-sm-offset-1 step'><h4>STEP 2</h4></div>
+            <div class='col-sm-8 content'><h5 class="active">Describe Your Video</h5>
+                Add a title, and description. Don't forget to
+                review your video. You can re-record your video if you don't like it.
+            </div>
+        </div>
+        <br/>
+        <div class='row'>
+            <div class='col-sm-2 col-sm-offset-1 step'><h4>STEP 3</h4></div>
+            <div class='col-sm-8 content'>
+                <h5 class="active">Click Submit</h5>
+                You can also share your video on social media sites.
+            </div>
+        </div>
+        <div style='text-align: center;padding: 2% 0px;'>
+<!--            <button onclick="window.location='<?php //echo Yii::app()->createUrl('/site/contact'); ?>'" class='btn'>Contact Us</button>-->
+        </div>
+    </div>
+</div>

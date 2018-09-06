@@ -1,0 +1,51 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile('/core/webassets/css/preview/preview.css');
+$cs->registerCSS('body', 'body{margin:0px;}');
+$cs->registerCoreScript('jquery', CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/preview/preview.js', CClientScript::POS_END);
+if ((isset($settings['ticker_direction_default']) && $settings['ticker_direction_default'] )) {
+    $cs->registerScript('previewRev', 'sliderHandlerReverse();', CClientScript::POS_READY);
+} else {
+    $cs->registerScript('preview', 'sliderHandler();', CClientScript::POS_READY);
+}
+?>
+
+<!--<div class="message">Broadcast Signal</div>-->
+
+<?php if (isset($settings['ticker_direction_default']) && $settings['ticker_direction_default']): ?>
+    <img src ="/webassets/images/home/bg_alpha.png">
+    <div id="sliderContainer" style="bottom:250px; position:relative; background-color: rgba(0, 0, 0, 0.0); color: #ffffff;">
+        <div class="slidersRev">
+            <?php foreach ($tickers as $t) { ?>
+                <div class="sliderRev">
+                    <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+                    <div class="text"><?php echo $t->ticker; ?></div>
+                </div>
+            <?php } ?>
+
+            <?php if (sizeof($tickers) == 0) { ?>
+                <div class="sliderRev">
+                    <div class="text">There are no tickers approved for this question.</div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+<?php else: ?>
+    <div id="sliderContainer">
+        <div class="sliders">
+            <?php foreach ($tickers as $t) { ?>
+                <div class="slider">
+                    <div class="avatar"><img src="<?php echo TickerUtility::getAvatar($t); ?>" alt="avatar"></div>
+                    <div class="text"><?php echo $t->ticker; ?></div>
+                </div>
+            <?php } ?>
+
+            <?php if (sizeof($tickers) == 0) { ?>
+                <div class="slider">
+                    <div class="text">There are no tickers approved for this question.</div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+<?php endif; ?>

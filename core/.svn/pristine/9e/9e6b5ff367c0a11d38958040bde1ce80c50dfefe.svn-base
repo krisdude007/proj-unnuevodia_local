@@ -1,0 +1,69 @@
+<?php
+
+class GameUtility {
+
+    //get total points for a user
+    public static function totalUserPoints($user_id) {
+        //will need to convert to yii
+        $total = Yii::app()->db->createCommand("SELECT SUM(A.point_value) "
+                . "FROM game_choice_answer AS A "
+                . "RIGHT JOIN game_choice_x_response AS R ON R.game_choice_answer_id=A.id AND R.user_id=$user_id")->queryScalar();
+
+        return $total;
+    }
+    
+    //get top users according to points
+    public static function topUsersPoints($top = 10)
+    {
+        //will need to convert to yii
+        $result = Yii::app()->db->createCommand("SELECT SUM(A.point_value) AS total, R.user_id "
+                . "FROM game_choice_answer AS A "
+                . "RIGHT JOIN game_choice_x_response AS R ON R.game_choice_answer_id=A.id "
+                . "GROUP BY R.user_id "
+                . "ORDER BY total DESC LIMIT $top")->queryAll();
+        
+        $totals = array();
+        $i = 0;
+        foreach($result as $r)
+        {
+            $totals[$i]['id'] = $r['user_id'];
+            $totals[$i]['total'] = $r['total'];
+            $i++;
+        }
+        
+        return $totals;
+    }
+    
+    public static function pickWinnerRand($old_is_active, $new_is_active, $game_id) {
+        
+        if($old_is_active == 1 && $new_is_active == 0) {
+            $answers = eGameChoiceAnswer::model()->with('gameChoiceResponse')->findByAttributes(array('game_choice_id' => $game_id, 'is_correct' => 1));
+
+            if($answers != NULL && sizeof($answers->gameChoiceResponse) >= 1) //make sure there is a correct response
+            {
+                //get random response
+                $response_id = $answers->gameChoiceResponse[rand(0,sizeof($answers->gameChoiceResponse)-1)]->id;
+
+                $response = eGameChoiceResponse::model()->findByPK($response_id);
+                $response->is_winner = 1;
+                $response->save();
+            }
+        }
+    }
+    
+    public static function getWinners()
+    {
+        //$games = eGameChoiceAnswer::model()->isCorrect()->with('gameChoiceResponse:isWinner')->findAll();
+        //$games = eGameChoice::model()->isNotActive()->multiple()->with('gameChoiceAnswers:isCorrect')->findAll();
+        
+        $criteria = new CDbCriteria();
+        $criteria->select = 't.*, a.*, r.*';
+        $criteria->join = ' LEFT JOIN game_choice_answer AS a ON t.id = a.game_choice_id'
+                        . ' RIGHT JOIN game_choice_y_response AS r ON a.id = r.game_choice_answer_id';
+        $criteria->addCondition("a.is_correct = 1 AND is_winner = 1");
+        
+        $games = eGameChoice::model()->isNotActive()->multiple()->findAll($criteria);
+                
+        return $games;
+    }
+}

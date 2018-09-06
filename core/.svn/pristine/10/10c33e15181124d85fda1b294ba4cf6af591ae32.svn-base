@@ -1,0 +1,72 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/campaign/main.css');
+?>
+
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+
+     
+    <div class="campaign_top_bar">
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/campaign/campaign_manager_icon.png" />Campaign Manager
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='campaign_container'>
+             <div class='campain_header'>
+             	Get Started
+             </div>
+        </div>
+        <div class='campaign_step'>
+            <span class="campaign_step1_selected"></span>
+            <span class="campaign_step2_unselected"></span>
+            <span class="campaign_step2_unselected"></span>
+        </div> 
+         
+         
+        <div class="campaign_subtitle">Connect Accounts</div>
+        <div class="campaign_divider"></div>
+        <div class=' campaign_media_row '>
+            <div>
+                <span class="campaign_media_button_facebook"><span class="campaign_media_row_text">Connected</span></span>
+                <span class="campaign_on_selected"></span>
+                <span class="campaign_off_unselected"></span>
+                <span class="campaign_social_media_email">username@facebook.com</span>
+            </div>
+            <div>
+                Don't have an account? <a href="" >Create One</a>
+            </div>
+        	
+        </div>
+        <div class='campaign_media_row'>
+            <div>
+                <span class="campaign_media_button_twitter"><span class="campaign_media_row_text">Connect</span></span>
+                <span class="campaign_on_unselected"></span>
+                <span class="campaign_off_selected"></span>
+            </div>
+            <div>
+                Don't have an account? <a href="" >Create One</a>
+            </div>
+        	
+        </div>
+        <div class='campaign_media_row'>
+            <span class="campaign_media_button_youtube"></span>
+        	
+        </div>
+        <div class='campaign_media_row'>
+            <span class="campaign_media_button_tumblr"></span>
+        	
+        </div>
+        <div class='campaign_media_row'>
+            <span class="campaign_media_button_google"></span>
+        	
+        </div>
+        <div class="campaign_continue_button">
+            <button class="btn btn-primary">Continue</button>
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

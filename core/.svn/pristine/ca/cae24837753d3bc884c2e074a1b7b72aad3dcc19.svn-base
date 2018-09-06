@@ -1,0 +1,209 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminReport/_weekly.css');
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminReport/_weekly.js', CClientScript::POS_HEAD);
+?>
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/reports-image.png">Weekly Reports</h2>
+    </div>
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <div class="fab-row-fluid">
+            <div>
+                <h2 style="margin-top:-10px;">Choose week start date <input id="weekSelect"></input> <button id="reportButton">Get Report</button></h2>
+            </div>
+            <table class="mystyle">
+                <tr>
+                    <th>Week of <?php echo date('M jS Y', strtotime($startDate)).' - '.date('M jS Y', strtotime($startDate." + 7 days")); ?></th>
+                    <?php
+                    for($i=0; $i<7; $i++){
+                        echo "<th>".date('D m/d', strtotime($startDate." + ".$i." days"))."</th>";
+                    }
+                    ?>
+                </tr>
+                <?php
+                foreach($collection as $description => $category){
+                    echo "<tr><td colspan='8' style='text-align:left'>".$description."</td></tr>";
+                    foreach($category as $description => $obj){
+                        echo "<tr>";
+                        echo "<td class='description'>".$description."</td>";
+                        for($i=0; $i<7; $i++){
+                            echo "<td>";
+                            $count = 0;
+                            foreach($obj as $record){
+                                if(substr($record->created_on,0 , 10) == date('Y-m-d', strtotime($startDate." + ".$i." days"))){
+                                    $count++;
+                                }
+                            }
+                            echo $count."</td>";
+                        }
+                        echo "</tr>";
+                    }
+                }
+                if(sizeof($analyticsTotals) > 0){
+                    echo "<tr><td colspan='8' style='text-align:left'>Web Analytics</td></tr>";
+                    echo "<tr><td class='description'>Pageviews</td>";
+                    for($i=7; $i<14; $i++){
+                        echo "<td>".($analyticsTotals[$i]['New Visitor']['pageviews'] + $analyticsTotals[$i]['Returning Visitor']['pageviews'])."</td>";
+                    }
+                    echo "<tr><td class='description'>Avg. Visit Duration</td>";
+                    for($i=7; $i<14; $i++){
+                        if(isset($analyticsTotals[$i]['New Visitor']['timeOnSite']))
+                            echo "<td>".gmdate("H:i:s", round(($analyticsTotals[$i]['New Visitor']['timeOnSite'] + $analyticsTotals[$i]['Returning Visitor']['timeOnSite'])/($analyticsTotals[$i]['New Visitor']['visits'] + $analyticsTotals[$i]['Returning Visitor']['visits']),2))."</td>";
+                        else
+                            echo "<td>0</td>";
+                    }
+                    echo "<tr><td class='description'>Unique Visitors</td>";
+                    for($i=7; $i<14; $i++){
+                        echo "<td>".($analyticsTotals[$i]['New Visitor']['visitors'] + $analyticsTotals[$i]['Returning Visitor']['visitors'])."</td>";
+                    }
+                    echo "<tr><td class='description'>Bounce Rate</td>";
+                    for($i=7; $i<14; $i++){
+                        echo "<td>".round(100 * ($analyticsTotals[$i]['New Visitor']['bounces'] + $analyticsTotals[$i]['Returning Visitor']['bounces']) / ($analyticsTotals[$i]['New Visitor']['visits'] + $analyticsTotals[$i]['Returning Visitor']['visits']), 2)."%</td>";
+                    }
+                    echo "<tr><td class='description'>Pages Per Visit</td>";
+                    for($i=7; $i<14; $i++){
+                        echo "<td>".round(($analyticsTotals[$i]['New Visitor']['pageviews'] + $analyticsTotals[$i]['Returning Visitor']['pageviews'])/ ($analyticsTotals[$i]['Returning Visitor']['visits'] + $analyticsTotals[$i]['New Visitor']['visits']), 2)."</td>";
+                    }
+                    echo "<tr><td class='description'>%New Visit</td>";
+                    for($i=7; $i<14; $i++){
+                        echo "<td>".round(100 * ($analyticsTotals[$i]['New Visitor']['visits'] / ($analyticsTotals[$i]['New Visitor']['visits'] + $analyticsTotals[$i]['Returning Visitor']['visits'])), 2)."%</td>";
+                    }
+                }else{
+                    echo "<tr><td colspan='8'>Analytic tracking code pending</td></tr>";
+                }
+//                
+//                
+//                
+//                echo "<tr><td colspan='8' style='text-align:left'>Web Analytics</td></tr>";
+//                foreach($analytics[0] as $description => $total){
+//                    echo "<tr><td class='description'>".$description."</td>";
+//                    foreach($analytics as $day => $daysAnalytics){
+//                        echo "<td>".$daysAnalytics[$description]."</td>";
+//                    }
+//                    echo "</tr>";
+//                }
+                
+                //TOTALS
+                echo "<tr><td colspan='8' style='text-align:left'>Week-to-week Trends</td></tr>";
+                foreach($collectionTotals['lastWeek'] as $description => $obj){
+                    echo "<tr>";
+                    echo "<td class='description'>".$description."</td>";
+                    for($i=0; $i<7; $i++){
+                        echo "<td>";
+                        $countLastWeek = 0;
+                        $countThisWeek = 0;
+                        foreach($collectionTotals['lastWeek'][$description] as $record){
+                            if(substr($record->created_on,0 , 10) == date('Y-m-d', strtotime($startDate." - 1 week + ".$i." days"))){
+                                $countLastWeek++;
+                            }
+                        }
+                        foreach($collectionTotals['thisWeek'][$description] as $record){
+                            if(substr($record->created_on,0 , 10) == date('Y-m-d', strtotime($startDate." + ".$i." days"))){
+                                $countThisWeek++;
+                            }
+                        }
+                        echo ($countThisWeek - $countLastWeek)."</td>";
+                    }
+                    echo "</tr>";
+                }
+                
+                if(sizeof($analyticsTotals) > 0){
+                    //Analytics Totals
+                    echo "<tr><td class='description'>Unique Visitors</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = $day['New Visitor']['visitors'] + $day['Returning Visitor']['visitors'];
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = $analyticsTotals[$key + 7]['New Visitor']['visitors'] + $analyticsTotals[$key + 7]['Returning Visitor']['visitors'];
+                            $difference = $thisWeekTotal - $lastWeekTotal;
+                            echo "<td>".$difference."</td>";
+                        }else
+                            echo "<td>0</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='description'>Pageviews</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = $day['New Visitor']['pageviews'] + $day['Returning Visitor']['pageviews'];
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = $analyticsTotals[$key + 7]['New Visitor']['pageviews'] + $analyticsTotals[$key + 7]['Returning Visitor']['pageviews'];
+                            $difference = $thisWeekTotal - $lastWeekTotal;
+                            echo "<td>".$difference."</td>";
+                        }else
+                            echo "<td>0</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='description'>Pages Per Visit</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = round(($day['New Visitor']['pageviews'] + $day['Returning Visitor']['pageviews'])/ ($day['Returning Visitor']['visits'] + $day['New Visitor']['visits']), 2);
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = ($analyticsTotals[$key + 7]['New Visitor']['pageviews'] + $analyticsTotals[$key + 7]['Returning Visitor']['pageviews'])/ ($analyticsTotals[$key + 7]['Returning Visitor']['visits'] + $analyticsTotals[$key + 7]['New Visitor']['visits']);
+                            $difference = round($thisWeekTotal - $lastWeekTotal, 2);
+                            echo "<td>".$difference."</td>";
+                        }else
+                            echo "<td>0</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='description'>Avg. Visit Duration</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = ($day['New Visitor']['timeOnSite'] + $day['Returning Visitor']['timeOnSite']) / ($day['New Visitor']['visits'] + $day['Returning Visitor']['visits']);
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = ($analyticsTotals[$key + 7]['New Visitor']['timeOnSite'] + $analyticsTotals[$key + 7]['Returning Visitor']['timeOnSite']) / ($analyticsTotals[$key + 7]['New Visitor']['visits'] + $analyticsTotals[$key + 7]['Returning Visitor']['visits']);
+                            $difference = $thisWeekTotal - $lastWeekTotal;
+                            if($difference < 0){
+                                echo "<td>-".gmdate("H:i:s", round(abs($difference)))."</td>";
+                            }else{
+                                echo "<td>".gmdate("H:i:s", round($difference))."</td>";
+                            }
+                        }else
+                            echo "<td>0</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='description'>Bounce Rate</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = ($day['New Visitor']['bounces'] + $day['Returning Visitor']['bounces']) / ($day['New Visitor']['visits'] + $day['Returning Visitor']['visits']);
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = ($analyticsTotals[$key + 7]['New Visitor']['bounces'] + $analyticsTotals[$key + 7]['Returning Visitor']['bounces']) / ($analyticsTotals[$key + 7]['New Visitor']['visits'] + $analyticsTotals[$key + 7]['Returning Visitor']['visits']);
+                            $difference = $thisWeekTotal - $lastWeekTotal;
+                            echo "<td>".round(100 * $difference, 2)."%</td>";
+                        }else
+                            echo "<td>0%</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='description'>%New Visits</td>";
+                    foreach($analyticsTotals as $key => $day){
+                        if($key >= 7)
+                            break;
+                        $lastWeekTotal = ($day['New Visitor']['visits'] / ($day['New Visitor']['visits'] + $day['Returning Visitor']['visits']));
+                        if(isset($analyticsTotals[$key + 7])){
+                            $thisWeekTotal = ($analyticsTotals[$key + 7]['New Visitor']['visits'] / ($analyticsTotals[$key + 7]['New Visitor']['visits'] + $analyticsTotals[$key + 7]['Returning Visitor']['visits']));
+                            $difference = $thisWeekTotal - $lastWeekTotal;
+                            echo "<td>".round(100 * $difference, 2)."%</td>";
+                        }else
+                            echo "<td>0%</td>";
+                    }
+                    echo "</tr>";
+                }else{
+                    echo "<tr><td colspan='8'>Analytic tracking code pending</td></tr>";
+                }
+                ?>
+            </table>
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->

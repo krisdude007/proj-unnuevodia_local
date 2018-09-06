@@ -1,0 +1,48 @@
+<?php
+class clientUser extends eUser
+{
+    public $confirm_password;
+
+    public $newPassword;
+    public $newPasswordConfirm;
+
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function rules()
+    {
+            // NOTE: you should only define rules for those attributes that
+            // will receive user inputs.
+            return array(
+                array('first_name, last_name','filter','filter'=>array($obj=new CHtmlPurifier(),'purify')),
+                array('birthday, first_name, last_name', 'required','on'=>'register,profile,twitter'),
+                array('password, source, confirm_password','required','on'=>'register,twitter'),
+                array('birthday','date','format'=>'yyyy-MM-dd'),
+                array('birthYear','date','format'=>'yyyy'),
+                array('birthMonth','date','format'=>'MM'),
+                array('birthDay','date','format'=>'dd'),
+                array('birthday','ageOfMajority','on'=>'register,profile,twitter'),
+                array('username,source,password','required','on'=>'login'),
+                array('username','required','on'=>'reset'),
+                array('username','unique','on'=>'register,profile,twitter'),
+                array('terms_accepted', 'numerical', 'integerOnly'=>true),
+                array('terms_accepted', 'required', 'requiredValue' => 1, 'message' => 'Por favor, acepte los términos.'),
+                array('username, password, first_name, last_name, source', 'length', 'max'=>255),
+                array('gender', 'length', 'max'=>1),
+                array('role', 'length', 'max'=>14),
+                array('confirm_password', 'compare', 'compareAttribute'=>'password', 'on'=>'register'),
+
+                array('newPassword, newPasswordConfirm', 'required', 'on' => 'changePassword'),
+                array('newPasswordConfirm', 'compare', 'compareAttribute' => 'newPassword', 'message' => "New passwords do not match.", 'on'=>'changePassword'),
+                array('newPassword, newPasswordConfirm', 'length', 'min' => 6, 'max' => 255),
+
+                array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert, register, twitter, facebook'),
+                array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update, profile'),
+                // The following rule is used by search().
+                // Please remove those attributes that should not be searched.
+                array('id, username, password, birthday, gender, first_name, last_name, terms_accepted, source, created_on, updated_on', 'safe', 'on'=>'search'),
+
+            );
+    }
+}

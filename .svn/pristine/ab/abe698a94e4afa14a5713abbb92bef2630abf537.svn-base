@@ -1,0 +1,34 @@
+<div id="content">
+    <div>
+        <div style="width:70%;float:left;margin-top:5px;position:relative;height:275px">
+
+            <div style="float:left; clear:both;margin-top:80px; margin-left:80px; margin-bottom:40px;">
+                
+            </div>
+
+            <div style="float:left; clear:both;">
+                <img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/video/congrats.png" style="margin-left:84px;">
+            </div>
+
+            <div style="float:left; clear:both; margin-left:84px; margin-top:15px;">
+                <div style="margin-bottom:30px; text-align: left; font-family: Arial; font-size:16px">
+                    Your video has been submitted and will be approved shortly. In the meantime,<br>
+                    don't stop now! Send us a text or watch other viewer videos.
+                </div>                                           
+
+                <div style="float:left; width:128px; margin-top:20px;">
+                    <a href="<?php echo Yii::app()->request->baseurl; ?>/questions">
+                        <img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/buttons/Record-Now-Button.png">
+                    </a>
+                </div>   
+                
+                <div style="float:left; margin-top:30px; margin-left: 20px; text-align: left;">
+                    <div><img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/video/next-question.png"></div>
+                    <div>&nbsp;</div>
+                    <div><?php echo $question->question;?></div>
+                </div>    
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="fabmob_content-container text-center">
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-login-form',
+        'enableAjaxValidation' => true,
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+            'validateOnType' => false,
+        )
+    ));
+    ?>
+    <br/>
+    <h2 class="text-center text">Forgot Password</h2>
+    <br/>
+    <div class="form-group">
+        <?php echo $form->emailField($model, 'username', array('class' => 'form-control', 'placeholder' => "Email")); ?>
+        <?php echo $form->error($model, 'username'); ?>
+    </div>
+    <br/>
+    <div>
+        <button id="js-forgot-password-btn" type="submit" class="btn btn-default">Submit</button>
+    </div>
+    <a class="active" id="fabmob_forgot-password-cancel-link" href="/login">cancel</a>
+    <?php $this->endWidget(); ?>
+</div>

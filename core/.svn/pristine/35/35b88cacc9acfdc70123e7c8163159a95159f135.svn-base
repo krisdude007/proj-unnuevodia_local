@@ -1,0 +1,41 @@
+$(document).ready(function () {
+    var filterDate = getStartDate();
+lineGrapher('userGraph', 'user','ajaxGetLineGraphData', getMonthAgo(), 'total', null);
+pieGrapher('videoGraph', 'video','ajaxGetGraphData', filterDate, 'total');
+barGrapher('tickerGraph', 'ticker','ajaxGetGraphData', filterDate, 'total');
+barGrapher('voteGraph', 'vote','ajaxGetGraphData', filterDate, 'total');
+pieGrapher('imageGraph', 'image','ajaxGetGraphData', filterDate, 'total');
+});
+
+function getMonthAgo(){
+    return $("#monthAgo").html();
+}
+
+function boldCurrentLink(obj){
+    var nodes = obj.parentNode.childNodes;
+    for(var i = 0; i < nodes.length; i++){
+        if(nodes[i].nodeName.toLowerCase() === 'a'){
+            nodes[i].style.fontWeight = 'normal';
+        }
+    }
+    obj.style.fontWeight = 'bold';
+}
+
+function graph(id, date){
+    $("#"+id+"Graph").html('<img src="/core/webassets/images/spinner.gif" width="100" style="display: block;margin:0px auto;">');
+    var request = $.ajax({
+        url:"/adminReport/ajaxDashboardGraph",
+        type:'POST',
+        data:({
+            metric:id,
+            date:date,
+            YII_CSRF_TOKEN: getCsrfToken()
+        }),
+        success: function(data){
+            $("#"+id+"Graph").html(data);
+        },
+        error: function(data){
+            console.log('Unable to update analytics.');
+        }
+    });
+}

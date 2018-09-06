@@ -1,0 +1,105 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile('/core/webassets/js/adminEntity/index.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/adminEntity/index.css');
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+$this->renderPartial('/admin/_csrfToken');
+?>
+
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/dashboard-icon.png" style="margin-right: 10px;float:left;"/>Entity Editor</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+
+        <!-- END PAGE HEADER-->
+        <div id="fab-dashboard">
+            <div style="padding:0px 20px 0px 20px;">    
+                <div>
+                    <h2>Create New Entity:</h2>
+                    <div class="form">
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'admin-entity-form',
+                            'enableAjaxValidation' => true,
+                            'htmlOptions' => array('enctype' => 'multipart/form-data'),
+                                ));
+                        ?>    
+                        <?php echo $form->errorSummary($entity); ?>
+                        <div class="clearfix">
+                            <?php echo $form->labelEx($entity, 'name'); ?>
+                            <?php echo $form->textField($entity, 'name'); ?>
+                            <?php echo $form->error($entity, 'name'); ?>
+                        </div>
+                        <div class="clearfix">
+                            <?php echo $form->labelEx($entity, 'link'); ?>
+                            <?php echo $form->textField($entity, 'link'); ?>
+                            <?php echo $form->error($entity, 'link'); ?>
+                        </div>
+                        <div>
+                            <?php echo $form->labelEx($image, 'image'); ?>
+                            <?php foreach($entity->images as $k=>$v): ?>
+                            <a href="#" class="ajaxSetEntityAvatar" rel="<?php echo $entity->id; ?>" rev="<?php echo $v->id; ?>">
+                                <img class="<?php echo ($v->is_avatar) ? 'avatar' : ''; ?>" style='height:60px;width:60px;border:1px solid black;margin-left:5px;' src="<?php echo PATH_USER_IMAGES.'/'.$v->filename; ?>"></img>
+                            </a>                                    
+                            <?php endforeach; ?>
+                            <br />
+                            Click on an avatar to set it as the default avatar for the entity, or upload a new avatar: <br>
+                            <?php echo $form->fileField($image, 'image'); ?>
+                            <?php echo $form->error($image, 'image'); ?>
+                        </div>
+                        <div class="clearfix" style="margin-top:20px">
+                            <?php echo CHtml::submitButton('Submit'); ?>
+                            <?php echo CHtml::Button('Clear',Array('onclick'=>'window.location = "/admin/entity"')); ?>
+                        </div>
+
+                        <?php $this->endWidget(); ?>
+
+                    </div>
+
+                </div>
+                <div style="margin-top:40px;">
+                    <h2>Edit Entity:</h2>
+                    <div style="margin-bottom:20px">
+                        Click on the column title to sort by that column.<br>
+                        Click on the entity image or name to edit it.<br>
+                        Click on the entity link to preview that link.<br>
+                    </div>        
+                    <table id="entityTable">
+                        <thead>
+                            <tr>
+                                <th style="width:80px">Image</th>                                
+                                <th>Name</th>
+                                <th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $rowFormat = "
+                                <tr>
+                                    <td><a href='/admin/entity/%s'><img style='height:60px;width:60px;border:1px solid white;margin-left:5px;' src='%s' /></a></td>                                
+                                    <td><a href='/admin/entity/%s'>%s</a></td>
+                                    <td><a href='%s' target='_blank'>%s</a></td>
+                                </tr>
+                            ";
+                            foreach ($entities as $k => $v) {
+                                echo sprintf($rowFormat,
+                                    $v->id,PATH_USER_IMAGES.'/'.$v->images[0]->filename,                                        
+                                    $v->id, $v->name,
+                                    $v->link, $v->link
+                                );
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

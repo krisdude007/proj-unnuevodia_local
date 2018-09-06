@@ -1,0 +1,36 @@
+<?php
+/* @var $this UserController */
+?>
+<div id="content">
+    <div class="you">
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+        <div class="verticalRule">
+            <img src="/webassets/images/you/profile.divider.png" />
+        </div>
+        <div class="youContent">
+
+
+            <div class="profile">        
+
+                <div style="margin-top:20px; text-align: left;">
+                    <img src="<?php echo Yii::app()->request->baseurl; ?>/webassets/images/you/header-settings.png">
+                </div>
+                
+                <?php
+                $this->renderPartial('/user/_formProfile', array(
+                    'user' => $user,
+                    'userEmail' => $userEmail,
+                    'userLocation' => $userLocation,
+                    'image' => $image,
+                        )
+                );
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

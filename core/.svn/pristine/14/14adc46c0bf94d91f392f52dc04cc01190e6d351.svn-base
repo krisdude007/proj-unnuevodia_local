@@ -1,0 +1,15 @@
+.ui-tabs-nav li.ui-tabs-active a{
+    font-weight:bold
+}
+.removeFilter{
+    color:#000;
+    float:left;
+    font-size:8px;
+    margin-top:-5px;
+    margin-left:2px;
+}
+.filterDisplay{
+    float:left;
+    margin-right:10px
+}
+#map-canvas img{max-width: inherit;}

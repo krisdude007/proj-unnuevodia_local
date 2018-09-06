@@ -1,0 +1,1 @@
+<div id="csrfToken" style="display:none;"><?php echo Yii::app()->request->csrfToken;?></div>

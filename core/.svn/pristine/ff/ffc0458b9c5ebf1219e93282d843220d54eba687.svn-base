@@ -1,0 +1,36 @@
+/* 
+    Document   : index
+    Created on : Jun 17, 2013, 9:55:04 AM
+    Author     : Greg Stringer
+    Description: Fine tunining of the image page should take place here.
+*/
+
+.errorMessage{color:red}
+.linkButton {
+    border:0px;
+    width:100px;
+    height: 23px;
+    background-color: #f17100;
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:18px;
+    font-weight:bold;
+    padding:6px 10px;
+    margin: 5px;
+    text-decoration:none;
+    text-align: center;
+    /*text-shadow:1px 1px 0px #528ecc;*/
+}
+.linkButton:hover {
+    color:#EEEEEE;
+}
+.linkButton:active {
+    position:relative;
+    top:1px;
+}
+.linkButton:visited {
+    color:#ffffff;
+    position:relative;
+    top:1px;
+}

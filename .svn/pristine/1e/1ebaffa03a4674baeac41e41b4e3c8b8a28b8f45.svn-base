@@ -1,0 +1,249 @@
+<?php
+
+// uncomment the following to define a path alias
+// Yii::setPathOfAlias('local','path/to/local-folder');
+// This is the main Web application configuration. Any writable
+// CWebApplication properties can be configured here.
+require('constants.php');
+if(defined(CLIENT_TZ)){
+    date_default_timezone_set(CLIENT_TZ);
+} 
+list($tld,$host,$subdomain,$developer) = array_reverse(explode(".",$_SERVER["HTTP_HOST"]));
+$dbname = (isset($developer)) 
+        ? ($developer == 'stage') ? strtolower($subdomain).'_stage' : strtolower($subdomain).'_dev'
+        : strtolower($subdomain);
+return array(
+    'import' => array(
+        'client.models.*',
+        'client.components.*',
+    ),
+    //'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name' => SITE_NAME, 
+    // preloading 'log' component
+    'preload' => array('log'),
+    'language'=>'en',
+    // application components
+    'components' => array(
+        'user' => array(
+            // enable cookie-based authentication
+            'allowAutoLogin' => true,
+        ),
+        'request' => array(
+            'enableCsrfValidation' => true,
+            'enableCookieValidation' => true,
+            //'class' => 'application.components.GHttpRequest',
+        ),
+        // uncomment the following to enable URLs in path-format
+        'urlManager' => array(
+            'showScriptName' => false,
+            'urlFormat' => 'path',
+            'rules' => array(
+                'thanks' => '/video/thanks',
+                'help' => '/user/help',
+                'capture' => '/video/capture',
+                'process/<id:\d+>' => '/video/process',
+                'register' => '/user/register',
+                'login' => '/user/login',
+                'logout' => '/user/logout',
+                'forgot/<key:\w+>' => '/user/forgot',
+                'forgot' => '/user/forgot',
+                'videos' => '/video/index',
+                'videos/<order:\w+>' => '/video/index',
+                'play/<view_key:\w+>' => '/video/play',
+                
+                'images' => '/image/index',
+                'images/<order:\w+>' => '/image/index',
+                'viewimage/<view_key:\w+>' => '/image/view',
+                'avatar' => '/user/userphoto',
+                'vote/<id:\d+>' => '/poll/index',
+                'vote' => '/poll/index',
+                'you' => '/user/index',
+                'terms' => '/user/termsoverlay',
+                'privacyoverlay' => '/user/privacyoverlay',
+                'you/<order:recent|views|rating>' => '/user/index',
+                'you/imageview/<order:recent|views|rating>' => '/user/imageview',
+                'you/<action:\w+>' => '/user/<action>',
+                'record/<id:\d+>' => '/video/record',
+                'record' => '/video/record',
+                
+                'upload/<id:\d+>' => '/image/upload',
+                'upload' => '/image/upload',
+
+                'password' => '/user/password',
+                'profile' => '/user/profile',
+                
+                'questions' => '/question/index',
+                'ticker' => '/ticker/index',
+                'user' => '/user',
+                'user/<id:\d+>' => '/user/view',
+                'user/<id:\d+>/<order:\w+>' => '/user/view',
+                'user/video/<id:\d+>' => '/user/video',
+                'user/image/<id:\d+>' => '/user/image',
+                'user/video/<id:\d+>/<order:\w+>' => '/user/video',
+                'user/image/<id:\d+>/<order:\w+>' => '/user/image',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ),
+        ),
+        'db' => array(
+            'connectionString' => 'mysql:host='.DATABASE_HOST.';dbname='.DATABASE_PREFIX.$dbname,
+            'emulatePrepare' => true,
+            'schemaCachingDuration' => 3600,
+            'username' => DATABASE_USER,
+            'password' => DATABASE_PASSWORD,
+            'charset' => 'utf8',
+        ),
+        'errorHandler' => array(
+            // use 'site/error' action to display errors
+            'errorAction' => 'site/error',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            // uncomment the following to show log messages on web pages
+                /*
+              array(
+              'class'=>'CWebLogRoute',
+              ),
+                 * 
+                 */
+            ),
+        ),
+        'twitter' => (TWITTER_ACTIVE)
+            ? array(
+                'class' => 'ext.yiitwitteroauth.YiiTwitter',
+                'consumer_key' => TWITTER_CONSUMER_KEY,
+                'consumer_secret' => TWITTER_CONSUMER_SECRET,
+                'callback' => 'http://' . $_SERVER['HTTP_HOST'] . '/twitterConnect',
+            )
+            : array(),
+        'facebook' => (FACEBOOK_ACTIVE)
+            ? array(
+                'class' => 'ext.yii-facebook-opengraph.SFacebook',
+                'appId' => FACEBOOK_APPLICATION_ID, // needed for JS SDK, Social Plugins and PHP SDK
+                'secret' => FACEBOOK_APPLICATION_SECRET, // needed for the PHP SDK
+                'fileUpload'=>true, // needed to support API POST requests which send files
+                //'trustForwarded'=>false, // trust HTTP_X_FORWARDED_* headers ?
+                //'locale'=>'en_US', // override locale setting (defaults to en_US)
+                //'jsSdk'=>true, // don't include JS SDK
+                //'async'=>true, // load JS SDK asynchronously
+                //'jsCallback'=>false, // declare if you are going to be inserting any JS callbacks to the async JS SDK loader
+                //'status'=>true, // JS SDK - check login status
+                //'cookie'=>true, // JS SDK - enable cookies to allow the server to access the session
+                //'oauth'=>true,  // JS SDK - enable OAuth 2.0
+                //'xfbml'=>true,  // JS SDK - parse XFBML / html5 Social Plugins
+                //'frictionlessRequests'=>true, // JS SDK - enable frictionless requests for request dialogs
+                //'html5'=>true,  // use html5 Social Plugins instead of XFBML
+                'ogTags' => array(// set default OG tags
+                    'og:title' => SITE_NAME,
+                    'og:description' => SITE_NAME,
+                    'og:image' => 'http://'. $_SERVER['HTTP_HOST'] . '/webassets/images/icons/shareImage.png',
+                ),
+            )
+            : Array(),
+        'Paypal' => (PAYPAL_ACTIVE)
+            ? Array(
+                'class'=>'application.components.Paypal',
+                'apiUsername' => PAYPAL_USERNAME,
+                'apiPassword' => PAYPAL_PASSWORD,
+                'apiSignature' => PAYPAL_SIGNATURE,
+                'apiLive' => false,
+
+                'returnUrl' => PAYPAL_RETURN_URL, //regardless of url management component
+                'cancelUrl' => PAYPAL_CANCEL_URL, //regardless of url management component
+            )
+            : Array(),        
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'noCsrfValidationRoutes'=>array('facebook/index'),        
+        'contacts' => Array(
+            'Admin Email' => YOUTOO_SUPPORT_EMAIL,
+            'Support Email' => YOUTOO_SUPPORT_EMAIL,
+            'Support Phone' => YOUTOO_SUPPORT_PHONE,
+            '24/7 Critical Email' => YOUTOO_CRITICAL_EMAIL,
+            '1st Contact' => YOUTOO_FIRST_CONTACT,
+            '2nd Contact' => YOUTOO_SECOND_CONTACT,
+            '3rd Contact' => YOUTOO_THIRD_CONTACT,
+            'ftp_file_transfer' => array('greg.stringer@gmail.com', 
+                                         'radio@dubterrain.net')
+        ),
+        'facebook' => (FACEBOOK_ACTIVE)
+            ? Array(                
+                'pageID'=>FACEBOOK_PAGE_ID,
+            )
+            : Array(),
+        'twitter' => (TWITTER_ACTIVE)
+            ? Array(
+                'consumerKey'=>TWITTER_CONSUMER_KEY,
+                'consumerSecret'=>TWITTER_CONSUMER_SECRET,
+                'adminAccessToken' =>TWITTER_ADMIN_ACCESS_TOKEN,
+                'adminTokenSecret' =>TWITTER_ADMIN_TOKEN_SECRET,
+                'streamFile'=>$_SERVER['DOCUMENT_ROOT'].'/twitter.txt',
+            )
+            : Array(),
+        'client' => $subdomain,
+        'maxActiveQuestions' => MAX_ACTIVE_QUESTIONS,
+        'paths' => array(
+            'video' => $_SERVER['DOCUMENT_ROOT'] . PATH_USER_VIDEOS,
+            'avatar' => $_SERVER['DOCUMENT_ROOT'] . PATH_USER_IMAGES,
+            'image' => $_SERVER['DOCUMENT_ROOT'] . PATH_USER_IMAGES,
+        ),
+        'wowza' => array(
+            'ip' => WOWZA_IP,
+            'clientip' => WOWZA_CLIENT_IP,
+            'user' => WOWZA_USER,
+            'password' => WOWZA_PASSWORD,
+            'path' => WOWZA_PATH,
+        ),
+        'brightcove' => array(
+            'playerID' =>BRIGHTCOVE_PLAYER_ID,
+            'playerKey' =>BRIGHTCOVE_PLAYER_KEY,
+        ),
+        
+        /*
+         * FTP
+         */
+        'ftp' => array(
+            'server' => FTP_SERVER,
+            'port' => FTP_PORT,
+            'secure' => FTP_SECURE,
+            'passive' => FTP_PASSIVE,
+            'user' => FTP_USER,
+            'pass' => FTP_PASSWORD,
+            'uploadPath' => FTP_PATH,
+        ),
+        
+        /*
+         * Need to keep this stuff separated by admin section if possible.
+         */
+        'ticker' => array(
+            'sleepTime'=>TICKER_SLEEP_TIME,
+        ),
+        'video' => array(
+            'duration' => VIDEO_DURATION,
+        ),
+        'videoAdmin' => array(
+            'perPage' => 12,
+            'indicatorThreshold' => array(
+                'min' => 0.2,
+                'max' => 0.5,
+            ),
+        ),
+        'imageAdmin' => array(
+            'perPage' => 12,
+        ),
+        'analytics' => array(
+            'username' => ANALYTICS_USER,
+            'password' => ANALYTICS_PASSWORD,
+            'projectId' => ANALYTICS_PROJECT_ID,
+            'startDate' => ANALYTICS_START_DATE,
+        ),
+    ),
+);

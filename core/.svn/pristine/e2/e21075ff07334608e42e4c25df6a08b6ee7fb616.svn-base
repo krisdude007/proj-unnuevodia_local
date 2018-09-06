@@ -1,0 +1,175 @@
+<?php
+
+/**
+ * This is the model class for table "game_choice".
+ *
+ * The followings are the available columns in table 'game_choice':
+ * @property integer $id
+ * @property integer $user_id
+ * @property string $type
+ * @property string $question
+ * @property string $description
+ * @property double $price
+ * @property string $prize
+ * @property integer $is_active
+ * @property integer $is_deleted
+ * @property string $created_on
+ * @property string $updated_on
+ *
+ * The followings are the available model relations:
+ * @property User $user
+ * @property GameChoiceAnswer[] $gameChoiceAnswers
+ * @property GameChoiceResponse[] $gameChoiceResponses
+ * @property GameChoiceSmsinbound[] $gameChoiceSmsinbounds
+ * @property GamingTransaction[] $gamingTransactions
+ */
+class eGameChoice extends GameChoice {
+
+    public $num_users;
+    public $num_plays;
+    public $spent;
+    public $winner_id = NULL;
+
+    public static function getNumberOfActiveGames() {
+        return self::model()->isActive()->count();
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('user_id', 'default', 'value' => Yii::app()->user->getId()),
+            array('user_id, type, question, description', 'required'),
+            array('user_id, is_active, is_deleted', 'numerical', 'integerOnly' => true),
+            array('price', 'numerical', 'integerOnly'=>false),
+            array('type', 'length', 'max' => 8),
+            array('question, prize', 'length', 'max' => 256),
+            array('description', 'length', 'max' => 512),
+            array('price', 'default', 'value' => 5),
+            array('is_active, is_deleted', 'default', 'value' => 0),
+            array('created_on, updated_on', 'default', 'value' => date("Y-m-d H:i:s"), 'setOnEmpty' => false, 'on' => 'insert'),
+            array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"), 'setOnEmpty' => false, 'on' => 'update'),
+            array('id, user_id, type, question, price, prize, is_active, is_deleted, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'gameChoiceAnswers' => array(self::HAS_MANY, 'eGameChoiceAnswer', 'game_choice_id'),
+            'gameChoiceResponse' => array(self::HAS_MANY, 'eGameChoiceResponse', 'game_choice_id'),
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'user_id' => 'User',
+            'type' => 'Type',
+            'question' => 'Question',
+            'description' => 'Description',
+            'price' => 'Price to Play',
+            'prize' => 'Prize',
+            'is_active' => 'Is Active',
+            'is_deleted' => 'Is Deleted',
+            'created_on' => 'Created On',
+            'updated_on' => 'Updated On',
+        );
+    }
+
+    
+    
+    
+    public function scopes() {
+        return array(
+            'recent' => array('order' => '`t`.`id` DESC'),
+            'deleted' => array(
+                'condition' => "is_deleted = '1'"
+            ),
+            'multiple' => array(
+                'condition' => "type = 'multiple'"
+            ),
+            'hotornot' => array(
+                'condition' => "type = 'hotornot'"
+            ),
+            'notdeleted' => array(
+                'condition' => "is_deleted = '0'"
+            ),
+            'orderByCreatedDesc' => array(
+                'order' => '`t`.created_on DESC',
+            ),
+            'orderByCreatedAsc' => array(
+                'order' => '`t`.created_on ASC',
+            ),
+            'orderByIDDesc' => array(
+                'order' => '`t`.id DESC',
+            ),
+            'isActive' => array(
+                'condition' => "is_active = '1'",
+            ),
+            'isNotActive' => array(
+                'condition' => "is_active = '0'",
+            ),
+        );
+    }
+
+    
+    public function getUniqueUsers($game_choice_id) {
+        $criteria = new CDbCriteria();
+        $criteria->distinct = true;
+        $criteria->condition = "game_choice_id={$game_choice_id}";
+        $criteria->select = 'user_id';
+        
+        return eGameChoiceResponse::model()->findAll($criteria);
+    }
+
+    public function afterFind() {
+        $this->num_users = count(eGameChoice::getUniqueUsers($this->id));
+
+        $this->num_plays = eGameChoiceResponse::model()->count("game_choice_id={$this->id}");
+
+        if($this->is_active == 0)
+        {
+            $responses = eGameChoiceResponse::model()->findByAttributes(array('game_choice_id' => $this->id, 'is_winner' => 1));
+
+            if($responses != NULL) {
+                $user = eUser::model()->findByPk($responses->user_id);
+                $this->winner_id = $user->id;
+            }
+            else
+            {
+                $this->winner_id = NULL;
+            }
+        }
+
+        $this->spent = $this->num_plays * $this->price;
+
+        return parent::afterFind();
+    }
+
+    public function filterByDates($startDate, $endDate) {
+        return DateTimeUtility::filterByDates($this, $startDate, $endDate);
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return GameChoice the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+}

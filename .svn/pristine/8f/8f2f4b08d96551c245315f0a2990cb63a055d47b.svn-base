@@ -1,0 +1,305 @@
+<?php
+
+class clientUserController extends UserController {
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+    }
+
+    public function actionIndex($id = null) {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/user/login'));
+        }
+
+        if (!isset($id)) {
+            $id = Yii::app()->user->getId();
+        }
+        $user = eUser::model()->with('userDetail')->findByPK($id);
+        if (!$user) {
+            throw new CHttpException(404, 'User not found.');
+        }
+
+        $video = new eVideo;
+        $videos = $video->orderBy($id); // default order
+
+        $this->render('index', array(
+            'user' => $user,
+            'userDetail' => $user->userDetail,
+            'videos' => $videos,
+        ));
+    }
+
+    public function actionDetails() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/user/login'));
+        }
+
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        if (!$user) {
+            // This should never happen, unless the current user's user record
+            // is deleted from the database after the user has logged in.
+            throw new CHttpException(404, 'User not found.');
+        }
+
+        // Look up the user's details.
+        // If the user does not have a detail record, create one.
+        $userDetail = eUserDetail::model()->findByAttributes(array('user_id' => $user_id));
+        if (!$userDetail) {
+            $userDetail = new eUserDetail();
+            $userDetail->user_id = $user_id;
+        }
+
+        // Ajax handler.
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-detail-form') {
+            echo CActiveForm::validate(array($userDetail));
+            Yii::app()->end();
+        }
+
+        // Form handler.
+        if (isset($_POST['eUserDetail'])) {
+            $userDetail->attributes = $_POST['eUserDetail'];
+            if ($userDetail->save()) {
+                Yii::app()->user->setFlash('success', "User details updated.");
+            }
+        }
+
+        $this->render('details', array(
+            'user' => $user,
+            'userDetail' => $userDetail,
+        ));
+    }
+
+    // This password update/reset works a bit differently than the basic one
+    // in core; this requires the user to enter the old password.
+    public function actionPassword() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $user->setScenario('changePassword');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-password-form') {
+            echo CActiveForm::validate(array($user));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'])) {
+            $user->attributes = $_POST['eUser'];
+            if ($user->validate()) {
+                $user->password = $user->newPassword;
+                if ($user->save()) {
+                    Yii::app()->user->setFlash('success', "User password updated.");
+                }
+            }
+        }
+
+        $this->render('password', array(
+            'user' => $user,
+        ));
+    }
+
+    // This is a "core-style" password reset; the scenario just requires
+    // the new password and a matching confirmation.
+    // It uses the same view and form/partial as actionPassword;
+    // the partial checks the scenario and hides the old password field.
+    public function actionResetPassword() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $user->setScenario('resetPassword');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-password-form') {
+            echo CActiveForm::validate(array($user));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'])) {
+            $user->attributes = $_POST['eUser'];
+            if ($user->validate()) {
+                $user->password = $user->newPassword;
+                if ($user->save()) {
+                    Yii::app()->user->setFlash('success', "User password updated.");
+                }
+            }
+        }
+
+        $this->render('password', array(
+            'user' => $user,
+        ));
+    }
+
+    // Override core so we can redirect the user to the /resetpassword page.
+    // Other than the change to the redirect, this is copied from core.
+    public function actionForgot($key = false) {
+        if (!$key) {
+            $model = new eUser;
+            $model->setScenario('reset');
+            if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-login-form') {
+                echo CActiveForm::validate($model);
+                Yii::app()->end();
+            }
+            if (isset($_POST['eUser'])) {
+                $model->attributes = $_POST['eUser'];
+                if ($model->validate()) {
+                    $userRecord = $model->findByAttributes(array('username' => $model->username));
+                    $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $userRecord->id));
+                    $reset = new eUserReset;
+                    $reset->user_id = $userRecord->id;
+                    $reset->key = sha1(uniqid());
+                    $reset->expired = 0;
+                    if ($reset->save()) {
+                        $result = MailUtility::send('password', $userEmail->email, array('link' => "http://{$_SERVER['HTTP_HOST']}/forgot/{$reset->key}"));
+                        if ($result) {
+                            Yii::app()->user->setFlash('success', "A reset message has been sent to {$userEmail->email}.  Please follow the instructions there.");
+                        } else {
+                            Yii::app()->user->setFlash('error', "We were unable to send a reset message to {$model->username}.");
+                        }
+                    } else {
+                        Yii::app()->user->setFlash('error', "We were unable to send a reset message to {$model->username}.");
+                    }
+                }
+            }
+            $this->render('forgot', array('model' => $model));
+        } else {
+            $reset = eUserReset::model()->active()->findByAttributes(array('key' => $key, 'expired' => 0));
+            if ($reset->user_id) {
+                $reset->expired = 1;
+                $reset->save();
+                $user = eUser::model()->findByPK($reset->user_id);
+                $user->scenario = 'reset';
+                if (UserUtility::login($user)) {
+                    $this->redirect('/resetpassword');
+                } else {
+                    $this->redirect('/login');
+                }
+            } else {
+                $this->redirect(Yii::app()->createUrl('/user/login'));
+            }
+        }
+    }
+
+    public function actionRegister() {
+        if (!Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user = new eUser;
+        $userEmail = new eUserEmail;
+        $user->setScenario('register');
+        $userEmail->setScenario('register');
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-register-form') {
+
+            echo CActiveForm::validate(array($user, $userEmail));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['eUser'], $_POST['eUserEmail'])) {
+            $user->attributes = $_POST['eUser'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->type = 'primary';
+            $user->username = $userEmail->email;
+            $user->source = 'web';
+            
+            if(UserUtility::register($user,$userEmail)){
+                $result = MailUtility::send('register',$userEmail->email, array('link' => "http://{$_SERVER['HTTP_HOST']}/login/"));
+                if ($result){
+                $this->render('_registrationSuccess'); 
+                } else {
+                     Yii::app()->user->setFlash('error', "We were unable to send a register confirmation message to {$user->username}.");
+                 }
+            }
+
+        } else {
+
+            $this->render('register', array(
+                'user' => $user,
+                'userEmail' => $userEmail
+            ));
+
+        }
+
+    } // end function - actionRegister
+
+    // Override core because this client does not require a location,
+    // and the user photo is set on a separate page/form.
+    public function actionProfile() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+        }
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+        $userEmail = (is_null($userEmail)) ? new eUserEmail : $userEmail;
+        $user->setScenario('profile');
+        $userEmail->setScenario('profile');
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profile-form') {
+            echo CActiveForm::validate(array($user, $userEmail));
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUser'], $_POST['eUserEmail'])) {
+            $user->attributes = $_POST['eUser'];
+            $user->birthday = $user->birthYear . '-' . $user->birthMonth . '-' . $user->birthDay;
+            $user->username = $_POST['eUserEmail']['email'];
+            $userEmail->attributes = $_POST['eUserEmail'];
+            $userEmail->user_id = $user->id;
+            if ($user->validate() && $userEmail->validate()) {
+                $user->save();
+                $userEmail->save();
+                Yii::app()->user->setFlash('success', "User profile updated.");
+            }
+        }
+        $this->render('profile', array(
+            'user' => $user,
+            'userEmail' => $userEmail,
+        ));
+    }
+    
+     public function actionUserPhoto() {
+         if (Yii::app()->user->isGuest) {
+            $this->redirect('/');
+         }
+         $user_id = Yii::app()->user->getId();
+         $user = eUser::model()->findByPK($user_id);
+         //echo 'user id is :' . var_export(($user_id), true); exit;
+         $userPhoto = eUserPhoto::model()->findByAttributes(array('user_id' => $user->id, 'type' => 'primary'));
+         $userPhoto = (is_null($userPhoto)) ? new eUserPhoto : $userPhoto;
+         $userPhoto->setScenario('profilephoto');
+         if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-profilephoto-form') {
+            echo CActiveForm::validate(array($userPhoto));
+            Yii::app()->end();
+        }
+        if (isset($_POST['eUserPhoto'])) {
+            $userPhoto->attributes = $_POST['eUserPhoto'];
+            $userPhoto->user_id = $user->id;
+            $userPhoto->filename = CUploadedFile::getInstance($userPhoto, 'image');
+            if ($userPhoto->validate()) {
+                if (!empty($userPhoto->filename)) {
+                    if ($userPhoto->save()) {
+                        preg_match('/\..{3,4}$/', $userPhoto->filename->getName(), $matches);
+                        $filetype = $matches[0];
+                        $filename = "{$user->id}_". md5($userPhoto->filename) . $filetype;
+                        $userPhoto->filename->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+                        $userPhoto->filename = $filename;
+                        $userPhoto->save();
+                    }
+                }
+                Yii::app()->user->setFlash('success', "User profile pic updated.");
+            }
+        }
+         $this->render('userphoto', array(
+             'user' => $user,
+             'userPhoto' => $userPhoto,
+        ));
+     }
+    
+}

@@ -1,0 +1,11 @@
+
+            <h2 class="title">
+                <span id="startDate"><?php echo(is_numeric($daysBack) ? date('M j, Y', strtotime(-$daysBack . ' days')) : date('M j, Y', strtotime(Yii::app()->params['analytics']['startDate'])));?></span> - <?php echo(date('M j, Y', strtotime("-1 day"))); ?>
+            </h2>
+            <div class="reportFilterWrap">
+                <a href="/adminReport/<?php echo($this->action->Id);?>/daysBack/total<?php echo isset($request) ? '/request/'.$request : ''; ?>"><div class="reportFilterButton<?php if($daysBack != 30 && $daysBack != 7 && $daysBack != 1):?> reportActiveFilter<?php endif;?>">Current Total</div></a>
+                <a href="/adminReport/<?php echo($this->action->Id);?>/daysBack/30<?php echo isset($request) ? '/request/'.$request : ''; ?>"><div class="reportFilterButton<?php if($daysBack == 30):?> reportActiveFilter<?php endif;?>">Last 30 days</div></a>
+                <a href="/adminReport/<?php echo($this->action->Id);?>/daysBack/7<?php echo isset($request) ? '/request/'.$request : ''; ?>"><div class="reportFilterButton<?php if($daysBack == 7):?> reportActiveFilter<?php endif;?>">Last 7 days</div></a>
+                <a href="/adminReport/<?php echo($this->action->Id);?>/daysBack/1<?php echo isset($request) ? '/request/'.$request : ''; ?>"><div class="reportFilterButton<?php if($daysBack == 1):?> reportActiveFilter<?php endif;?>">Yesterday</div></a>
+                <div class="clear"></div>
+            </div>

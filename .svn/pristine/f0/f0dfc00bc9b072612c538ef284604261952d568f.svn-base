@@ -1,0 +1,72 @@
+<?php
+
+// This is the configuration for yiic console application.
+// Any writable CConsoleApplication properties can be configured here.
+require('constants.php');
+if(defined('CLIENT_TZ')){
+    date_default_timezone_set(CLIENT_TZ);
+} 
+require(Yii::getPathOfAlias('core').'/config/constants.php');
+$docroot = dirname(__FILE__).'/../..'; 
+$pathParts = explode('/',$docroot);
+$dbname = ($pathParts[4] == 'dev')
+        ? $pathParts[6].'_'.$pathParts[4]
+        : $pathParts[4];
+$client = ($pathParts[4] == 'dev')
+        ? $pathParts[6]
+        : $pathParts[4];
+
+return array(
+    'commandPath' => Yii::getPathOfAlias('core').'/commands',
+    'import' => array(
+        'core.models.*',
+        'core.components.*',
+        'core.components.utilities.*',
+        'client.models.*',
+    ),
+    //'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+    'name' => ucfirst(basename($docroot)),
+    // preloading 'log' component
+    'preload' => array('log'),
+    // application components
+    'components' => array(
+        'db' => array(
+            'connectionString' => 'mysql:host='.DATABASE_HOST.';dbname='.DATABASE_PREFIX.$dbname,
+            'emulatePrepare' => true,
+            'schemaCachingDuration' => 3600,
+		'username' => DATABASE_USER,
+            'password' => DATABASE_PASSWORD,
+            'charset' => 'utf8',
+        ),
+        'log' => array(
+            'class' => 'CLogRouter',
+            'routes' => array(
+                array(
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
+                ),
+            ),
+        ),
+    ),
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => array(
+        'ftp_naming_convention_video' => 'UND'.date('m').date('d').'V',
+        'ftp_naming_convention_image' => 'UND'.date('m').date('d').'P',
+        'docroot' => $docroot,
+        'twitter' => (TWITTER_ACTIVE)
+            ? Array(
+                'consumerKey'=>TWITTER_CONSUMER_KEY,
+                'consumerSecret'=>TWITTER_CONSUMER_SECRET,
+                'adminAccessToken' =>TWITTER_ADMIN_ACCESS_TOKEN,
+                'adminTokenSecret' =>TWITTER_ADMIN_TOKEN_SECRET,
+                'streamFile'=>$docroot.'/twitter.txt',
+            )
+            : Array(),
+        'dev' => ($pathParts[4] == 'dev') ? $pathParts[5] : '',
+        'client' => $client,
+        'ticker' => array(
+            'sleepTime'=>TICKER_SLEEP_TIME,
+        ),
+    ),
+);

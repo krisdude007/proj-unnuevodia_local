@@ -1,0 +1,29 @@
+
+
+$(document).ready(function () {
+    sliderHandler();
+});
+
+var sliderHandler = function() { 
+    
+    var slider_w = 0;
+    
+    $('#sliderContainer .sliders').css('left', $(window).width()+'px');
+    
+    $('#sliderContainer .sliders .slider').each(function(i, e){
+        slider_w = slider_w + $(this).width() + 60;
+    });
+    
+    $('#sliderContainer .sliders').css('width', slider_w+'px');
+    $('#sliderContainer .sliders').animate({
+        left: -$(".sliders").width()},
+        {duration: slider_w*30,
+         easing: "linear",
+        complete: function() {
+            sliderHandler();
+        }
+    });
+}
+  
+  
+

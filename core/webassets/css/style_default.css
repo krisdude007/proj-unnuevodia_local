@@ -1,0 +1,159 @@
+/***
+default theme
+***/
+
+/***
+Reset and overrides  
+***/
+body { 
+
+}
+
+/***
+Page header
+***/
+.fab-header .fab-navbar-inner {
+
+}
+
+.fab-header .fab-btn-navbar {  
+  background-color: #1f1f1f !important;
+} 
+
+.fab-header .fab-nav .fab-dropdown-toggle:hover, 
+.fab-header .fab-nav .fab-dropdown.open .fab-dropdown-toggle {
+  background-color: #333 !important;
+}
+
+.fab-header .fab-nav li.fab-dropdown .fab-dropdown-toggle i {
+  color: #808080 !important;
+}
+
+/***
+Page sidebar
+***/
+.fab-page-sidebar > ul > li > a {
+  border-top: 1px solid #595959 !important;
+  color: #fff !important;
+}
+
+.fab-page-sidebar > ul > li:last-child > a {
+   border-bottom: 1px solid transparent !important;
+}
+
+.fab-page-sidebar > ul > li:nth-child(3) > a {
+  border-top-color: transparent !important;
+}
+
+.fab-page-sidebar > ul > li > a i {
+   color: #808080;
+}
+
+.fab-page-sidebar > ul > li.fab-has-sub.open >a, 
+.fab-page-sidebar > ul > li >a:hover, 
+.fab-page-sidebar > ul > li:hover>a {  
+  background: #313131;
+}
+
+.fab-page-sidebar > ul > li.fab-active > a {
+   
+  border-top-color: transparent !important;
+  color:#fff;
+}  
+
+.fab-page-sidebar > ul > li.fab-active > a i {
+  color:#fff;
+}
+
+.fab-page-sidebar > ul > li > a.open {
+  background: #313131;
+}
+
+.fab-page-sidebar ul > li > a .fab-arrow:before,
+.fab-page-sidebar > ul > li > a .fab-arrow.open:before {  
+   color: #919091 !important;
+}
+
+.fab-page-sidebar ul > li.fab-active > a .fab-arrow:before,
+.fab-page-sidebar > ul > li.fab-active > a .fab-arrow.open:before {  
+   color: #fff !important;
+}
+
+.fab-page-sidebar > ul > li > ul.fab-sub > li > a {
+  color: #fff;
+  margin-left:0px;  
+  padding-left: 5px; 
+}
+
+.fab-page-sidebar > ul > li > ul.fab-sub > li:first-child > a {
+  border-top: 0px !important;
+}
+
+.fab-page-sidebar > ul > li > ul.fab-sub > li.fab-active > a, 
+.fab-page-sidebar > ul > li > ul.fab-sub > li > a:hover {
+  color: #fff !important;
+  background: #4b4b4b !important;  
+}
+
+.fab-page-sidebar > ul > li > ul.fab-sub > li > a:hover {
+  background: #4b4b4b !important;
+}
+
+.fab-page-sidebar .sidebar-search input{
+  background-color: #3d3d3d  !important;  
+  color: #bababa !important;
+}
+
+.fab-page-sidebar .sidebar-search .input-box {
+  border-bottom-color: #959595  !important;
+}
+
+.fab-page-sidebar .sidebar-search .submit {
+  background-image: url(../img/search-icon.png);
+}
+
+/***
+Sidebar toggler
+***/
+.fab-sidebar-toggler {  
+  background-image: url(../img/sidebar-toggler.jpg);
+  background-color: #333;
+}
+
+/* search box bg color on expanded */
+.sidebar-closed .fab-page-sidebar .sidebar-search.open {
+  background-color: #3d3d3d !important;
+}
+
+.sidebar-closed .fab-page-sidebar .sidebar-search.open .fab-remove {  
+  background-image: url("../img/sidebar-search-close.png");
+}
+
+/* sub menu bg color on hover menu item */
+.sidebar-closed .fab-page-sidebar > ul > li.fab-has-sub:hover .fab-sub {
+  background-color: #3d3d3d;
+}
+
+/***
+Landscape phone to portrait tablet
+***/
+@media (max-width:979px) { 
+  /***
+  page sidebar
+  ***/
+  .fab-page-sidebar {
+    background-color: #232427 !important;
+  }
+
+  .fab-page-sidebar > ul > li > a {
+    border-top: 1px solid #2c2d30 !important;
+  }
+
+  .fab-page-sidebar > ul > li:last-child > a {
+    border-bottom: 0 !important;
+  }
+
+  .fab-page-sidebar .sidebar-search input{
+    background-color: #232427  !important;  
+  }
+}

@@ -1,0 +1,63 @@
+/* 
+    Document   : _yttJqPlot
+    Created on : Aug 23, 2013, 3:22:42 PM
+    Author     : Lee Elliott
+    Description:
+        Has all youtoo specifics styling for jqPlot graphs
+*/
+
+.jqplot-data-label{
+    color:#fff;
+}
+
+.jqplot-table-legend{
+    font-size:9px;
+    padding:0px 4px;
+}
+
+.dashGraph{
+    width:500px;
+    float:left;
+    margin-right:40px;
+    margin-bottom:20px;
+}
+
+.dashGraph a{
+    cursor:pointer;
+    color:#118dbf;
+}
+input[type="checkbox"] {
+    margin: -5px 0px 3px 3px;
+    line-height: normal;
+}
+
+.jqplot-table-legend .jqplot-series-hidden {
+    text-decoration: none !important;
+}
+
+/*.graphDate{display:none;}*/
+.jqplot-table-legend input[type=checkbox]{display:inline-block;}
+.jqplot-table-legend .jqplot-series-hidden {text-decoration:none;}
+.jqplot-table-legend-swatch-outline{
+    display:inline-block;
+    padding: 1px;
+    margin-top: 4px;
+}
+.jqplot-data-label{color:#fff !important;}
+.jqplot-highlighter-tooltip{border:none !important; background:none !important;}
+.jqplot-highlighter-tooltip-facebook, .jqplot-highlighter-tooltip-web, .jqplot-highlighter-tooltip-twitter, .jqplot-highlighter-tooltip-mobile, .jqplot-highlighter-tooltip-total{
+    font-size:14px;
+    color:#000;
+    background:#fff !important;
+    padding:4px;
+    -moz-border-radius:8px !important;
+    border-radius:8px !important;
+    border:2px;
+    border-style:solid;
+}
+.jqplot-highlighter-tooltip-facebook{border-color:#ff9900;}
+.jqplot-highlighter-tooltip-web{border-color:#35aa47;}
+.jqplot-highlighter-tooltip-twitter{border-color:#e02222;}
+.jqplot-highlighter-tooltip-mobile{border-color:#852b99;}
+.jqplot-highlighter-tooltip-total{border-color:#aaa;}
+/*.frame .page{margin-left:105px !important;}*/

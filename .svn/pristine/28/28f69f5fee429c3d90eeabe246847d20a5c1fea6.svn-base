@@ -1,0 +1,42 @@
+<?php
+/* @var $this UserController */
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+?>
+<div class="fabmob_content-container" style="padding: 2%;">
+    <div class="link">
+        <div>
+            <a style="padding: 0 1%;" href="#" id="fb_conn" rel="<?php echo (!empty($user->userFacebooks[0]->id)) ? '1' : '0'; ?>">
+                <?php if (!empty($user->userFacebooks[0]->id)): ?>
+                    <img src='/webassets/images/Button_Facebook_Connect_Social_Active.png'/>
+                <?php else: ?>
+                    <img src="/webassets/images/Button_Facebook_Connect_Social_Nuetral.png" />
+                <?php endif; ?>
+            </a>
+            <span style="padding: 0 1%;">
+                <?php if (!empty($user->userFacebooks[0]->id)): ?>
+                    <a  href="<?php echo $facebook['link']; ?>" target="_blank"><?php echo $facebook['name']; ?></a>
+                <?php else: ?>
+                    <a>Facebook</a>
+                <?php endif; ?>
+            </span>
+        </div>
+        <hr></hr>
+        <div>
+<!--            <a style="padding: 0 1%;" href="#" id="tw_conn" rel="<?php //echo (!empty($user->userTwitters[0]->id)) ? '1' : '0'; ?>">
+                <?php //if (!empty($user->userTwitters[0]->id)): ?>
+                    <img src="/webassets/images/Button_Twitter_Connect_Social_Active.png" />
+                <?php //else: ?>
+                    <img src="/webassets/images/Button_Twitter_Connect_Social_Nuetral.png" />
+                <?php //endif; ?>
+            </a>-->
+<!--            <span style="padding: 0 1%;">
+                <?php //if (!empty($user->userTwitters[0]->id)): ?>
+                    <a  href="http://www.twitter.com/<?php //echo $twuser->screen_name; ?>" target="_blank"><?php //echo $twuser->screen_name; ?></a>
+                <?php //else: ?>
+                    <a>Twitter</a>
+                <?php //endif; ?>
+            </span>-->
+        </div>
+    </div>
+</div>

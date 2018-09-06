@@ -1,0 +1,107 @@
+<?php
+/* @var $this UserController */
+/* @var $user User */
+/* @var $userEmail UserEmail */
+/* @var $userLocation UserLocation */
+/* @var $userPhone UserPhone */
+/* @var $twitterUsername string (read-only) */
+/* @var $facebookUsername string (read-only) */
+/* @var $form CActiveForm */
+?>
+<div class="form">
+<?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-profile-form',
+        'enableAjaxValidation' => true,
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+            'validateOnType' => false,
+        ),
+    ));
+    echo $form->errorSummary(array($user, $userEmail, $userLocation, $userPhone));
+?>
+<table class="formProfile">
+    <tr>
+        <td>
+            <?php echo $form->labelEx($user, 'first_name'); ?><br />
+            <?php echo $form->textField($user, 'first_name'); ?><br />
+            <?php echo $form->error($user, 'first_name'); ?>
+        </td>
+        <td colspan="2">
+            <?php echo $form->labelEx($user, 'last_name'); ?><br />
+            <?php echo $form->textField($user, 'last_name'); ?><br />
+            <?php echo $form->error($user, 'last_name'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <?php /*echo $form->labelEx($user, 'username');*/ ?>Username<br />
+            <?php echo $form->textField($user, 'username'); ?><br />
+            <?php echo $form->error($user, 'username'); ?>
+        </td>
+        <td colspan="2">
+            <?php echo $form->labelEx($userEmail, 'email'); ?>
+
+            <?php
+                $emailActive = array('1' => 'Receive', '0' => 'Do not receive');
+                echo $form->radioButtonList($userEmail, 'active', $emailActive, array('separator' => ' '));
+            ?>
+
+            <?php echo $form->textField($userEmail, 'email'); ?><br />
+            <?php echo $form->error($userEmail, 'email'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <?php /*echo $form->labelEx($userLocation, 'postal_code');*/ ?>Zip Code<br />
+            <?php echo $form->textField($userLocation, 'postal_code'); ?><br />
+            <?php echo $form->error($userLocation, 'postal_code'); ?>
+        </td>
+        <td colspan="2">
+            <?php echo $form->labelEx($userPhone, 'number'); ?><br />
+            <?php echo $form->textField($userPhone, 'number'); ?><br />
+            <?php echo $form->error($userPhone, 'number'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="white-space:nowrap">
+            <?php echo $form->labelEx($user, 'birthday'); ?><br />
+            <?php echo $form->dropDownList($user, 'birthMonth',  DateTimeUtility::monthsOfYear()); ?>
+            <?php echo $form->dropDownList($user, 'birthDay', DateTimeUtility::daysOfMonth()); ?>
+            <?php echo $form->dropDownList($user, 'birthYear',  DateTimeUtility::yearsOfCentury()); ?><br />
+            <?php echo $form->error($user, 'birthday'); ?>
+        </td>
+        <td colspan="2">
+            Twitter Handle<br />
+            <?php if ($twitterUsername): echo $twitterUsername; else: ?>
+                <a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Connect to Twitter!</a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $form->labelEx($user, 'gender'); ?><br />
+            <?php
+                $gender = array('M' => 'Male', 'F' => 'Female');
+                echo $form->radioButtonList($user, 'gender', $gender, array('separator' => '<br />'));
+            ?>
+            <?php echo $form->error($user, 'gender'); ?>
+        </td>
+        <td>
+            Facebook Handle<br />
+            <?php if ($facebookUsername): echo $facebookUsername; else: ?>
+                <a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Connect to Facebook!</a>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php echo CHtml::submitButton('save', array('style' => 'width:100px')); ?>
+        </td>
+    </tr>
+</table>
+<?php $this->endWidget(); ?>
+</div><!-- form -->

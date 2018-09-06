@@ -1,0 +1,138 @@
+
+
+.spotButton {
+  background: url('/core/webassets/images/accept-button.jpg') no-repeat;
+  height: 18px;
+  width: auto !important;
+  border: none;
+  color: #fffffe;
+  font-size: 11px;
+  padding-bottom: 2px;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-bottom: 2px;
+}
+
+#selectedShowInformation {
+    float: left; 
+    width: 400px;
+}
+
+#selectedVideoInformation {
+    float: right; 
+    width: 400px; 
+    text-align: right;
+}
+
+#selectedVideoThumbnail {
+    width: 50px;
+}
+
+#selectedVideoId {
+  display: none;
+}
+
+#datatableScheduler tr.even.row_selected td {
+  background-color:#00FF99;
+}
+
+#datatableScheduler  tr.odd.row_selected td {
+  background-color:#66FF99;
+}
+
+#datatableScheduler tr.even.selected-row, tr.odd.selected-row {
+    background-color: #ff0000;
+}
+
+#datatableScheduler tbody tr.even:hover, #datatableScheduler tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+#datatableScheduler tbody tr.odd:hover, #datatableScheduler tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
+
+#datatableScheduler tr.even:hover {
+	background-color: #ECFFB3;
+}
+
+#datatableScheduler tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+#datatableScheduler tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+#datatableScheduler tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+#datatableScheduler tr.odd:hover {
+	background-color: #E6FF99;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+#datatableScheduler tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
+}
+
+
+#datatableSpotScheduler tr.even.row_selected td {
+  background-color:#00FF99;
+}
+
+#datatableSpotScheduler  tr.odd.row_selected td {
+  background-color:#66FF99;
+}
+
+#datatableSpotScheduler tr.even.selected-row, tr.odd.selected-row {
+    background-color: #ff0000;
+}
+
+#datatableSpotScheduler tbody tr.even:hover, #datatableSpotScheduler tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+#datatableSpotScheduler tbody tr.odd:hover, #datatableSpotScheduler tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
+
+#datatableSpotScheduler tr.even:hover {
+	background-color: #ECFFB3;
+}
+
+#datatableSpotScheduler tr.even:hover td.sorting_1 {
+	background-color: #DDFF75;
+}
+
+#datatableSpotScheduler tr.even:hover td.sorting_2 {
+	background-color: #E7FF9E;
+}
+
+#datatableSpotScheduler tr.even:hover td.sorting_3 {
+	background-color: #E2FF89;
+}
+
+#datatableSpotScheduler tr.odd:hover {
+	background-color: #E6FF99;
+}
+
+#datatableSpotScheduler tr.odd:hover td.sorting_1 {
+	background-color: #D6FF5C;
+}
+
+#datatableSpotScheduler tr.odd:hover td.sorting_2 {
+	background-color: #E0FF84;
+}
+
+#datatableSpotScheduler tr.odd:hover td.sorting_3 {
+	background-color: #DBFF70;
+}

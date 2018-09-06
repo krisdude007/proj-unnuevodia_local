@@ -1,0 +1,40 @@
+<?php
+
+class ClientTickerUtility extends TickerUtility {
+    
+    public static function getStatuses() {
+        
+        if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isProducerWebAdmin())
+        {
+            $webAdmin = array('new' => 'New Web',
+                              'accepted' => 'Accepted Web');
+        }
+        
+        if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isProducerTVAdmin())
+        {
+            $tvAdmin = array('newtv' => 'New TV',
+                             'acceptedtv' => 'Accepted TV',
+                             'statustv' => 'Approval Status TV');
+        }
+        
+        if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSup1Admin())
+        {
+            $sup1 = array('newsup1' => 'New S&P');
+        }
+        
+        if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSup2Admin())
+        {
+            $sup2 = array('newsup2' => 'New Legal');
+        }
+        
+        if(Yii::app()->user->isSuperAdmin())
+        {
+            $superAdmin = array('denied' => 'Deleted Web',
+                                'deniedtv' => 'Deleted TV');
+        }
+        
+        return CMap::mergeArray($webAdmin, $tvAdmin, $sup1, $sup2, $superAdmin);
+    }
+}
+
+?>

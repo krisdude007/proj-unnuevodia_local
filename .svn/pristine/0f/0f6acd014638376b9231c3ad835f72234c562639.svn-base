@@ -1,0 +1,28 @@
+<div class='as-table'>
+    <div class="homeTop">
+        <h4>Be On TV</h4>
+    </div>
+    <div class="as-table-row" style="background-color: #1794d1;text-align: center;">
+        <div class="as-table-cell">
+            <br/>
+            <h1>Congrats!</h1>
+            <div>
+                <p>
+                    Your video has been submitted and will be approved shortly.
+                </p>
+                <p>
+                    In the meantime,  don't stop now!
+                </p>
+            </div>
+            <br/>
+                <button class="btn btn-inverse" style="width:50%;background-color: transparent !important;border-color: white !important;" onclick="window.location = '<?php echo Yii::app()->createUrl('/question/index?upload=1'); ?>'">
+                    Upload Another Video
+                </button>
+            <br/>
+            <br/>
+            <button class="btn btn-inverse" style="width:50%;background-color: transparent !important;border-color: white !important;" onclick="window.location = '<?php echo Yii::app()->createUrl('videos/recent'); ?>'">
+                Watch Videos
+            </button>
+        </div>
+    </div>
+</div>

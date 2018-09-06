@@ -1,0 +1,42 @@
+<?php $this->renderPartial('/csrf/_csrfToken'); ?> 
+<div id="content">
+    <div class="tleft centerBlock">
+        <div id="voteDetail" style="margin-left:84px; margin-top:15px;">
+            <?php if (!is_null($activePoll)): ?>
+                <div id="voteHead" style="padding-top:20px;"> 
+                    <h1>
+                        <?php if (strtotime($activePoll->end_time) <= time()): ?>
+                            VOTING CLOSED!
+                        <?php else: ?>
+                            VOTE NOW                
+                        <?php endif; ?>
+                    </h1>            
+                    <div id="question" style="font-family: Helvetica, Arial, sans-serif;font-size:24px;font-weight:100;margin-bottom: 12px;">
+                        <?php echo $activePoll->question; ?>                        
+                    </div>
+                </div>
+            <div class="afterVote" <?php echo (strtotime($activePoll->end_time) <= time()) ? 'style="display:none"' : ''; ?>>
+                    <?php
+                    $this->renderPartial('_voteButtons', array('answers' => $activePoll->pollAnswers));
+                    ?>
+                </div>
+                <div class="afterVote" <?php echo (strtotime($activePoll->end_time) <= time()) ? '' : 'style="display:none"'; ?>>
+                    <div style="width:400px;float:left;">
+                    <?php $this->renderPartial('_voteGraph', array('poll' => $activePoll), false, true); ?>
+                    </div>    
+                    <div id="buttonsafter" style="width:428px;margin-top:10px;margin-left:auto;margin-right:auto;height:40px;">
+                        <?php if (strtotime($activePoll->end_time) >= time()): ?>                    
+                        <div><a class="linkButton" href="/vote" style="width:120px; text-align: center;">VOTE AGAIN</a></div> 
+                        <?php endif; ?>
+                        <div><a class="linkButton" href="/questions" style="width:120px;text-align: center;">RECORD A VIDEO</a></div>
+                        <div><a class="linkButton" href="/image" style="width:120px;text-align: center;">UPLOAD A PHOTO</a></div>
+                    </div>                
+                </div>
+            <?php else: ?>
+                <h1>
+                    NO POLLS OPEN!
+                </h1>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

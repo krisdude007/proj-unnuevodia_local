@@ -1,0 +1,63 @@
+<?php
+
+class ImageUtility {
+    // gets values for image status dropdown
+    public static function getStatuses() {
+        if(IMAGE_FILTERS_EXTENDED)
+        {
+            $extendedLabels = unserialize(IMAGE_FILTERS_EXTENDED_LABELS);
+            
+            foreach($extendedLabels as &$value)
+            {
+                if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission(key($value)))
+                {
+                    $extendedAdmin = CMap::mergeArray($extendedAdmin, $value);
+                }
+            }
+
+            if(Yii::app()->user->isSuperAdmin())
+            {
+                $extendedAdmin = CMap::mergeArray($extendedAdmin, unserialize(IMAGE_FILTERS_EXTENDED_SUPADMIN_LABELS));
+            }
+            
+            return CMap::mergeArray($extendedAdmin, $superAdmin);
+        }
+        else
+        {
+            $prodAdmin = array('new' => 'New',
+            'accepted' => 'Accepted');
+
+            if (Yii::app()->user->isSuperAdmin()) {
+                $superAdmin = array('denied' => 'Deleted',
+                    'all' => 'All');
+            }
+            
+            return CMap::mergeArray($prodAdmin, $superAdmin);
+        }
+    }
+    
+    public static function getDefaultStatus()
+    {
+        if(IMAGE_FILTERS_EXTENDED)
+        {
+            $defaultStatus = Utility::getDefaultStatus(IMAGE_FILTERS_EXTENDED_LABELS);
+        }
+        else
+        {
+            $defaultStatus = 'new';
+        }
+            
+        return $defaultStatus;
+    }
+    
+    public static function getPerPageOptions() {
+        return array('12' => '12',
+            '24' => '24',
+            '36' => '36',
+            '48' => '48'
+        );
+    }
+
+}
+
+?>

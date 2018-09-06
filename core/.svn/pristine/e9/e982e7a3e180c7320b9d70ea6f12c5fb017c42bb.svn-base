@@ -1,0 +1,60 @@
+<?php
+
+class DateTimeUtility{
+    
+    public static function niceTime($timestamp){
+        $periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
+        $lengths = array("60", "60", "24", "7", "4.35", "12", "10");
+        $now = time();
+        $tense = ($now > $timestamp) ? 'ago' : 'from now';
+        $difference = abs($now-$timestamp);
+        for ($i = 0; $difference >= $lengths[$i] && $i < count($lengths) - 1; $i++) {
+            $difference /= $lengths[$i];
+        }
+        $difference = round($difference);
+        if ($difference != 1) {
+            $periods[$i].= "s";
+        }
+        return "$difference $periods[$i] {$tense}";        
+    }
+        
+    public function filterByDate($obj, $filterDate) {
+        $obj->getDbCriteria()->mergeWith(array(
+            'condition'=>'created_on>=:filterDate',
+            'params'=>array(':filterDate'=>$filterDate,),
+        ));
+        return $obj;
+    }
+    
+    public static function convertTimestampToDate($timestamp) {
+        return date('m/d/Y', strtotime($timestamp));
+    }
+    
+    public static function convertTimestampToTime($timestamp) {
+        return date('h:i a', strtotime($timestamp));
+    }
+    
+    public static function daysOfMonth(){
+        for($i=1;$i<=31;$i++){
+            $days[sprintf('%02d',$i)]=$i;
+        }
+        return $days;
+    }
+
+    public static function monthsOfYear(){
+        for($i=1;$i<=12;$i++){
+            $months[sprintf('%02d',$i)]=date(F,mktime(0,0,0,$i,1,date(Y,time())));
+        }        
+        return $months;
+    }
+
+    public static function yearsOfCentury(){
+        for($i=date(Y);$i>=date(Y)-100;$i--){
+            $years[$i]=$i;
+        }        
+        return $years;
+    }
+    
+}
+
+?>

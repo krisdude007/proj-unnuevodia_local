@@ -1,0 +1,14 @@
+.campain_container
+{
+	margin-left:20px;
+	font-family:'Open Sans';
+	 
+}
+.campain_header
+{
+	font-size: 31pt;
+	color: #4d90f3;
+	font-weight: bold;
+	margin-bottom: 30px;
+}
+	

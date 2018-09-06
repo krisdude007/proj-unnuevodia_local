@@ -1,0 +1,185 @@
+<?php
+
+class ActelController extends Controller {
+
+    public $layout = '//layouts/main';
+    public $user;
+    public $ticker;
+    public $activeNavLink = 'pay';
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        if (!Yii::app()->user->isGuest) {
+            $this->user = ClientUtility::getUser();
+            $this->ticker = new eTicker();
+        } else {
+            $this->redirect('/login');
+        }
+    }
+
+    public function actionIndex() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/login'));
+            return;
+        }
+        $userPhone = new eUserPhone;
+        //$payment = new ePricing;
+        //$user->setScenario('payment');
+
+        $country = '';
+        $operator = '';
+        $plmn = '';
+        $phonenumber = '';
+
+        if (isset($_POST['country']) && isset($_POST['operator']) && isset($_POST['eUserPhone'])) {
+            $country = $_POST['country'];
+            $operator = $_POST['operator'];
+
+            $userPhone->attributes = $_POST['eUserPhone'];
+            $phonenumber = $userPhone->number;
+
+            $plmn = ClientUtility::getPLMNumbers($country, $operator);
+
+            $url = "http://clients.actelme.com/MainSMS/SDK/PincodeActions.aspx?username=" . urlencode(Yii::app()->params['actel']['username']) .
+                    "&password=" . urlencode(Yii::app()->params['actel']['password']) .
+                    "&action=otp&id_application=" . urlencode(Yii::app()->params['actel']['id_application']) .
+                    "&mode=mobile&countryname=" . urlencode($country) .
+                    "&operatorname=" . urlencode($operator) .
+                    "&plmn=" . urlencode($plmn) .
+                    "&receiver=" . urlencode($phonenumber);
+            //echo $url;exit();
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            //print_r($response);
+
+            if ($response == 'ok') {
+                Yii::app()->session['country'] = $country;
+                Yii::app()->session['operator'] = $operator;
+                Yii::app()->session['number'] = $phonenumber;
+                Yii::app()->session['plmn'] = $plmn;
+
+                $this->redirect('/actel/otp');
+                return;
+            } else {
+                //$userPhone->addError('number', $response);
+                Yii::app()->user->setFlash('error', $response);
+            }
+        }
+
+        $this->render('index', array(
+            'userphone' => $userPhone,
+        ));
+    }
+
+    public function actionOtp($id = NULL) {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('/login'));
+            return;
+        }
+
+        $country = Yii::app()->session['country'];
+        $operator = Yii::app()->session['operator'];
+        $phonenumber = Yii::app()->session['number'];
+        $plmn = Yii::app()->session['plmn'];
+        $response = NULL;
+
+        if($id == NULL)
+        {
+            $game = eGameChoice::model()->multiple()->isActive()->with('gameChoiceAnswers')->find();
+        }
+        else
+        {
+            $game = eGameChoice::model()->multiple()->with('gameChoiceAnswers')->findByPk((int)$id);
+        }
+        $price = $game->price;
+
+        //$amount = 5;
+        $userPhone = new eUserPhone;
+        $transStatus = '';
+        $currency = '';
+
+        if ($country == 'UAE') {
+            $currency = 'AED';
+        }
+        if ($country == 'egypt') {
+            $currency = 'EGP';
+        } // want to use localeconv() function or someother from utility function to fetch currency codes, for now actel handles only UAE and Egypt. Will derive this for later.
+
+        $orderId = uniqid();
+
+        if (isset($_POST['otpassword'])) {
+
+            $pincode = $_POST['otpassword'];
+
+            $url =  "http://clients.actelme.com/MainSMS/SDK/PincodeActions.aspx?pincode=" . urlencode($pincode) . "&username=" . urlencode(Yii::app()->params['actel']['username']) .
+                    "&password=" . urlencode(Yii::app()->params['actel']['password']) .
+                    "&id_application=" . urlencode(Yii::app()->params['actel']['id_application']) .
+                    "&action=vcode_charge&mode=mobile&countryname=" . urlencode($country) .
+                    "&operatorname=" . urlencode($operator) .
+                    "&plmn=" . urlencode($plmn) .
+                    "&receiver=" .urlencode($phonenumber) .
+                    "&amount=" . urlencode($price) ."&currency=". $currency;
+            //echo $url;exit();
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            //print_r($response);
+
+            $transaction = new eGamingTransaction();
+
+            $user = ClientUtility::getUser();
+            $transaction->user_id = isset($user->id) ? $user->id : 0;
+            $transaction->processor = 'actel';
+
+            $transaction->response = $response;
+
+            //$transStatus = $country . ' - ' . $operator . ' - ' . $phonenumber . ' - ' . $plmn;
+            $transaction->request = $url;
+            $transaction->description = json_encode(array('orderid' => $orderId, 'country' => $country, 'operator' => $operator, 'phonenumber' => $phonenumber, 'plmn' => $plmn));
+            $transaction->price = $price;
+            $transaction->created_on = new CDbExpression('NOW()');
+
+            if ($transaction->validate()) {
+                $transaction->save();
+            } else {
+                return;
+            }
+
+            if ($response == 'OKDELIVERED') {
+
+                $this->redirect('/actel/thankyou');
+                return;
+            } else {
+                //$userPhone->addError('number', $response);
+                $this->redirect('/actel/sorry');
+                Yii::app()->user->setFlash('error', $response);
+            }
+        }
+
+        $this->render('otp', array(
+        ));
+    }
+
+    public function actionThankYou() {
+
+        $this->render('thankyou', array(
+        ));
+    }
+
+    public function actionSorry() {
+
+        $this->render('sorry', array(
+        ));
+    }
+
+}
+
+?>

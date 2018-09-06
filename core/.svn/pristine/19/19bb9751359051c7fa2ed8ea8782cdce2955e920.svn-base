@@ -1,0 +1,133 @@
+    var storeHandler = function(e){
+        $('.storeSearch').off('change');
+        $('.storeSearch').on('change',function(e){
+            e.preventDefault();
+            $(this).attr({'disabled':'disabled'})
+            var data = searchObj[$(this).attr('rel')];
+            data.YII_CSRF_TOKEN = getCsrfToken();
+            data.questionid = $(this).val();
+            var request = $.ajax({
+               url:'/adminSocialSearch/save', 
+               type:'POST',
+               data:$.param(data),
+               success:function(data){
+                   var obj = $.parseJSON(data);
+                   if(obj.code == 'saved'){
+                       alert('Social Search Saved!');
+                   } else {
+                       var errors = '';
+                       $.each(obj.errors,function(k,v){
+                           errors += v+"\r\n";
+                       })
+                       alert(obj.code+':\r\n'+errors);
+                   }
+               }
+            });
+        });
+    }
+    var searchHandler = function(){
+        $('#search').off('submit');
+        $('#search').on('submit',function(e){
+            e.preventDefault();
+            rTable.fnClearTable();
+            $('#ajaxSpinner').show();
+            $('#spinnerReplace').hide();                        
+            var data = $(this).serializeArray();
+            var csrf = new Object;
+            csrf.name = 'YII_CSRF_TOKEN';
+            csrf.value = getCsrfToken();
+            data.push(csrf);
+            var request = $.ajax({
+                url:'/adminSocialSearch/ajaxSearch',
+                type:'POST',
+                data:$.param(data),
+                success:function(data){
+                    searchObj = $.parseJSON(data);
+                    if(searchObj !== null){
+                        if(searchObj.errors !== null){
+                            var errorMessage = '';
+                            $.each(searchObj.errors,function(k,v){
+                                errorMessage = errorMessage+k.charAt(0).toUpperCase()+k.substr(1)+' says: '+v+'<br />'; 
+                            });
+                            $('.errors').show();
+                            $('.errors').html(errorMessage);
+                        }
+                        if(searchObj.rates !== null){
+                            var rateMessage = '';
+                            $.each(searchObj.rates,function(k,v){
+                                rateMessage = rateMessage+k.charAt(0).toUpperCase()+k.substr(1)+' says: '+v+'<br />'; 
+                            });
+                            $('.rates').html(rateMessage);
+                        }                        
+                        $.each(searchObj,function(i,e){
+                            if(isNaN(parseInt(i))){return true;}
+                            console.log(e.questions);
+                            $('#resultsTable').dataTable().fnAddData( [
+                                i,
+                                $(e.questions).attr({'rel':i}).prop('outerHTML'),
+                                $('<a>').attr({'href':e.accountLink,'target':'_blank'}).html($('<img>').attr({'src':e.avatar})).prop('outerHTML'),
+                                $('<a>').attr({'href':e.accountLink,'target':'_blank'}).html($('<div>').append($('<div>').html(e.username)).append($('<div>').html(e.accountDescription).css({'display':'none'}))).prop('outerHTML'),
+                                $('<div>').html(e.date).prop('outerHTML'),
+                                $('<div>').html(e.content).prop('outerHTML'),
+                                $('<div>').html(e.hashtag).prop('outerHTML'),
+                                $('<div>').html(e.clean.pass.toString()).prop('outerHTML'),                        
+                                $('<div>').html(e.accountClean.pass.toString()).prop('outerHTML'),                        
+                                $('<div>').html(e.media.toString()).prop('outerHTML'),                        
+                                $('<div>').html(e.language).prop('outerHTML'),                        
+                                $('<div>').html(e.accountLanguage).prop('outerHTML'),                        
+                                $('<div>').html(e.verified.toString()).prop('outerHTML'),                        
+                                $('<div>').html(e.hasLocation.toString()).prop('outerHTML'),                        
+                                $('<div>').html(e.place).prop('outerHTML'),   
+                                e.placeCoordinates.toString(),                        
+                                e.tweetCoordinates.toString(),                        
+                                e.followers,
+                                e.following,
+                            ] ); 
+                            storeHandler();
+                        });
+                        $('#ajaxSpinner').hide();                        
+                        $('#spinnerReplace').show();                        
+                    } else {
+                        $('#ajaxSpinner').hide();                    
+                        $('#spinnerReplace').show();                        
+                        alert('No results for that query!');
+                    }
+                }
+            });            
+            return false;           
+        });
+    }
+        
+function makeDataTable(){    
+    rTable = $("#resultsTable").dataTable({
+        "aaSorting":[[0,"desc"]],  
+        "aoColumns": [
+            {"sType":"numeric","bVisible":false},
+            {"sType":"null","sWidth":"50px"},
+            {"sType":"null","sWidth":"50px"},
+            {"sType":"html"},
+            {"sType":"date"},
+            {"sType":"html","sClass": "tleft","sWidth":"800px"},
+            {"sType":"string","bVisible":false},
+            {"sType":"string","bVisible":false},
+            {"sType":"string","bVisible":false},
+            {"sType":"string","bVisible":false},            
+            {"sType":"string"},                        
+            {"sType":"string"},                        
+            {"sType":"string","bVisible":false},                        
+            {"sType":"string","bVisible":false},                        
+            {"sType":"string"},                        
+            {"sType":"string","bVisible":false},                        
+            {"sType":"string","bVisible":false},                        
+            {"sType":"numeric"},
+            {"sType":"numeric"},
+        ],
+        "fnDrawCallback":storeHandler(), 
+        "sDom":'<flipt>',
+    });
+}
+
+$(document).ready(function () {
+    searchHandler();    
+    makeDataTable();
+});

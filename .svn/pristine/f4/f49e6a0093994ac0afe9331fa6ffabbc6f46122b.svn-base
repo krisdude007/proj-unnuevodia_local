@@ -1,0 +1,48 @@
+<?php
+
+define('SITE_NAME','UNNUEVODIA');
+
+//This is YoutooSandbox app: http://dev.twitter.com/apps/5239419
+//This is YoutooSandbox twitter page: http://www.twitter.com/YoutooSandbox
+define('TWITTER_ACTIVE',true);
+define('TWITTER_CONSUMER_KEY','RChO1lBGkJvQTZhOgjbw8A');
+define('TWITTER_CONSUMER_SECRET','NLD9sTbY1YLWz7SbvSNvQ80RTRBfoRGvAluYYJZy8');
+define('TWITTER_ADMIN_ACCESS_TOKEN','1967328594-hg0MWwc1GtYkdnfQUyOnrruBx3gDrzRCRWRpydB');
+define('TWITTER_ADMIN_TOKEN_SECRET','HnyF8uzVKxU1I6iR55iHOCjTtrCYOiasYXkMATPmE');
+
+//This is YoutooSandbox app: http://apps.facebook.com/YoutooSandbox
+//This is YoutooSandbox facebook page: http://www.facebook.com/YoutooSandbox
+define('FACEBOOK_ACTIVE',true);
+define('FACEBOOK_APPLICATION_ID','177992429059463');
+define('FACEBOOK_APPLICATION_SECRET','ed3e68e1e14fd9d4069040276be986ed');
+define('FACEBOOK_PAGE_ID','430827127022450');
+
+define('BRIGHTCOVE_PLAYER_ID','2383208631001');
+define('BRIGHTCOVE_PLAYER_KEY','AQ~~,AAABqrGtIvE~,QfeoOVnmCtX8HqQBHPBa6Z_FVpPftA7m');
+
+define('MAX_ACTIVE_QUESTIONS',3);
+
+define('FTP_SECURE',true);
+define('FTP_PASSIVE',true);
+define('FTP_SERVER','');
+define('FTP_USER','');
+define('FTP_PASSWORD','');
+define('FTP_PATH','');
+
+define('SESSION_DURATION',86400);
+
+// video related
+define('VIDEO_DURATION',15);
+define('VIDEO_FRAMES_PER_SEC', 30);
+define('VIDEO_WATERMARK','/webassets/images/watermark.png');
+define('VIDEO_WATERMARK_LOCATION','topRight');
+define('VIDEO_PARAMS','-q:v 1 -async 1  -r 30 -b:v 2M -bt 4M -vcodec libx264 -preset placebo -g 1 -movflags +faststart -acodec libfdk_aac -ac 2 -ar 48000 -ab 192k');
+
+define('CLIENT_SUPPORT_EMAIL','greg.stringer@gmail.com');
+
+define('TICKER_SLEEP_TIME',10);
+
+// analytics
+define('ANALYTICS_PROJECT_ID','72166659');
+define('ANALYTICS_START_DATE','2013-11-14');
+?>

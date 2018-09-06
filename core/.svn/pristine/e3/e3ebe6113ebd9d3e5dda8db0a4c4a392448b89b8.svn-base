@@ -1,0 +1,149 @@
+<?php
+
+class AdminEntityController extends Controller {
+
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array(
+                    'index',
+                    'ajaxSetEntityAvatar',
+                    'ajaxSetEntityStatus',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+
+    public function actionAjaxSetEntityAvatar() {
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $update = eImage::model()->updateAll(Array('is_avatar' => 0), "entity_id = {$entity}");
+        $image = eImage::model()->findByPK($image);
+        $image->is_avatar = 1;
+        $image->save();
+    }
+
+    public function actionAjaxSetEntityStatus() {
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $entity = eEntity::model()->findByPK($id);
+        $entity->active = $value;
+        $entity->save();
+    }
+    //create new entity
+    //update existing entity by id
+    //get entities and a selected entity(id)
+    public function actionIndex($id = NULL) {
+        if(is_null($id)){
+            $entity = new eEntity();
+            $twitter = new eEntityTwitter();
+            $facebook = new eEntityFacebook();
+        }
+        else{
+            $entity = eEntity::model()->with('images')->findByPK($id);
+            if (is_null($entity)) {
+                $entity = new eEntity();
+                $twitter = new eEntityTwitter();
+                $facebook = new eEntityFacebook();
+            }
+            else{
+                $twitter = eEntityTwitter::model()->findByAttributes(Array('entity_id' => $entity->id));
+                $facebook = eEntityFacebook::model()->findByAttributes(Array('entity_id' => $entity->id));
+            }
+        }
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'admin-entity-form') {
+            echo CActiveForm::validate(array($entity, $twitter, $facebook));
+            Yii::app()->end();
+        }
+        $image = new eImage();
+        if (isset($_POST['eEntity'])) {
+            $entity->attributes = $_POST['eEntity'];
+            $twitter->attributes = $_POST['eEntityTwitter'];
+            $facebook->attributes = $_POST['eEntityFacebook'];
+            if ($entity->validate()) {
+                $entity->save();
+                $twitter->entity_id = $entity->id;
+                $twitter->save();
+                $facebook->entity_id = $entity->id;
+                $facebook->save();
+                Yii::app()->user->setFlash('success', "Entity Added!");
+                if (isset($_POST['eImage'])) {
+                    $image->attributes = $_POST['eImage'];
+                    $image->filename = CUploadedFile::getInstance($image, 'image');
+                    $image->title = 'Photo';
+                    $image->description = 'Entity Avatar';
+                    $image->source = 'entity';
+                    $image->to_facebook = 0;
+                    $image->to_twitter = 0;
+                    $image->status = 'accepted';
+                    $image->arbitrator_id = Yii::app()->user->getId();
+                    $image->is_avatar = 1;
+                }
+                if ($image->validate()) {
+                    preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+                    $filetype = $matches[0];
+                    $filename = "{$entity->id}_entity_" . md5(uniqid('', true) . $image->filename) . $filetype;
+                    $image->filename->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+                    $image->filename = $filename;
+                    $image->entity_id = $entity->id;
+                    $update = eImage::model()->updateAll(Array('is_avatar' => 0), "entity_id = {$entity->id}");
+                    $image->save();
+                }
+                $this->redirect('/admin/entity');
+            }
+        }
+        if(is_null($id)){
+            $entity = new eEntity();
+            $twitter = new eEntityTwitter();
+            $facebook = new eEntityFacebook();
+        }
+        else{
+            $entity = eEntity::model()->with('images')->findByPK($id);
+            if (is_null($entity)) {
+                $entity = new eEntity();
+                $twitter = new eEntityTwitter();
+                $facebook = new eEntityFacebook();
+            }
+            else{
+                $twitter = eEntityTwitter::model()->findByAttributes(Array('entity_id' => $entity->id));
+                $facebook = eEntityFacebook::model()->findByAttributes(Array('entity_id' => $entity->id));
+            }
+        }
+        $entities = eEntity::model()->with('images:isAvatar', 'entityTwitters', 'entityFacebooks')->findAll();
+        $this->render('index', array(
+            'entity' => $entity,
+            'image' => $image,
+            'twitter' => $twitter,
+            'facebook' => $facebook,
+            'entities' => $entities,
+        ));
+    }
+
+}

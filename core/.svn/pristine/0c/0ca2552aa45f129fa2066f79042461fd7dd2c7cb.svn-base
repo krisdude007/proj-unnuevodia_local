@@ -1,0 +1,39 @@
+<div style="display: none;" id="videoUploadOverlay">
+    <div id="videoUploadOverlayContent">
+        <h2 style="font-size: 18px;">Upload a video:</h2>
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'video-upload-form',
+            'enableClientValidation' => true,
+            'enableAjaxValidation' => false,
+            'action' => '/adminVideo/upload',
+            'htmlOptions' => array('enctype' => 'multipart/form-data'),
+            'clientOptions' => array(
+                'validateOnSubmit' => true,
+                'validateOnChange' => true,
+                'validateOnType' => false,
+            )
+                ));
+        ?>
+
+        <label class="fab-left">Question:</label>
+        <div class="fab-clear" style="height:6px;"></div>
+        <?php echo $form->dropDownList($formVideoUploadModel, 'question_id', $questionsUpload, array('class' => 'fab-select-question')); ?>
+        <div class="fab-clear" style="height:6px;"></div>
+
+        <label class="fab-left">Title:</label>
+        <div class="fab-clear" style="height:6px;"></div>
+        <div><?php echo $form->textField($formVideoUploadModel, 'title', array('style' => 'width: 200px;', 'class' => 'fab-small-input fab-left')); ?></div>
+        <div><?php echo $form->error($formVideoUploadModel, 'title'); ?></div>
+        <br/><br/>
+        
+        <div><?php echo $form->fileField($formVideoUploadModel, 'video'); ?></div>
+        <div><?php echo $form->error($formVideoUploadModel, 'video'); ?></div>
+        <br/><br/>
+        
+        
+        <?php echo CHtml::submitButton('Submit'); ?>
+
+        <?php $this->endWidget(); ?>
+    </div>
+</div>

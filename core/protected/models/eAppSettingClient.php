@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * This is the model class for table "app_setting_client".
+ *
+ * The followings are the available columns in table 'app_setting_client':
+ * @property string $id
+ * @property string $type
+ * @property string $attribute
+ * @property integer $value
+ * @property string $description
+ * @property string $created_on
+ * @property string $updated_on
+ */
+class eAppSettingClient extends AppSettingClient
+{
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'app_setting_client';
+	}
+
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('type, attribute, description', 'required'),
+                        array('created_on,updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => date("Y-m-d H:i:s"),'setOnEmpty'=>false,'on' => 'update'),                        
+			array('value', 'numerical', 'integerOnly'=>true),
+			array('type', 'length', 'max'=>15),
+			array('attribute, description', 'length', 'max'=>255),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, type, attribute, value, description, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}        
+        
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return AppSettingClient the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+        
+}

@@ -1,0 +1,92 @@
+<?php $form = $this->beginWidget('CActiveForm', array(
+          'id' => 'campaign-form-post',
+          'htmlOptions' => array('enctype' => 'multipart/form-data'),
+      ));
+?>
+ 
+ <div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($post, 'post_content', array('class'=>'label')); ?>
+    	<br/>
+        <?php echo $form->textArea($post, 'post_content', array('placeholder'=>'Limit to 140 characters', 'class'=>'input-xxlarge', 'rows'=>5));   ?>
+        <div><span id='count'>140</span> character left</div>
+        <?php echo $form->error($post, 'post_content'); ?>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($post, 'hash_tag', array('class'=>'label')); ?>
+    	<br/>
+        <?php echo $form->textField($post, 'hash_tag', array('placeholder'=>'#hash tag'));   ?>
+        <?php echo $form->error($post, 'hash_tag'); ?>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($post, 'post_time', array('class'=>'label')); ?>
+    	<br/>
+        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+        'attribute'=>'date',
+        'model'=> $post,
+        // additional javascript options for the date picker plugin
+        'options'=>array(
+            'showAnim'=>'fold',
+            'dateFormat'=>"yy-mm-dd",
+    		'defaultDate'=> '+1',
+            'onSelect'=>'js:function(dateText, inst) {
+                  curDate = $(this).datepicker("getDate");
+				  dayName = $.datepicker.formatDate("DD", curDate);
+				  $("#start_day").text(dayName);
+               }'
+        ),
+        'htmlOptions'=>array(
+            'style'=>'height:20px;width:80px'
+        ),
+    ));?>
+    <?php echo $form->dropDownList($post, 'hour', Utility::getHourArray(), array('style'=>'width:60px;'));  ?>
+    <span class='label'>:</span>
+    <?php echo $form->dropDownList($post, 'minute', Utility::getMinuteArray(), array('style'=>'width:60px;'));  ?>
+    
+    <?php echo $form->dropDownList($post, 'am', array('AM'=>'AM','PM'=>'PM'), array('style'=>'width:60px;'));  ?>
+        <?php echo $form->error($post, 'post_time'); ?>
+    </div>
+</div>
+<div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($media, 'media_name', array('class'=>'label')); ?>
+    	<br/>
+        <?php echo $form->textField($media, 'media_name');   ?>
+        <?php echo $form->error($media, 'media_name'); ?>
+    </div>
+</div>
+ <div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($media, 'media_type', array('class'=>'label')); ?>
+    	<br/>
+        <?php echo $form->dropDownList($media, 'media_type', array('video'=>'Video', 'image'=>'Image'));   ?>
+        <?php echo $form->error($media, 'media_type'); ?>
+    </div>
+</div>
+<div class='row'>
+    <div class='campaign_form_element'>
+    	<?php echo $form->labelEx($media, 'media_file', array('class'=>'label')); ?>
+    	<br/>
+        <?php echo $form->fileField($media, 'media_file');   ?>
+        <?php echo $form->error($media, 'media_file'); ?>
+    </div>
+</div>
+  
+<div class="row">
+    <?php echo CHtml::submitButton('Continue', array('class'=>'btn btn-primary')); ?>
+</div>
+<?php $this->endWidget(); ?>
+<script type='text/javascript'>
+	$(function(){
+		$('#eCampaignPost_post_content').on('keyup', function(){
+			var length = $(this).val().length ;
+			$('#count').html(140-length);
+		})
+	})
+</script>

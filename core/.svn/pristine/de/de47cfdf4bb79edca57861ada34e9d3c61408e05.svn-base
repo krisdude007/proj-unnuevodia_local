@@ -1,0 +1,115 @@
+<?php
+
+class AdminTickerController extends Controller {
+
+    
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            
+            array('allow',
+                'actions' => array(
+                    'index'
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * TICKER ACTIONS
+     * This section contains everything required for the ticker section of the admin
+     * 
+     * 
+     */
+    public function actionIndex($status = 'new') {
+        $tickers = eTicker::model()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->findAllByAttributes(Array('status' => $status));
+        $tickerRuns = Array();
+        
+        $questions_prepend = array('0' => 'All');
+        $questions = Utility::resultToKeyValue(eQuestion::model()->orderByCreatedDesc()->findAll(), 'id', 'question');
+        $questions = $questions_prepend + $questions;
+        $statuses = TickerUtility::getStatuses();
+        $perPageOptions = VideoUtility::getPerPageOptions();
+        
+        if ($status == 'accepted') {
+            foreach ($tickers as $ticker) {
+                $tickerRuns[] = new eTickerRun;
+            }
+        }
+        if (isset($_POST['eTicker'])) {
+            foreach ($tickers as $i => $ticker) {
+                if (isset($_POST['eTicker'][$i]) && $_POST['eTicker'][$i]['status'] != '') {
+                    $ticker->attributes = $_POST['eTicker'][$i];
+                    $ticker->arbitrator_id = Yii::app()->user->getId();
+                    if ($ticker->validate()) {
+                        $ticker->save();
+                    }
+                }
+                if ($_POST['eTicker'][$i]['status'] == 'denied' || $_POST['eTicker'][$i]['stop'] == 1) {
+                    $runRecords = eTickerRun::model()->findAllByAttributes(Array('ticker_id' => $tickers[$i]['id'], 'stopped' => 0), 'web_runs > web_ran || mobile_runs > mobile_ran || tv_runs > tv_ran');
+                    foreach ($runRecords as $runRecord) {
+                        $runRecord->stopped = 1;
+                        $runRecord->user_id = Yii::app()->user->getId();
+                        $runRecord->save();
+                    }
+                }
+            }
+        }
+        if (isset($_POST['eTickerRun'])) {
+            foreach ($tickerRuns as $i => $tickerRun) {
+                if (isset($_POST['eTickerRun'][$i])) {
+                    $tickerRun->attributes = $_POST['eTickerRun'][$i];
+                    $tickerRun->ticker_id = $tickers[$i]->id;
+                    $tickerRun->user_id = Yii::app()->user->getId();
+                    if ($tickerRun->web_runs + $tickerRun->mobile_runs + $tickerRun->tv_runs > 0 && $tickerRun->validate()) {
+                        $tickerRun->save(false);
+                    }
+                }
+            }
+        }
+        //This is called again because the view will refresh and we need to load only the tickers that match the current criteria.
+        $tickers = eTicker::model()->with('tickerDestinations', 'tickerRuns', 'user', 'user.userEmails:primary')->findAllByAttributes(Array('status' => $status));
+        $tickerRuns = Array();
+        if ($status == 'accepted') {
+            foreach ($tickers as $ticker) {
+                $tickerRuns[] = new eTickerRun;
+            }
+        }
+        $this->render('index', array(
+            'questions' => $questions,
+            'statuses' => $statuses,
+            'perPageOptions' => $perPageOptions,
+            'status' => $status,
+            'tickers' => $tickers,
+            'tickerRuns' => $tickerRuns
+        ));
+    }
+    
+    
+}

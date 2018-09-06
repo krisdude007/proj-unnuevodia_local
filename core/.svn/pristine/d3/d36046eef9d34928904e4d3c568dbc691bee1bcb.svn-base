@@ -1,0 +1,18 @@
+//jQuery.noConflict();
+
+var tabHandlers = function() {
+  $('#videoSchedulerModalTabs').tabs();
+}
+
+var datePickerHandler = function() {
+  // datepickers for datestart datestop on video filters
+  $( "#datepickerVideoSchedulerFilter" ).datepicker({
+    //maxDate: "0"
+  });
+}
+
+$(document).ready(function () {
+  tabHandlers();
+  datePickerHandler();
+});
+

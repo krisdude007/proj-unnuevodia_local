@@ -1,0 +1,72 @@
+<?php
+
+class AdminDashboardController extends Controller {
+
+    
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            
+            array('allow',
+                'actions' => array(
+                    'index',
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * DASHBOARD ACTIONS
+     * This section contains everything required for the dashboard section of the admin
+     * 
+     * 
+     */
+    public function actionIndex() {
+        $settings = eAppSetting::model()->dashboard()->active()->findAll();
+        foreach ($settings as $k => $v) {
+            $pageSettings[$v->attribute] = $v->value;
+        }
+        $this->render('index', array(
+            'settings' => $pageSettings,
+            'questionCount' => ePoll::model()->countByAttributes('id'),
+            'voteCount' => ePollResponse::model()->countByAttributes('id'),
+            'videoCount' => eVideo::model()->processed()->countByAttributes('id'),
+            'pendingCount' => eVideo::model()->processed()->countByAttributes(Array('status' => 'new')),
+            'imageCount' => eImage::model()->countByAttributes('id'),
+            'pendingImageCount' => eImage::model()->countByAttributes(Array('status' => 'new')),
+            'tickerRunningCount' => eTicker::model()->accepted()->with('tickerRuns')->hasRuns()->count(),
+            'tickerFailCount' => eTicker::model()->countByAttributes(Array('status' => 'denied')),
+            'tickerNewCount' => eTicker::model()->countByAttributes(Array('status' => 'new')),
+            'yesterday' => date("Y-m-d", time() - 60 * 60 * 24),
+            'lastWeek' => date("Y-m-d", time() - 60 * 60 * 24 * 7),
+            'lastMonth' => date("Y-m-d", strtotime("-1 month", time())),
+            'startDate' => Yii::app()->params['analytics']['startDate']
+        ));
+    }
+}

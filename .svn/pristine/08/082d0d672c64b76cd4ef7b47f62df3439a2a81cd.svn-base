@@ -1,0 +1,88 @@
+<?php
+$cs = Yii::app()->getClientScript();
+$cs->registerScriptFile('/webassets/js/jquery.oauthpopup.js', CClientScript::POS_END);
+?>
+<div class="fabmob_content-container text-center">
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-register-form',
+        'enableAjaxValidation' => true,
+        'htmlOptions' => array(
+            'class' => 'form-horizontal fabmob_condensed-form',
+        ),
+    ));
+    ?>
+    <br/>
+    <h3 class="text-center text">Sign Up</h3>
+    <br/>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'first_name', array('class' => 'form-control fabmob_round-border-top', 'placeholder' =>'First Name')); ?>
+        <?php echo $form->error($user, 'first_name'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'last_name', array('class' => 'form-control fabmob_round-border-top', 'placeholder' => 'Last Name')); ?>
+        <?php echo $form->error($user, 'last_name'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->passwordField($user, 'password', array('class' => 'form-control', 'placeholder' => 'Password')); ?>
+        <?php echo $form->error($user, 'password'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->passwordField($user, 'confirm_password', array('class' => 'form-control', 'placeholder' => 'Confirm Password')); ?>
+        <?php echo $form->error($user, 'confirm_password'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->emailField($userEmail, 'email', array('class' => 'form-control', 'placeholder' => 'Email')); ?>
+        <?php echo $form->error($userEmail, 'email'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($user, 'birthday', array('class' => 'form-control fabmob_round-border-bottom', 'placeholder' => 'Date of Birth')); ?>
+        <?php echo $form->error($user, 'birthday'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->textField($userLocation, 'postal_code', array('class' => 'form-control', 'placeholder' => 'Zipcode')); ?>
+        <?php echo $form->error($userLocation, 'postal_code'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group">
+        <?php echo $form->dropDownList($user, 'gender', array('M' => 'Male', 'F' => 'Female') , array('separator' => ' ', 'class' => 'form-control fabmob_round-border-bottom', 'placeholder' => 'Gender')); ?>
+        <?php echo $form->error($user, 'gender'); ?>
+        <span class="help-block hidden"></span>
+    </div>
+    <div class="form-group text">
+        <?php echo $form->checkBox($user, 'terms_accepted'); ?>
+        <span id="fabmob_sign-up-terms-input-label">
+            I agree to
+            <a class="active" style="text-decoration:underline;" href="<?php echo Yii::app()->createUrl('site/terms');?>">
+               Terms of Use
+            </a> and
+            <a class="active" style="text-decoration:underline;" href="<?php echo Yii::app()->createUrl('site/privacy');?>">
+                Privacy
+            </a>
+        </span>
+        <?php echo $form->error($user, 'terms_accepted'); ?>
+    </div>
+    <button id="signUpButton" class="btn btn-default">Submit</button>
+    <?php $this->endWidget(); ?>
+    <br/>
+    <div class="SocialLoginImage">
+        <div>
+            <img class="fbreg SocialLoginImage" src="/webassets/mobile/images/Button_Facebook_Login.png"/>
+        </div>
+        <div style="margin-top:10px">
+            <img class="twreg SocialLoginImage" src="/webassets/mobile/images/Button_Twitter_Login.png"/>
+        </div>
+    </div>
+    <p id="fabmob_login-register-copy" class="text">
+        Already have a login?
+    </p>
+    <span class="text-center">
+    <a id="fabmob_login-register-link" class="active" href="/login">Login</a>
+    </span>
+</div>

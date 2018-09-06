@@ -1,0 +1,48 @@
+<?php
+$tmpFontSize = range(30,40);
+$fontSize  = array();
+foreach ($tmpFontSize as $key => $value) {
+	$fontSize[$value] = $value;
+} 
+?>
+<div id="toolsFormContainer" class="content" style="display:none">
+	<div class="clearfix">
+		 <br/> 
+		<?php echo CHtml::label('Sliding Speed',''); ?>
+		<br/> 
+		 <?php echo $form->hiddenField($formTvScreenSettingModel,'slide_speed');?>
+		 <div class="graph"> 
+	        <div style="height: 8px;" class="bar" barValue="30"></div>
+	        <div style="height: 15px;" class="bar" barValue="50"></div> 
+	        <div style="height: 20px;" class="bar" barValue="70"></div> 
+	        <div style="height: 25px;" class="bar" barValue="90"></div>
+	        <div style="height: 30px;" class="bar" barValue="110"></div>
+	        <div style="height: 35px;" class="bar" barValue="220"></div>
+	        <div style="height: 40px;" class="bar" barValue="300"></div> 
+	        <div style="height: 45px;" class="bar" barValue="400"></div>
+		</div> 
+	</div>
+	<div class="clearfix">
+		<?php echo CHtml::label('Font-Size',''); ?>
+		<br/>
+		<?php echo $form->DropDownList($formTvScreenSettingModel, 'font_size', $fontSize)?> PX
+		 
+	</div>
+	<div class="clearfix">
+		<?php echo CHtml::label('Font-Color',''); ?>
+		<br/>
+		<?php echo $form->textField($formTvScreenSettingModel, 'font_color', array('id' => 'fontColorPicker', 'style' => 'width: 50px', 'maxlength' => 5))?>
+		
+	</div>
+	<div class="clearfix"><br/>
+		<?php echo CHtml::label('Show Running Preview LTR OR RTL',''); ?>
+		
+		<div class="onoffswitch">
+			<?php echo  $form->checkBox($formTvScreenSettingModel,'direction', array('value'=>1,'uncheckValue'=>0,'class'=>'onoffswitch-checkbox','id'=>"myonoffswitch")) ?>
+			 <label class="onoffswitch-label" for="myonoffswitch">
+			<span class="onoffswitch-inner"></span>
+			<span class="onoffswitch-switch"></span>
+			</label>
+		</div>
+	</div> 
+</div> 

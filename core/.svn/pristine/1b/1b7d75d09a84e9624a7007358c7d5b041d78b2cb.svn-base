@@ -1,0 +1,7 @@
+<?php
+class UpdateAnalyticsCommand extends CConsoleCommand{
+    public function run(){//nightly cron
+        eAnalytics::updateAnalytics();
+    }
+}
+?>

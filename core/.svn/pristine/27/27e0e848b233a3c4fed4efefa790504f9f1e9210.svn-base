@@ -1,0 +1,4 @@
+<div id='userGraph'></div>
+<script>
+    lineGrapher('userGraph','ajaxGetUserGraphData', '<?php echo $filterDate; ?>');
+</script>

@@ -1,0 +1,38 @@
+<?php
+
+class clientVideoController extends VideoController {
+
+     public function actionRecord($id = 0) {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('user/login'));
+        } else {
+            $user = eUser::model()->findByPK(Yii::app()->user->getId());
+            
+            if ($id == 0) {
+                $questions = eQuestion::model()->video()->current()->findAll();
+                foreach ($questions as $q) {
+                    $question = $q->question;
+                    $id = $q->id;
+                }
+            } else {
+                $questions = eQuestion::model()->findByPK($id);
+                $question = $questions->question;
+            }
+            if (!is_null($question)) {
+                $this->render('recorder', array(
+                    'question' => $question,
+                    'question_id' => $id,
+                    'duration' => Yii::app()->params['video']['duration'],
+                    'user_id' => Yii::app()->user->getId(),
+                    'wowzaip' => Yii::app()->params['wowza']['clientip'],
+                        )
+                );
+            } else {
+                $this->redirect('/');
+            }
+        }
+    }
+
+}
+
+?>

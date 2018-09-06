@@ -1,0 +1,6 @@
+<h1>Profile Settings</h1>
+<div class="profilenav">
+    <a  href="<?php echo Yii::app()->request->baseurl; ?>/info">basic info</a>
+    <a  href="<?php echo Yii::app()->request->baseurl; ?>/password">password</a>
+    <a  href="<?php echo Yii::app()->request->baseurl; ?>/avatar">photo</a>
+</div>

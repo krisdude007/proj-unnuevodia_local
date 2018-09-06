@@ -1,0 +1,94 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerScript('maxActives',"var maxActives = $maxActives", CClientScript::POS_END);
+$cs->registerScriptFile('/core/webassets/js/adminUser/index.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/adminUser/index.css');
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+$this->renderPartial('/admin/_csrfToken');
+?>
+
+<div class="fab-page-content">
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <?php
+    $flashMessages = Yii::app()->user->getFlashes();
+    if ($flashMessages) {
+        $messageFormat = '<div class="flashes"><div class="flash-%s">%s</div></div>';
+        foreach($flashMessages as $key => $message) {
+            echo sprintf($messageFormat,$key,$message);
+        }
+    }
+    ?>                                                        
+    <div id="fab-top">
+        <h2 class="fab-title"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/dashboard-icon.png" style="margin-right: 10px;float:left;"/>User Administration</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="fab-container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+
+        <!-- END PAGE HEADER-->
+        <div id="fab-dashboard">
+            <div style="padding:0px 20px 0px 20px;">    
+                <div>
+                    <h2>Create/Edit User:</h2>
+                    <?php
+                        $this->renderPartial('_formUser',array(
+                            'user'=>$user,
+                            'userEmail'=>$userEmail,
+                            'userPhoto'=>$userPhoto,
+                            'userLocation'=>$userLocation,
+                            'userPermissions'=>$userPermissions,
+                            'permissions'=>$permissions,                            
+                        ));
+                    ?>
+                </div>
+                <div style="padding-top:40px;clear:both;">
+                    <h2>Edit Users:</h2>
+                    <div style="margin-bottom:20px">
+                        Click on the column title to sort by that column.<br>
+                        Click on any user to edit them.
+                    </div>   
+                    <table id="userTable">
+                        <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Extended Permissions</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $rowFormat = "
+                                <tr>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                    <td><a href='/adminUser/index/%d'>%s</a></td>
+                                </tr>
+                            ";
+                            $i=0;
+                            foreach($users as $k=>$v){
+                                echo sprintf($rowFormat,                                        
+                                        $v->id,$v->username,
+                                        $v->id,$v->role,
+                                        $v->id,(sizeof($v->userPermissions) > 0) ? 'YES' : 'NO',
+                                        $v->id,$v->first_name,
+                                        $v->id,$v->last_name,
+                                        $v->id,$v->userEmails[0]->email
+                                     );
+                            }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

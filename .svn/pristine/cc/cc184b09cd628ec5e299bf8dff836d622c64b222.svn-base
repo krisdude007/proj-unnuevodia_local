@@ -1,0 +1,1561 @@
+<p><em>
+La versión en español de los Términos de Servicio es únicamente para propósito informativo. En caso de cualquier conflicto o discrepancia, la versión
+en inglés será la utilizada para todo propósito que no sea informativo.
+</em>
+</p>
+<center>
+<p>To view the spanish version of the terms and conditions, please click <a href="#spanishTerms">here</a>
+</p>
+</center>
+<a name="englishTerms">
+</a>
+<div id="englishTerms" class=Section1>
+<center>
+<h1>TERMS OF SERVICE</h1>
+</center>
+<p align=center style='margin-bottom:12.0pt;text-align:center;
+'>
+<span style='font-family:"hn"'>Effective Date:
+June 7, 2013.</span>
+</p>
+<p style='text-align:justify;'>
+<a name="TOS_general">
+<span
+style='font-family:"hn"'>To print our full Terms of Service, click
+</span>
+</a>
+<span>
+<b>
+<span style='font-family:"hn Bold";color:#4BACC6'>here</span>
+</b>
+</span>
+<span
+>
+<span style='font-family:"hn"'><b
+>
+<span style='background:yellow;
+'>
+</span>
+</b>.<span
+>  </span>To print our full Privacy Policy, click </span>
+</span>
+<span
+>
+<b>
+<span
+style='font-family:"hn Bold";color:#4BACC6'>here</span>
+</b>
+</span>
+<span
+>
+<span style='font-family:"hn"'><b
+>
+<span style='background:yellow;
+'>
+</span>
+</b>.<span
+>  </span>To receive copies of both documents by email,
+click </span>
+</span>
+<span>
+<b>
+<span style='font-family:"hn Bold";color:#4BACC6'>here</span>
+</b>
+</span>
+<span
+>
+<span style='font-family:"hn"'><b
+>. </span>
+</span>
+</p>
+<p align=center style='text-align:center;'>
+<span>
+<b>
+<span
+style='font-family:"hn"'>PLEASE READ THIS AGREEMENT CAREFULLY. IT
+SETS FORTH THE LEGALLY BINDING TERMS AND CONDITIONS FOR YOUR USE OF THE
+SERVICE.</span>
+</b>
+</span>
+<span>
+<span
+style='font-family:"hn"'>
+</span>
+</span>
+</p>
+<p align=center style='text-align:center;'>
+<span>
+<b
+>
+<span style='font-family:"hn"'>Introduction
+and Overview</span>
+</b>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span
+style='font-family:"hn"'>Welcome!<span> 
+</span>You have arrived at www.youtootech.com (the “<b>Site</b>”) and/or are otherwise interacting with a Service (defined
+below) that Youtoo Technologies LLC (collectively, “<b>Youtoo</b>,” “<b>we</b>,” “<b >our</b>,” or “<b>us</b>”) is operating on behalf of itself or one of our customers.<span >  </span>This Terms of Service (“<b>Terms</b>”) governs your use of any online service location (<i   >e.g.</i>, website or mobile application)
+that posts a link to these Terms, and also applies to all features, widgets,
+plug-ins, applications, content, downloads and other services that are owned
+and controlled by us or are otherwise operated by us and that post or link to
+these Terms (collectively with the Site, the "Service"), regardless of how you access or use the Service, whether
+via computer, mobile device or otherwise. By using the Service, you acknowledge and accept the Service’s
+<a href="http://www.youtootech.com/privacy.html">Privacy Policy</a> and consent to
+the collection and use of your data in accordance with the <b>
+<a href="http://www.youtootech.com/privacy.html">Privacy Policy</a>.
+<span></span>By using the Service, you further agree that
+Youtoo may change, alter, or modify the settings or configurations on your
+Device (defined below) in order to allow for or optimize your use of the
+Service. </span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span
+style='font-family:"hn"'>It’s important that you read these entire
+Terms; but to help facilitate your review, here are some of the more
+significant terms we want to bring to your initial attention that are further
+detailed below.</span>
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>Each time you use the Service, the Terms
+and any applicable Additional Terms (defined below) then posted apply so you
+should check back each time you return for any updates.<b></b>
+</span>
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>Click <a href="#linkableContents">here</a>
+for a summary of each section of these Terms.<span> 
+</span>You may click on the topic heading for full details.<b></b>
+</span>
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>You may only use the Content (defined
+below) on the Service in connection with your permitted activities on the
+Service and not in an offline environment or in connection with another site or
+service. (<b>
+<span style='color:#33CCCC'>Section
+1</span>
+</b><b>
+</b> and<b><span style='color:#33CCCC'>Section 3</span>
+</b><b
+>)<span></span>You grant us
+a broad license to content you submit or post. (<b>
+<span style='color:#33CCCC'>Section 2</span>
+</b><b >
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>Except as set forth in the <b
+>
+<span style='color:#33CCCC'>Privacy
+Policy</span>
+</b><b>
+</b> that applies
+to the Service, you and we do not have a confidential, fiduciary, or any other
+special relationship by virtue of your use of the Service or your
+communications to us through or related to the Service. (<b style=''>
+<span style='color:#33CCCC'>Section 2</span>
+</b><b  >
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>You consent to our <a href="http://www.youtootech.com/privacy.html">Privacy Policy</a> and our practices detailed in it, including targeted
+advertising.</span>
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>Many types of disputes that may arise in
+connection with your access to and use of the Service are subject to mandatory
+arbitration – which includes your waiver of a right to a jury trial. (<b
+>
+<span style='color:#33CCCC'>Section 11</span>
+</b>
+</span>
+</p>
+<p style='margin-left:.75in;text-align:justify;text-indent:-.25in;'>
+<span
+>
+<span style='font-family:"hn"'>•<span
+>     </span>We are providing the Service to you on an
+“as-is” basis, without any warranty of any kind, and our liability to you in
+connection with your use of the Service is very limited.<span
+>  </span>Many other limitations and disclaimers relate
+to your use of the Service.<span></span>(<b
+>
+<span style='color:#33CCCC'>Section 12</span>
+</b>
+<b>
+</b> and<b>
+<span style='color:#33CCCC'>Section 13</span></p>
+<span>
+</span>
+<p align=center style='text-align:center;line-height:normal;page-break-after:avoid'>
+<b
+>
+<span style='font-family:"hn"'>If
+You Want to Use the Service</span>
+</b>
+<span style='font-family:"hn"'>,</span>
+</p>
+<p style='margin-bottom:0in;margin-bottom:.0001pt;text-align:
+justify;'>
+<span style='font-family:"hn"'>then
+carefully read these entire Terms (including all links to details), as they
+constitute a written agreement between you and us and they affect your legal
+rights and obligations.<span></span>The summaries of
+provisions and section headings are provided for convenience only and shall not
+limit the full Terms.<span></span>If you are under
+the age of majority in your state or jurisdiction of residence, you may use the
+Service only with involvement of a parent or guardian who must sign up for an
+account and agree to these Terms and be responsible for your use.</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>Each
+time you access and/or use the Service (other than to simply read these Terms),
+you agree to be bound by and comply with the Terms and any Additional Terms
+(defined below) then posted.<span></span>
+<b
+>
+<i>Therefore,</i>
+</b>
+<b>
+<i>do
+not use the Service if you do not agree</i>
+</b>.</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>The
+business realities associated with operating the Service are such that, without
+the limitations that are set forth in these Terms – such as your grants and
+waivers of rights, the limitations on our liability, your indemnity of us, and
+arbitration of certain disputes – we would not make the Service available to
+you.</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>By
+accessing and/or using any part of the Service, you agree to be bound by these
+Terms.<span></span>In some instances, both these
+Terms and separate guidelines, rules, or terms of service or sale setting forth
+additional or different terms and/or conditions will apply to your use of the
+Service or to a service or product offered via the Service (in each such
+instance, and collectively “<b>Additional
+Terms</b>”).<span></span>To the extent there is a
+conflict between these Terms and any Additional Terms, the Additional Terms
+will control unless the Additional Terms expressly state otherwise.<span
+>  </span>Please also review the terms of the Service’s
+<a href="http://www.youtootech.com/privacy.html">Privacy Policy</a>
+, which you accept by using the Service.</span>
+</p>
+<a name="linkableContents">
+</a>
+<p align=center style='text-align:center;line-height:normal;page-break-after:avoid'>
+<b
+>
+<span style='font-family:"hn"'>Linkable
+Table of Contents</span>
+</b>
+</p>
+
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>It
+is important that you read and understand these entire Terms before using the
+Service.<span></span>To ease review, each section
+below includes a brief introductory summary and a link to the full
+explanation.<span></span>You can click on the
+headings and “<b>More</b>” links to
+be taken to the full explanation.<b></b>
+</span>
+</p>
+<p style='margin-left:1.0in;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>1.<span
+>
+</span>
+<span style='color:#33CCCC'>
+<a href="#1license">Service
+Content, Ownership, Limited License, and Rights of Others</a>
+</span>
+</span>
+</b>
+</p>
+<p style='margin-left:1.0in;line-height:normal;page-break-after:avoid'>
+<span style='font-family:"hn"'>We only grant you a limited
+revocable license to use the Service for your own non-commercial use subject to
+rules and limitations.</p>
+<p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>2.<span>
+</span>
+<span style='color:#33CCCC'>
+<a href="#communityusagerules">Content You Submit and
+Community Usage Rules</a>
+</span>
+</span>
+</b>
+</p>
+<p style='margin-left:1.0in;text-align:justify;line-height:
+'>
+<span style='font-family:"hn"'>You grant us a broad
+license, which we may sublicense, to the content you submit, including your
+profile, which you represent you have the right to allow us to use.<span
+>  </span>You, however, retain ownership of and
+responsibility for, your content.<span></span>Use of
+our Service is subject to community usage rules and we have the right to manage
+our Service to keep its content appropriate.</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b
+>
+<span style='font-family:"hn"'>3.<span
+>
+</span>
+<a href="#communityusagerules">Service
+and Content Use Restrictions</a>
+</p>
+<p style='margin-left:1.0in;text-align:justify;line-height:
+normal;page-break-after:avoid'>
+<span style='font-family:"hn"'>Your
+use of our Service is subject to various restrictions designed to protect the
+Service and our users.<span></span>We may change or
+discontinue our Service in whole or in part.</p>
+<p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>4. <span>
+</span>
+<a href="#SocialFeatures">Accounts, Profiles and Social Features</a>
+</p>
+<p style='margin-left:1.0in;text-align:justify;line-height:'>
+<span style='font-family:"hn"'>You may have the opportunity to open, revise and close your accounts and setup and change Profiles, subject to certain rules.<span></span>We may offer you the ability to make choices regarding how and to whom some aspects of your account and profile are used and seen, but these may not be completely effective.<span></span>The Service includes a social network and your activities (including social action, interaction with advertisers and media consumption) on the Service may be shared with others both on and off of the Service (e.g., Dick watched this music video, etc.).</p>
+<p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>5.<span>
+</span>
+<a href="#CopyrightInfringement">Procedure For Alleging Copyright Infringement</a>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>Users may not post content they do not own or control, and may be suspended or terminated if they do so.<span></span>Copyright owners may give us notice of infringement by following specific instructions mandated by federal law.</p>
+ <p style='margin-left:1.0in;text-indent:-.5in'>
+<b>
+<span style='font-family:"hn"'>6.<span>
+</span>
+<a href="#AllegingInfringement">Procedure for Alleging Infringement of Other Intellectual Property</a>
+</b>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;line-height:'>
+<span style='font-family:"hn"'>You can also give notice of trademark and other infringements that you think occur on the Service.</span>
+</p>
+<!--Notices-->
+<p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>7.<span>
+</span>
+<a href="#CustomerService">Notices, Questions and Customer Service</a>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>Click <b style=''>
+<span style='color:#33CCCC'>here</span>
+</b> to contact us for customer service or questions.You agree we may provide you notices, including of new terms and conditions, by posting notice on the home page or by other reasonable means, such as to the email address you provided.</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>8.<span>
+</span>
+<span style='color:#33CCCC'>Links by You to the Service</span>
+<span style='color:#33CCCC'></span>
+</b>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>You may link to our Service, subject to some basic rules.</span>
+</p>
+ <p style='margin-left:.5in;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>9.<span>
+</span>
+<a href="#Third-PartySites">Third-Party Sites; Advertisements; Dealings with Third Parties</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>We are not responsible for third parties or their content, advertisement(s), apps or sites.<span></span>For instance, our Service may be integrated into third-party sites and apps that we do not control.<span></span>Similarly, we may make third-party content or services available to you on or via our Service, which we also do not control.<span></span>Use caution when dealing with third parties.</p>
+ <p style='margin-left:.5in;text-align:justify;page-break-after: avoid'>
+<b>
+<span style='font-family:"hn"'>10.<span>
+</span>
+<a href="#Location-BasedFeatures">Wireless and Location-Based Features</a>
+</span></b>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>Wireless carrier charges may apply to use of the Service via wireless networks or Devices.<span></span>We my offer functionality on the Service that relies on your location.</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>11.<span>
+</span>
+<a href="#DisputeResolution">Dispute Resolution</a>
+</span>
+</b>
+</p>
+ <p style='margin-left:.5in;text-align:justify;text-indent:.5in; '>
+<span style='font-family:"hn"'>You agree to arbitrate most disputes and waive jury trial and class actions.</span>
+</p>
+ <!--warrenties-->
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>12.<span style=''>
+</span>
+<a href="#Warranties">Disclaimer of Representations and Warranties</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>We disclaim most warranties and provide the Service “As Is”.</span>
+</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>13.<span style=''>
+</span>
+<a href="#OurLiability">Limitations of Our Liability</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>Our liability is greatly limited.</span>
+</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>14.<span style=''>
+</span>
+<a href="#EquitableRelief">Waiver of Injunctive or Other Equitable Relief</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>You waive equitable or injunctive relief.</span>
+</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>15.<span style=''>
+</span>
+<a href="#UpdatestoTerms">Updates to Terms</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>These Terms and Additional Terms posted on the Service at each time of use apply to that use, and the Terms may be prospectively updated as our Service evolves.<span></span>Posting of new Terms on the Service is notice to you thereof.</span>
+</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>16.<span style=''>
+</span>
+<a href="#Provisions">General Provisions</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>You agree to various other terms and conditions, which you should read here, including regarding: (a) our control and discretion; (b) the law that governs these Terms; (c) your indemnity of us; (d) accessing the Service from outside of the United States; (e) restriction on the Service for those countries subject to U.S. export controls; (f) enforcement and interpretation of these Terms; (g) communications with us; (h) investigations, cooperation with law enforcement, termination and survival; (i) limit on assignment and delegation of rights and obligations; (j) how waivers may be made; (k) special terms for U.S. government users; (l) California consumer rights; and (m) your responsibility for your connectivity and access.</span>
+</p>
+ <p style='margin-left:.5in'>
+<b>
+<span style='font-family:"hn"'>17.<span style=''>
+</span>
+<a href="#TermsApplicable">Terms Applicable For Apple iOS</a>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>There are some other things you should know if you are accessing or using the Service through an Apple Device.</span>
+</p>
+ <p align=center style='text-align:center;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>Full Details of the Terms of Service</span>
+</b>
+</p>
+ <p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>1.<span>
+</span>Service Content, Ownership, Limited License, and Rights of Others</span>
+</b>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>Content</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>The Service contains a variety of: (i) materials and other items relating to Youtoo and its products and services, and similar items from our licensors, customers and other third parties, including all layout, information, text, data, files, images, scripts, designs, graphics, button icons, instructions, illustrations, photographs, audio clips, music, sounds, pictures, videos, advertising copy, URLs, technology, software, interactive features, the “look and feel” of the Service, and the compilation, assembly, and arrangement of the materials of the Service and any and all copyrightable material (including source and object code); (ii) trademarks, logos, trade names, service marks, and trade identities of various parties, including those of Youtoo (collectively,<span></span>“<b>Trademarks</b>”); and (iii) other forms of intellectual property (all of the foregoing, collectively “<b>Content</b>”).<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Ownership</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>The Service (including past, present, and future versions) and the Content are owned or controlled by Youtoo and our licensors and certain other third parties.<span></span>All right, title, and interest in and to the Content available via the Service is the property of Youtoo or our licensors or certain other third parties, and is protected by U.S. and international copyright, trademark, patent, or other intellectual property rights and laws to the fullest extent possible.<span></span>Youtoo owns the copyright in the selection, compilation, assembly, arrangement, and enhancement of the Content on the Service.<span></span>
+</span>
+</p>
+ <a name="1license">
+</a>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C.<span>
+</span>Limited License</span>
+</b>
+<span style='font-family: "hn"'>.<span></span>Subject to your strict compliance with these Terms and the Additional Terms, Youtoo grants you a limited, non-exclusive, revocable, non-assignable, personal, and non-transferable license to (i) download (temporary storage only), display, view, use, play, and/or print one copy of the Content (excluding source and object code in raw form or otherwise, other than as made available to access and use to enable display and functionality) on a personal computer, mobile phone or other wireless device, or other Internet enabled device (each, a “<b>Device</b>”) for your personal, non-commercial use only, and (ii) to use certain Content that we may from time to time make available on the Service explicitly for you for use as part of your User-Generated Content (defined below) (“<b>Youtoo Licensed Elements</b>”), but only for such purposes as may be explicitly stated at the time that the Youtoo Licensed Elements are made available on the Service; but we and our licensors and certain other third parties, as the case may be, retain ownership of such Youtoo Licensed Elements.<span></span>The foregoing limited license (i) does not give you any ownership of, or any other intellectual property interest in, any Content, and (ii) may be immediately suspended or terminated for any reason, in Youtoo’s sole discretion, and without advance notice or liability.<span></span>In some instances, we may permit you to have greater access to and use of Content and/or Youtoo Licensed Elements, subject to certain Additional Terms.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>D.<span>
+</span>Rights of Others</span>
+</b>
+<span style='font-family: "hn"'>.<span></span>In using the Service, you must respect the intellectual property and other rights of Youtoo and others.<span></span>Your unauthorized use of Content may violate copyright, trademark, privacy, publicity, communications, and other laws, and any such use may result in your personal liability, including potential criminal liability.<span></span>Youtoo respects the intellectual property rights of others.<span></span>If you believe that your work has been infringed by means of an improper posting or distribution of it via the Service, then please see </span>
+<b>
+<span style='font-family:"hn Bold";color:#33CCCC'>Section&nbsp;5</span>
+</b>
+<b>
+<span style='font-family:"hn Bold"; color:#33CCCC'>Section&nbsp;6</span>
+</b>
+<span style='font-family:"hn"'><b> below.</span>
+</p>
+ <p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>2.<span>
+</span>Content You Submit and Community Usage Rules</span>
+</b>
+</p>
+ <p style='text-align:justify;'>
+<span style='font-family:"hn"'>
+<span>   </span>
+<b>A.<span>
+</span>User-Generated Content</b>.</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(i)<span></span>
+<span>
+</span>General</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo may now or in the future offer users of the Service the opportunity to create, build, post, upload, display, publish, distribute, transmit, broadcast, or otherwise make available on or submit through the Service (collectively, “<b>submit</b>”) messages, avatars, text, illustrations, files, images, graphics, photos, comments, responses, sounds, music, videos, information, content, ratings, reviews, data, questions, suggestions, personally identifiable information, or other information or materials and the ideas contained therein (collectively, but excluding Youtoo Licensed Elements included therein, “<b>User-Generated Content</b>”).<span></span>Youtoo may allow you to do this through, forums, blogs, message boards, social networking environments, content creation tools, gameplay, social communities, email, and other communications functionality.<span></span>Subject to the rights and license you grant in these Terms, you retain whatever legally cognizable right, title, and interest that you have in your User-Generated Content and you remain ultimately responsible for it.</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(ii)<span></span>
+<span></span>Non-Confidentiality of Your User-Generated Content</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Except as otherwise described in the Service’s posted <b>
+<span style='color:#33CCCC'>Privacy Policy</span>
+</b> or any Additional Terms, you agree that: (a) your User-Generated Content will be treated as non-confidential – regardless of whether you mark them “confidential,” “proprietary,” or the like – and will not be returned, and (b) Youtoo does not assume any obligation of any kind to you or any third party with respect to your User-Generated Content.<span></span>Upon Youtoo’s request, you will furnish us with any documentation necessary to substantiate the rights to such content and to verify your compliance with these Terms or any Additional Terms.<span></span>You acknowledge that the Internet and mobile communications may be subject to breaches of security and that you are aware that submissions of User-Generated Content may not be secure, and you will consider this before submitting any User-Generated Content and do so at your own risk.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<span style='font-family:"hn"'>In your communications with Youtoo, please keep in mind that we do not seek any unsolicited ideas or materials for products or services, or even<b></b>suggested improvements to products or services, including, without limitation, ideas, concepts, inventions, or designs for music, websites, apps, books, scripts, screenplays, motion pictures, television shows, theatrical productions, software or otherwise (collectively, “<b>Unsolicited Ideas and Materials</b>”).<span></span>Any Unsolicited Ideas and Materials you post on or send to us via the Service are deemed User-Generated Content and licensed to us as set forth below. In addition, Youtoo retains all of the rights held by members of the general public with regard to your Unsolicited Ideas and Materials.<span></span>Youtoo’s receipt of your Unsolicited Ideas and Materials is not an admission by Youtoo of their novelty, priority, or originality, and it does not impair Youtoo’s right to contest existing or future intellectual property rights relating to your Unsolicited Ideas and Materials. </span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(iii)<span></span>
+<span>
+</span>License to Youtoo of Your User-Generated Content</span>
+</b>
+<span style='font-family: "hn"'>.<span></span>Except as otherwise described in any applicable Additional Terms (such as a contest official rules), which specifically govern the submission of your User-Generated Content), you hereby grant to Youtoo (and all of its affiliated companies, agents, partners and associated entities), the non-exclusive, unrestricted, unconditional, unlimited, worldwide, irrevocable, perpetual, and cost-free right and license to use, copy, record, distribute, reproduce, disclose, sell, re-sell, sublicense (through multiple levels), display, publicly perform, transmit, publish, broadcast, translate, make derivative works of, and otherwise use and exploit in any manner whatsoever, all or any portion of your User-Generated Content (and derivative works thereof), for any purpose whatsoever in all formats, on or through any means or medium now known or hereafter developed, and with any technology or devices now known or hereafter developed, and to advertise, market, and promote the same.<span></span>Without limitation, the granted rights include the right to: (a) configure, host, index, cache, archive, store, digitize, compress, optimize, modify, reformat, edit, adapt, publish in searchable format, and remove such User-Generated Content and combine same with other materials, and (b) use any ideas, concepts, know-how, or techniques contained in any User-Generated Content for any purposes whatsoever, including developing, producing, and marketing products and/or services.<span></span>In order to further effect the rights and license that you grant to Youtoo to your User-Generated Content, you also hereby grant to Youtoo, and agree to grant to Youtoo, the unconditional, perpetual, irrevocable right to use and exploit your name, persona, and likeness in connection with any User-Generated Content, without any obligation or remuneration to you.<span></span>Except as prohibited by law, you hereby waive, and you agree to waive, any moral rights (including attribution and integrity) that you may have in any User-Generated Content, even if it is altered or changed in a manner not agreeable to you.<span></span>To the extent not waivable, you irrevocably agree not to exercise such rights (if any) in a manner that interferes with any exercise of the granted rights.<span></span>You understand that you will not receive any fees, sums, consideration, or remuneration for any of the rights granted in this Section 2.A(iii) and the license extends to all other Youtoo clients, customers and product and Service users.</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(iv) <span></span>Youtoo’s Exclusive Right to Manage our Venue</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo may, but will not have any obligation to, review, monitor, display, post, store, maintain, accept, or otherwise make use of, any of your User-Generated Content, and Youtoo may, in its sole discretion, reject, delete, move, re-format, remove or refuse to post or otherwise make use of User-Generated Content without notice or any liability to you or any third party in connection with our operation of User-Generated Content venues in an appropriate manner.<span></span>Without limitation, we may do so to address content that comes to our attention that we believe is offensive, obscene, lewd, lascivious, filthy, violent, harassing, threatening, abusive, illegal or otherwise objectionable or inappropriate, or to enforce the rights of third parties or these Terms or any applicable Additional Terms, including, without limitation, the content restrictions set forth below in the </span>
+<b>
+<span style='font-family:"hn Bold";color:#33CCCC'>Rules</span>
+</b>
+<span style='font-family:"hn"'><b>
+</b> (defined in </span>
+<b>
+<span style='font-family:"hn Bold"; color:#33CCCC'>Section&nbsp;2.B</span>
+</b>
+<span style='font-family:"hn"'><b>
+</b>).<span></span>Such User-Generated Content submitted by you or others need not be maintained on the Service by us for any period of time and you will not have the right, once submitted, to access, archive, maintain, or otherwise use such User-Generated Content on the Service or elsewhere.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(v)<span style=''>
+</span>Representations and Warranties Related to Your User-Generated Content</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Each time you submit any User-Generated Content, you represent and warrant that you are at least the age of majority in the jurisdiction in which you reside and are the parent or legal guardian, or have all proper consents from the parent or legal guardian, of any minor who is depicted in or contributed to any User-Generated Content you submit, and that, as to that User-Generated Content, (a) you are the sole author and owner of the intellectual property and other rights to the User-Generated Content, or you have a lawful right to submit the User-Generated Content and grant Youtoo the rights to it that you are granting by these Terms and any Additional Terms, all without any Youtoo obligation to obtain consent of any third party and without creating any obligation or liability of Youtoo; (b) the User-Generated Content is accurate; (c) the User-Generated Content does not and, as to Youtoo’s permitted uses and exploitation set forth in these Terms, will not infringe any intellectual property or other right of any third party; and (d) the User-Generated Content will not violate these Terms (including the Rules) or any Additional Terms, or cause injury or harm to any person.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(vi) <span></span>Enforcement</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo has no obligation to monitor or enforce your intellectual property rights to your User-Generated Content, but you grant us the right to protect and enforce our rights to your User-Generated Content, including by bringing and controlling actions in your name and on your behalf (at Youtoo’s cost and expense, to which you hereby consent and irrevocably appoint Youtoo as your attorney-in-fact, with the power of substitution and delegation, which appointment is coupled with an interest).<span></span>
+</span>
+</p>
+ <a name="communityusagerules">
+</a>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Community Usage Rules</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>As a user of the Service, these Community Usage Rules (“<b>Rules</b>”) are here to help you understand the conduct that is expected of members of the Service’s online communities (“<b>Communities</b>”). </span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<span style='font-family:"hn"'>(<b>i)<span>
+</span>Nature of Rules</b>.<span></span>Your participation in the Communities is subject to all of the Terms, including these Rules:</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Your User-Generated Content</b>.<span></span>All of your User-Generated Content either must be original with you or you must have all necessary rights in it from third parties in order to permit you to comply with these Terms and any Additional Terms.<span></span>Your User-Generated Content should not contain any visible logos, phrases, or trademarks that belong to third parties.<span></span>Do not use any User-Generated Content that belongs to other people and pass it off as your own; this includes any content that you might have found elsewhere on the Internet.<span></span>If anyone contributes to your User-Generated Content or has any rights to your User-Generated Content, or if anyone appears in the User-Generated Content, then you must also have their permission to submit such User-Generated Content to Youtoo.<span></span>(For example, if someone has taken a picture of you and your friend, and you submit that photo to Youtoo as your User-Generated Content, then you must obtain your friend’s and the photographer’s permission to do so.)</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Speaking of Photos:<span></span>No Pictures, Videos, or Images of Anyone Other Than You and Your Friends and Family</b>.<span></span>If you choose to submit photos to the Service, link to embedded videos, or include other images of real people, then make sure they are of you or of you and someone you know – and only if you have their express permission to submit it.</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Act Appropriately</b>.<span></span>All of your Service activities must be venue appropriate, as determined by us.<span></span>Be respectful of others’ opinions and comments so we can continue to build Communities for everyone to enjoy.<span></span>If you think your User-Generated Content might offend someone or be embarrassing to someone, then chances are it probably will and it doesn’t belong on the Service.<span></span>Cursing, harassing, stalking, insulting comments, personal attacks, gossip, and similar actions are prohibited.<span></span>Your User-Generated Content must not threaten, abuse, or harm others, and it must not include any negative comments that are connected to race, national origin, gender, sexual orientation, or physical handicap.<span></span>Your User-Generated Content must not be defamatory, slanderous, indecent, obscene, pornographic, or sexually explicit.<span></span>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Do Not Use for Commercial or Political Purposes</b>.<span></span>Your User-Generated Content must not advertise or promote a product or service or other commercial activity, or a politician, public servant, or law.</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Do Not Use for Inappropriate Purposes</b>.<span></span>Your User-Generated Content must not promote any infringing, illegal, or other similarly inappropriate activity. </span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Be</b><b>Honest and Do Not Misrepresent Yourself or Your User-Generated Content</b>.<span></span>Do not impersonate any other person, user, or company, and do not submit User-Generated Content that you believe may be false, fraudulent, deceptive, inaccurate, or misleading, or that misrepresents your identity or affiliation with a person or company. </span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Others Can See</b>.<span></span>We hope that you will use the Communities to exchange information and content and have venue appropriate discussions with other members.<span></span>However, please remember that the Communities are public or semi-public and User-Generated Content that you submit on the Service within a Community may be accessible and viewable by other users.<span></span>Do not submit personally identifying information (<i>e.g.</i>, first and last name together, password, phone number, address, credit card number, medical information, email address, or other personally identifiable information or contact information) on Community spaces and take care when disclosing this type of information to others.<span></span>
+</span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Don’t Share Other Peoples’ Personal Information</b>.<span></span>Your User-Generated Content should not reveal another person’s address, phone number, email address, social security number, credit card number, medical information, financial information, or any other information that may be used to track, contact, or impersonate that individual, unless, and in the form and by the method, specifically requested by Youtoo. </span>
+</p>
+ <p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>•<span></span>
+<b>Don’t Damage the Service</b><b>or Anyone’s Computers or Other Devices</b>.<span></span>Your User-Generated Content must not submit viruses, Trojan horses, spyware, or any other technologies or malicious code that could impact the operation of the Service or any computer or other Device.</span>
+</p>
+ <p style='text-align:justify;'>
+<span style='font-family:"hn"'>If you submit User-Generated Content that Youtoo reasonably believes violates these Rules, then we may take any legally available action that we deem appropriate, in our sole discretion.<span></span>However, we are not obligated to take any action not required by law.<span></span>We may require, at any time, proof of the permissions referred to above in a form acceptable to us.<span></span>Failure to provide such proof may lead to, among other things, the User-Generated Content in question being removed from the Service.</span>
+</p>
+ <p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(ii)<span>
+</span>Your Interactions With Other Users; Disputes</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You are solely responsible for your interaction with other users of the Service, whether online or offline.<span></span>We are not responsible or liable for the conduct or content of any user.<span></span>We reserve the right, but have no obligation, to monitor or become involved in disputes between you and other users.<span></span>Exercise common sense and your best judgment in your interactions with others (<i>e.g</i>., when you submit any personal or other information) and in all of your other online activities.</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C.<span>
+</span>Alerting Us of Violations</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>If you discover any content that violates these Terms, then you may report it to support@youtootech.com.<span></span>For alleged infringements of intellectual property rights, see </span>
+<b>
+<span style='font-family:"hn Bold"; color:#33CCCC'>Sections 5</span>
+</b>
+<b>
+<span style='font-family:"hn"'>  </span>
+</b>
+<span style='font-family:"hn"'>and </span>
+<b>
+<span style='font-family:"hn Bold";  color:aqua'>6</span>
+</b>
+<b>
+<span style='font-family:"hn"'></span>
+</b>
+<span style='font-family:"hn"'>, below.</span>
+</p>
+ <p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>3.<span>
+</span>Service and Content Use Restrictions</span>
+</b>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>Service Use Restrictions</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You agree that you will not: (i) use the Service for any political or commercial purpose (including, without limitation, for purposes of advertising, soliciting funds, collecting product prices, and selling products); (ii) use any meta tags or any other “hidden text” utilizing any Trademarks; (iii) engage in any activities through or in connection with the Service that seek to attempt to or do harm any individuals or entities or are unlawful, offensive, obscene, lewd, lascivious, filthy, violent, threatening, harassing, or abusive, or that violate any right of any third party, or are otherwise objectionable to Youtoo; (iv) reverse engineer, decompile, disassemble, reverse assemble, or modify any Service source or object code or any software or other products, services, or processes accessible through any portion of the Service; (v) engage in any activity that interferes with a user’s access to the Service or the proper operation of the Service, or otherwise causes harm to the Service,<b></b>Youtoo, or other users of the Service; (vi) interfere with or circumvent any security feature of the Service or any feature that restricts or enforces limitations on use of or access to the Service, the Content, or the User-Generated Content; (vii) harvest or otherwise collect or store any information (including personally identifiable information about other users of the Service, including email addresses, without the express consent of such users); (viii) attempt to gain unauthorized access to the Service, other computer systems or networks connected to the Service, through password mining or any other means; or (ix) otherwise violate these Terms or any Additional Terms.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Content Use Restrictions</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You also agree that, in using the Service: (i) you will not monitor, gather, copy, or distribute the Content (except as may be a result of standard search engine activity or use of a standard browser) on the Service by using any robot, rover, “bot”, spider, scraper, crawler, spyware, engine, device, software, extraction tool, or any other automatic device, utility, or manual process of any kind; (ii) you will not frame or utilize framing techniques to enclose any such Content (including any images, text, or page layout); (iii) you will keep intact all Trademark, copyright, and other intellectual property notices contained in such Content; (iv) you will not use such Content in a manner that suggests an unauthorized association with any of our or our licensors’ products, services, or brands; (v) you will not make any modifications to such Content (other than to the extent of your permitted use of the Youtoo Licensed Elements, if applicable); (vi) you will not copy, modify, reproduce, archive, sell, lease, rent, exchange, create derivative works from, publish by hard copy or electronic means, publicly perform, display, disseminate, distribute, broadcast, retransmit, circulate or transfer to any third party or on any third-party application or website, or otherwise use or exploit such Content in any way for any purpose except as specifically permitted by these Terms or any Additional Terms or with the prior written consent of an officer of Youtoo or, in the case of Content from a licensor, the owner of the Content; and (vii) you will not insert any code or product to manipulate such Content in any way that adversely affects any user experience. </span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C.<span>
+</span>Availability of Service and Content</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo may immediately suspend or terminate the availability of the Service and Content (and any elements and features of them), in whole or in part, for any reason, in Youtoo’s sole discretion, and without advance notice or liability.<span></span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>D.<span>
+</span>Reservation of All Rights Not Granted as to Content and Service</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>These Terms and any Additional Terms include only narrow, limited grants of rights to Content and to use and access the Service.<span></span>No right or license may be construed, under any legal theory, by implication, estoppel, industry custom, or otherwise.<span></span>All rights not expressly granted to you are reserved by Youtoo and its licensors and other third parties.<span></span>
+<b style=''>
+<i>Any unauthorized use of any Content or the Service for any purpose is prohibited</i>
+</b>.</span>
+</p>
+
+ <a name="SocialFeatures">
+</a>
+ <p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>4. <span>
+</span>Accounts, Profiles and Social Features</span>
+</b>
+<span style='font-family:"hn"'>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<span style='font-family:"hn"'>
+<span>   </span>
+<b>A.<span></span>
+<span></span>Accounts</b>.<span></span>In order to access or use some (or potentially all) of the features on the Service, you must first register through our online registration process or use the registration forms otherwise as made available on the Service.<a name="TOS_use">
+</a>
+<a name="_GoBack">
+</a>
+<span>
+<b>
+<span  >  </span>
+</b>The Service’s practices governing any resulting collection and use of your personal information are disclosed in the <b>
+<span style='color:#33CCCC'>Privacy  Policy</span>
+</b><b>
+</b>.<span></span>If you are under the age of eighteen (18), then you are not permitted to register as a user, create a profile page or otherwise use the Service.<span></span>If you are under the age of eighteen (18) and wish to participate in the Service, ask your parent or legal guardian to open an account for you so that you can utilize the Service under their supervision. </span>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>If you register for any feature that requires a password and/or username, then you will select your own password at the time of registration (or we may send you an email notification with a randomly generated initial password) and you agree that: (i) You will not use a username (or email address) that is already being used by someone else, may impersonate another person, belongs to another person, violates the intellectual property or other right of any person or entity, or is offensive.<span></span>We may reject the use of any password, username, or email address for any other reason in our sole discretion; (ii) You will provide true, accurate, current and complete registration information about yourself in connection with the registration process and, as permitted, to maintain and update it, including your profile page, continuously and promptly to keep it accurate, current and complete; (iii) You are solely responsible for all activities that occur under your account, password, and username – whether or not you authorized the activity; (iv) You are solely responsible for maintaining the confidentiality of your password and for restricting access to your Device so that others may not access any password protected portion of the Service using your name, username, or password; (v) You will immediately notify us of any unauthorized use of your account, password, or username, or any other breach of security; and (vi) You will not sell, transfer, or assign your account or any account rights.</span>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>We will not be liable for any loss or damage (of any kind and under any legal theory) to you or any third party arising from your inability or failure for any reason to comply with any of the foregoing obligations.<span></span>
+</span>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>If any information that you provide, or if we have reasonable grounds to suspect that any information that you provide, is false, inaccurate, outdated, incomplete, or violates these Terms, any Additional Terms, or any applicable law, then we may suspend or terminate your account.<span></span>We also reserve the more general and broad right to terminate your account or suspend or otherwise deny you access to it or its benefits – all in our sole discretion, for any reason, and without advance notice or liability.</span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<span style=''>
+<b>
+<span style='font-family:"hn"'>B.<span  >
+</span> Profiles</span>
+</b>
+</span>
+<span>
+<span style='font-family:"hn"'>.<span></span>Your profile page may not include any form of prohibited User-Generated Content, as outlined in our <b>
+<span style='color:#33CCCC'>Rules</span>
+</b><b >
+<span style='background:yellow; '>
+</span>
+</b>.<span></span>Without limiting the foregoing, profile pages may not include content that you are attempting to sell through the Service, and cannot be used to conduct commercial activities, including, but not limited to, transactions, advertising, fundraising, contests or other promotions absent our prior written consent.<span></span>We may offer you the ability to set preferences relating to your profile or Service activities, but settings may not become effective immediately or be error free, and options may change from time-to-time.<span></span>We assume no responsibility or liability for users’ profile material.</span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<span style=''>
+<span style='font-family:"hn"'>Profile pages may only be set up by an authorized representative of the individual that is the subject of the Profile page.<span></span>We do not review profile pages to determine if they were created by an appropriate party, and we are not responsible for any unauthorized profile pages that may appear on the Service.<span></span>If there is any dispute as to whether a profile page has been created or is being maintained by an authorized representative of the individual who is the subject of that profile page, then we shall have the sole right, but are not obligated, to resolve such dispute as we determine is appropriate in our sole discretion.<span></span>Such resolution may include, without limitation, deleting or disabling access to profile pages, or any portion thereof, at any time without notice.</span>
+</span>
+</p>
+ <p style='text-align:justify;text-indent:.5in;'>
+<span style=''>
+<b>
+<span style='font-family:"hn"'>C.</span>
+</b>
+</span>
+<span>
+<span style='font-family:"hn"'>
+<span>
+</span>
+<b>Social Features</b>.<span></span>Certain aspects of the Service are a community and inherently a social media experience.<span>   </span>Subject to our good faith efforts to honor your election of certain options we may offer from time-to-time that may offer you certain choices regarding what is shared and with whom, your activities, User-Generated Content and Content consumption (including videos and music) may be viewable by, or shared with, others on and off of the Service, including advertisers.<span></span>You consent to this, and irrevocably grant us the sub-licensable right to use and exploit your name, persona, likeness, pseudonym, profile picture, information and User-Generated Content, and to share it with others, without any obligation or remuneration to you.<span></span>This may include, without limitation, associating you with commercial, sponsored or related content (such as a brand you like or the sponsors of an ad you click on).<span></span>As examples, if you watch a show, or become their fan, other users may be told that and we may serve you ads for other shows or Content that you might like.</span>
+</span>
+</p>
+ <p style='text-align:justify;'>
+<a href="#">Return to Terms summary and navigation</a>
+</span>
+</p>
+
+<a name="CopyrightInfringement">
+</a>
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<span>
+<b>
+<span style='font-family:"hn"'>5.<span>
+</span>Procedure For Alleging Copyright Infringement </span>
+</b>
+</span>
+</p>
+
+<p style='text-align:justify;text-indent:.5in;'>
+<span style=''>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>DMCA Notice</span>
+</b>
+</span>
+<span>
+<span style='font-family:"hn"'>.<span></span>Youtoo will respond appropriately to notices of alleged copyright infringement that comply with the U.S. Digital Millennium Copyright Act (“<b>DMCA</b>”), as set forth below.<span></span>If you own a copyright in a work (or represent such a copyright owner) and believe that your (or such owner’s) copyright in that work has been infringed by an improper posting or distribution of it via the Service, then you may send us a written notice that includes all of the following: </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(i) <span>
+</span>a legend or subject line that says: “DMCA Copyright Infringement Notice”; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(ii) <span>
+</span>a description of the copyrighted work that you claim has been infringed or, if multiple copyrighted works are covered by a single notification, a representative list of such works; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(iii) <span></span>a description of where the material that you claim is infringing or is the subject of infringing activity is located that is reasonably sufficient to permit us to locate the material (please include the URL of the Service on which the material appears); </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(iv) <span></span>your full name, address, telephone number, and email address; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(v) <span>
+</span>a statement by you that you have a good faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or the law; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(vi) <span></span>a statement by you, made under penalty of perjury, that all the information in your notice is accurate, and that you are the copyright owner (or, if you are not the copyright owner, then your statement must indicate that you are authorized to act on the behalf of the owner of an exclusive right that is allegedly infringed); and </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(vii) <span>
+</span>your electronic or physical signature. </span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>Youtoo will only respond to DMCA Notices that it receives by mail or email, at the addresses below:</span>
+</span>
+</p>
+<p style='margin-left:1.5in;text-align:justify;text-indent:-1.0in;'>
+<span>
+<span style='font-family:"hn"'>By Mail:<span></span>Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (Attn: DMCA Agent).</span>
+</span>
+</p>
+<p style='margin-bottom:0in;margin-bottom:.0001pt;text-align:justify;text-indent:.5in;line-height:12.0pt;'>
+<span>
+<span style='font-family:"hn"'>By Email:<span>
+</span>DMCA@youtootech.com </span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>It is often difficult to determine if your copyright has been infringed.<span></span>Youtoo may elect to not respond to DMCA Notices that do not substantially comply with all of the foregoing requirements, and Youtoo may elect to remove allegedly infringing material that comes to its attention via notices that do not substantially comply with the DMCA.<span></span>
+</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>Please note that the DMCA provides that any person who knowingly materially misrepresents that material or activity is infringing may be subject to liability.</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>We may send the information that you provide in your notice to the person who provided the allegedly infringing work.<span></span>That person may elect to send us a DMCA Counter-Notification.</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>Without limiting Youtoo’s<b></b>other rights, Youtoo may, in appropriate circumstances, terminate a repeat infringer’s access to the Service and any other website owned or operated by Youtoo.<span></span>See<span style='color:#33CCCC'><b>Section 4</b>
+</span><b>
+</b>, above.</span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<span style=''>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Counter-Notification</span>
+</b>
+</span>
+<span>
+<span style='font-family:"hn"'>.<span></span>If access on the Service to a work that you submitted to Youtoo is disabled or the work is removed as a result of a DMCA Notice, and if you believe that the disabled access or removal is the result of mistake or misidentification, then you may send us a DMCA Counter-Notification to the addresses above.<span></span>Your DMCA Counter-Notification should contain the following information:</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(i)<span>
+</span>a legend or subject line that says:<span></span>“DMCA Counter-Notification”;</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(ii)<span>
+</span>a description of the material that has been removed or to which access has been disabled and the location at which the material appeared before it was removed or access to it was disabled (please include the URL of the Service from which the material was removed or access to it disabled);</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(iii)<span>
+</span>a statement under penalty of perjury that you have a good faith belief that the material was removed or disabled as a result of mistake or misidentification of the material to be removed or disabled;</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(iv)<span>
+</span>your full name, address, telephone number, email address, and the username of your account;</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(v)<span>
+</span>a statement that you consent to the jurisdiction of the Federal District Court for the judicial district in which your address is located (or, if the address is located outside the U.S.A., to the jurisdiction of the United States District Court for the Central District of California), and that you will accept service of process from the person who provided DMCA notification to us or an agent of such person; and</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(vi)<span>
+</span>your electronic or physical signature.</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>Please note that the DMCA provides that any person who knowingly materially misrepresents that material or activity was removed of disabled by mistake or misidentification may be subject to liability.</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>If we receive a DMCA Counter-Notification, then we may replace the material that we removed (or stop disabling access to it) in not less than ten (10) and not more than fourteen (14) business days following receipt of the DMCA Counter-Notification.<span></span>However, we will not do this if we first receive notice at the addresses above that the party who sent us the DMCA Copyright Infringement Notice has filed a lawsuit asking a court for an order restraining the person who provided the material from engaging in infringing activity relating to the material on the Service.<span></span>You should also be aware that we may forward the Counter-Notification to the party who sent us the DMCA Copyright Infringement Notice.</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn";color:#4BACC6'>Return to Terms summary and navigation</span>
+</span>
+<span>
+<span style='font-family:"hn"'><b>
+</b>
+</span>
+</span>
+</p>
+
+<a name="AllegingInfringement">
+</a>
+<p style='text-align:justify;'>
+<span>
+<b>
+<span style='font-family:"hn"'>6.<span>
+</span>Procedure for Alleging Infringement of Other Intellectual Property</span>
+</b>
+</span>
+<span style=''>
+<span style='font-family:"hn"'>
+</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>If you own intellectual property other than copyrights and believe that your intellectual property has been infringed by an improper posting or distribution of it via the Service, then you may send us a written notice to the addresses set forth above that includes all of the following:</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(a)<span>
+</span>a legend or subject line that says:<span></span>“Intellectual Property Infringement Notice”;</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(b)<span>
+</span>a description of the intellectual property that you claim has been infringed; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(c) <span>
+</span>a description of where the material that you claim is infringing or is the subject of infringing activity is located that is reasonably sufficient to permit us to locate the material (please include the URL of the Service on which the material appears); </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(d) <span>
+</span>your full name, address, telephone number, and email address; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(e) <span>
+</span>a statement by you that you have a good faith belief that use of the material in the manner complained of is not authorized by the owner of the intellectual property, its agent, or the law; </span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(f) <span>
+</span>a statement by you, made under penalty of perjury, that all the information in your notice is accurate, and that you are the owner of the intellectual property at issue (or, if you are not the owner, then your statement must indicate that you are authorized to act on the behalf of the owner of the intellectual property that is allegedly infringed); and</span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>(g) <span>
+</span>your electronic or physical signature. </span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn"'>We will act on such notices in our sole discretion.<span></span>Any user of the Service that fails to respond satisfactorily to Youtoo with regard to any such notice is subject to suspension or termination.<span></span>We may send the information that you provide in your notice to the person who provided the allegedly infringing material.<span></span>
+</span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span>
+<span style='font-family:"hn";color:#4BACC6'>Return to Terms summary and navigation</span>
+</span>
+<span>
+<span style='font-family:"hn"'><b>
+</b>
+</span>
+</span>
+<span style='font-family:"hn"'>
+</span>
+</p>
+
+<a name="CustomerService">
+</a>
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>7.</span>
+</b>
+<span style='font-family:   "hn"'>
+<span>
+</span>
+<b>Notices, Questions and</b><b>Customer Service</b>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>You agree that: (1) we may give you notices of new, revised or changed terms and other important matters by prominently posting notice on the home page of the Service, or in another reasonable manner; and (2) we may contact you by mail or email sent to the address provided by you.<span></span>You agree to promptly notify us if you change your email or mailing address by updating your account.<span></span>All legal notices to us must be sent to Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (Attn: Legal Department).<span></span>If you have a question regarding using the Service, you may contact Youtoo Customer Support by sending an email to support@youtootech.com.<span></span>You acknowledge that the provision of customer support is at Youtoo’s sole discretion and that we have no obligation to provide you with customer support of any kind. </span>
+</p>
+
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>8. <span>
+</span>Links by You to the Service</span>
+</b>
+<span style='font-family:"hn"'>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>We grant you a limited, non-exclusive, revocable, non-assignable, personal, and non-transferable license to create hyperlinks to the Service, so long as: (a) the links only incorporate text, and do not use any Trademarks, (b) the links and the content on your website do not suggest any affiliation with Youtoo or cause any other confusion, and (c) the links and the content on your website do not portray Youtoo or its products or services in a false, misleading, derogatory, or otherwise offensive matter, and do not contain content that is unlawful, offensive, obscene, lewd, lascivious, filthy, violent, threatening, harassing, or abusive, or that violate any right of any third party or are otherwise objectionable to Youtoo.<span></span>Youtoo reserves the right to suspend or prohibit linking to the Service for any reason, in its sole discretion, without advance notice or any liability of any kind to you or any third party.</span>
+</p>
+
+<a name="Third-PartySites">
+</a>
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>9.<span>
+</span>Third-Party Sites; Advertisements; Dealings with Third Parties</span>
+</b>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>Third-Party Content and Sites; Advertisements</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>The Service may contain links to third-party websites that are not owned, controlled or operated by Youtoo, and the Service may also include links to third-party ads on the Service or otherwise, to or from third-party websites (collectively, “<b>Third-Party Sites</b>”), including websites operated by advertisers, licensors, licensees, and certain other third parties who may have business relationships with Youtoo.<span></span>Youtoo may have no control over the content, operations, policies, terms, or other elements of Third-Party Sites, and Youtoo does not assume any obligation to review any Third-Party Sites.<span></span>Youtoo<b></b>does<b></b>not endorse, approve, or sponsor any Third-Party Sites, or any third-party content, advertising, information, materials, products, services, or other items.<span></span>Furthermore, Youtoo is not responsible for the quality or delivery of the products or services offered, accessed, obtained by or advertised at such sites.<span></span>Finally, Youtoo will under no circumstances be liable for any direct, indirect, incidental or special loss or other damage, whether arising from negligence, breach of contract, defamation, infringement of copyright or other intellectual property rights, caused by the exhibition, distribution or exploitation of any information or content contained within these Third-Party Sites.<span></span>Any activities you engage in connection with any of the same are subject to the privacy and other policies, terms and conditions of use and/or sale, and rules issued by the operator of the Third-Party Sites.<span></span>Youtoo disclaims all liability in connection therewith. </span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Dealings with Third Parties</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Any interactions, correspondence, transactions, and other dealings that you have with any third parties found on or through the Service (including on or via Third-Party Sites or advertisements) are solely between you and the third party (including issues related to the content of third-party advertisements, payments, delivery of goods, warranties (including product warranties), privacy and data security, and the like).<span></span>Youtoo disclaims all liability in connection therewith. </span>
+</p>
+
+<a name="Location-BasedFeatures">
+</a>
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>10.<span>
+</span>Wireless and Location-Based Features</span>
+</b>
+<span style='font-family:"hn"'>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>Wireless Features</span>
+</b>
+<span style='font-family:  "hn"'>.<span></span>The Service may offer certain features and services that are available to you via your wireless Device.<span></span>These features and services may include the ability to access the Service’s features and upload content to the Service, receive messages from the Service, and download applications to your wireless Device (collectively, “<b>Wireless Features</b>”).<span></span>Standard messaging, data, and other fees may be charged by your carrier to participate in Wireless Features.<span></span>Fees and charges may appear on your wireless bill or be deducted from your pre-paid balance.<span></span>Your carrier may prohibit or restrict certain Wireless Features and certain Wireless Features may be incompatible with your carrier or wireless Device.<span></span>You should check with your carrier to find out what plans are available and how much they cost.<span></span>Contact your carrier with questions regarding these issues.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Terms of Wireless Features</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You agree that as to the Wireless Features for which you are registered for, we may send communications to your wireless Device regarding us or other parties.<span></span>Further, we may collect information related to your use of the Wireless Features.<span></span>If you have registered via the Service for Wireless Features, then you agree to notify Youtoo of any changes to your wireless contact information (including phone number) and update your Accounts on the Service to reflect the changes.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C. <span style=''>
+</span>Location-Based Features</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>If you have enabled GPS, geo-location or other location-based features on any mobile app(s) or feature(s) of the Service, you acknowledge that your Device location will be tracked and may be shared with others consistent with the <b>
+<span style='color:#33CCCC'>Privacy Policy</span>
+</b><b>
+</b>.<span></span>Some mobile app(s) or feature(s) allow for you to disable location-based features or manage preferences related to them.<span></span>However, you can terminate Device location tracking by us by disinstalling any mobile app(s) or feature(s).<span></span>The location-based services offered in connection with our mobile app(s) or feature(s) are for individual use only and should not be used or relied on as an emergency locator system, used while driving or operating vehicles, or used in connection with any hazardous environments requiring fail-safe performance, or any other situation in which the failure or inaccuracy of use of the location-based services could lead directly to death, personal injury, or severe physical or property damage.<span></span>The location-based services are not suited or intended for family finding purposes, fleet tracking, or any other type of business or enterprise use – other products exist today that may be used specifically for these purposes.<b>
+</b>
+</span>
+</p>
+
+<a name="DisputeResolution">
+</a>
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>11.<span>
+</span>Dispute Resolution</span>
+</b>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>Certain portions of this Section 11 are deemed to be a “written agreement to arbitrate” pursuant to the Federal Arbitration Act.<span></span>You and Youtoo agree that we intend that this Section 11 satisfies the “writing” requirement of the Federal Arbitration Act.<span></span>This Section 11 can only be amended by mutual agreement.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>First – Try To Resolve Disputes and Excluded Disputes</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>If any controversy, allegation, or claim arises out of or relates to the Service, the Content, your User-Generated Content,<span></span>these Terms, or any Additional Terms, whether heretofore or hereafter arising (collectively, “<b>Dispute</b>”), or to any of Youtoo’s actual or alleged intellectual property rights (an “<b>Excluded Dispute</b>”, which includes those actions set forth in Section 11.D), then you and we agree to send a written notice to the other providing a reasonable description of the Dispute or Excluded Dispute, along with a proposed resolution of it.<span></span>Our notice to you will be sent to you based on the most recent contact information that you provide us.<span></span>But if no such information exists or if such information is not current, then we have no obligation under this Section 11.A.<span></span>Your notice to us must be sent to: Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (Attn: Legal Department).<span></span>For a period of sixty (60) days from the date of receipt of notice from the other party, Youtoo and you will engage in a dialogue in order to attempt to resolve the Dispute or Excluded Dispute, though nothing will require either you or Youtoo to resolve the Dispute or Excluded Dispute on terms with respect to which you and Youtoo, in each of our sole discretion, are not comfortable. </span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Forums For Alternative Dispute Resolution</span>
+</b>
+<span style='font-family:"hn"'>
+<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(i)<span style=''>
+</span>Arbitration</span>
+</b>
+<span style='font-family:"hn"'>.<b>
+<span>    </span>
+</b>If we cannot resolve a Dispute as set forth in Section 11.A within sixty (60) days of receipt of the notice, then either you or we may submit the Dispute to formal arbitration in accordance with this Section 11.B.<span></span>If we cannot resolve an Excluded Dispute as set forth in Section 11.A within sixty (60) days of receipt of the notice, then either you or we may submit the Excluded Dispute to formal arbitration only if you and Youtoo consent, in a writing signed by you and an Officer or legal representative of Youtoo, to have that Excluded Dispute subject to arbitration.<span></span>In such a case (and only in such a case), that Excluded Dispute will be deemed a “Dispute” for the remainder of this Section 11.B.<span></span>
+<b>
+</b>
+</span>
+</p>
+<p style='text-align:justify;text-indent:1.0in;'>
+<span style='font-family:"hn"'>Upon expiration of the applicable sixty-day period and to the fullest extent permitted by applicable law, a Dispute will be resolved solely by binding arbitration in accordance with the then-current Commercial Arbitration Rules of the American Arbitration Association (“<b>AAA</b>”).<span></span>If the Dispute has a claimed value of not more than $250,000, then the arbitration will be heard and determined by a single neutral arbitrator who is a retired judge or a lawyer with not less than fifteen (15) years’ experience as a practicing member of the bar in the substantive practice area related to the Dispute, who will administer the proceedings in accordance with the AAA’s Supplementary Procedures for Consumer Related Disputes.<span></span>If the Dispute has a claimed value of more than $250,000, or if Youtoo elects in its sole discretion to bear the costs of arbitration in excess of those that would occur for a proceeding before a single neutral arbitrator, then the arbitration will be heard and determined by a three-member panel, with one member to be selected by each party and the third (who will be chair of the panel) selected by the two party-appointed members or by the AAA in accordance with the Commercial Arbitration Rules.<span></span>The arbitrator or arbitration panel, as the case may be, will apply applicable law and the provisions of these Terms and any Additional Terms, will determine any Dispute according to the applicable law and facts based upon the record and no other basis, and will issue a reasoned award.<span></span>If you and Youtoo do not both consent to the arbitration of an Excluded Dispute as set forth in the immediately preceding paragraph of this Section 11.B(i), then this paragraph and the remainder of this Section 11.B will not apply to the Excluded Dispute.</span>
+</p>
+<p style='text-align:justify;text-indent:1.0in;'>
+<span style='font-family:"hn"'>If a party properly submits the Dispute to the AAA for formal arbitration and the AAA is unwilling or unable to set a hearing date within sixty (60) days of the filing of a “demand for arbitration,” then either party can elect to have the arbitration administered by the Judicial Arbitration and Mediation Services Inc. (“<b>JAMS</b>”) using JAMS’ streamlined Arbitration Rules and Procedures, or by any other arbitration administration service that you and an officer or legal representative of Youtoo consent to in writing.<span></span>The substantive practice area requirements for the arbitrator and the $250,000 threshold for a the number of arbitrators assigned to the Dispute set forth in the paragraph above for the AAA arbitration will also apply to any such arbitration under JAMS or another arbitration service.</span>
+</p>
+<p style='margin-left:.5in;text-align:justify;text-indent:.5in;'>
+<span style='font-family:"hn"'>You can obtain AAA and JAMS procedures, rules, and fee information as follows:</span>
+</p>
+<p style='margin-left:.5in;text-align:justify;text-indent:.5in;'>
+<span lang=DE style='font-family:"hn";'>AAA:<span></span>
+<span></span>800.778.7879<span style='4'>                             </span>JAMS:<span></span>949.224.1810</span>
+</p>
+<p style='margin-left:.5in;text-align:justify;text-indent:.5in;'>
+<span lang=DE style='font-family:"hn";'>http://www.adr.org <span style='4'>                                 </span>http://www.jamsadr.com </span>
+</p>
+<p style='text-align:justify;text-indent:1.0in;'>
+<b>
+<span style='font-family:"hn"'>(ii)<span>
+</span>Nature, Limitations, and Location of Alternative Dispute Resolution</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>In arbitration, as with a court, the arbitrator must honor the terms of these Terms (and any Additional Terms) and can award the prevailing party damages and other relief (including attorneys’ fees).<span></span>However, WITH ARBITRATION (A) THERE IS NO JUDGE OR JURY, (B) THE ARBITRATION PROCEEDINGS AND ARBITRATION OUTCOME ARE SUBJECT TO CERTAIN CONFIDENTIALITY RULES, AND (C) JUDICIAL REVIEW OF THE ARBITRATION OUTCOME IS LIMITED.<span></span>All parties to the arbitration will have the right, at their own expense, to be represented by an attorney or other advocate of their choosing.<span></span>If an in-person arbitration hearing is required, then it will be conducted in the “metropolitan statistical area” (as defined by the U.S. Census Bureau) where you are a resident at the time the Dispute is submitted to arbitration.<span></span>You and we will pay the administrative and arbitrator’s fees and other costs in accordance with the applicable arbitration rules; but if applicable arbitration rules or laws require Youtoo to pay a greater portion or all of such fees and costs in order for this Section 11 to be enforceable, then Youtoo will have the right to elect to pay the fees and costs and proceed to arbitration.<span></span>Discovery will be permitted pursuant to the applicable arbitration rules.<span></span>The arbitrator’s decision must consist of a written statement stating the disposition of each claim of the Dispute, and must provide a statement of the essential findings and conclusions on which the decision and any award (if any) is based.<span></span>Judgment on the arbitration decision and award (if any) may be entered in or by any court that has jurisdiction over the parties pursuant to Section 9 of the Federal Arbitration Act.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C.<span>
+</span>Limited Time To File Claims</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, IF YOU OR WE WANT TO ASSERT A DISPUTE (BUT NOT A EXCLUDED DISPUTE) AGAINST THE OTHER, THEN YOU OR WE MUST COMMENCE IT (BY DELIVERY OF WRITTEN NOTICE AS SET FORTH IN SECTION 11.A) WITHIN ONE (1) YEAR AFTER THE DISPUTE ARISES – OR IT WILL BE FOREVER BARRED.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>D.<span>
+</span>Injunctive Relief</span>
+</b>
+<span style='font-family:  "hn"'>.<span></span>The foregoing provisions of this Section 11 will not apply to any legal action taken by Youtoo to seek an injunction or other equitable relief in connection with, any loss, cost, or damage (or any potential loss, cost, or damage) relating to the Service, any Content, your User-Generated Content and/or Youtoo’s intellectual property rights (including such Youtoo may claim that may be in dispute), Youtoo’s operations, and/or Youtoo’s products or services.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>E.<span>
+</span>Small Claims Matters Are Excluded From Arbitration Requirement</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Notwithstanding the foregoing, either of us may bring qualifying claim of Disputes (but not Excluded Disputes) in small claims court, subject to Section 11.G.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>F.<span>
+</span>No Class Action Matters</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Disputes will be arbitrated only on an individual basis and will not be consolidated with any other arbitration or other proceedings that involve any claim or controversy of any other party.<span></span>But if, for any reason, any court with competent jurisdiction or any arbitrator selected pursuant to Section 11.B(i) holds that this restriction is unconscionable or unenforceable, then our agreement in Section 11.B to arbitrate will not apply and the Dispute must be brought exclusively in court pursuant to Section 11.G.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>G.<span>
+</span>Federal and State Courts in Dallas, Texas</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Except to the extent that arbitration is required in Section 11.B, and except as to the enforcement of any arbitration decision or award, any action or proceeding relating to any Dispute or Excluded Dispute may only be instituted in state or federal court in Dallas, Texas.<span></span>Accordingly, you and Youtoo consent to the exclusive personal jurisdiction and venue of such courts for such matters.</span>
+</p>
+
+<a name="Warranties">
+</a>
+
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>12.<span>
+</span>DISCLAIMER OF REPRESENTATIONS AND WARRANTIES</span>
+</b>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>YOUR ACCESS TO AND USE OF THE SERVICE IS AT YOUR SOLE RISK.<span></span>THE SERVICE IS PROVIDED ON AN “AS IS”, “AS AVAILABLE”, AND “WITH ALL FAULTS” BASIS.<span></span>Therefore, to the fullest extent permissible by law, Youtoo Technologies LLC and its subsidiaries and each of their respective employees, directors, members, managers, shareholders, agents, vendors, licensors, licensees, contractors, customers, successors, and assigns (collectively, “<b>Youtoo Parties</b>”) hereby disclaim and make no representations, warranties, endorsements, or promises, express or implied, as to: </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(a) '<span>
+</span>the Service (including the Content and the User-Generated Content); </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(b) '<span>
+</span>the functions, features, or any other elements on, or made accessible through, the Service; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(c) '<span>
+</span>any products, services, or instructions offered or referenced at or linked through the Service; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(d) '<span>
+</span>security associated with the transmission of your User-Generated Content transmitted to Youtoo or via the Service; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(e) '<span>
+</span>whether the Service or the servers that make the Service available are free from any harmful components (including viruses, Trojan horses, and other technologies that could adversely impact your Device);</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(f) '<span>
+</span>whether the information (including any instructions) on the Service is accurate, complete, correct, adequate, useful, timely, or reliable;</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(g)<span>
+</span>whether any defects to or errors on the Service will be repaired or corrected; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(h) '<span>
+</span>whether your access to the Service will be uninterrupted; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(i) <span>
+</span>whether the Service will be available at any particular time or location; and</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;text-indent:-27.0pt;'>
+<span style='font-family:"hn"'>(h)<span>
+</span>whether your use of the Service is lawful in any particular jurisdiction.<span></span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>EXCEPT FOR ANY SPECIFIC WARRANTIES PROVIDED HEREIN OR IN ADDITIONAL TERMS PROVIDED BY A YOUTOO PARTY, YOUTOO PARTIES HEREBY FURTHER DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT OR MISAPPROPRIATION OF INTELLECTUAL PROPERTY RIGHTS OF THIRD PARTIES, TITLE, CUSTOM, TRADE, QUIET ENJOYMENT, SYSTEM INTEGRATION, AND FREEDOM FROM COMPUTER VIRUS. </span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>Some jurisdictions limit or do not allow the disclaimer of implied or other warranties so the above disclaimers may not apply to the extent such jurisdictions’ laws are applicable.</span>
+</p>
+
+<a name="OurLiability">
+</a>
+
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>13.<span>
+</span>LIMITATIONS OF OUR LIABILITY</span>
+</b>
+<span style='font-family:"hn"'>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>UNDER NO CIRCUMSTANCES WILL ANY YOUTOO PARTIES BE RESPONSIBLE OR LIABLE FOR ANY LOSS OR DAMAGES OF ANY KIND, including personal injury or death or for any direct, indirect, economic, exemplary, special, punitive, incidental, or consequential losses or damages that are directly or indirectly related to:</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(a) <span>
+</span>the Service (including the Content and the User-Generated Content); </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(b) <span>
+</span>your use of or inability to use the Service, or the performance of the Service; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(c) <span>
+</span>any action taken in connection with an investigation by Youtoo Parties or law enforcement authorities regarding your access to or use of the Service;</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(d) <span>
+</span>any action taken in connection with copyright or other intellectual property owners or other rights owners; </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(e) <span>
+</span>any errors or omissions in the Service’s technical operation; or </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(f) <span>
+</span>any damage to any user’s computer, hardware, software, modem, or other equipment or technology, including damage from any security breach or from any virus, bugs, tampering, fraud, error, omission, interruption, defect, delay in operation or transmission, computer line, or network failure or any other technical or other malfunction, including losses or damages in the form of lost profits, loss of goodwill, loss of data, work stoppage, accuracy of results, or equipment failure or malfunction.</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>The foregoing limitations of liability will apply even if any of the foregoing events or circumstances were foreseeable and even if Youtoo Parties were advised of or should have known of the possibility of such losses or damages, regardless of whether you bring an action based in contract, negligence, strict liability, or tort (including whether caused, in whole or in part, by negligence, acts of god, telecommunications failure, or destruction of the Service).<span></span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>Some jurisdictions do not allow the exclusion or limitation of incidental or consequential damages of the sort that are described above, so the above limitation or exclusion may not apply to you.<span></span>
+</span>
+</p>
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>EXCEPT AS MAY BE PROVIDED IN ANY ADDITIONAL TERMS, TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL YOUTOO PARTIES’ TOTAL LIABILITY TO YOU, FOR ALL POSSIBLE DAMAGES, LOSSES, AND CAUSES OF ACTION IN CONNECTION WITH YOUR ACCESS TO AND USE OF THE SERVICE AND YOUR RIGHTS UNDER THESE TERMS, EXCEED AN AMOUNT EQUAL TO THE AMOUNT YOU HAVE PAID YOUTOO IN CONNECTION WITH THE TRANSACTION(S) THAT UNDERLIE THE CLAIM(S); PROVIDED, HOWEVER, THIS PROVISION WILL NOT APPLY IF A TRIBUNAL WITH APPLICABLE JURISDICTION FINDS SUCH TO BE UNCONSCIONABLE.<span></span>FOR PURPOSES OF CLARITY, THE PRIOR SENTENCE DOES NOT EXPAND OR LIMIT ANY EXPRESS, WRITTEN PRODUCT WARRANTY THAT IS PROVIDED BY YOUTOO OR A MANUFACTURER OF A PHYSICAL PRODUCT. </span>
+</b>
+</p>
+
+<a name="EquitableRelief">
+</a>
+
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>14.<span>
+</span>Waiver of Injunctive or Other Equitable Relief</span>
+</b>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>IF YOU CLAIM THAT YOU HAVE INCURRED ANY LOSS, DAMAGES, OR INJURIES IN CONNECTION WITH YOUR USE OF THE SERVICE, THEN THE LOSSES, DAMAGES, AND INJURIES WILL NOT BE IRREPARABLE OR SUFFICIENT TO ENTITLE YOU TO AN INJUNCTION OR TO OTHER EQUITABLE RELIEF OF ANY KIND.<span></span>THIS MEANS THAT, IN CONNECTION WITH YOUR CLAIM, YOU AGREE THAT YOU WILL NOT SEEK, AND THAT YOU WILL NOT BE PERMITTED TO OBTAIN, ANY COURT OR OTHER ACTION THAT MAY INTERFERE WITH OR PREVENT THE DEVELOPMENT OR EXPLOITATION OF ANY WEBSITE, APPLICATION, CONTENT, USER-GENERATED CONTENT, PRODUCT, SERVICE, OR INTELLECTUAL PROPERTY OWNED, LICENSED, USED OR CONTROLLED BY YOUTOO (INCLUDING YOUR LICENSED USER-GENERATED CONTENT) OR A LICENSOR OF YOUTOO.</span>
+</p>
+
+<a name="UpdatestoTerms">
+</a>
+<p style='text-align:justify;'>
+<b>
+<span style='font-family:"hn"'>15.<span>
+</span>Updates to Terms</span>
+</b>
+<span style='font-family:"hn"'>
+</span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>These Terms (or if applicable Additional Terms), in the form posted at the time of your use of the applicable services to which it applies, shall govern such use (including transactions entered during such use).<span></span>AS OUR SERVICE EVOLVES, THE TERMS AND CONDITIONS UNDER WHICH WE OFFER THE SERVICE MAY PROSPECTIVELY BE MODIFIED AND WE MAY CEASE OFFERING THE SERVICE UNDER THE TERMS OR ADDITIONAL TERMS FOR WHICH THEY WERE PREVIOUSLY OFFERED.<span></span>ACCORDINGLY, EACH TIME YOU SIGN IN TO OR OTHERWISE USE THE SERVICE YOU ARE ENTERING INTO A NEW AGREEMENT WITH US ON THE THEN APPLICABLE TERMS AND CONDITIONS AND YOU AGREE THAT WE MAY NOTIFY YOU OF OTHER TERMS BY POSTING THEM ON THE SERVICE (OR IN ANY OTHER REASONABLE MANNER OF NOTICE WHICH WE ELECT), AND THAT YOUR USE OF THE SERVICE AFTER SUCH NOTICE CONSTITUTES YOUR GOING FORWARD AGREEMENT TO THE OTHER TERMS FOR YOUR NEW USE AND TRANSACTIONS.<span></span>Therefore, you should review the posted terms of service and any applicable Additional Terms each time you use the Service (at least prior to each transaction or submission).<span></span>The Additional Terms will be effective as to new use and transactions as of the time that we post them, or such later date as may be specified in them or in other notice to you.<span></span>However, the Terms (and any applicable Additional Terms) that applied when you previously used the Service will continue to apply to such prior use (i.e., changes and additions are prospective only) unless mutually agreed.<span></span>In the event any notice to you of new, revised or additional terms is determined by a tribunal to be insufficient, the prior agreement shall continue until sufficient notice to establish a new agreement occurs.<span></span>You should frequently check the home page, your message account and the email you associated with your Account for notices, all of which you agree are reasonable manners of providing you notice.<span></span>You can reject any new, revised or additional Terms by discontinuing use of the Service and related services. </span>
+</p>
+
+<a name="Provisions">
+</a>
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>16.<span>
+</span>General Provisions</span>
+</b>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>A.<span>
+</span>Youtoo’s Consent or Approval</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>As to any provision in these Terms or any Additional Terms that grants Youtoo a right of consent or approval, or permits Youtoo to exercise a right in its “sole discretion,” Youtoo may exercise that right in its sole and absolute discretion.<span></span>No Youtoo consent or approval may be deemed to have been granted by Youtoo without being in writing and signed by an officer of Youtoo.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>B.<span>
+</span>Applicable Law</span>
+</b>
+<span style='font-family: "hn"'>.<span></span>These Terms and any Additional Terms will be governed by and construed in accordance with, and any Dispute and Excluded Dispute will be resolved in accordance with, the laws of the Texas, without regard to its conflicts of law provisions.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>C.<span>
+</span>Indemnity</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You agree to, and you hereby, defend, indemnify, and hold Youtoo Parties harmless from and against any and all claims, damages, losses, costs, investigations, liabilities, judgments, fines, penalties, settlements, interest, and expenses (including attorneys’ fees) that directly or indirectly arise from or are related to any claim, suit, action, demand, or proceeding made or brought against any Youtoo Party, or on account of the investigation, defense, or settlement thereof, arising out of or in connection with, whether occurring heretofore or hereafter: (i) your User-Generated Content; (ii) your use of the Service and your activities in connection with the Service; (iii) your breach or alleged breach of these Terms or any Additional Terms; (iv) your violation or alleged violation of any laws, rules, regulations, codes, statutes, ordinances, or orders of any governmental or quasi-governmental authorities in connection with your use of the Service or your activities in connection with the Service; (v) information or material transmitted through your Device, even if not submitted by you, that infringes, violates, or misappropriates any copyright, trademark, trade secret, trade dress, patent, publicity, privacy, or other right of any person or entity; (vi) any misrepresentation made by you; and (vii) Youtoo Parties’ use of the information that you submit to us (including your User-Generated Content) (all of the foregoing, “<b>Claims and Losses</b>”).<span></span>You will cooperate as fully required by Youtoo Parties in the defense of any Claim and Losses.<span></span>Notwithstanding the foregoing, Youtoo<b></b>Parties retain the exclusive right to settle, compromise, and pay any and all Claims and Losses.<span></span>Youtoo<b></b>Parties reserve the right to assume the exclusive defense and control of any Claims and Losses.<span></span>You will not settle any Claims and Losses without, in each instance, the prior written consent of an officer of a Youtoo Party.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>D.<span>
+</span>Operation of Service; Availability of Products and Services; International Issues</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo<b></b>controls and operates the Service from its U.S.-based offices in the U.S.A., and Youtoo makes no representation that the Service is appropriate or available for use beyond the U.S.A.<span></span>If you use the Service from other locations, you are doing so on your own initiative and are responsible for compliance with applicable local laws regarding your online conduct and acceptable content, if and to the extent local laws apply.<span></span>The Service may describe products and services that are available only in the U.S.A. (or only parts of it) and are not available worldwide.<span></span>We reserve the right to limit the availability of the Service and/or the provision of any content, program, product, service, or other feature described or available on the Service to any person, entity, geographic area, or jurisdiction, at any time and in our sole discretion, and to limit the quantities of any content, program, product, service, or other feature that we provide.<span></span>You and we disclaim any application to these Terms of the Convention on Contracts for the International Sale of Goods.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>E.<span>
+</span>Export Controls</span>
+</b>
+<span style='font-family: "hn"'>.<span></span>Software related to or made available by the Service may be subject to export controls of the U.S.A.<span></span>No software from the Service may be downloaded, exported, or re-exported (i) into (or to a national or resident of) any country or other jurisdiction to which the U.S.A. has embargoed goods, software, technology or services (which, as of the effective date of these Terms, includes Cuba, North Korea, Iran, Sudan, and Syria), or (ii) to anyone on the U.S. Treasury Department’s list of Specially Designated Nationals or the U.S. Commerce Department’s Table of Deny Orders, or (iii) to anyone on the U.S. Department of Commerce’s Bureau of Industry and Security Entities List as published in the Export Administration Regulations (including entities engaged in weapons of mass destruction proliferation in various countries and persons and entities that are suspected of diverting U.S. origin items to embargoed countries or terrorist end-uses).<span></span>You are responsible for complying with all trade regulations and laws both foreign and domestic.<span></span>Except as authorized by law, you agree and warrant not to export or re-export the software to any county, or to any person, entity, or end-user subject to U.S. export controls, including as set forth in subsections (i) – (iii) above.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>F.<span>
+</span>Severability; Interpretation</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>If any provision of these Terms, or any Additional Terms, is for any reason deemed invalid, unlawful, void, or unenforceable by a court or arbitrator of competent jurisdiction, then that provision will be deemed severable from these Terms or the Additional Terms, and the invalidity of the provision will not affect the validity or enforceability of the remainder of these Terms or the Additional Terms (which will remain in full force and effect).<span></span>To the extent permitted by applicable law, you agree to waive, and you hereby waive, any applicable statutory and common law that may permit a contract to be construed against its drafter.<span></span>Wherever the word “including” is used in these Terms or any Additional Terms, the word will be deemed to mean “including, without limitation,”.<span></span>The summaries of provisions and section headings are provided for convenience only and shall not limit the full Terms.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>G.<span>
+</span>Communications</span>
+</b>
+<span style='font-family:   "hn"'>.<span></span>When you communicate with us electronically, such as via email and text message, you consent to receive communications from us electronically.<span></span>Please note that we are not obligated to respond to inquiries that we receive.<span></span>You agree that all agreements, notices, disclosures, and other communications that we provide to you electronically satisfy any legal requirement that such communications be in writing.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>H.<span>
+</span>Investigations; Cooperation with Law Enforcement; Termination; Survival</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo reserves the right, without any limitation, to: (i) investigate any suspected breaches of its Service security or its information technology or other systems or networks, (ii) investigate any suspected breaches of these Terms and any Additional Terms, (iii) investigate any information obtained by Youtoo in accordance with its <b>
+<span style='color:#33CCCC'>Privacy Policy</span>
+</b> in connection with reviewing law enforcement databases or complying with criminal laws, (iv) involve and cooperate with law enforcement authorities in investigating any of the foregoing matters, (v) prosecute violators of these Terms and any Additional Terms, and (vi) discontinue the Service, in whole or in part, or, except as may be expressly set forth in any Additional Terms, suspend or terminate your access to it, in whole or in part, including any user Accounts or registrations, at any time, without notice, for any reason and without any obligation to you or any third party.<span>   </span>Any suspension or termination will not affect your obligations to Youtoo under these Terms or any Additional Terms.<span></span>Upon suspension or termination of your access to the Service, or upon notice from Youtoo, all rights granted to you under these Terms or any Additional Terms will cease immediately, and you agree that you will immediately discontinue use of the Service.<span></span>The provisions of these Terms and any Additional Terms, which by their nature should survive your suspension or termination will survive, including the rights and licenses you grant to Youtoo in these Terms, as well as the indemnities, releases, disclaimers, and limitations on liability and the provisions regarding jurisdiction, choice of law, no class action, and mandatory arbitration.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>I.<span> </span>Assignment</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Youtoo may assign its rights and obligations under these Terms and any Additional Terms, in whole or in part, to any party at any time without any notice.<span></span>These Terms and any Additional Terms may not be assigned by you, and you may not delegate your duties under them, without the prior written consent of an officer of Youtoo.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>J.<span>
+</span>No Waiver</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>Except as expressly set forth in these Terms or any Additional Terms, (i) no failure or delay by you or Youtoo in exercising any of rights, powers, or remedies under will operate as a waiver of that or any other right, power, or remedy, and (ii) no waiver or modification of any term of these Terms or any Additional Terms will be effective unless in writing and signed by the party against whom the waiver or modification is sought to be enforced.<span></span>
+</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>K.<span>
+</span>U.S. Government Restricted Rights</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>If you are a government end user, then this provision applies to you.<span></span>The Service provided in connection with these Terms has been developed entirely at private expense, as defined in FAR section 2.101, DFARS section 252.227-7014(a)(1) and DFARS section 252.227-7015 (or any equivalent or subsequent agency regulation thereof), and is provided as “commercial items,” “commercial computer site” and/or “commercial computer site documentation.”<span></span>Consistent with DFARS section 227.7202 and FAR section 12.212 and to the extent required under U.S. federal law, the minimum restricted rights as set forth in FAR section 52.227-19 (or any equivalent or subsequent agency regulation thereof), any use, modification, reproduction, release, performance, display, disclosure or distribution thereof by or for the U.S. Government shall be governed solely by these Terms and shall be prohibited except to the extent expressly permitted by these Terms.</span>
+</p>
+<p style='text-align:justify;text-indent:.5in;'>
+<b>
+<span style='font-family:"hn"'>M.<span>
+</span>Connectivity</span>
+</b>
+<span style='font-family:"hn"'>.<span></span>You are responsible for obtaining and maintaining all Devices and other equipment and software, and all internet service provider, mobile service, and other services needed for your access to and use of the Service and you will be responsible for all charges related to them.</span>
+</p>
+
+<a name="TermsApplicable">
+</a>
+<p style='text-align:justify;line-height:normal;page-break-after:avoid'>
+<b>
+<span style='font-family:"hn"'>17.<span>
+</span>Terms Applicable For Apple iOS</span>
+</b>
+<span style='font-family:"hn"'></span>
+</p>
+<p style='text-align:justify;'>
+<span style='font-family:"hn"'>If you are accessing or using the Service through an Apple Device, the following additional terms and conditions are applicable to you and are incorporated into the Terms by this reference:</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(i)<span>
+</span>To the extent that you are accessing the Service through an Apple Device, you acknowledge that these Terms are entered into between you and Youtoo and, that Apple, Inc. (“<b>Apple</b>”) is not a party to these Terms other than as third-party beneficiary as contemplated below.</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(ii)<span>
+</span>The license granted to you in <b>
+<span style='color:#33CCCC'>Section 1</span>
+</b> of these Terms is subject to the permitted Usage Rules set forth in the App Store Terms of Service (see: http://www.apple.com/legal/itunes/us/terms.html) and any third party terms of agreement applicable to the Service. </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(iii)<span>
+</span>You acknowledge that Youtoo, and not Apple, is responsible for providing the Service and Content thereof.</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(iv)<span>
+</span>You acknowledge that Apple has no obligation whatsoever to furnish any maintenance or any support services to you with respect to the Service. </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(v)<span>
+</span>To the maximum extent permitted by applicable law, Apple will have no other warranty obligation whatsoever with respect to the Service.</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(vi)<span>
+</span>Notwithstanding anything to the contrary herein, and subject to the terms in these Terms, you acknowledge that, solely as between Apple and Youtoo, Youtoo, and not Apple is responsible for addressing any claims you may have relating to the Service, or your possession and/or use thereof, including, but not limited, to: (i) product liability claims; (ii) any claim that the Service fails to confirm to any applicable legal or regulatory requirement; and (iii) claims arising under consumer protection or similar legislation.<span></span>
+</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(vii)<span></span>Further, you agree that if the Service, or your possession and use of the Service, infringes on a third party's intellectual property rights, you will not hold Apple responsible for the investigation, defense, settlement and discharge of any such intellectual property infringement claims.</span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(viii)<span>
+</span>You acknowledge and agree that Apple, and Apple’s subsidiaries, are third-party beneficiaries of these Terms, and that, upon your acceptance of the terms and conditions of these Terms, Apple will have the right (and will be deemed to have accepted the right) to enforce these Terms against you as a third-party beneficiary thereof. </span>
+</p>
+<p style='margin-left:1.0in;text-align:justify;'>
+<span style='font-family:"hn"'>(ix)<span>
+</span>When using the Service, you agree to comply with any and all third-party terms that are applicable to any platform, website, technology or service that interacts with the Service.<b>
+</b>
+</span>
+</p>
+<p style='text-align:justify;'>
+<p style='text-align:justify;'>
+<i>
+<span style='font-family:"hn"'>©2013 Youtoo Technologies LLC. All Rights Reserved.</span>
+</i>
+<span style='font-family:"hn"'>
+</span>
+</p>
+</div>
+<center>
+<p>To view Terms of Service in English, click <a href="#englishTerms">here</a>
+</center>
+<a name="spanishTerms">
+</a>
+<div id="spanishTerms" style="color:#000;"><br/><h2><center> TÉRMINOS DE USO </center>
+ </h2><p align="center"><b>Efectivo a partir del 7 de Junio, 2013.</b></p><p align="center"><b>Para imprimir un juego completo de nuestro términos de servicio haga clic aquí. Para imprimir un juego completo de nuestra Política de Privacidad haga clic aquí.</b></p><p align="center"><b>FAVOR DE LEER ESTE ACUERDO CUIDADOSAMENTE, YA QUE ESTABLECE LOS TERMINOS VINCULANTES LEGALES PARA EL USO DE ESTE SERVICIO.</b></p><p align="center"><b>Introducción y Resumen</b></p><p> ¡Bienvenido! Ha llegado a <a href="http://www.youtootech.com">www.youtootech.com</a> (el “Sitio”) y/o esta interactuando con un Servicio (definido a continuación) que Youtoo Technologies LLC (colectivamente “Youtoo”, “nosotros”, “nuestro(a)”) está operando en nuestra representación o la de uno de nuestros clientes. Los Términos de Servicio (“Términos”) gobiernan su uso de cualquiera de nuestros servicios en línea (por ejemplo: página web o aplicación móvil) que publique un link a estos Términos, y también es aplicable a todas las funciones, widgets, plug-ins, aplicaciones, contenido, downloads y otros servicios propiedad y controlados por nosotros u operados por nosotros y que publiquen el link a estos Términos (colectivamente con el Sitio, el “Servicio”), independientemente de la forma en que accedió el Servicio, su conocimiento y aceptación del Servicio, ya sea vía computadora, aparato móvil u otro medio. Al utilizar el Servicio, usted reconoce y acepta la Política de Privacidad del Servicio y autoriza la recopilación y uso de sus datos de acuerdo con la Política de Privacidad. Al utilizar el Servicio, además acepta que Youtoo puede cambiar, alterar ó modificar la configuración del Aparato (definido a continuación) de manera que pueda optimizar el uso del Servicio. </p><p> Es importante que usted lea todos los Términos, pero para facilitar su revisión, aquí hay unos de los términos mas importantes que queremos traer a su atención y los cuales están detallados a continuación: </p><p> - Cada vez que utilice el Servicio, los Términos y cualquiera de los Términos Adicionales (definidos a continuación) publicados, vuelva a revisarlos para cualquier actualización. </p><p> - Haga clic aquí para un resumen de cada sección de estos Términos. Puede hacer clic en el título del tema para mayores detalles. </p><p> - Puede utilizar el Contenido (definido a continuación) en el Servicio en conexión con sus actividades autorizadas en el Servicio y no en un ambiente fuera de línea ó en conexión con cualquier otro sitio o servicio (Apartado 1 y Apartado 3). Nos da autorización amplia para el contenido que envía o publique (Apartado 2). </p><p> - Con la excepción con lo descrito en la Política de Privacidad correspondiente a este servicio, usted y nosotros no tenemos una relación confidencial, fiduciaria, u otra relación especial en virtud al uso de este Servicio o sus comunicados a nosotros a través ó relacionado al servicio (Apartado 2). </p><p> - Usted da su consentimiento a nuestra Política Sobre Privacidad y nuestras practicas detalladas en la misma, incluyendo publicidad. </p><p> - Varias de las controversias que puedan resultar en conexión a su acceso al y el uso del Servicio, serán sujetas a arbitraje obligatorio – el cual incluye su renuncia al derecho de juicio con jurado (Apartado 11) </p><p> - Le estamos proporcionando el Servicio en forma “tal cual”, sin garantía alguna, y nuestra responsabilidad en conexión al uso del Servicio en muy limitada. Otras limitaciones y disposiciones relacionados al uso del Servicio (Apartado 12 y Apartado 13). </p><p align="center"> Si Desea Utilizar el Servicio, </p><p align="center">
+ </p><p> lea cuidadosamente todos los Términos (incluyendo todos los links a detalles), ya que constituyen un acuerdo escrito entre usted y nosotros y afectan sus derechos y obligaciones legales. Les resúmenes de las disposiciones y títulos de las apartados son proporcionados únicamente para su conveniencia y no limitan los Términos en su totalidad. Si usted es considerado menor de edad en el estado o jurisdicción de residencia, puede utilizar el Servicio únicamente con la ayuda de uno de sus padres ó tutor legal, el cual tendrá que crear una cuenta y estar de acuerdo con estos Términos y será responsable por su uso. </p><p> Cada vez que acceda y/o utilice el Servicio (otro que sea diferente a simplemente leer estos Términos), usted acepta estar sujeto y cumplir con los Términos y cualquier otro Termino Adicional (definido a continuación). Por lo tanto, no utilice el Servicio si usted no está de acuerdo. </p><p> Las realidades de negocios asociadas con la operación del Servicio son tales que, sin limitaciones estipuladas en estos Términos – tales como su renuncia y cesión de derechos, limitaciones en nuestra responsabilidad, nuestra indemnización, y arbitraje de ciertas controversias – no podríamos hacer el Servicio disponible para usted. </p><p> Por medio de accesar y/o utilizar cualquier parte del Servicio, usted está de acuerdo a estar sujeto a estos Términos. En ciertas instancias, tanto los Términos como otros lineamientos, reglas, o términos de servicio o venta adicionalmente expuestos o términos diferentes y/o condiciones aplicables a su uso del Servicio o al servicio o producto ofrecido por medio del Servicio (en cada instancia, colectivamente “Términos Adicionales”). Si hubiese conflicto entere estos Términos y cualquiera de los Términos Adicionales, los Términos Adicionales controlarán, a menos que los Términos Adicionales indiquen lo contrario. Favor de también revisar los términos de la Política de Privacidad del Servicio, el cual usted acepta al utilizar el Servicio. </p><p> Es importante que lea y entienda todos los Términos antes de utilizar el Servicio. Para facilitar la revisión, cada una de las siguientes apartados incluye un pequeño resumen introductorio y un link con la explicación completa. Puede hacer clic en los títulos y “Mas” links para ser dirigido a la explicación completa. </p><p> 1. Contenido, Propiedad, Licencia Limitada y Derechos de Otros del Servicio </p><p> Únicamente le otorgamos licencia limitada y revocable para uso no comercial sujeto a reglas y limitaciones. </p><p> 2. Contenido Que Usted Envía y Normas de Uso Comunitario </p><p> Usted nos otorga licencia amplia, la cual podemos sub-licenciar, para el contenido enviado, incluyendo su perfil, el cual usted representa tener el derecho de permitirnos utilizar. Aun así, usted mantiene la propiedad y es responsable por su contenido. La utilización de nuestro Servicio está sujeto a la utilización de normas de uso comunitario y tenemos el derecho de administrar nuestro Servicio para mantener el contenido apropiado. </p><p> 3. Restricciones para la Utilización del Servicio y Contenido </p><p> La utilización de nuestro Servicio está sujeta a varias restricciones diseñadas para proteger el Servicio y nuestros usuarios. Podemos cambiar o descontinuar el Servicio por completo o por partes. </p><p> 4. Cuentas, Perfiles y Cualidades Sociales </p><p> Puede tener la oportunidad de crear, revisar y cerrar sus cuentas al igual que crear y cambiar Perfiles, sujeto a ciertas reglas. Le podemos ofrecer la capacidad de escoger ciertos aspectos para su cuenta y perfil de cómo éstos son utilizados y vistos, pero puede que no sean completamente efectivos. El Servicio incluye una red social y sus actividades (incluyendo acción social, interacción con anunciantes y medios de publicidad) en el Servicio pueden ser compartidas con otros, tanto dentro como fuera del Servicio (por ejemplo: Oscar vio este video musical, etc.). </p><p> 5. Procedimiento para Alegar Violación de Derechos de Autor </p><p> Los usuarios no pueden publicar contenido que no sea de su propiedad o control, y pueden ser suspendidos o eliminados si lo hacen. Los autores nos pueden dar aviso de violación siguiendo las siguientes instrucciones requeridas de acuerdo a la ley federal. </p><p> 6. Procedimiento para Alegar Violación de Otra Propiedad Intelectual </p><p> También puede dar aviso de violación de marca registrada u otras violaciones que crea estén ocurriendo en el Servicio. </p><p> 7. Notificaciones, Preguntas y Servicio al Cliente </p><p> Haga clic para contactarnos, servicio al cliente o preguntas. Usted acepta que le enviemos avisos, incluyendo nuevos términos y condiciones, publicando el aviso en la pagina principal o por otros medios razonables, tales como al correo electrónico que usted haya proporcionado. </p><p> 8. Enlaces (links) por usted hacia el Servicio </p><p> Usted puede enlazar hacia nuestro Servicio, sujeto a ciertas reglas básicas. </p><p> 9. Sitios de Terceros, Anuncios, Tratando con Terceros </p><p> Nosotros no somos responsable por terceros o su contenido, anuncios, aplicaciones o sitios. Por ejemplo, nuestro Servicio puede estar integrado a sitios de terceros y aplicaciones que o controlamos. Similarmente, nuestro Servicio puede estar integrado a contenido o servicios de terceros disponibles a usted en o por medio de nuestro Servicio, el cual tampoco controlamos. Use precaución cuando trate con terceros. </p><p> 10. Características Móviles (wireless) y Basadas en Ubicación </p><p> Empresas móviles pueden tener cargos para la utilización del servicio por medio de redes inalámbricas o aparatos inalámbricos. Nosotros podemos ofrecer funcionalidad de Servicio basado en su ubicación. </p><p> 11. Resolución de Controversias </p><p> Usted acepta arbitraje para la mayoría de las controversias y renuncia al derecho de juicio con jurado y demandas colectivas. </p><p> 12. Aviso de Representación y Garantías </p><p> Está provisto que la mayoría de las garantías y el Servicio proporcionado es “tal cual”. </p><p> 13. Limitación de Nuestras Responsabilidades </p><p> Nuestra responsabilidad es enormemente limitada. </p><p> 14. Renuncia a Mandato Judicial u Otro Beneficio Equitativo </p><p> Usted renuncia a beneficios equitativos o judiciales. </p><p> 15. Actualización de Términos </p><p> Estos Términos y Términos Adicionales publicados en el Servicio cada vez que se utilizan se aplican a ese uso, y los Términos pueden ser actualizados como nuestro Servicio vaya evolucionando. La publicación de nuevos Términos en el Servicio se considera un aviso a usted. </p><p> 16. Disposiciones Generales </p><p> Usted está de acuerdo con los términos y condiciones, los cuales debe leer aquí, incluso en relación a: (a) nuestro control y discreción; (b) la ley que rige estos Términos; (c) su indemnización a nosotros; (d) el acceso al Servicio desde fuera de los Estado Unidos; (e) restricciones en el Servicio para los países sujetos a controles de exportación de Estados Unidos; (f) la aplicación e interpretación de estos Términos; (g) comunicaciones con nosotros; (h) investigaciones, cooperación con la policía, terminación y supervivencia; (i) límite en la asignación y delegación de derechos y obligaciones; (k) condiciones especiales para los usuarios del gobierno de los Estados Unidos; (l) los derechos del consumidor de California; y (m) su responsabilidad por su conectividad y acceso. </p><p> 17. Términos Aplicables a Apple iOS </p><p> Hay algunas otras cosas que usted debe saber si tiene acceso o al uso del Servicio a través de un producto de Apple. </p><p align="center"> Detalles Completos de los Términos del Servicio </p><p align="center">
+ </p><p> 1. Contenido del Servicio, Propiedad, Licencia Limitada, y Derechos de Terceros </p><p> A. Contenido. El Servicio contiene una variedad de: (i) materiales y artículos relacionados con Youtoo y sus productos y servicios, y artículos similares de nuestros licenciatarios, clientes y otras terceras partes, incluyendo todo formato, información, texto, datos, archivos, imágenes, guiones, diseño, gráficos, iconos, instrucciones, ilustraciones, fotografías, clips de audio, música, sonidos, imágenes, videos, contenido publicitario, URLs, tecnología, software, funciones interactivas, la apariencia y uso (“look and feel”) del Servicio y cualquier y todo material de derechos de autor (incluyendo la fuente y el código objeto), (ii) las marcas comerciales, logotipos, nombres comerciales, marcas de servicio y las identidades comerciales de diversas partes, incluyendo los de Youtoo (colectivamente “Marcas”), y (iii) otras formas de propiedad intelectual (todos los anteriores colectivamente “Contenido”). </p><p> B. Propiedad. El Servicio (incluyendo versiones pasadas, presentes y futuras) y el Contenido con propiedad o están controlados por Youtoo y nuestros licenciantes otros terceros. Todos los derechos, títulos e intereses sobre y para el Contenido disponible a través del Servicio son propiedad de Youtoo o nuestros licenciantes u otros terceros, y están protegidos por derechos de, patentes ,marcas registradas u otros derechos de propiedad intelectual de Estados Unidos e internacionales en la mayor medida posible. Youtoo es el dueño del derecho de autor en la selección, elaboración, montaje, arreglo y mejora del Contenido en el Servicio. </p><p> C. Licencia Limitada. Sujeto a su estricto cumplimiento de estos Términos y las Condiciones Adicionales, Youtoo le concede una licencia limitada, no exclusiva, revocable, no atribuible, personal e intransferible para (i) descargar (únicamente almacenamiento temporal), mostrar, ver, usar, reproducir, y/o imprimir una copia del Contenido (excluyendo la fuente y el código objeto en forma <em>raw</em> o en otra forma, otra que no sea como se hace disponible para acceder y utilizar para permitir la visualización y funcionalidad) en una computadora (ordenador) personal, teléfono móvil, otro dispositivo inalámbrico u otro dispositivo capacitado para Internet (cada uno un “Dispositivo”) únicamente para uso personal, no comercial, y (ii) el uso de cierto Contenido que cada cierto tiempo podemos poner a disposición en el Servicio de manera explicita para que usted use como parte del Contenido Generado por Usuario (definido a continuación) (“Elementos Autorizados por Youtoo), pero únicamente para los fines que se pudieran reflejar explícitamente en el momento en que los Elementos Autorizados por Youtoo estén disponibles en el Servicio, pero nosotros, nuestros licenciantes y otros terceros, según sea el caso, conserven la propiedad de tales Elemento Autorizados por Youtoo. La precedente licencia limitada (i) no le otorga ningún derecho de propiedad, o cualquier otro interés de propiedad intelectual en ningún Contenido, y (ii) puede ser suspendido o terminado por cualquier razón, a la sola discreción de Youtoo, y sin aviso previo o responsabilidad alguna. En ciertos casos, es posible que le permitan tener un mayor acceso y uso del Contenido y/o Elementos Autorizados por Youtoo, sujetos a ciertos Términos Adicionales. </p><p> D. Derecho Ajenos. Al utilizar el Servicio, usted debe respetar la propiedad intelectual y derecho ajenos de Youtoo y otros. El uso no autorizado del Contenido puede violar los derechos de autor, marca registrada, privacidad, publicidad, comunicaciones y otras leyes, y cualquier uso puede dar lugar a sus responsabilidad personal, incluyendo posible responsabilidad criminal. Youtoo respeta los derechos de propiedad intelectual de otros. Si usted cree que su trabajo ha sido infringido por medio de una publicación indebida o distribución del mismo a través del Servicio, por favor consulte la Apartado 5 y Apartado 6 a continuación. </p><p> 2. Contenido Enviado y Normas de Uso Comunitario. </p><p> A. Contenido Generado por el Usuario. </p><p> (i) General. Youtoo puede ahora o en el futuro, ofrecer a los usuarios del Servicio la oportunidad de crear, construir, anunciar, subir, exhibir, publicar, distribuir, transmitir, difundir o poner a disposición en o enviando través del Servicio (colectivamente “enviar”) mensajes, avatares, textos, imágenes, archivos, imágenes, gráficos, fotos, comentarios, respuestas, sonidos, música, videos, información, contenido, calificaciones, críticas, datos, preguntas, sugerencias, información de identificación personal, u otra información o materiales e ideas contenidas en la presente (colectivamente, pero excluyendo los Elementos Autorizados por Youtoo incluidos en la presente, “Contenido Generado por el Usuario”). Youtoo puede permitirle hacer esto a través de foros, blogs, entornos de redes sociales, herramientas de creación de contenido, juego, comunidades sociales, correo electrónico, y otras comunicaciones funcionales. Sujeto a los derechos y licencia que usted otorga en estos Términos, usted conserva cualquier derecho legalmente reconocible, títulos e intereses que forman parte del Contenido Generado por el Usuario y en ultima instancia usted continua siendo responsable por el mismo. </p><p> (ii) No Confidencialidad del Contenido Generado por el Usuario. A excepción de lo descrito en la Política de Privacidad del Servicio y cualquier Termino Adicional, usted acepta que: (a) el Contenido Generado por el Usuario será tratado como no confidencial –sin importar si los marca “confidencial”, “propiedad” o similares- y no será devuelto, y (b) Youtoo no asume obligación de ningún tipo ante usted o cualquier tercera parte con respecto al Contenido Generado por el Usuario. A petición de Youtoo, usted nos proporcionará con cualquier documentación necesaria para corroborar los derechos de dicho contenido y para verificar su cumplimiento con los Términos o cualquiera de los Términos Adicionales. Usted reconoce que Internet y las comunicaciones móviles pueden ser objeto de violaciones de la seguridad y de que usted esta consiente que el envío de Contenido Generado por el Usuario puede no ser seguro, y que usted tendrá esto en cuenta antes de enviar cualquier Contenido Generado por el Usuario y lo hará bajo su propio riesgo. </p><p> En sus comunicaciones con Youtoo, por favor, tenga en cuenta que no estamos en busca de ideas o materiales para productos o servicios no solicitados, ni sugerencias para mejorar los productos o servicios, incluyendo, sin limitación alguna, ideas conceptos, inventos, diseños para música, paginas web, aplicaciones, libros, guiones, películas, programas de televisión, producciones de teatro, software o similares (colectivamente “Ideas y Materiales No Solicitados”). Cualquier Idea o Material No Solicitado publicado o enviado a nosotros por medio del Servicio serán considerados Contenido Generado por el Usuario y con licencia para nosotros como se indica a continuación. Adicionalmente, Youtoo conserva todos los derechos que poseen los integrantes del público en general con respecto a Ideas y Materiales No Solicitados. Youtoo al recibir Ideas y Materiales No Solicitados no será considerado una admisión por Youtoo de su novedad, prioridad u originalidad y no afecta el derecho de refutar presentes o futuros derechos de propiedad intelectual relacionados con sus Ideas y Materiales No Solicitados. </p><p> (iii) Licencia de Youtoo de su Contenido Generado por el Usuario. Salvo que se indique lo contrario en los Términos Adicionales (tales como reglas oficiales de un concurso, que regulan de manera específica la presentación de su Contenido Generado por el Usuario), usted otorga a Youtoo (y todas sus compañías afiliadas, agentes, socios y entidades asociadas) el derecho no exclusivo, sin restricciones, incondicional, sin limitaciones, global, irrevocable, perpetuo y libre de costo, al igual que la licencia para usar, copiar, grabar, distribuir, reproducir, divulgar, vender, revender, sublicenciar (a través de niveles múltiples), mostrar, ejecutar públicamente, transmitir, publicar, traducir, crear derivados de, y de otra manera utilizar y explotar de cualquier forma que sea, la totalidad o parte de su Contenido Generado por el Usuario (y trabajos derivados de éste), con cualquier propósito en cualquier formato, en o a través de cualquier medio conocido en el presente o desarrollado en el futuro, y hacer publicidad, comercializar y promover el mismo. Sin limitación alguna, los derecho concedidos incluyen el derecho a: (a) configurar, hospedar, índice, cache, archivar, almacenar, digitalizar, comprimir, optimizar, reformatear, adaptar, publicar en formato de búsqueda, y eliminar dicho Contenido Generado por el Usuario y combinar con otros materiales, y (b) utilizar cualquier idea, concepto, conocimiento técnico (<em>know-how</em>)o técnicas contenidas en cualquier Contenido Generado por el Usuario para cualquier propósito, incluyendo el desarrollo, producción, y los productos y/o servicios de mercadotecnia. A fin de efectuar aun mas los derechos y la licencia que usted otorga a Youtoo de su Contenido Generado por el Usuario ,también otorga a Youtoo, y se compromete a conceder a Youtoo, el perpetuo derecho incondicional, irrevocable, para utilizar y explotar su nombre, personalidad, y la semejanza en relación con cualquier Contenido Generado por el Usuario, sin ningún tipo de obligación o remuneración para usted. Salvo que esté prohibido por la ley, usted renuncia , y usted acepta renunciar a cualquier derecho moral (incluyendo atribución e integridad ) que usted pueda tener en cualquier Contenido Generado por el Usuario , incluso si ha sido alterado o modificado de manera no conveniente para usted. En la medida en que no puede renunciar al mismo, acepta de forma irrevocable no ejercer tales derechos (si existen) de una manera que interfiera con los derechos otorgados . Usted entiende que no recibirá honorarios, sumas, consideración o remuneración por ninguno de los derechos otorgados en esta Sección 2.A ( iii ) y la licencia se extiende a todos los demás clientes Youtoo , clientes y usuarios de productos del Servicio. </p><p> (iv) Derecho Exclusivo de Youtoo para Administrar el Sitio. Youtoo puede, pero no tendrá ninguna obligación de revisar, monitorear, mostrar, publicar, almacenar, mantener, aceptar, o de otro modo hacer uso de cualquiera de su Contenido Generado por el Usuario, y Youtoo, a su discreción, puede rechazar, eliminar, mover, reformatear, eliminar o rehusar la publicación o utilizar el Contenido Generado por el Usuario sin previo aviso ni responsabilidad hacia usted o cualquier tercero en relación con nuestra operación de sitios de Contenido Generado por el Usuario de manera apropiada. Sin limitación alguna, podremos hacerlo para abordar el contenido enviado a nuestra atención y que nosotros creemos es ofensivo, obsceno, lascivo, sucio, violento, hostil, amenazante, abusivo, ilegal o inapropiado, o para hacer cumplir los derechos de terceros o de estos Términos o cualesquiera Términos Adicionales aplicables, incluyendo, sin limitación, las restricciones de contenido que se establecen a continuación en las Reglas (definidos en el apartado 2.b). Dicho Contenido Generado por el Usuario enviado por usted o por otros no tendrá que mantenerse en el Servicio por nosotros por cualquier período de tiempo y usted no tendrá derecho, una vez enviado, a accesar, archivar, mantener o utilizar de otro modo dicho Contenido Generado por el Usuario en el Servicio o en otros sitios. </p><p> (v) Declaraciones y Garantías Relacionadas al Contenido Generado por el Usuario. Cada vez que envíe Contenido Generado por el Usuario, usted representa y garantiza que tiene al menos la mayoría de edad considerada en la jurisdicción en la cual reside y que es un padre o tutor legal, de cualquier menor presentado o contribuyente a cualquier Contenido Generado por el Usuario que usted envíe, y que, en cuanto al Contenido Generado por el Usuario, (a) usted es el único autor y dueño de la propiedad intelectual y otros derechos del Contenido Generado por el Usuario, o tiene el derecho legal de presentar el Contenido General por el Usuario y otorga a Youtoo los derechos al mismo que han sido otorgados a Youtoo por medio de estos Términos y Términos Adicionales, todo ellos sin ninguna obligación para que Youtoo obtenga el consentimiento de terceros y sin crear ninguna obligación o responsabilidad a Youtoo; (b) el Contenido Generado por el Usuario es preciso; (c) el Contenido Generado por el Usuario no infringe, en cuanto al uso y explotación permitido a Youtoo como acordado en estos Términos, ni infringirá cualquier propiedad intelectual u otro derecho de terceros; y (d) el Contenido Generado por el Usuario no violará estos Términos (incluyendo las Reglas) o los Términos Adicionales, ni causará perjuicio o daño a otros. </p><p> (vi) Ejecución. Youtoo no tiene obligación alguna de monitorear o imponer sus derechos de propiedad intelectual para su Contenido Generado por el Usuario, pero otorga el derecho de proteger y hacer valer nuestros derechos a su Contenido Generado por el Usuario, en particular haciendo y controlando acciones en su nombre y por su nombre (por cuenta y cargo de Youtoo, a lo que usted da su consentimiento e irrevocablemente nombra a Youtoo como su apoderado, con facultad de sustituir y delegar, que nombramiento corresponde junto con el interés). </p><p> B. Reglas de Uso Comunitarias. Como usuario del Servicio, estas Reglas de Uso Comunitario (“Reglas”) están para ayudarle a entender la conducta esperada de los miembros de la comunidad en línea del Servicio (“Comunidades). </p><p> (i) Naturaleza de las Reglas. Su participación en las Comunidades está sujeta a todos los Términos, incluyendo estas Reglas: </p><p>  Su Contenido Generado por el Usuario. Todo su Contenido Generado por el Usuario debe ser propio o usted debe tener todos los derechos necesarios por parte de terceros con el fin de permitirle cumplir con estos Términos y Términos Adicionales. Su Contenido Generado por el Usuario no debe incluir logotipos, frases o marcas registradas visibles registradas a terceros. No utilice Contenido Generado por el Usuario propiedad de otras personas haciéndolo pasar como propio, incluyendo contenido que haya encontrado en otro sitios en el Internet. Si alguien contribuye al Contenido Generado por el Usuario o tiene derechos sobre su Contenido Generado por el Usuario, o aparece en el Contenido Generado por el Usuario, usted deberá tener permiso para enviar dicho contenido a Youtoo. Por ejemplo, si alguien ha tomado una foto de usted y su amigo, y usted envía la foto como Contenido Generado por el Usuario, usted deberá obtener el permiso de su amigo para enviar la misma. </p><p>  Hablando de Fotos. Las fotos, videos o imagines son únicamente de usted, sus amigos y familiares. Si opta por enviar fotos al Servicio, links a videos, o incluir otras imágenes de gente real, asegúrese de que sean suyas o de alguien que conoce –y únicamente si tiene permiso expreso para enviar. </p><p>  Actúe Apropiadamente. Todas sus actividades en el Servicio deben ser apropiadas para el sitio, según sea determinado por nosotros. Sea respetuoso de las opiniones y comentarios ajenos para que podamos seguir creando Comunidades que todos disfruten. Si usted cree que el Contenido Generado por el Usuario podría ofender a alguien o ser embarazoso para alguien, lo más probable es que así sea y no tiene pertenece en el Servicio. Maldecir, acosar, acechar, comentarios insultantes, ataques personales, chismes y acciones similares están prohibidas. Su Contenido Generado por el Usuario no debe amenazar, abusar o perjudicar a otros, y no debe incluir comentarios negativos que estén conectados con la raza, original nacional, sexo, orientación sexual o discapacidad física. Su Contenido Generado por el Usuario no debe ser difamatorio, calumnioso, indecente, obsceno, pornográfico o sexualmente explicito. </p><p>  No Utilice con Fines Comerciales o Políticos. Su Contenido Generado por el Usuario no deberá anunciar o promocionar un producto o servicio u otra actividad comercial, o un político, funcionario publico o de la ley. </p><p>  No Utilice para Fines Inadecuados. Su Contenido Generado por el Usuario no debe promover cualquier actividad que infrinja la ley, sea ilegal o similar a las anteriores. </p><p>  Sea Honesto y no tergiverse su persona o su Contenido Generado por el Usuario. No se haga pasar por otra persona, usuario o empresa, y no envíe Contenido Generado por el Usuario que crea sea falso, fraudulento, engañoso, inexacto, o que tergiverse su identidad o afiliación con una persona o empresa. </p><p>  Otros Pueden Ver. Esperamos que utilice las Comunidades para intercambiar información y contenido y tenga discusiones apropiadas para el sitio con otros miembros. Sin embargo, por favor recuerdo que las Comunidades son públicas o semi-públicas y el Contenido Generado por el Usuario que envíe al Servicio dentro de una Comunidad puede ser accesible y visible para otros usuarios. No envíe información personal de identificación personal (por ejemplo: nombre y apellido juntos, contraseña, numero telefónico, dirección , números de tarjetas de crédito, información medica, dirección de correo electrónico u otra información personal o información de contacto) en espacios de la Comunidad y cuidado al compartir este tipo de información con otros. </p><p>  No Comparta la Información Personal Ajena. Su Contenido Generado por el Usuario no debe revelar dirección, numero telefónico, dirección de correo electrónico, numero de seguro social, numero de tarjeta de crédito, información medica y/o información financiera perteneciente a otros, o cualquier otra información que pueda ser utilizada para rastrear, contactar o hacerse pasar por alguien mas, a menos que sea en la forma y método específicamente solicitado por Youtoo. </p><p>  No Dañe el Servicio o Computadoras u Otros Aparatos Ajenos. Su Contenido Generado por el Usuario no debe enviar virus, troyanos, spyware o cualquier otra tecnología o códigos maliciosos que puedan afectar el funcionamiento del Servicio, computadora u otros aparatos. </p><p> Si envía Contenido Generado por el Usuario que Youtoo razonablemente crea que viola estas Reglas, en ese caso podremos tomar cualquier acción legal disponible que consideremos apropiada, a nuestra entera discreción. Sin embargo, no estamos obligados a tomar acción alguna que no sea requerida por la ley. Podemos requerir, en cualquier momento, evidencia de los permisos mencionados anteriormente en forma que sea aceptable para nosotros. La omisión de dicha evidencia puede conducir a, entre otras cosas, que el Contenido Generado por el Usuario en cuestión sea retirado del Servicio. </p><p> (ii) Sus Interacciones con Otros Usuarios; Controversias. Usted es el único responsable de su interacción con otros usuarios del Servicio, ya sea en línea o fuera de línea. Nosotros no somos responsables por la conducta o contenido de ningún usuario. Nos reservamos el derecho, mas no la obligación, de supervisar o intervenir en las controversias entre usted y otros usuarios. Siga su sentido común y buen juicio en sus interacciones con los demás (por ejemplo: al momento de enviar cualquier información personal o de otro tipo) y en todas sus otras actividades en línea. </p><p> C. Alértenos de Violaciones. Si usted descubre cualquier contenido que viole estos Términos, usted puede reportarlo a support@youtootech.com. Por supuestas infracciones de los derechos de propiedad intelectual, véase las Apartados 5 y 6, a continuación. </p><p> 3. Restricciones del Uso de Servicio y Contenido. </p><p> A. Restricciones del Uso del Servicio. Usted acepta que no podrá: (i) utilizar el Servicio para cualquier propósito político o comercial (incluyendo, sin limitación, para efectos de publicidad, solicitud de fondos, juntar precios de productos, y venta de productos); (ii) utilizar meta tags o cualquier otro “texto oculto” utilizando marcas registradas; (iii) participar en ninguna actividad a través de o en conexión con el Servicio que traten de perjudicar individuos o entidades o sean ilegales ofensivas, obscenas, lascivas, sucias, violentas, amenazadoras, acosadoras o abusivas, o que viole cualquier derecho de un tercero, o sean inaceptables para Youtoo; (iv) realizar ingeniería inversa, descompilar, desmontar, desensamblar o modificar cualquier fuente o código objeto del Servicio o de cualquier software u otros productos, servicios o procesos accesibles a través de cualquier parte del Servicio; (v) participar en cualquier actividad que interfiera con el acceso del usuario al Servicio o el buen funcionamiento del Servicio, o que cause daño al Servicio, Youtoo u otros usuarios del Servicio; (vi) interferir o evadir cualquier característica de seguridad del Servicio o de cualquier característica que restrinja o imponga limitaciones en el uso o acceso del Servicio, el Contenido o el Contenido Generado por el Usuario; (vii) obtener, compilar o almacenar ningún tipo de información (incluida la información de identificación personal de otros usuarios del Servicio, incluyendo direcciones de correo electrónico, sin el consentimiento expreso de dichos usuarios); (viii) intentar tener acceso no autorizado al Servicio, otros sistemas informáticos o redes conectadas al Servicio, a través de minería de contraseñas o cualquier otro medio; o (ix) viole de otro modo estos Términos o cualquiera de los Términos Adicionales. </p><p> B. Restricciones para el Uso de Contenido. También acepta que, al utilizar el Servicio: (i) usted no va a controlar, recopilar, copiar o distribuir el Contenido (salvo que sean consecuencia de la actividad del motor de búsqueda estándar o el uso de un navegador estándar) en el Servicio mediante el uso de cualquier robot, rover, “bot” spider, scraper, crawler, spyware, motor, dispositivo, software, herramienta de extracción, o cualquier otro dispositivo automático, utilidad o proceso manual de cualquier tipo; (ii) usted no utilizará marcos o técnicas de enmarcado para adjuntar cualquier Contenido (incluyendo cualquier imagen, texto o diseño de página); (iii) se mantendrá intacta toda marca registrada, derechos de autor y otros avisos de propiedad intelectual contenidos en dicho Contenido; (iv) no utilizará dicho Contenido en una manera que sugiera una asociación no autorizada con cualquiera de nuestros productos o nuestros licenciantes , servicios o marcas; (v) que no se hará ninguna modificación en dicho Contenido (excepto en la medida del uso permitido de los Elementos Autorizados de Youtoo, de ser el caso); (vi) no va a copiar, modificar, reproducir, archivar, vender, arrendar , alquilar, cambiar, crear trabajos derivados, publicar en forma impresa o por medios electrónicos, públicamente reproducir, publicar, difundir, distribuir , transmitir, retransmitir, distribuir o transferir a terceros o en cualquier otra aplicación de terceros o sitio web , o de otro modo usar o explotar dicho Contenido en cualquier manera para cualquier propósito con excepción de lo expresamente permitido por estos Términos o los Términos Adicionales o con el consentimiento previo por escrito de un oficial de Youtoo o , en el caso del Contenido de un licenciante, el dueño del contenido; y (vii) usted no va a introducir ningún código o producto para manipular dicho Contenido en cualquier forma que afecte negativamente cualquier experiencia de un usuario. </p><p> C. Disponibilidad del Servicio y Contenido. Youtoo podrá suspender inmediatamente o concluir la disponibilidad del Servicio y Contenido (y cualquier elemento y característica de los mismos), en su totalidad o en parte, por cualquier razón, a la sola discreción de Youtoo, y sin previo aviso o responsabilidad. </p><p>
+ </p><p> D. Reserva de los Derechos No Otorgados en Cuanto al Contenido y Servicio . Estos Términos y los Términos Adicionales incluyen cesiones limitadas de los derechos de Contenido y para el uso y acceso del Servicio. Ningún derecho o licencia podrá ser interpretado bajo ninguna teoría legal, por implicación, impedimento, costumbre de la industria, o de otra manera. Todos los derechos no concedidos expresamente a usted se reservan a Youtoo y sus licenciantes y otros terceros. Está prohibido el uso no autorizado de cualquier Contenido o del Servicio para cualquier propósito. </p><p> 4. Cuentas, Perfiles y Características Sociales </p><p> A. Cuentas. Con el fin de acceder o utilizar algunas (o potencialmente todas) de las funciones en el Servicio, usted deberá registrarse primero a través de nuestro proceso de registro en línea o de otro modo utilizar los formularios de registro facilitados en el Servicio. Las prácticas del Servicio que rigen cualquier recopilación y uso de su información personal están descritos en la Política de Privacidad. Si usted es menor de dieciocho (18) años, entonces no se le permitirá registrarse como usuario, crear una página de perfil o de otra manera utilizar el Servicio. Si usted es menor de dieciocho (18) años y desea participar en el Servicio, pídale a su padre o tutor legal abrir una cuenta para usted y así poder utilizar el Servicio bajo su supervisión. </p><p> Si usted se registra para cualquier función que requiera una contraseña y/o nombre de usuario, entonces usted va a seleccionar su propia contraseña en el momento de registro (o nosotros le podemos enviar una notificación por correo electrónico con una contraseña inicial generada aleatoriamente) y usted acepta que: </p><p> (i) no utilizará un nombre de usuario (o dirección de correo electrónico) que ya esté en uso por otra persona, pueda hacerse pasar por otra, pertenezca a alguien mas, viole la propiedad intelectual u otro derecho de cualquier persona o entidad, o sea ofensivo. Nosotros podremos rechazar el uso de cualquier contraseña, nombre de usuario o dirección de correo electrónico, por cualquier razón y a nuestra discreción; (ii) proporcionará información de registro para usted que sea verídica, precisa, actual, y según lo permita, para mantenerla y actualizarla, incluyendo su pagina de perfil, de forma continua e inmediata para que sea precisa, al corriente y completa; (iii) usted será el único responsable de toda actividad que ocurra bajo su cuenta, contraseña y nombre de usuario haya autorizado o no la actividad; (iv) usted será el único responsable de mantener la confidencialidad de su contraseña y de restringir el acceso a su Aparato de manera que otros no puedan acceder cualquier parte protegida por contraseña del Servicio utilizando su nombre, nombre de usuario o contraseña; (v) nos notificará de inmediato de uso no autorizado de su cuenta, contraseña o nombre de usuario, o cualquier otra violación de seguridad, y (vi) usted no venderá, transferirá o cederá su cuenta ni los derecho de la misma. </p><p> Nosotros no seremos responsables de pérdida o daño (de cualquier tipo y bajo cualquier teoría legal) hacia usted o terceros como consecuencia de su incapacidad o incumplimiento por cualquier motivo para cumplir con cualquiera de las anteriores obligaciones. </p><p> Si la información proporcionada, o si tenemos dudas razonables de sospechar que la información proporcionada, es falsa, inexacta, desactualizada, incompleta o viola los Términos o Términos Adicionales, o cualquier ley, podremos suspender o cancelar su cuenta. También nos reservamos el mas general y amplio derecho para cancelar o suspender su cuenta o de otra manera negarle acceso a la misma o sus beneficios –todo a nuestra discreción, por cualquier razón y sin previo aviso u obligación. </p><p> B. Perfiles. Su página de perfil no puede incluir ninguna forma de Contenido Generado por el Usuario que esté prohibido, como se indica en nuestras Reglas. Sin perjuicio de lo anterior, las paginas de perfil no pueden incluir contenido que usted esté tratando de vender a través del Servicio, y no pueden ser utilizadas para llevar a cabo actividades comerciales, incluyendo, pero no limitado a transacciones, publicidad, recaudación de fondos, concursos u otras promociones sin nuestro previo consentimiento por escrito. Podemos ofrecerle la posibilidad de configurar las preferencias relacionadas a su perfil o a las actividades del Servicio, pero los ajustes no serán efectivos de inmediato o libre de errores, y las opciones pueden cambiar de vez en cuando. No asumimos ninguna responsabilidad u obligación por el material en el perfil del usuario. </p><p> Las páginas de perfil sólo podrán ser creadas por un representante autorizado de la persona objeto de dicho perfil. Nosotros no revisamos las páginas de perfil para determinar si fueron creados por una persona apropiada, y no somos responsables de ninguna de las páginas de perfil no autorizadas que puedan aparecer en el Servicio. Si hay alguna controversia en cuanto a si una página de perfil ha sido creada o está siendo mantenida por un representante autorizado de la persona que es el sujeto de dicha página, entonces tendremos el derecho exclusivo, pero no estamos obligados, de resolver tales controversia en cuanto determinemos si es apropiado a nuestra discreción. Dicho acuerdo podrá incluir, sin limitación, la eliminación o cancelación del acceso a las páginas de perfil, o cualquier parte de éstas, en cualquier momento y sin previo aviso. </p><p> C. Características Sociales. Ciertos aspectos del Servicio son una comunidad y por sí una experiencia de medios de comunicación social. Sujeto a nuestros esfuerzos de buena fe para honrar su elección de ciertas opciones que podemos ofrecer de vez en cuando y que pueden ofrecer ciertas elecciones con respecto a lo que se comparte y con quién, sus actividades, Contenido Generado por el Usuario y el consumo de Contenido (incluyendo videos y música) que puede ser visible, o compartido con otros dentro y fuera del Servicio, incluyendo anunciantes. Usted da su consentimiento para ello, e irrevocablemente nos concede el derecho de sublicenciar para utilizar y explotar su nombre, persona, imagen, seudónimo, imagen de perfil, información y Contenido Generado por el Usuario, y para compartirlo con los demás, sin ningún tipo de obligación o remuneración a usted. Esto puede incluir, sin limitación, la asociación con contenido comercial, patrocinado o relacionado (como una marca que le guste o los patrocinadores de un anuncio en el que hizo clic). Como ejemplo, si usted ve un programa, o se convierte en su fan, otros usuarios pueden ser informados al respecto y nosotros podremos mostrarle anuncios para otros programas o Contenido que le puedan gustar. </p><p> 5. Procedimientos para Alegar Infracción a los Derechos de Autor. </p><p> A. Aviso DMCA. Youtoo responderá adecuadamente a los avisos de supuestas infracciones de derechos de autor que cumplan con los EE.UU. Digital Millennium Copyright Act ("DMCA"), tal como se expone a continuación. Si usted es dueño de un derecho de autor sobre una obra (o representa a dicho propietario del derecho de autor) y cree que su (o la del propietario) derecho de autor en ese trabajo ha sido infringido por una publicación inadecuada o distribución de la misma a través del Servicio, usted nos podrá enviar un comunicado por escrito que incluya lo siguiente: </p><p> (i) una leyenda o título que diga: " Aviso de derechos de autor DMCA" ; (ii) una descripción del trabajo registrado que usted afirma ha sido infringido , o si múltiples obras están cubiertas por una sola notificación, una lista representativa de dichas obras; (iii) una descripción de donde se ubica el material que considera que infringe o es sujeto de actividad violatoria que sea razonablemente suficiente para permitirnos localizar el material (por favor incluya la dirección URL del servicio en el que aparece el material); (iv) su nombre completo, dirección, número telefónico y dirección de correo electrónico; (v) su declaración de que usted cree de buena fe que el uso del material descrito en el reclamo no está autorizado por el propietario con derecho de autor, su agente o la ley; (vi) su declaración, hecha bajo pena de perjurio, que toda la información en su notificación es exacta y que usted es el propietario de los derechos (o, si usted no es el propietario de los derechos de autor, su declaración debe indicar que usted está autorizado para actuar en nombre del propietario de un derecho exclusivo que presuntamente se ha infringido), y (vii) su firma electrónica o física. </p><p> Youtoo sólo responderá a avisos DMCA que reciba por correo o correo electrónico, a las siguientes direcciones: </p><p> Por correo: Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (A la atención de: Agente DMCA). </p><p> Por correo electrónico: <a href="mailto:DMCA@youtootech.com">DMCA@youtootech.com</a></p><p> A menudo es difícil determinar si sus derechos de autor han sido infringidos. Youtoo pueden optar por no responder a las notificaciones de la DMCA que no cumplan sustancialmente con todos los requisitos anteriores, y Youtoo pueden optar por retirar el material supuestamente infractor que llegue a su conocimiento a través de los avisos que no cumplan sustancialmente con la DMCA. </p><p> Tenga en cuenta que la DMCA establece que cualquier persona que a sabiendas falsifica material, la actividad material o está infringiendo, puede ser sujeta responsable. Podemos enviarle la información que usted proporciona en su comunicado a la persona que proporcionó la obra en cuestión. Esa persona podrá optar por enviar una contra-notificación DMCA. </p><p> Sin perjuicio de otros derechos de Youtoo, Youtoo puede, en circunstancias apropiadas, cancelar el acceso de un infractor repetitivo al Servicio y cualquier otro sitio web propiedad u operados por Youtoo. Consulte el Apartado 4 anterior. </p><p> B. Contra-Aviso. Si el acceso en el Servicio a la obra que usted envió a Youtoo esta deshabilitado o la obra ha sido eliminada como resultado de un Aviso DMCA, y si usted cree que el acceso deshabilitado o la eliminación es el resultado de un error, usted nos puede enviar un Contra-Aviso DMCA a la dirección mencionada anteriormente. Su Contra-Aviso DMCA debe incluir la siguiente información: </p><p> (i) una leyenda o título que diga: " Contra-Aviso DMCA "; (ii) una descripción del material que ha sido eliminado o cuyo acceso ha sido inhabilitado y el lugar en el que apareció el material antes de ser removido o el acceso al mismo desactivado (por favor incluya la dirección URL del Servicio de donde el material fue removido o el acceso deshabilitado) ;(iii) declaración bajo pena de perjurio, que usted cree de buena fe que el material fue removido o inhabilitado como consecuencia de un error o identificación errónea del material ha ser eliminado o incapacitado; (iv) su nombre completo, dirección, número telefónico, dirección de correo electrónico y el nombre de usuario de su cuenta ; (v) declaración en la que consienta a la jurisdicción de la Corte Federal de Distrito para el distrito judicial en el que se encuentra su domicilio (o , si la dirección se encuentra fuera de los EE.UU., a la jurisdicción de la Corte de Distrito de Estados Unidos para el Distrito Central de California), y que usted aceptará el servicio del proceso de la persona que nos presentó Aviso DMCA a nosotros o del agente de dicha persona, y (vi) su firma electrónica o física. </p><p> Tenga en cuenta que la DMCA establece que cualquier persona que a sabiendas falsifica material o actividad fue eliminado o deshabilitado por error o por mala identificación puede ser sujeto responsable. </p><p> Si recibimos un contra-aviso DMCA, podremos reemplazar el material que hemos eliminado (o dejar que sea imposible accederlo) en no menos de diez (10) y un máximo de catorce (14) días hábiles siguientes a la recepción del contra-aviso DMCA. Sin embargo , no vamos a hacer esto si primero recibimos notificación en las direcciones anteriores que la parte que nos envió el aviso DMCA ha presentado una demanda pidiendo a un tribunal una orden de restricción de la persona que proporcionó el material en una actividad infractora en relación al material en el Servicio. También debe ser consciente de que es posible que enviemos el contra-aviso a la parte que nos envió el aviso DMCA con la infracción de derechos de autor. </p><p> 6. Proceso para Alegar una Infracción de otra Propiedad Intelectual. </p><p> Si es el titular de propiedad intelectual diferente a los derecho de autor y cree que su propiedad intelectual ha sido infringida por una publicación inadecuada o su distribución a través del Servicio, usted nos puede enviar un comunicado por escrito a las direcciones mencionadas anteriormente, y debe incluir lo siguiente: </p><p> (a) un leyenda o título que diga: Aviso de Violación de Propiedad Intelectual; (b) descripción de la propiedad intelectual que usted afirma ha sido violada; (c) descripción de donde se ubica el material que usted afirma ha sido infringido o que es sujeto a actividad infractora, que se razonablemente suficiente para que nos permita localizar el material (por favor incluya la dirección URL del Servicio en el que aparece el material); (d) nombre completo, dirección, número telefónico y dirección de correo electrónico; (e) su declaración donde usted cree de buena fe que el uso del material descrito en la reclamación no esta autorizado por el titular de la propiedad intelectual, su agenta o la ley; (f) su declaración, hecha bajo pena de perjurio, que toda la información en su aviso es exacta y que usted es el titular de la propiedad intelectual en cuestión, o si usted no es el dueño, entonces su declaración indicando que usted está autorizado para actuar en nombre del titular de la propiedad intelectual; (g) su firma electrónica o física. </p><p> Tomaremos acción en cuanto los avisos en cuestión bajo nuestra discreción. Cualquier usuario del Servicio que no responda satisfactoriamente a Youtoo con respecto a dicho aviso está sujeto a suspensión o terminación. Podemos enviarle la información que usted proporciona en su aviso a la persona que proporcionó el material presuntamente infractor. </p><p> 7. Avisos, Preguntas y Servicio al Cliente </p><p> Usted acepta que: (1) podemos enviar avisos con términos nuevos, editados o modificados y otros asuntos importantes colocando avisos en la página de inicio del Servicio, o de otra manera razonable, y (2) podemos comunicarnos con usted por correo o correo electrónico enviado a la dirección proporcionada por usted. Usted acepta notificarnos de inmediato si cambia de dirección de correo electrónico o dirección postal, actualizando su cuenta. Todas las notificaciones legales para nosotros deben ser enviadas a Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (A la atención de: Departamento Jurídico). Si usted tiene alguna pregunta sobre el uso del Servicio, puede comunicarse con Youtoo Atención al Cliente mediante el envío de un correo electrónico a support@youtootech.com. Usted reconoce que la prestación de la atención al cliente es a discreción de Youtoo y no tenemos ninguna obligación de proporcionarle asistencia al cliente de ningún tipo. </p><p> 8. Sus Links al Servicio </p><p> Le otorgamos licencia limitada, no exclusiva, revocable, no asignable, personal y no transferible para crear hyperlinks al Servicio, siempre y cuando: (a) los links sólo incorporen texto, y no utilicen ninguna marca registrada; (b) los links y el contenido de su página web no sugieran ninguna afiliación con Youtoo o creen cualquier otra confusión, y (c) los links y el contenido de su pagina no representan a Youtoo o sus productos o servicios de manera falsa, equívoca, despectivamente o de otra manera ofensiva, y no incluirá contenido que sea ilegal, ofensivo, obsceno, lascivo, sucio, violento, amenazador, acosador, o abusivo, o que viole cualquier derecho de un tercero o sea de otra manera objetable por Youtoo. Youtoo se reserva el derecho de suspender o prohibir la vinculación con el Servicio por cualquier razón, a su discreción, sin previo aviso, ni responsabilidad de ningún tipo a usted o a terceros. </p><p> 9. Sitios de Terceros; Anuncios Publicitario, Relaciones con Terceros </p><p> A. Contenido y Sitios de Terceros; Anuncios Publicitarios. El Servicio puede tener links a sitios de terceros que no sean propiedad, controlados u operados por Youtoo, y el Servicio puede incluir links a anuncios publicitarios de terceras partes, o sitios de terceros (colectivamente “Sitios de Terceros”), incluyendo sitios operados por anunciantes, licenciantes, licenciados, y ciertas terceras partes que pudieran tener una relación de negocios con Youtoo. Youtoo puede no tener ningún control sobre el contenido, operaciones, políticas, términos, u otros elementos de Sitios de Terceros y Youtoo no asume ninguna obligación de revisar los Sitios de Terceros. Youtoo no respalda, aprueba o patrocina ningún Sitio de Terceros, o cualquier contenido de terceros, publicidad, información , materiales, productos, servicios u otros artículos . Asimismo, Youtoo no es responsable de la calidad o entrega de los productos o servicios ofrecidos, consultados, obtenidos por o anunciados en dichos sitios. Por último , Youtoo no será en ningún caso responsable de pérdida directa, indirecta , incidental o especial u otro daño, ya sea por negligencia , incumplimiento de contrato , difamación, violación de los derechos de autor u otra propiedad intelectual , causada por la exposición, distribución o explotación de cualquier información o contenido dentro de estos Sitios de Terceros . Cualquier actividad que lleve a cabo en relación con cualquiera de los mismos están sujetos a la política de privacidad y otras ,términos y condiciones de uso y/o venta, y las normas emitidas por el operador de los Sitios de Terceros . Youtoo se exime de toda responsabilidad en relación con la misma. </p><p> B. Relaciones con Terceros. Cualquier interacción con otros, correspondencia, transacciones y otras operaciones que se tenga con terceros y que sean encontrados en o a través del Servicio (incluyendo en o a través de Sitios de Terceros o anuncios), son exclusivamente entre usted y el tercero (incluyendo las cuestiones relacionadas con el contenido de anuncios de terceros, pagos, entrega de los bienes, garantías (incluyendo garantías de los productos), privacidad y seguridad de datos, y similares). Youtoo se exime de toda responsabilidad en relación a ello. </p><p> 10. Características Inalámbricas y Basadas en Ubicación </p><p> A. Características Inalámbricas. El Servicio puede ofrecer ciertas características y servicios por medio de su Dispositivo inalámbrico. Estas características y servicios pueden incluir la posibilidad de acceder funciones del Servicio y cargar contenido en el Servicio, recibir mensajes de servicio, y descargar aplicaciones para su dispositivo inalámbrico (en conjunto, "Funciones Inalámbricas"). Puede haber un cargo por parte de su proveedor por mensajes, datos y otros cargos para participar en Funciones Inalámbricas. Las tarifas y cargos pueden aparecer en la factura de celular o pueden ser deducidos de su saldo prepagado. Su compañía puede prohibir o restringir ciertas características inalámbricas y ciertas características inalámbricas puede ser incompatible con su operador o dispositivo inalámbrico. Usted debe verificar con su proveedor qué planes están disponibles y cuánto cuestan. Contacte a su proveedor con preguntas acerca de estos temas. </p><p> B. Términos de las Características Inalámbricas. Usted acepta que en cuanto a las funciones inalámbricas para el usuario registrado, es posible enviar comunicaciones a su dispositivo móvil con respecto a nosotros o terceros. Además, podemos recopilar información relacionada con el uso de las funciones inalámbricas. Si se ha registrado a través del Servicio para las Características Inalámbricas, entonces usted se compromete a notificar a Youtoo de cualquier cambio en su información de contacto inalámbrico (incluido el número de teléfono) y actualizar sus cuentas en el servicio para reflejar los cambios. </p><p> C. Características Basadas en Ubicación. Si ha activado el GPS, localización geográfica u otras características basadas en la localización de cualquier aplicación móvil(es) o característica(s) del Servicio, usted reconoce que se realizará un seguimiento de la ubicación de su dispositivo y la información puede ser compartida con otros de acuerdo con la Política de Privacidad. Algunas aplicaciones móviles o características permiten deshabilitar características de localización o administrar preferencias relacionadas. Sin embargo, usted puede finalizar nuestro seguimiento de localización de dispositivos, desinstalando cualquier aplicación móvil o característica. Los servicios de localización ofrecidos en relación con nuestra aplicación móvil o características son para uso individual y no deben usarse ni considerarse como un sistema de localización de emergencia, que se utilice mientras maneje o conduzca un vehículos o usado en conexión con cualquier entorno peligroso que requieran un rendimiento a prueba de fallos , o cualquier otra situación en la que el fallo o inexactitud del uso de los servicios basados en la ubicación podrían conllevar directamente a la muerte, lesiones personales o daños físicos o materiales considerables. Los servicios de localización no son adecuados o destinados para fines de búsqueda de familiares, seguimiento de flota, o cualquier otro tipo de uso para negocios - hoy en día existen otros productos que pueden ser utilizado específicamente para estos fines. </p><p> 11. Resolución de Controversias. Ciertas porciones del Apartado 11 se considerarán como un "acuerdo escrito de arbitraje" de conformidad con la Ley Federal de Arbitraje. Usted y Youtoo están de acuerdo en que la intención este Apartado 11 satisface el requerimiento “escrito” de la Ley Federal de Arbitraje. Este Apartado 11 sólo puede ser modificado por mutuo acuerdo. </p><p> A. Primero. Tratar de Resolver Disputas y Disputas Excluidas. Si cualquier controversia, alegación o reclamación derive de o se relacione con el Servicio, el Contenido, el Contenido Generado por el Usuario, estos Términos, o las Términos Adicionales, presentes o futuros (colectivamente, "Disputa" ), o cualquiera de los derechos de propiedad intelectual existentes o supuestos de Youtoo (una "Disputa Excluidos", que incluya las acciones establecidas en el Apartado 11D), entonces ambas partes acuerdan enviar una notificación por escrito a la otra parte con una descripción razonable del Disputa o Disputas Excluidas, junto con una propuesta de resolución a la misma. Nuestro aviso a usted se le enviará basado en la información de contacto más reciente que usted nos haya proporcionado. Pero si no existe dicha información o si dicha información no es actual, no tenemos ninguna obligación bajo Este Apartado 11A. Su aviso a nosotros debe ser enviado a : Youtoo Technologies LLC, 6565 North MacArthur Blvd., Suite 400, Las Colinas, TX 75039 (a la atención de: Departamento Jurídico). Durante un período de sesenta (60) días a partir de la fecha de recepción de la notificación por la otra parte , Youtoo y usted entablarán en un diálogo con el fin de tratar de resolver la Disputa o Disputas Excluidas, aunque nada requerirá que usted o Youtoo resuelvan la Disputa o Disputas excluidas en los Términos con respecto a los cuales usted y Youtoo, bajo la discreción de cada quien, no se sientan cómodos. </p><p> B. Foros Para la Resolución Alternativa de Disputas </p><p> (i) El arbitraje. Si no podemos resolver un conflicto como se establece en la Apartado 11, dentro de los sesenta (60) días siguientes a la recepción de la notificación, a continuación, ya sea usted o nosotros podemos presentar la disputa a un arbitraje oficial de acuerdo con el presente Apartado 11.B. Si no podemos resolver una Disputa Excluida como se establece en la Sección 11, dentro de los sesenta (60) días siguientes a la recepción de la notificación, usted o nosotros podremos presentar la Disputa Excluida formalmente a arbitraje, únicamente si usted y Youtoo dan su consentimiento, por medio de un comunicado escrito y firmado por usted y un oficial o representante legal de Youtoo, a que la Controversia Excluida esté sujeta a arbitraje. En tal caso (y sólo en este caso), la Disputa Excluida se considerará que una "controversia" por el resto del presente Apartado 11.B. </p><p> Una vez transcurrido el plazo de los sesenta días y en la máxima medida permitida por la ley pertinente, una disputa se resolverá exclusivamente mediante arbitraje de conformidad con las Reglas de Arbitraje Comercial, vigentes en el momento, de la Asociación Americana de Arbitraje ("AAA"). Si la controversia tiene un valor reclamado de no más de $250.000, entonces el arbitraje será escuchado y determinado por un solo árbitro neutral el cual será un juez jubilado o un abogado con no menos de quince (15) años de experiencia como miembro practicante de la barra en el área de práctica sustantiva relacionada con la disputa, quien administrará los procedimientos de conformidad con los Procedimientos Suplementarios de la AAA para Disputas Relacionadas al Consumidor. Si la controversia tiene un valor reclamado mayor a $ 250.000, o si Youtoo decide a su entera discreción, asumir los costos de arbitraje por encima de los que se producirían en un proceso ante un solo árbitro neutral, en cuyo caso el arbitraje se resolverá por un panel de tres miembros, con un miembro seleccionado por cada una de las partes y tercero (quien será presidente del panel )será elegido por los dos miembros designados por ambas partes o por la AAA , de acuerdo con las Reglas de Arbitraje Comercial. El árbitro o panel de arbitraje, según sea el caso, utilizará las leyes pertinentes y las disposiciones de estos Términos y Términos Adicionales, determinará cualquier conflicto de acuerdo con la ley y los hechos basándose únicamente en la información del expediente y ninguna otra base, y emitirá un fallo congruente. Si usted y Youtoo dan su consentimiento al arbitraje de una Disputa Excluida como se establece en el párrafo inmediatamente anterior de Apartado 11.B (i), entonces este párrafo y el resto de este Apartado 11.B no se aplicarán a las Disputas Excluidas. </p><p> Si una de las partes presenta debidamente la controversia a la AAA para el arbitraje formal y la AAA no está dispuesta o no puede establecer una fecha de audiencia dentro de los sesenta (60) días siguientes a la presentación de la "demanda de arbitraje", entonces cualquiera de las partes puede elegir que el arbitraje sea administrado por el Centro de Arbitraje Judicial y Servicios de Mediación ("JAMS") simplificando con el uso de las Reglas y Procedimientos de Arbitraje de JAMS de Youtoo consientan por escrito. Los requisitos para el área práctica sustantiva para el árbitro y el umbral de 250,000 dólares para el número de árbitros asignados a la solución de Disputas estipulados en el párrafo anterior para el arbitraje de la AAA también se aplicarán a dicho arbitraje con respecto a JAMS u otro servicio de arbitraje . </p><p> Para obtener información relacionada a los procedimientos, reglas y costos de AAA y JAMS , favor de contactar: </p><p> AAA : 800.778.7879 http://www.adr.org </p><p> JAMS : 949.224.1810 http://www.jamsadr.com </p><p> (ii) Naturaleza, Limitaciones y Ubicación para la Resolución de Disputas Alternativas. En el arbitraje, como en un tribunal, el árbitro debe honrar los términos de estos Términos (y los Términos Adicionales ) podrá otorgar daños y otra compensación (incluyendo honorarios de abogados) a la parte ganadora. Sin embargo, con el arbitraje (A) NO HAY JUEZ O JURADO, (B ) LOS PROCEDIMIENTOS DE ARBITRAJE Y RESULTADO DE ARBITRAJE ESTÁN SUJETOS A CIERTAS REGLAS DE CONFIDENCIALIDAD, Y (C) LA REVISIÓN JUDICIAL DE LOS RESULTADOS DE ARBITRAJE ES LIMITADA. Todas las partes en el arbitraje tendrán el derecho, a su propio costo, de ser representados por un abogado u otro defensor de su elección. Si se requiere una audiencia de arbitraje en persona, entonces se llevará a cabo en el "área metropolitana por estadística" (como se define por la Oficina del Censo de EE.UU.) en la que es residente en el momento que se someta la Disputa a arbitraje. Usted y nosotros pagaremos los gastos administrativos y de arbitraje, y otros costos de acuerdo con las reglas de arbitraje pertinentes , pero si las normas o leyes de arbitraje pertinentes requieren que Youtoo pague una porción mayor o la totalidad de los honorarios y costos a fin de que este Apartado 11 sea ejecutable, Youtoo tendrá el derecho a optar por pagar los honorarios y costos y proceder con el arbitraje. Descubrimiento de pruebas se permitirá de conformidad con las reglas de arbitraje aplicables. La decisión del árbitro debe consistir en una declaración escrita indicando la disposición de cada reclamo de la disputa, y debe proporcionar una declaración de los hallazgos y conclusiones en los que se basa la decisión y cualquier fallo (de existir uno). El dictamen sobre el laudo arbitral y el fallo (de existir) se puede introducir en o por cualquier tribunal que tenga jurisdicción sobre las partes de conformidad con el Apartado 9 de la Ley Federal de Arbitraje. </p><p> C. Periodo Limitado para Presentar Quejas. EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEY APLICABLE, SI USTED O NOSOTROS DESEAMOS HACER VALER UNA DISPUTA (PERO NO Controversias Excluidas) CONTRA EL OTRO, ENTONCES USTED O NOSOTROS INICIAREMOS (POR ENTREGA DE NOTIFICACIÓN POR ESCRITO COMO SE ESTABLECE EN APARTADO 11.A ) DENTRO DE UN PERIODO DE UN (1) AÑO DESPUÉS DE QUE SURJA LA CONTROVERSIA- o SERA PERMANENTEMENTE PRESCRITA. </p><p> D. Mandato Judicial. Las disposiciones precedentes de este Apartado 11 no se aplicarán a cualquier acción legal emprendida por Youtoo a solicitar un mandato judicial u otro beneficio equitativo en relación con cualquier pérdida, costo o daño (o cualquier pérdida, costo o daños potenciales) relativos al Servicio, cualquier Contenido, el Contenido Generado por el Usuario y / o derechos de propiedad intelectual de Youtoo (incluyendo aquellos que Youtoo en disputa que pueda reclamar), las operaciones de Youtoo, y/o los productos o servicios de Youtoo. </p><p> Asuntos de Controversias Menores Quedan Excluidas de los Requisitos de Arbitración. No obstante lo anterior, cualquiera de nosotros puede presentar reclamos de Disputas (pero no Disputas Excluidas) en la corte de controversias menores, sujetos al Apartado 11.G. </p><p> F. Asuntos de Demanda Colectiva. Las Disputas serán arbitradas sólo de forma individual y no se consolidará con ningún otro arbitraje u otros procedimientos que involucren cualquier reclamo o controversia de cualquier otra parte. Pero si, por cualquier razón, un tribunal con jurisdicción competente o un árbitro seleccionado de conformidad con el Apartado 11.B(i) sostiene que esta restricción es inmoral o no ejecutable, entonces nuestro acuerdo en el Apartado 11.B de arbitraje no se aplicará y la Disputa debe ser llevada exclusivamente a la corte correspondiente al Apartado 11.G. </p><p> G. Cortes Federales y Estatales en Dallas, Texas. Salvo en la medida en que se requiere que el arbitraje en el Apartado 11.B, y excepto en cuanto a la ejecución de cualquier decisión o laudo arbitral, cualquier acción o procedimiento relacionado con cualquier conflicto o Disputas Excluidas sólo podrá establecerse en un tribunal estatal o federal en Dallas, Texas. En consecuencia, usted y Youtoo aceptarán la jurisdicción personal y exclusiva de dichos tribunales para tales asuntos. </p><p> 12. EXENCION DE DECLARACIONES Y GARANTÍAS. SU ACCESO Y USO DEL SERVICIO ES BAJO SU PROPIO RIESGO. </p><p> EL SERVICIO SE PROPORCIONA "TAL CUAL", "SEGÚN DISPONIBILIDAD", Y "CON TODOS SUS DEFECTOS". Por lo tanto, en la máxima medida permitida por la ley, Youtoo Technologies LLC y sus filiales y cada uno de sus respectivos empleados, directores, miembros, gerentes, accionistas, agentes, proveedores, licenciantes, licenciatarios, contratistas, clientes, sucesores y cesionarios (colectivamente, "Partes Youtoo") renuncian por la presente y no hacen ninguna representación, garantía, aprobación, o promesas, expresa o implícita, en cuanto a: </p><p> (a) el Servicio ( incluyendo el Contenido y el Contenido Generado por el Usuario ); </p><p> (b) las funciones , características o cualesquiera otros elementos insertados en o accesibles a través del Servicio; </p><p> (c) cualquier producto, servicio , o instrucciones ofrecidas o referenciados en o vinculadas a través del Servicio; </p><p> (d) de seguridad asociados con la transmisión de su Contenido Generado por el Usuario transmitido a Youtoo a través del Servicio ; </p><p> (e) si el Servicio o los servidores que hacen que al Servicio disponible están libres de componentes dañinos (incluidos los virus, troyanos, y otras tecnologías que podrían afectar negativamente a su dispositivo); </p><p> (f) si la información (incluyendo cualquier instrucción) en el Servicio es correcta , completa, correcta, adecuada, útil, oportuna y fiable; </p><p> (g) si los defectos o errores a en el Servicio serán reparados o corregidos ; </p><p> (h) si será ininterrumpido su acceso al Servicio; </p><p> (i) si el Servicio estará disponible en cualquier momento o lugar en particular; y </p><p> (h) si su uso del Servicio es legal en cualquier jurisdicción en particular. </p><p> EXCEPTO POR LAS GARANTÍAS ESPECÍFICAS PREVISTAS EN ESTE DOCUMENTO O EN CONDICIONES ADICIONALES OTORGADOS POR UNA YOUTOO, PARTES YOUTOO RECHAZAN POR ESTE MEDIO MÁS TODA GARANTÍA, EXPRESA O IMPLÍCITA, INCLUIDAS LAS GARANTÍAS DE COMERCIALIZACIÓN, IDONEIDAD PARA UN PROPÓSITO PARTICULAR, NO INFRACCIÓN O LA APROPIACIÓN INDEBIDA DE LOS DERECHOS DE PROPIEDAD INTELECTUAL DE TERCEROS, TÍTULO, COMERCIO, GOCE PACÍFICO, INTEGRACIÓN DE SISTEMAS Y AUSENCIA DE VIRUS INFORMÁTICOS. Algunas jurisdicciones limitan o no permiten la exención de garantías implícitas o de otro modo la exenciones anteriores pueden no aplicarse en la medida en leyes tales jurisdicciones son aplicables. </p><p> 13. LIMITACIONES DE NUESTRA RESPONSABILIDAD. </p><p> BAJO NINGUNA CIRCUNSTANCIA LAS PARTES YOUTOO SERÁN RESPONSABLES POR CUALQUIER PÉRDIDA O DAÑO DE NINGÚN TIPO, incluyendo lesiones físicas o muerte, o por cualquier pérdida directa, indirecta, económica, ejemplar, especial, punitiva, incidental o consecuente o daños que sean directamente o indirectamente relacionadas con: </p><p> (a) el Servicio (incluyendo el Contenido y el Contenido Generado por el Usuario); </p><p> (b) el uso o la imposibilidad de utilizar el Servicio, o el desempeño del Servicio; </p><p> (c) cualquier medida adoptada en relación con una investigación realizada por las Partes Youtoo o los cuerpos de seguridad con respecto a su acceso o uso del Servicio; </p><p> (d) cualquier medida adoptada en relación con los derechos de autor u otros titulares de propiedad intelectual u otros titulares de derechos; </p><p> (e) cualquier error u omisión en el funcionamiento técnico del Servicio; o </p><p> (f) cualquier daño a la computadora de cualquier usuario, hardware, software, módem u otro equipo o tecnología, incluyendo daños de cualquier violación de la seguridad o de cualquier virus, bugs, falsificaciones, fraude, error, omisión, interrupción, defecto, retraso en la operación o transmisión, línea de la computadora, o falla en la red o cualquier otro falla técnico o de otro tipo , incluidas las pérdidas o daños y perjuicios en forma de pérdida de ganancias, pérdida de clientela, pérdida de datos, interrupción del trabajo, la precisión de los resultados, o la falla o mal funcionamiento del equipo. </p><p> Las anteriores limitaciones de responsabilidad se aplican incluso si alguno de los eventos o circunstancias que anteceden sean previsibles y aunque se haya aconsejado a las Partes Youtoo o que debieran haber sabido de la posibilidad de tales daños o perjuicios, independientemente de si usted tenga una acción basada en el contrato, negligencia, responsabilidad estricta o agravio (incluyendo si es causado, en su totalidad o en parte, por la negligencia, actos de la naturaleza, el fracaso de las telecomunicaciones, o la destrucción del Servicio). </p><p> Algunas jurisdicciones no permiten la exclusión o limitación de daños incidentales o emergentes de la clase que se han descrito anteriormente, por lo que la limitación o exclusión anterior puede no aplicarse en su caso. </p><p> SALVO QUE SE ESTABLEZCA EN LOS TÉRMINOS ADICIONALES, EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEY APLICABLE, EN NINGÚN CASO LA RESPONSABILIDAD TOTAL DE PARTES YOUTOO POR TODOS LOS DAÑOS POSIBLES, PÉRDIDAS Y CAUSAS DE ACCIÓN EN RELACIÓN CON EL ACCESO Y USO DEL SERVICIO Y SUS DERECHOS BAJO ESTOS TÉRMINOS, SERA SUPERIOR A LA CANTIDAD QUE USTED HAYA PAGADO A YOUTOO EN RELACIÓN CON LA TRANSACCIÓN QUE SUBYACEN LA RECLAMACIÓN; SIN EMBARGO, ESTA DISPOSICIÓN NO APLICARA SI UN TRIBUNAL CON JURISDICCIÓN APLICABLE ENCUENTRA ESTA INADMISIBLE. PARA MAYOR CLARIDAD, LA FRASE ANTERIOR NO AMPLIARÁ O LIMITARÁ CUALQUIER GARANTIA POR ESCRITO PROPORCIONADA POR YOUTOO O EL FABRICANTE DE UN PRODUCTO FÍSICO. </p><p> 14. Renuncia al Mandato Judicial u Otro Beneficio Equitativo. </p><p> SI USTED AFIRMA QUE HA INCURRIDO EN CUALQUIER PÉRDIDA, DAÑOS O LESIONES EN RELACIÓN CON EL USO DEL SERVICIO, LAS PÉRDIDAS, DAÑOS Y LESIONES NO SERAN IRREPARABLES O SUFICIENTES PARA DAR DERECHO A UNA ORDEN JUDICIAL O A OTROS BENEFICIOS EQUITATIVOS DE CUALQUIER TIPO. ESTO SIGNIFICA QUE, EN RELACIÓN CON SU DEMANDA, USTED ACEPTA QUE NO BUSCARA Y QUE NO SERA PERMITIDO A OBTENER, CUALQUIER ACCION TRIBUNAL U OTRA ACCIÓN QUE PUEDA INTERFERIR O IMPEDIR EL DESARROLLO O EXPLOTACIÓN DE CUALESQUIERA SITIO WEB, APLICACIÓN, CONTENIDO , CONTENIDO GENERADO POR EL USUARIO, PRODUCTO, SERVICIO, O LA PROPIEDAD INTELECTUAL, CON LICENCIA, USADA O CONTROLADA POR YOUTOO (INCLUYENDO SU LICENCIA DEL CONTENIDO GENERADO POR EL USUARIO) O UN LICENCIANTE DE YOUTOO. </p><p> 15. Actualizaciones a los Términos. Estos Términos (o en su los Términos Adicionales), en la forma publicada en el momento de su uso de los servicios aplicables a los que se aplica, regirán dicho uso (incluyendo las operaciones realizadas durante el uso). COMO NUESTRO SERVICIO SE DESARROLLA, LOS TÉRMINOS Y CONDICIONES BAJO LAS QUE OFRECEMOS EL PUEDEN SER MODIFICADOS Y NOS PUEDEN DEJAR DE OFRECER EL SERVICIO EN VIRTUD DE LOS TÉRMINOS Y TERMINOS ADICIONALES PARA LOS QUE FUERON OFRECIDOS ANTERIORMENTE. CONSECUENTEMENTE, CADA VEZ QUE INICIE UNA SESIÓN O UTILICE EL SERVICIO USTED ESTÁ ACEPTANDO UN NUEVO ACUERDO CON NOSOTROS EN LOS TÉRMINOS Y TERMINOS ADICIONALES VIGENTES EN ESE MOMENTO Y USTED ACEPTA QUE PODEMOS NOTIFICARLE DE OTROS TÉRMINOS MEDIANTE SU PUBLICACIÓN EN EL SERVICIO (O EN CUALQUIER OTRA MANERA RAZONABLE DE AVISO DE NUESTRA ELECCION), Y QUE EL USO DEL SERVICIO DESPUÉS DE DICHO AVISO CONSTITUYE UN FUTURO ACUERDO A LOS OTROS TÉRMINOS PARA SU NUEVO USO Y TRANSACCIONES. Por lo tanto , debe revisar los términos de servicio publicados y los Términos Adicionales aplicables cada vez que utilice el servicio (por lo menos antes de cada transacción o envío). Los Términos Adicionales se harán efectivos en cuanto a nuevos usos y las transacciones a partir del momento que los publiquemos, o en una fecha posterior que se haya especificado en ellos o en otro aviso. Sin embargo , las condiciones (y los Términos Adicionales aplicables) aplicables previamente cuando ha usado el servicio seguirán siendo aplicables a dicho uso anterior (por ejemplo , los cambios y las adiciones son tan sólo una posibilidad) salvo que se acuerde mutuamente. En el caso de haber recibido cualquier aviso de Términos nuevos, revisados o adicionales y sea determinado por un tribunal de ser insuficiente, el acuerdo previo deberá continuar hasta que se produzca la suficiente antelación para establecer un nuevo acuerdo. Usted debe verificar con frecuencia la página de inicio, mensajes en su cuenta y el correo electrónico asociado con su cuenta, todo lo cual usted está de acuerdo son maneras razonables de proporcionarle aviso. Usted puede rechazar los Términos nuevos , revisados o adicionales al descontinuar el uso del Servicio y los servicios relacionados . </p><p> 16. Disposiciones Generales </p><p> A. Consentimiento o Aprobación de Youtoo. En cuanto a cualquier disposición de estos Términos y Términos Adicionales que le otorga a Youtoo el derecho de consentimiento o aprobación, o permite a Youtoo ejercer un derecho en su "propio criterio", Youtoo podrá ejercer ese derecho, a su sola y absoluta discreción. Sin el consentimiento o aprobación de Youtoo se considerará que se ha concedido por Youtoo, sin ser por escrito y firmado por un funcionario de Youtoo. </p><p> B. Leyes Aplicables. Estos Términos y Términos Adicionales y cualquier Disputa y Disputas Excluidas se regirán, interpretarán y solucionarán de acuerdo con las leyes de Texas, sin tener en cuenta sus conflictos de provisiones de ley. </p><p> C. Indemnización. Usted acepta, por la presente, defender, indemnizar y mantener a Partes Youtoo, por y contra cualquiera y todas las demandas, daños, pérdidas, costos, investigaciones, responsabilidades, juicios, multas, sanciones, liquidaciones, intereses y gastos (incluyendo los honorarios de abogados) que directa o indirectamente surjan o estén relacionados con cualquier reclamo, demanda, acción o procedimiento o interponerse contra cualquier Parte Youtoo, o en razón de la investigación, la defensa o la liquidación de la misma, que surja de o en conexión con, habiendo ocurrido o que pueda ocurrir: (i) el Contenido Generado por el Usuario, (ii) el uso del Servicio y de sus actividades en relación con el Servicio, (iii) el incumplimiento o supuesto incumplimiento de los presentes Términos o cualesquiera Términos Adicionales, (iv) la violación o supuesta violación de las leyes, normas, reglamentos, códigos, estatutos, ordenanzas u órdenes de cualquier autoridad gubernamental o cuasi gubernamentales en relación con su uso del Servicio o de sus actividades en relación con el Servicio; (v) la información o material transmitido a través de su dispositivo , incluso si no es enviada por usted, que infrinja, quebranta o malversa cualquier derecho de autor, marcas registradas, secretos comerciales, imagen comercial , patente, publicidad, privacidad u otro derecho de cualquier persona o entidad, (vi) cualquier declaración falsa hecha por usted, y (vii) el uso por Partes Youtoo de la información que usted nos envíe (incluyendo su Contenido Generado por el Usuario) (todo lo anterior, "las Reclamaciones y Pérdidas"). Usted cooperará tan plenamente como sea requerido por Partes Youtoo en la defensa de cualquier Reclamación y Pérdida. No obstante lo anterior, las Partes Youtoo se reservan el derecho exclusivo para resolver, aceptar, y pagar cualquier y todos los Reclamos y Pérdidas . Partes Youtoo se reserva el derecho de asumir la defensa exclusiva y control de cualquier Reclamación y Pérdida. Usted no resolverá las Reclamaciones y Pérdidas sin que, en cada caso, cuente con el consentimiento previo por escrito de un funcionario de Partes Youtoo. </p><p> D. Funcionamiento del Servicio; Disponibilidad de Productos y Servicios; Asuntos Internacionales. Youtoo controla y opera el Servicio desde sus oficinas en Estados Unidos, y Youtoo no garantiza que el Servicio sea apropiado o disponible para su uso más allá de los Estados Unidos. Si usted usa el Servicio desde otras ubicaciones, lo hace bajo su propia iniciativa y será responsable de cumplir con las leyes locales aplicables con respecto a su conducta en línea y contenido aceptable, si y en la medida se aplican las leyes locales. El Servicio puede describir productos y servicios que están disponibles sólo en los Estados Unidos (o sólo partes de éste), y no están disponibles a nivel mundial. Nos reservamos el derecho de limitar la disponibilidad del servicio y/o la prestación de cualquier contenido, programa, producto, servicio, o cualquier otra característica descrita o disponibles en el servicio a cualquier persona, entidad, área geográfica o jurisdicción, en cualquier momento y en nuestra única discreción, y para limitar las cantidades de cualquier contenido, programa, producto, servicio, o cualquier otro elemento que proporcionemos. Usted y nosotros renunciamos a cualquier aplicación de estos Términos de la Convención sobre Contratos de Compraventa Internacional de Mercancía. </p><p> E. Controles de Exportación . Software relacionado o disponible a través del Servicio puede estar sujeto a controles de exportación de los Estados Unidos. Ningún software del Servicio puede ser descargado, exportado o reexportado (i) a (a un ciudadano o residente de) cualquier país u otro jurisdicción a la que los Estados Unidos haya embargado bienes, software, tecnología o servicios (que, a partir de la fecha de vigencia de los presentes Términos, incluye a Cuba, Corea del Norte, Irán, Sudán y Siria), o (ii) a cualquier persona en la lista de ciudadanos designados de la Tesorería de los Estados Unidos o en la lista de Ordenes Negadas del Departamento de Comercio de los Estados Unidos, o (iii) a cualquier persona en el Departamento de la Oficina de Industria y lista de entidades de Seguro de Comercio de los EE.UU. que se publica en las Regulaciones de Administración de Exportaciones (incluidas las entidades dedicadas a las armas de destrucción masiva proliferación de destrucción en varios países y las personas y entidades que se sospecha de desvío de artículos de origen estadounidense a países embargados o para uso final de terroristas). Usted es responsable de cumplir con todas las regulaciones y leyes comerciales tanto nacionales como extranjeras . A excepción de lo autorizado por la ley, usted acepta y garantiza no exportar ni reexportar el software a ningún condado, ni a ninguna persona, entidad o usuario final sujeto a los controles de exportación de Estados Unidos, incluyendo los dispuestos en los incisos (i) - (iii) anteriores. </p><p> F. Separabilidad; Interpretación. Si alguna disposición de estos Términos, o los Términos Adicionales, es por cualquier razón considerada inválida, ilegal, nula o inaplicable por un tribunal o árbitro de la jurisdicción competente, dicha disposición se considerará separable de estos Términos o los Términos Adicionales, y la invalidez de dicha disposición no afectará la validez o aplicabilidad del resto de estos Términos o de los Términos adicionales (que permanecerá en pleno vigor y efecto). En la medida permitida por la ley aplicable, usted acepta renunciar, y por la presente renuncia a cualquier derecho legal y común aplicable en que pueda permitir que un contrato deba interpretarse en contra de su redactor. Dondequiera que la palabra "incluso" se utiliza en estos Términos o cualesquiera Términos Adicionales, se considerará que la palabra significa "incluyendo sin limitación". Los resúmenes de las disposiciones y los títulos de los Apartados se proporcionan por comodidad y no limitarán las condiciones completas. </p><p> G. Comunicaciones. Cuando usted se comunique con nosotros por vía electrónica, como por correo electrónico y mensaje de texto, usted da su consentimiento para recibir comunicaciones de nosotros electrónicamente. Por favor, tenga en cuenta que no estamos obligados a responder a las preguntas que recibimos. Usted acepta que todos los acuerdos, avisos, divulgaciones y otras comunicaciones que le proporcionemos a usted electrónicamente satisfacen cualquier requisito legal que dichas comunicaciones sean por escrito. </p><p> H. Investigaciones; Cooperación con las Autoridades ; Terminación ; Supervivencia. Youtoo se reserva el derecho, sin restricción alguna, a: (i) investigar cualquier sospecha de incumplimiento de seguridad del Servicio, su informática u otros sistemas o redes, (ii) investigar cualquier sospecha de incumplimiento de estos Términos y los Términos Adicionales, (iii) investigar cualquier información obtenida por Youtoo de acuerdo con su Política de Privacidad en relación con la revisión de las bases de datos de las autoridades o cumplimiento con las leyes penales, (iv) involucrar y cooperar con las autoridades en la investigación de cualquiera de los temas anteriores, (v) procesar a los violadores de estos Términos y Términos Adicionales, y (vi) interrumpir el Servicio, en su totalidad o parcialmente, o, excepto lo que se indica expresamente en los Términos Adicionales, suspender o interrumpir el acceso al mismo, en su totalidad o parcialmente, incluyendo cualquier cuentas de usuario o registros, en cualquier momento, sin previo aviso , por cualquier razón y sin ninguna obligación hacia usted o cualquier tercero. Cualquier suspensión o terminación no afectará a sus obligaciones para con Youtoo bajo estos Términos o cualesquiera Términos Adicionales. Tras la suspensión o terminación de su acceso al Servicio, o bajo requerimiento de Youtoo, todos los derechos que le correspondan en virtud de estos Términos y cualesquiera Términos Adicionales cesarán inmediatamente, y usted acepta que usted dejará de usar inmediatamente el Servicio. Las disposiciones de estos Términos y los Términos Adicionales, que por su naturaleza deberían sobrevivir a su suspensión o terminación sobrevivirán, incluyendo los derechos y licencias que conceda a Youtoo en los presentes Términos , así como las indemnizaciones, liberaciones , renuncias y limitaciones de responsabilidad, así como las disposiciones relativas a la jurisdicción, la elección de la ley, ninguna acción de clase, y el arbitraje obligatorio. </p><p> I. Asignación. Youtoo puede ceder sus derechos y obligaciones bajo estos Términos y los Términos Adicionales, en su totalidad o parcialmente, a cualquier parte en cualquier momento sin previo aviso. Estos Términos y los Términos Adicionales no pueden ser cedidos por usted, y usted no puede delegar sus funciones en virtud de ellos, sin el consentimiento previo por escrito de un oficial de Youtoo. </p><p> J. No Renuncia. Con excepción de lo expresamente establecido en los presentes Términos o Términos Adicionales, (i) ningún incumplimiento o retraso por parte suya o de Youtoo en el ejercicio de cualquiera de los derechos, poderes o recursos se considerará como renuncia de éste o de cualquier otro derecho, poder o remedio, y (ii) ninguna renuncia o modificación de cualquiera de los Términos o los Términos Adicionales serán efectivas a menos que por escrito y firmado por la parte contra la que se solicita la renuncia o modificación que deba ejecutarse. </p><p> K. Derechos restringidos por el Gobierno de los Estados Unidos. Si usted es un usuario final del gobierno, esta disposición se aplica a usted. El servicio prestado en relación con estos Términos se ha desarrollado completamente con fondos privados, según se define en la sección FAR 2.101, sección DFARS 252.227-7014 (a) (1) y la sección DFARS 252.227-7015 (o cualquier otra normativa oficial equivalente o posterior) según la sección DFARS 227.7202 y la sección FAR 12.212 y en la medida requerida bajo la ley federal de los Estados Unidos de los derechos, y se proporciona como "elementos comerciales", "sitio informático comercial" y / o "documentación sitio informático comercial", el mínimo de restricción establecidos establece en la sección FAR 52.227-19 (o cualquier otra normativa oficial equivalente o posterior), cualquier uso, modificación, reproducción, publicación, ejecución, exhibición, divulgación o distribución de los mismos por o para el Gobierno de los Estados Unidos se regirán exclusivamente por estos Términos y deberán ser prohibidos salvo en la medida expresamente permitida por los presentes Términos. </p><p> M. Conectividad. Usted es responsable de obtener y mantener todos los dispositivos y otros equipos y software, y todo proveedor de servicios de Internet, el servicio móvil y otros servicios necesarios para su acceso y uso del Servicio y usted será responsable por todos los cargos relacionados con los mismos. </p><p> 17. Términos aplicables para Apple iOS. </p><p> Si usted tiene acceso o utiliza el Servicio a través de un dispositivo de Apple, los siguientes términos y condiciones adicionales son aplicables a usted y se incorporan a los Términos por esta referencia: </p><p> (i) En la medida en que está accediendo al Servicio a través de un dispositivo de Apple, usted reconoce que estos Términos se contraen entre usted y Youtoo y que Apple, Inc. ("Apple") no es parte de estos Términos mas que como tercer beneficiario como se contempla a continuación. </p><p> (ii) La licencia concedida a usted en el Apartado 1 de estos Términos está sujeta a las Reglas de Uso Permitidos establecidos en la App Store Términos de Servicio (ver: http://www.apple.com/legal/itunes/us/terms . html) y cualquier término de contratos de terceros aplicables al Servicio. </p><p> (iii) Usted reconoce que Youtoo, y no Apple, es responsable de proporcionar el Servicio y contenido de los mismos. </p><p> (iv) Usted reconoce que Apple no tiene obligación alguna de proporcionar cualquier tipo de mantenimiento o cualquier servicio de apoyo a usted en relación con el Servicio. </p><p> (v) En la medida máxima permitida por la ley aplicable, Apple no tendrá ninguna obligación de garantía alguna con respecto al Servicio. </p><p> (vi) No obstante cualquier disposición contraria en el presente documento, y con sujeción a los términos de estos Términos, usted reconoce que, únicamente como entre Apple y Youtoo, Youtoo, y no Apple, es responsable de tratar cualquier reclamación que pueda tener en relación con el Servicio, su posesión y/o uso de los mismos, incluyendo, pero no limitado, a: (i) las reclamaciones de responsabilidad de productos, (ii) cualquier reclamación que el Servicio incumple con cualquier requisito legal o reglamentaria aplicable, y (iii) las demandas emergentes bajo la protección del consumidor o legislación similar. </p><p> (vii) Asimismo, usted acuerda que si el Servicio, o su posesión y el uso del Servicio, infringe en los derechos de propiedad intelectual de un tercero, usted no hará a Apple responsable de la investigación, defensa, liquidación y descarga de esta la alegada infracción de propiedad intelectual. </p><p> (viii) Usted reconoce y acepta que Apple y las filiales de Apple son terceros beneficiarios de estos Términos, y que, después de aceptar los Términos y condiciones de estos Términos, Apple tendrá derecho (y se considerará que tienen aceptado el derecho) para hacer cumplir estos Términos contra usted como tercer beneficiario de los mismas. </p><p> (ix) Al utilizar el Servicio, usted se compromete a cumplir con todos los términos de terceros que sean aplicables a cualquier plataforma, sitio web, tecnología o servicio que interactúe con el Servicio. </p><p>
+<center> © 2013 Youtoo Technologies LLC. Todos los derechos reservados.</center></p>
+<br/>
+</div>

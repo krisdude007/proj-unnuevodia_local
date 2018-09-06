@@ -1,0 +1,127 @@
+<?php
+
+class ImageController extends Controller {
+
+  public $layout = '//layouts/main';
+  public $user;
+  public $ticker;
+
+  /**
+   * Anything required on every page should be loaded here
+   * and should also be made a class member.
+   */
+  function init() {
+    parent::init();
+
+    if (!Yii::app()->user->isGuest) {
+      $this->user = ClientUtility::getUser();
+      $this->ticker = new eTicker();
+    }
+  }
+
+  public function actionIndex($order = 'recent') {
+    switch ($order) {
+      case 'recent':
+        $images = eImage::model()->with('user')->accepted()->recent()->findAll();
+        break;
+      default:
+        $image = new eImage;
+        $images = $image->orderBy(NULL, $order);
+        break;
+    }
+    $this->render('index', array(
+        'images' => $images,
+            )
+    );
+  }
+
+  public function actionView($view_key) {
+
+    $image = eImage::model()->with('user')->accepted()->findByAttributes(array('view_key' => $view_key));
+    $user = eUser::model()->findByPK($image->user_id);
+
+    if (!Yii::app()->user->isGuest) {
+      $imageView = new eImageView;
+      $imageView->user_id = Yii::app()->user->getId();
+      $imageView->image_id = $image->id;
+      $imageView->save();
+    }
+    
+    $this->render('view', array(
+        'image' => $image,
+        'user' => $user,
+            )
+    );
+  }
+
+  public function actionUpload() {
+
+    if (Yii::app()->user->isGuest) {
+      $this->redirect('/login');
+    }
+
+    $image = new eImage;
+
+    if (isset($_POST['ajax']) && $_POST['ajax'] === 'image-upload-form') {
+      echo CActiveForm::validate(array($image));
+      Yii::app()->end();
+    }
+
+    if (isset($_POST['eImage'])) {
+
+      $image->attributes = $_POST['eImage'];
+      $image->user_id = Yii::app()->user->getId();
+      $image->filename = CUploadedFile::getInstance($image, 'image');
+      $image->title = 'Photo';
+      $image->description = 'User uploaded photograph.';
+      $image->source = 'web';
+      $image->to_facebook = 0;
+      $image->to_twitter = 0;
+      $image->status = (IMAGE_AUTO_APPROVE === true) ? 'accepted' : 'new';
+      $image->arbitrator_id = Yii::app()->user->getId();
+      $image->is_avatar = 0;
+
+      if ($image->validate()) {
+        preg_match('/\..{3,4}$/', $image->filename->getName(), $matches);
+        $filetype = $matches[0];
+        $filename = "{$user->id}_" . md5($image->filename) . $filetype;
+        $image->filename->saveAs(Yii::app()->params['paths']['avatar'] . "/{$filename}");
+        $image->filename = $filename;
+        $image->save();
+        Yii::app()->user->setFlash('success', "Photo uploaded successfully.");
+        $this->redirect('/image/thanks');
+      }
+    }
+
+    $this->render('upload', array('image' => $image));
+  }
+
+  public function actionThanks() {
+    if (Yii::app()->user->isGuest) {
+      $this->redirect('/login');
+    }
+
+    $this->render('thanks', array());
+  }
+  
+  
+
+  public function actionAjaxRate() {
+    $this->layout = false;
+    foreach ($_POST as $k => $v) {
+      $$k = $v;
+    }
+    
+    if (!Yii::app()->user->isGuest) {
+      $imageRate = eImageRating::model()->findByAttributes(array('user_id' => Yii::app()->user->getId(), 'image_id' => $object_id));
+      $imageRate = (is_null($imageRate)) ? new eImageRating() : $imageRate;
+      $imageRate->user_id = Yii::app()->user->getId();
+      $imageRate->image_id = $object_id;
+      $imageRate->rating = $rating;
+      $imageRate->save();
+      $image = eImage::model()->findByPK($object_id);
+      echo json_encode(array('avg' => $image->rating, 'votes' => sizeof($image->imageRatings)));
+    }
+  }
+
+}

@@ -1,0 +1,73 @@
+<?php
+/* @var $this UserController */
+/* @var $user eUser */
+/* @var $userDetail eUserDetail */
+/* @var $form CActiveForm */
+?>
+<?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-detail-form',
+        #'enableAjaxValidation' => true,
+    ));
+    echo $form->errorSummary(array($user));
+?>
+<table class="userProfileForm">
+    <tr>
+        <td colspan="2">about</td>
+    </tr>
+    <tr class="spaceUnder">
+        <td colspan="2">
+            <?php echo $form->textField($userDetail, 'about', array('style' => 'width:100%')); ?>
+            <?php echo $form->error($userDetail, 'about'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>interests</td>
+        <td>quote</td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $form->textField($userDetail, 'interests'); ?>
+            <?php echo $form->error($userDetail, 'interests'); ?>
+        </td>
+        <td>
+            <?php echo $form->textField($userDetail, 'quote'); ?>
+            <?php echo $form->error($userDetail, 'quote'); ?>
+        </td>
+    </tr>
+    <tr>
+        <td>occupation</td>
+        <td>location</td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $form->textField($userDetail, 'occupation'); ?>
+            <?php echo $form->error($userDetail, 'occupation'); ?>
+        </td>
+        <td>
+            <?php echo $form->textField($userDetail, 'location'); ?>
+            <?php echo $form->error($userDetail, 'location'); ?>
+        </td>
+    </tr>
+    <tr>
+        <td>pets</td>
+        <td>zodiac</td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $form->textField($userDetail, 'pets'); ?>
+            <?php echo $form->error($userDetail, 'pets'); ?>
+        </td>
+        <td>
+            <?php echo $form->textField($userDetail, 'zodiac'); ?>
+            <?php echo $form->error($userDetail, 'zodiac'); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="padding-top:30px;">
+            <?php echo CHtml::submitButton('submit'); ?>
+        </td>
+    </tr>
+</table>
+<?php $this->endWidget(); ?>

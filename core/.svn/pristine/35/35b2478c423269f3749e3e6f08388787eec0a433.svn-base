@@ -1,0 +1,154 @@
+<?php
+
+class TickerUtility {
+
+    // gets values for ticker status dropdown
+    public static function getStatuses() {
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            $extendedLabels = unserialize(TICKER_FILTERS_EXTENDED_LABELS);
+            
+            foreach($extendedLabels as &$value)
+            {
+                if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission(key($value)))
+                {
+                    $extendedAdmin = CMap::mergeArray($extendedAdmin, $value);
+                }
+            }
+
+            if(Yii::app()->user->isSuperAdmin())
+            {
+                $superAdmin = array('denied' => 'Deleted Web',
+                                    'deniedtv' => 'Deleted TV');
+            }
+
+            return CMap::mergeArray($extendedAdmin, $superAdmin);
+        }
+        else
+        {
+            $prodAdmin = array('new' => 'New',
+            'accepted' => 'Accepted');
+
+            if(Yii::app()->user->isSuperAdmin())
+            {
+                $superAdmin = array('denied' => 'Deleted');
+            }
+
+            return CMap::mergeArray($prodAdmin, $superAdmin);
+        }
+    }
+    
+    public static function getDefaultStatus()
+    {
+        if(TICKER_FILTERS_EXTENDED)
+        {
+            $defaultStatus = Utility::getDefaultStatus(TICKER_FILTERS_EXTENDED_LABELS);
+        }
+        else
+        {
+            $defaultStatus = 'new';
+        }
+            
+        return $defaultStatus;
+    }
+    
+    public static function getPerPageOptions() {
+        return array('20' => '20',
+                     '50' => '50',
+                     '100' => '100',
+                     '200' => '200'
+        );
+    }
+
+    public static function getAvatar($ticker){
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $avatar = FacebookUtility::getAvatarFromID($ticker->source_user_id);
+                        break;
+                    case 'twitter':
+                        $avatar = TwitterUtility::getAvatarFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $avatar = PATH_USER_IMAGES.'/'.$ticker->entity->images[0]->filename;
+                break;
+            default:
+                $avatar = UserUtility::getAvatar($ticker->user);    
+                break;               
+        }
+        return $avatar;
+    }
+    
+    public static function getUsername($ticker){
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $username = FacebookUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                    case 'twitter':
+                        $username = TwitterUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $username = $ticker->entity->name;
+                break;
+            default:
+                $username = $ticker->user->username;    
+                break;               
+        }
+        return $username;
+    }
+
+    public static function getLink($ticker){                
+        switch($ticker->type){
+            case 'social':
+                switch($ticker->source){
+                    case 'facebook':
+                        $link = "http://www.facebook.com/{$ticker->source_user_id}";
+                        break;
+                    case 'twitter':
+                        $link = "http://www.twitter.com/".TwitterUtility::getUsernameFromID($ticker->source_user_id);
+                        break;
+                }
+                break;
+            case 'entity':
+                $link = $ticker->entity->link;
+                break;
+            default:
+                $link = "/user/{$ticker->user_id}";    
+                break;               
+        }
+        return $link;
+    }
+    
+    public static function combineTickerWithEntityTickers($tickers, $entity_tickers)
+    {
+        $combined_tickers = Array();
+        
+        $i = 1;
+        foreach($tickers as $key => $value)
+        {
+            $combined_tickers[] = $value;
+            
+            foreach($entity_tickers as $key => $evalue)
+            {
+                if($i%$evalue->frequency == 0)
+                {
+                    $combined_tickers[] = $evalue;
+                }
+            }
+            
+            $i++;
+        }
+        
+        return $combined_tickers;
+    }
+    
+}
+
+?>

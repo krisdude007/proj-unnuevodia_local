@@ -1,0 +1,30 @@
+<div id="content">
+    <div>
+        <div style="width:70%;float:left;margin-top:5px;position:relative;height:275px">
+
+            <div style="float:left; clear:both;margin-top:80px; margin-left:80px; margin-bottom:40px;">
+                
+            </div>
+
+            <div style="float:left; clear:both; margin-left:84px; margin-top:15px;">
+                <h1>
+                    CONGRATS!
+                </h1>
+                
+                <div style="margin-bottom:30px; text-align: left; font-family: Arial; font-size:16px">
+                    Your photo has been submitted and will be approved shortly. In the meantime,<br>
+                    don't stop now! Send us a text or watch other viewer videos.
+                </div>                                           
+
+                <a class="linkButton" href="<?php echo Yii::app()->request->baseurl; ?>/questions">
+                    RECORD ANOTHER VIDEO
+                </a>
+                &nbsp
+                <a class="linkButton" href="<?php echo Yii::app()->request->baseurl; ?>/image" style="width:140px;text-align: center;">
+                    UPLOAD A PHOTO
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

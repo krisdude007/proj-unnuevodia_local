@@ -1,0 +1,86 @@
+<?php
+
+/*
+ * Dots demographic service
+ * gstringer - Oct 2013
+ */
+
+class importNetworkScheduleCommand extends CConsoleCommand {
+
+    public function run($args) {
+
+        self::import();
+    }
+
+    private static function import() {
+
+        
+        /*
+         *  pull all records from youludb - this sucks but oh well
+         * 
+
+
+INSERT INTO network_show_schedule (network_show_id, spot_type, spot_number, spot_length, show_datetime, spot_datetime, placed_datetime, created_on, updated_on)
+SELECT 
+ytt_initech_dev.network_show.id, 
+LEFT(youludb.vci_spots.house_number, 2) AS spot_type,
+SUBSTRING(youludb.vci_spots.house_number, 3, 10) AS spot_number, 
+TIME_TO_SEC(REPLACE(youludb.vci_spots.length, ':', '')) AS spot_length,
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.blocktime, 'm'), '%m/%d/%Y %h:%i:%s %p') AS show_time,
+STR_TO_DATE(CONCAT(youludb.vci_spots.date, ' ', youludb.vci_spots.spot_time, 'm'), '%m/%d/%Y %h:%i:%s %p') AS spot_time,
+youludb.vci_spots.placed,
+NOW(),
+NOW()  
+FROM youludb.vci_spots 
+LEFT JOIN ytt_initech_dev.network_show ON ytt_initech_dev.network_show.abbreviation = youludb.vci_spots.show_id 
+WHERE 
+ytt_initech_dev.network_show.id IS NOT NULL && 
+LEFT(youludb.vci_spots.house_number, 2) IN ('FS','PM')
+
+
+
+         */
+      
+      
+      
+      /**
+       * Get list of shows 
+       *  
+       
+SELECT DISTINCT show_datetime, network_show.name, COUNT( network_show_schedule.id ) AS slot_number
+FROM  `network_show_schedule` 
+LEFT JOIN network_show ON network_show.id = network_show_schedule.network_show_id
+WHERE spot_type =  'FS'
+GROUP BY show_datetime
+ORDER BY show_datetime DESC 
+
+
+       * 
+       * Get list of spots for given show and datetime
+       * 
+
+SELECT * 
+FROM  `network_show_schedule` 
+WHERE show_datetime =  '2013-11-22 17:00:00'
+AND network_show_id =1
+
+
+
+        // change house_number to int and concat spot_type with house_number to create original house numbers
+
+       * 
+       * 
+       * 
+       */
+      
+      
+      
+      
+      
+        
+    }
+
+    
+}
+
+?>

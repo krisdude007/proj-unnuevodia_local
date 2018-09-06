@@ -1,0 +1,60 @@
+<?php
+
+//define('SHARED_MEMCACHE_SERVER_IP','192.168.2.50');
+//define('SHARED_MEMCACHE_SERVER_PORT','11211');
+
+//define('LOCAL_MEMCACHE_SERVER_IP','127.0.0.1');
+//define('LOCAL_MEMCACHE_SERVER_PORT','11211');
+
+
+define('WOWZA_IP','jehmu4chtmbbfx.rtmphost.com');
+define('WOWZA_CLIENT_IP','jehmu4chtmbbfx.rtmphost.com');
+define('WOWZA_USER','jehmu4chtmbbfx');
+define('WOWZA_PASSWORD','winner');
+define('WOWZA_PATH','/jehmu4chtmbbfx_wowza/content');
+
+// system directories
+define('PATH_USER_VIDEOS', '/uservideos');
+define('PATH_USER_IMAGES', '/userimages');
+define('PATH_VCI_UPLOADS', '/vciuploads');
+define('PATH_STATE_BIN', '/state/state.bin');
+
+// video related
+define('VIDEO_IMAGE_FILE_EXT', '.png');
+define('VIDEO_PRE_FILE_EXT', '.flv');
+define('VIDEO_POST_FILE_EXT', '.mp4');
+
+define('VIDEO_FLIP_FACTORY_FILE_EXT', '.mov');
+define('VIDEO_FFMPEG_PATH', '/usr/local/bin/ffmpeg');
+define('VIDEO_FFPROBE_PATH', '/usr/local/bin/ffprobe');
+
+define('VIDEO_IMPORT_VINE_USERNAME', 'greg.stringer@gmail.com');
+define('VIDEO_IMPORT_VINE_PASSWORD', 'i!ur@ss4o');
+define('VIDEO_IMPORT_VINE_API_URL', 'https://api.vineapp.com');
+define('VIDEO_IMPORT_VINE_FILE_EXT', '.mp4');
+
+define('VIDEO_IMPORT_KEEK_USERNAME', 'greg.stringer@gmail.com');
+define('VIDEO_IMPORT_KEEK_PASSWORD', 'g33m4n');
+define('VIDEO_IMPORT_KEEK_API_URL', 'https://www.keek.com');
+define('VIDEO_IMPORT_KEEK_AKAMAI_URL', 'https://keek-a.akamaihd.net/keek/video/{VIDEO_ID}/flv');
+define('VIDEO_IMPORT_KEEK_FILE_EXT', '.flv');
+
+define('VIDEO_FLIP_FACTORY_HOST', '97.77.59.182');
+define('VIDEO_FLIP_FACTORY_USER', 'iphoneupload');
+define('VIDEO_FLIP_FACTORY_PASS', 'Dallas11');
+
+define('ANALYTICS_USER','lee4youtoo@gmail.com');
+define('ANALYTICS_PASSWORD','Dallas1101');
+
+define('DATABASE_HOST','192.168.2.50');
+define('DATABASE_PREFIX','ytt_');
+define('DATABASE_USER','yii');
+define('DATABASE_PASSWORD','Dallas11');
+
+// COMMAND LINE CONSTANTS
+define('DOTS_LICENSE_KEY', 'WS22-FSV1-OUI2');
+define('DOTS_WSDL_URL', 'http://ws.serviceobjects.com/gce/GeoCensus.asmx?WSDL');
+
+
+
+define('SESSION_DURATION_OFFSET', 60 * 5); // notify user of session expiration X seconds before duration is reached

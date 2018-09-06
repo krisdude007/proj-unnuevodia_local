@@ -1,0 +1,32 @@
+<?php
+
+class FormVideoUpload extends CFormModel {
+
+    public $question_id;
+    public $video;
+    public $title;
+
+    public function rules() {
+
+        return array(
+            array('question_id, video, title', 'required'),
+            array('question_id', 'numerical', 'integerOnly' => true),
+            array('video', 'file', 'types' => 'mov'),
+            array('question_id, title', 'safe')
+        );
+
+        return $rules;
+    }
+
+    /**
+     * Declares attribute labels.
+     */
+    public function attributeLabels() {
+        return array(
+            'question_id' => 'Question',
+            'video' => 'Video',
+            'title' => 'Title'
+        );
+    }
+
+}

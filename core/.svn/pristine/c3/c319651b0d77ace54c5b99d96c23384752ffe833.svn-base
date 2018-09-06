@@ -1,0 +1,4 @@
+<div id='voteGraph'></div>
+<script>
+    barGrapher('voteGraph','ajaxGetVoteGraphData', '<?php echo $filterDate; ?>', ['#bf4ca6', '#941278', '#480858', '#2c0237']);
+</script>

@@ -1,0 +1,4 @@
+<div id='videoGraph'></div>
+<script>
+    pieGrapher('videoGraph','ajaxGetVideoGraphData', '<?php echo $filterDate; ?>');
+</script>

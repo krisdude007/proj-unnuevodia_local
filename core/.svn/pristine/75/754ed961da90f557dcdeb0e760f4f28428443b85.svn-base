@@ -1,0 +1,182 @@
+    var storeHandler = function(e){
+        $('.storeSearch').off('click');
+        $('.storeSearch').on('click',function(e){
+            e.preventDefault();
+            if(!$(this).hasClass('saved')){
+                var el = $(this);
+                var data = searchObj[$(this).attr('rel')];
+                data.YII_CSRF_TOKEN = getCsrfToken();
+                var request = $.ajax({
+                   url:'/adminSocialSearch/save', 
+                   type:'POST',
+                   data:$.param(data),
+                   success:function(data){
+                       var obj = $.parseJSON(data);
+                       if(obj.code == 'saved'){
+                           alert('Social Search Saved!');
+                           $(el).find('img').attr({'src':'/core/webassets/images/socialSearch/download-arrow-selected.png'});
+                           $(el).addClass('saved');
+                       } else {
+                           var errors = '';
+                           $.each(obj.errors,function(k,v){
+                               errors += v+"\r\n";
+                           })
+                           alert(obj.code+':\r\n'+errors);
+                       }
+                   }
+                });
+            } else {
+                alert('This content has already been saved.');
+            }
+        });
+    }
+    var searchHandler = function(){
+        $('#search').off('submit');
+        $('#search').on('submit',function(e){
+            e.preventDefault();
+            if(typeof(rTable) != 'undefined'){
+                rTable.fnDestroy();
+            }
+            $('#results').html('');
+            $('#ajaxSpinner').show();
+            $('#resultsDiv').hide();
+            var data = $(this).serializeArray();
+            var csrf = new Object;
+            csrf.name = 'YII_CSRF_TOKEN';
+            csrf.value = getCsrfToken();
+            data.push(csrf);
+            var request = $.ajax({
+                url:'/adminSocialSearch/ajaxSearch',
+                type:'POST',
+                data:$.param(data),
+                success:function(data){
+                    searchObj = $.parseJSON(data);
+                    if(searchObj !== null){
+                        if(searchObj.errors !== null){
+                            var errorMessage = '';
+                            $.each(searchObj.errors,function(k,v){
+                                errorMessage = errorMessage+k.charAt(0).toUpperCase()+k.substr(1)+' says: '+v+'<br />'; 
+                            });
+                            $('.errors').show();
+                            $('.errors').html(errorMessage);
+                        }
+                        if(searchObj.rates !== null){
+                            var rateMessage = '';
+                            $.each(searchObj.rates,function(k,v){
+                                rateMessage = rateMessage+k.charAt(0).toUpperCase()+k.substr(1)+' says: '+v+'<br />'; 
+                            });
+                            $('.rates').html(rateMessage);
+                        }                        
+                        $.each(searchObj,function(i,e){
+                            if(isNaN(parseInt(i))){return true;}
+                            var resultRow = $('<tr></tr>').attr({'id':'search'+i});
+                            resultRow.append($('<td></td>').append($('<a></a>').attr({'href':'#','rel':i}).addClass('storeSearch').append($('<img></img>').attr({'src':'/core/webassets/images/socialSearch/download-arrow-unselected.png'}))));
+                            switch(e.source){
+                                case 'facebook':
+                                    resultRow.append($('<td></td>').append($('<div></div>').css({'display':'none'}).html('F')).append($('<img></img>').attr({'src':'/core/webassets/images/socialSearch/facebook.png'})));                                                            
+                                    break;
+                                case 'twitter':
+                                    resultRow.append($('<td></td>').append($('<div></div>').css({'display':'none'}).html('T')).append($('<img></img>').attr({'src':'/core/webassets/images/socialSearch/twitter.png'})));                                                            
+                                    break;
+                                default:
+                                    resultRow.append($('<td></td>').html(e.source));                                                            
+                                    break;
+                            }
+                            resultRow.append($('<td></td>').append($('<img></img>').attr({'src':e.avatar})));
+                            switch(e.source){
+                                case 'facebook':
+                                    resultRow.append($('<td></td>').append($('<div></div>').css({'display':'none'}).html(e.username)).append($('<a></a>').attr({'href':'http://www.facebook.com/'+e.userid,'target':'_blank'}).html(e.username)));
+                                    break;
+                                case 'twitter':
+                                    resultRow.append($('<td></td>').append($('<div></div>').css({'display':'none'}).html(e.username)).append($('<a></a>').attr({'href':'http://www.twitter.com/'+e.username,'target':'_blank'}).html(e.username)));
+                                    break;
+                                default:
+                                    resultRow.append($('<td></td>').html(e.username));                                                            
+                                    break;
+                            }                                                        
+                            resultRow.append($('<td></td>').html(e.date));
+                            resultRow.append($('<td></td>').addClass('tleft').append($('<div></div>').addClass('trunc').html(e.content)));
+                            $('#results').append(resultRow);
+                        });
+                        $('#ajaxSpinner').hide();                        
+                        $('#resultsDiv').show();
+                        rTable = $('#resultsTable').dataTable({
+                            'fnDrawCallback':storeHandler()
+                        });
+                    } else {
+                        $('#ajaxSpinner').hide();                    
+                        alert('No results for that query!');
+                    }
+                }
+            });            
+            return false;           
+        });
+    }
+    
+    var filterHandler = function(){
+        $('.socialFilter').off('click');
+        $('.socialFilter').on('click',function(e){
+            rTable.fnFilter($(this).val());
+        });
+    }
+    
+
+$(document).ready(function () {
+
+
+    $("ul#fab-collapsed li.fab-first").click(function () {
+
+        if ($('#fab-nav-collapsed').hasClass('fab-small')) {
+
+            $('.fab-text').css('display', 'block');
+            $('#fab-nav-collapsed').removeClass('fab-small');
+            $('#fab-nav-collapsed').addClass('fab-large');
+            $('.fab-page-content').css('margin-left', '107px');
+
+
+        } else if ($('#fab-nav-collapsed').hasClass('fab-large')) {
+
+            $('.fab-text').css('display', 'none');
+            $('#fab-nav-collapsed').removeClass('fab-large');
+            $('#fab-nav-collapsed').addClass('fab-small');
+            $('.fab-page-content').css('margin-left', '51px');
+
+        }
+    });
+
+    // workaround for webkit browsers
+    $(".fab-nav-collapse").on('shown',function () {
+        $(this).removeClass("collapse");
+    }).on('hidden', function () {
+        $(this).removeClass("collapse");
+    });
+
+    $('#fab-tabs-container div').hide();
+    $('#fab-tabs-container div:first').show();
+    $('#fab-tabs-container ul li:first').addClass('fab-active');
+ 
+    $('#fab-tabs-container ul li a').click(function(){
+        $('#fab-tabs-container ul li').removeClass('fab-active');
+        $(this).parent().addClass('fab-active');
+        var currentTab = $(this).attr('href');
+        $('#fab-tabs-container div').hide();
+        $(currentTab).show();
+        return false;
+    });
+
+
+    
+    
+    $("button").click(function (e) {
+
+        e.preventDefault();
+        if ($(this).hasClass('fab-grey')) {
+            $(this).removeClass('fab-grey');
+        } else {
+            $(this).addClass('fab-grey');
+        }
+    });
+
+    searchHandler();    
+    filterHandler();
+});

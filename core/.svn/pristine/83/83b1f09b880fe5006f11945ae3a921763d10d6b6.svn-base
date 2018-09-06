@@ -1,0 +1,23 @@
+<?php
+
+class TickerUtility {
+
+    // gets values for ticker status dropdown
+    public static function getStatuses() {
+        return array('new' => 'New',
+                     'accepted' => 'Accepted',
+                     'denied' => 'Denied',
+        );
+    }
+    
+    public static function getPerPageOptions() {
+        return array('20' => '20',
+                     '50' => '50',
+                     '100' => '100',
+                     '200' => '200'
+        );
+    }
+
+}
+
+?>

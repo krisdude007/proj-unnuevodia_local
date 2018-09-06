@@ -1,0 +1,52 @@
+
+<div id="content">
+    <div class="you">
+    <?php if(!(Yii::app()->user->isGuest)): ?>
+    
+        <?php
+        $this->renderPartial('/user/_sidebar', array(
+            'user' => $user,
+                )
+        );
+        ?>
+    <?php else: { } ?>
+        <?php endif; ?>
+        <div class="verticalRule">
+        </div>
+        <div class="youContent" style="text-align:left;">
+            <h1 style="margin-bottom: 0px;">¿NECESITAS AYUDA?</h1>
+            <div class="textBox">
+                <div class="textBorder">
+                    <div class="steps">
+                        <div class="textHead">1 PASO</div>
+                    </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        <b>Haz clic en “Grabar”  ¡Luz, cámara, acción!</b>
+		Ponte frente a la cámara, habla claramente, sonríe y diviértete grabando tu video
+!
+                    </div>
+                </div>
+                <div class="textBorder">
+                    <div class="steps">
+                        <div class="textHead">2 PASO</div>
+                    </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        <b>Describe tu video</b>
+		Agrega el título, etiquetas/tags y descripción. No olvides revisarlo. Si no te gusta, puedes volver a grabarlo. 
+                    </div>
+                </div>
+                <div class="textBorder">
+                    <div class="steps">
+                        <div class="textHead">3 PASO</div>
+                    </div>
+                    <div style="padding:15px;margin-left:95px;height:58px;">
+                        Después de hacer clic en enviar, se te pedirá  que te registres si ya no lo has hecho!
+                    </div>
+                </div> 
+            </div>
+            <div style="margin-top:20px;margin-right:10px; float:right;">
+                <a href="mailto:<?php echo CLIENT_SUPPORT_EMAIL;?>" style="color: #2d7abe">Contáctanos</a>
+            </div>
+        </div>
+    </div>
+</div>

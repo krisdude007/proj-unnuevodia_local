@@ -1,0 +1,78 @@
+/* 
+    Document   : index.css
+    Created on : Jun 20, 2013, 11:43:08 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the report page should take place here.
+*/
+
+
+#fab-ticker-filter-form {
+    max-width         : 920px;
+    height        : 58px;
+    border        : 1px solid #ABA9A9;
+    margin-bottom : 20px;
+}
+
+#fab-ticker-filter-form .fab-filter {
+    text-align  : center;
+    margin-top  : 13px;
+    margin-left : 12px;
+    border      : 0px;
+    cursor      : pointer;
+    height      : 34px;
+    color       : white;
+    font-size   : 14px;
+    font-family : "Open Sans", sans-serif;
+    font-weight : normal;
+    width:auto;
+    padding-left:14px;
+    padding-right:14px;
+}
+#fab-ticker-filter-form .fab-filter.fab-first{
+    margin-left:28px;
+}
+.fab-form-right-ticker {
+    display        : inline-block;
+    float          : left;
+    border-left    : 1px solid #ABA9A9;
+    padding-bottom : 12px;
+    padding-left   : 23px;
+    padding-top    : 13px;
+    margin-left: 23px;
+}
+
+.subtitle2 td{
+    font-weight:bold;
+}
+
+.subtitle2{
+    background-color:#efedee;
+}
+
+.fab-tools{
+    display:none !important;
+}
+
+.ui-daterangepickercontain{font-size: 10px;}
+#GAdateRange {width: 269px; margin:4px; display: block; float:left;}
+.ui-datepicker-current-day > a{color:#fff !important; background:#F6A828 !important;}
+.ui-datepicker-today > a {font-weight:bold;}
+.fab-third{margin-right:18px; margin-left:0px !important;}
+.fab-reports-container{max-width: 100%}
+
+#analyticBlocker, #socialSearchBlocker{
+    background-image: url('/core/webassets/images/shadow.png');
+    width: 287px;
+    height: 439px;
+    position: absolute;
+    color:#fff;
+    font-size:30px;
+    text-align: center;
+    font-weight: bold;
+    padding-top:120px;
+}
+#socialSearchBlocker{
+    height: 230px;
+}
+

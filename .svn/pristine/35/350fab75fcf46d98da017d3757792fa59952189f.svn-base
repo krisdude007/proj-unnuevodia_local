@@ -1,0 +1,183 @@
+<?php
+
+class eUser extends User {
+
+    public $birthDay;
+    public $birthMonth;
+    public $birthYear;
+    
+    // Used for user registration
+    public $confirm_password;
+
+    // Used for password update
+    public $oldPassword;
+    public $newPassword;
+    public $newPasswordConfirm;
+
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function ageOfMajority($attribute, $params) {
+        if (strtotime($this->birthday) > strtotime('18 years ago')) {
+            $this->addError($attribute, 'You must be 18 or older.');
+        }
+    }
+    
+    public function validateOldPassword($attribute, $params) {
+        // We do not want to use/reference $this->password in here,
+        // because that property gets overwritten during the process
+        // of changing a password.  We want to use the original value
+        // from the database, so we do a fresh user record lookup.
+        $user_id = Yii::app()->user->getId();
+        $user = eUser::model()->findByPK($user_id);
+        if (crypt($this->oldPassword, $user->salt) !== $user->password) {
+            $this->addError($attribute, 'Old password is incorrect.');
+        }
+    }
+
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('first_name, last_name', 'required', 'on' => 'register,profile,twitter'),
+            array('password, confirm_password, source', 'required', 'on' => 'register,twitter'),
+            array('username,source,password', 'required', 'on' => 'login'),
+            array('password, confirm_password', 'required', 'on' => 'register'),
+            array('password, confirm_password', 'length', 'min' => 6, 'max' => 40),
+            array('confirm_password', 'compare', 'compareAttribute'=>'password', 'on'=>'register'),
+            array('confirm_password', 'safe'),
+            array('username', 'required', 'on' => 'reset'),
+            array('username', 'unique', 'on' => 'register,profile,twitter'),
+            array('terms_accepted', 'numerical', 'integerOnly' => true),
+            array('username, password, oldPassword, newPassword, newPasswordConfirm, first_name, last_name, source', 'length', 'max' => 255),
+
+            array('oldPassword, newPassword, newPasswordConfirm', 'required', 'on' => 'changePassword'),
+            array('oldPassword', 'validateOldPassword', 'on' => 'changePassword'),
+            array('newPassword, newPasswordConfirm', 'required', 'on' => 'resetPassword'),
+            array('newPasswordConfirm', 'compare', 'compareAttribute' => 'newPassword', 'message' => "New passwords do not match."),
+            array('newPassword, newPasswordConfirm', 'length', 'min' => 6),
+
+            array('role', 'length', 'max' => 14),
+            array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'insert, register, twitter, facebook'),
+            array('birthday', 'default', 'value' => '0000-00-00 00:00:00'),
+
+            array('birthDay, birthMonth, birthYear', 'required', 'on' => 'profile'),
+            array('birthDay, birthMonth, birthYear', 'numerical', 'integerOnly' => true, 'on' => 'profile'),
+            array('birthDay', 'numerical', 'min' => 1, 'on' => 'profile'),
+            array('birthDay', 'numerical', 'max' => 31, 'on' => 'profile'),
+            array('birthMonth', 'numerical', 'min' => 1, 'on' => 'profile'),
+            array('birthMonth', 'numerical', 'max' => 12, 'on' => 'profile'),
+            array('birthYear', 'numerical', 'max' => date('Y'), 'on' => 'profile'),
+
+            array('gender', 'default', 'value' => 'M'),
+            array('updated_on', 'default', 'value' => new CDbExpression('NOW()'), 'setOnEmpty' => false, 'on' => 'update, profile'),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, username, password, birthday, gender, first_name, last_name, terms_accepted, source, created_on, updated_on', 'safe', 'on' => 'search'),
+        );
+    }
+
+    public function validatePassword($password, $scenario) {
+        if (crypt($password, $this->salt) === $this->password) {
+            return true;
+        } else {
+            switch ($scenario) {
+                case 'facebook':
+                case 'twitter':
+                case 'reset':
+                case 'register':
+                    if ($password === $this->password) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+        }
+    }
+    
+    public function afterFind() {
+        list($this->birthYear, $this->birthMonth, $this->birthDay) = split('-', $this->birthday);
+    }
+
+    public function beforeSave() {
+        if (($this->scenario != 'terms' && $this->scenario != 'profile') || ($this->scenario == 'profile' && !empty($this->password))) {
+            $this->salt = crypt(uniqid('', true));
+            $pass = crypt($this->password, $this->salt);
+            $this->password = $pass;
+        } else {
+            $user = self::model()->findByPK($this->id);
+            $this->password = $user->password;
+        }
+        return true;
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'demographics' => array(self::HAS_ONE, 'ePostalCodeDemographics', 'postal_code'),
+            'audits' => array(self::HAS_MANY, 'eAudit', 'user_id'),
+            'polls' => array(self::HAS_MANY, 'ePoll', 'user_id'),
+            'pollAnswers' => array(self::HAS_MANY, 'ePollAnswer', 'user_id'),
+            'questions' => array(self::HAS_MANY, 'eQuestion', 'user_id'),
+            'tickers' => array(self::HAS_MANY, 'eTicker', 'arbitrator_id'),
+            'votesByUserId' => array(self::HAS_MANY, 'eTicker', 'user_id'),
+            'tickerDestinations' => array(self::HAS_MANY, 'eTickerDestination', 'user_id'),
+            'tickerRuns' => array(self::HAS_MANY, 'eTickerRun', 'user_id'),
+            'userDetail' => array(self::HAS_ONE, 'eUserDetail', 'user_id'),
+            'userEmails' => array(self::HAS_MANY, 'eUserEmail', 'user_id'),
+            'userFacebooks' => array(self::HAS_MANY, 'eUserFacebook', 'user_id'),
+            'userTwitters' => array(self::HAS_MANY, 'eUserTwitter', 'user_id'),
+            'userLocations' => array(self::HAS_MANY, 'eUserLocation', 'user_id'),
+            'userLogins' => array(self::HAS_MANY, 'eUserLogin', 'user_id'),
+            'userPhones' => array(self::HAS_MANY, 'eUserPhone', 'user_id'),
+            'userPhotos' => array(self::HAS_MANY, 'eUserPhoto', 'user_id'),
+            'userTeches' => array(self::HAS_MANY, 'eUserTech', 'user_id'),
+            'videos' => array(self::HAS_MANY, 'eVideo', 'user_id'),
+            'videoDestinations' => array(self::HAS_MANY, 'eVideoDestination', 'user_id'),
+            'countVotesByUserId' => array(self::STAT, 'ePollResponse', 'user_id', 'select' => 'COUNT(id)', 'group' => 'user_id'),
+            'countVideosByUserId' => array(self::STAT, 'eVideo', 'user_id', 'select' => 'COUNT(id)', 'group' => 'user_id', 'condition' => 'status="accepted"'),
+            'avatar' => array(self::HAS_MANY, 'eUserPhoto', 'user_id', 'condition' => 'avatar.type="primary"')
+        );
+    }
+
+    public function filterByDate($filterDate) {
+        return DateTimeUtility::filterByDate($this, $filterDate);
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'username' => 'Email',
+            'password' => 'Password',
+            'birthday' => 'Birthday',
+            'gender' => 'Gender',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'terms_accepted' => 'Terms Accepted',
+            'source' => 'Source',
+            'created_on' => 'Created',
+            'updated_on' => 'Updated',
+        );
+    }
+
+    public function scopes() {
+        // todo - fix this so that it looks for specific roles
+        // instead of anything that is not user
+        return array(
+            'isAdmin' => array('condition' => 'role != "user"'),
+        );
+    }
+
+}

@@ -1,0 +1,15 @@
+<?php
+class BannerUtility{
+    public static function getBanners(){
+        $banners = glob(Yii::app()->params['paths']['image'] . '/' . BANNERNAMEPREFIX . "_banner[0-9]*" . "." . BANNERNAMEEXTENSION);
+        $bannerImages = array();
+        foreach ($banners as $banner) {
+            $imagePaths = explode('/', $banner);
+            $imageFile = $imagePaths[count($imagePaths) - 1];
+            $index = preg_replace("/[^0-9]/", "", $imageFile); //get numbers from file name.
+            $bannerImages[$index] = $imageFile;
+        }
+        return $bannerImages;
+    }
+}
+?>

@@ -1,0 +1,4 @@
+<?php
+
+$this->renderPartial('_invoice', array());
+?>

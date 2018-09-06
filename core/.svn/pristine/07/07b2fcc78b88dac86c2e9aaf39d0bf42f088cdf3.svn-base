@@ -1,0 +1,140 @@
+<?php
+
+class AdminVotingController extends Controller {
+
+    
+    public $user;
+    public $notification;
+    public $layout = '//layouts/admin';
+
+    public function filters() {
+        return array(
+            'accessControl', // perform access control for CRUD operations
+        );
+    }
+
+    public function accessRules() {
+        return array(
+            
+            array('allow',
+                'actions' => array(
+                    'index',
+                    'ajaxSetPollState'
+                ),
+                'expression' => '(Yii::app()->user->isAdmin())',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+        Yii::app()->setComponents(array('errorHandler' => array('errorAction' => 'admin/error',)));
+        $this->user = ClientUtility::getUser();
+        $this->notification = eNotification::model()->orderDesc()->findAllByAttributes(array('user_id' => Yii::app()->user->id));
+    }
+    
+    /**
+     * 
+     * 
+     * VOTING ACTIONS
+     * This section contains everything required for the voting section of the admin
+     * 
+     * 
+     */
+    public function actionAjaxSetPollState() {
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+        $poll = ePoll::model()->findByPK($id);
+        $poll->$column = $value;
+        $poll->save();
+        echo $value;
+    }
+
+    public function actionIndex($id = NULL) {
+        if (is_null($id)) {
+            $poll = new ePoll;
+            $pollAnswers = Array(new ePollAnswer,
+                                 new ePollAnswer,
+                                 new ePollAnswer,
+                                 new ePollAnswer,
+                                 new ePollAnswer, 
+                                 new ePollAnswer, 
+                                 new ePollAnswer,
+                                 new ePollAnswer,
+                                 new ePollAnswer,
+                                 new ePollAnswer);
+
+        } else {
+            $poll = ePoll::model()->with('pollAnswers', 'pollAnswers:tally')->findByPK($id);
+            $poll->start_time = date('Y-m-d H:i', strtotime($poll->start_time));
+            $poll->end_time = date('Y-m-d H:i', strtotime($poll->end_time));
+            foreach ($poll->pollAnswers as $answer) {
+                $pollAnswers[] = ePollAnswer::model()->findByPK($answer->id);
+            }
+            for ($i = 0; $i <= 10 - sizeof($pollAnswers); $i++) {
+                $pollAnswers[] = new ePollAnswer();
+            }
+        }
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'admin-voting-form') {
+            $pollValidate = CActiveForm::validate(array($poll));
+            $pollAnswersValidate = CActiveForm::validateTabular($pollAnswers);
+            echo json_encode(CMap::mergeArray(json_decode($pollValidate, true), json_decode($pollAnswersValidate, true)));
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['ePoll'], $_POST['ePollAnswer'])) {
+            $poll->attributes = $_POST['ePoll'];
+            $poll->user_id = Yii::app()->user->getId();
+            //$poll->start_time = date('Y-m-d H:i', strtotime($_POST['ePoll']['start_time']));
+            //$poll->end_time = date('Y-m-d H:i', strtotime($_POST['ePoll']['end_time']));
+            $valid = ($poll->validate()) ? 'true' : false;
+            foreach ($pollAnswers as $i => $answer) {
+                if (isset($_POST['ePollAnswer'][$i])) {
+                    $answer->attributes = $_POST['ePollAnswer'][$i];
+                    $answer->user_id = Yii::app()->user->getId();
+                    $valid = $answer->validate() && $valid;
+                }
+            }
+            if ($valid) {
+                Yii::app()->user->setFlash('success', "Poll Added!");
+                $poll->save();
+                foreach ($pollAnswers as $answer) {
+                    if (isset($answer->user_id)) {
+                        $answer->poll_id = $poll->id;
+                        $answer->save();
+                    }
+                }
+                //This is called in the poll model, but need to call it here because poll is saved without answers to being with.
+                $polls = ePoll::model()->current()->findAll();
+                if (sizeof($polls) > 0) {
+                    TwitterUtility::openVoting();
+                } else {
+                    TwitterUtility::closeVoting();
+                }
+            } else {
+                Yii::app()->user->setFlash('error', "Errors found!");
+            }
+        }
+
+        $polls = ePoll::model()->with('pollAnswers', 'pollAnswers:tally')->latest()->findAll();
+        $this->render('index', array(
+            'polls' => $polls,
+            'models' => Array(
+                'poll' => $poll,
+                'pollAnswers' => $pollAnswers,
+            ),
+        ));
+    }
+    
+    
+}

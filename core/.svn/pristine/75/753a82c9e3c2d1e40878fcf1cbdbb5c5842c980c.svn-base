@@ -1,0 +1,37 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/campaign/main.css');
+?>
+
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div id="fab-top">
+        <h2 class="fab-title"><img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/dashboard-icon.png" style="margin-right: 10px;float:left;"/>Campaign Manager</h2>
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='campaign_container'>
+             <div class='campain_header'>
+             	Get Started
+             </div>
+        </div>
+        <div class='campaign_step'>
+        <span>Step1</span>
+        <span>Step2</span>
+        <span>Step3</span>
+        </div> 
+        <hr/>
+        <div>
+        	Connect Accounts
+        </div>
+        <div class=''>
+        	
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>

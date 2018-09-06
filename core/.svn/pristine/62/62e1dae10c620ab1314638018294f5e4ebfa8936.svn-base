@@ -1,0 +1,87 @@
+<?php
+
+/*
+ * Dots demographic service
+ * gstringer - Oct 2013
+ */
+
+class dotsDemographicCommand extends CConsoleCommand {
+
+    public function run($args) {
+
+        ini_set('soap.wsdl_cache_enabled', 0);
+        ini_set('soap.wsdl_cache_ttl', 0);
+
+        // get a postal code 
+        while (true) {
+            self::getPostalCodeForUpdate();
+            //usleep(10000000);
+        }
+    }
+
+    private static function getPostalCodeForUpdate() {
+
+        $postalCode = ePostalCode::model()->findByAttributes(array('income' => '0',
+                                                                   'last_checked_on' => '0000-00-00 00:00:00'), 
+                                                             array('order' => new CDbExpression('RAND()')));
+
+        if (!is_null($postalCode)) {
+            $income = self::getIncome($postalCode->identifier);
+            
+            // update last checked on
+            $postalCode->last_checked_on = date("Y-m-d H:i:s");
+
+            if ($income != false) {
+                
+                $postalCode->income = $income;
+                print "Updated income for postal code " . $postalCode->identifier . ".\n";
+            } else {
+                
+                print "Could not locate income for postal code " . $postalCode->identifier . ".\n";
+            }
+            
+            $postalCode->save();
+            
+        } else {
+            print "No postal codes to update at this time.\n";
+        }
+    }
+
+    private static function getIncome($postalCode) {
+
+        try {
+            //Set Up Soap Client for DOTS Demographics Plus
+            $soapClient = new SoapClient(DOTS_WSDL_URL);
+
+            //Set up GetDemographicsByAddress parameters
+            $params['PostalCode'] = $postalCode;
+            $params['LicenseKey'] = DOTS_LICENSE_KEY;
+
+            //Call GetDemographicsByAddress Operation
+            $result = $soapClient->GetLocalAreaIncomeByZip($params);
+
+            if (!is_soap_fault($result)) {
+
+                if (isset($result->GetLocalAreaIncomeByZipResult->AreaHouseholdIncome)) {
+
+                    $income = $result->GetLocalAreaIncomeByZipResult->AreaHouseholdIncome;
+
+                    if (!empty($income)) {
+                        return $income;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    print "Area household income is undefined for $postalCode.\n";
+                }
+            } else {
+                return false;
+            }
+        } catch (SoapFault $fault) {
+            trigger_error("SOAP Fault: (faultcode: {$fault->faultcode}, faultstring: {$fault->faultstring})", E_USER_ERROR);
+        }
+    }
+
+}
+
+?>

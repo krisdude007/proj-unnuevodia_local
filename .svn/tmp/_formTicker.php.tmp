@@ -1,0 +1,41 @@
+<?php
+/* @var $this TickerController */
+/* @var $model Ticker */
+/* @var $form CActiveForm */
+?>
+<div class="form">
+    <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'ticker-form',
+            'enableAjaxValidation' => true,
+        ));
+    ?>
+    <div class="clearfix" style="margin-top: 10px; margin-bottom: 50px">
+        <div style="float:left;text-align:left;">
+            <div class="row" style="margin-left: 30px;">
+                <?php echo $form->textField($tickerModel, 'ticker',Array('style'=>'width:560px','class' => 'counter','value'=>'', 'placeholder'=>'Mejor que el alimentador de noticias de Facebook!', 'maxlength'=>'140')); ?>
+                <?php echo $form->error($tickerModel, 'ticker'); ?>
+            </div>
+            <div class="clearfix" style="padding-bottom:30px;margin-bottom:54px;">
+                <div class="row" style="margin-right: 10px; margin-left: 30px">
+                    También publicar en sus redes sociales:
+                </div>
+                <div class="row" style="margin-right: 10px;">
+                    <?php echo $form->checkbox($tickerModel, 'to_twitter'); ?>Twitter
+                    <?php echo $form->error($tickerModel, 'to_twitter'); ?>
+                </div>
+                <div class="row" style="margin-right: 10px;">
+                    <?php echo $form->checkbox($tickerModel, 'to_facebook'); ?>Facebook
+                    <?php echo $form->error($tickerModel, 'to_facebook'); ?>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row buttons" style="float:left;">
+            <?php echo $form->hiddenField($tickerModel,'source',Array('value'=>'web')); ?>                        
+            <?php echo CHtml::submitButton('ENVIAR', array( 'style'=> 'width: 100px; height: 30px; margin-left: 30px')); ?>
+        </div>
+    </div>
+<?php $this->endWidget(); ?>
+
+</div><!-- form -->

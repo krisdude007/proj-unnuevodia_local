@@ -1,0 +1,111 @@
+<?php
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminVideo/videoSchedulerModal.js', CClientScript::POS_END);
+
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables.css');
+$cs->registerCssFile('/core/webassets/css/adminVideo/videoSchedulerModal.css');
+?>
+
+<div class="fab-row-fluid" style="color: #fff; margin-top: 10px;">
+    <span style="margin-top: 55px; width:200px !important; font-size: 25px;">Network Scheduler</span>
+    <span style="float: right; width: 450px !important;">
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'video-scheduler-filter-form',
+            'enableAjaxValidation' => true,
+            'clientOptions' => array(
+                'validateOnSubmit' => true,
+                'validateOnChange' => true,
+                'validateOnType' => false,
+            )
+                ));
+        ?>
+
+        <div class="fab-clear" style="height:6px;"></div>
+
+        <div class="fab-box fab-right" style="margin-left: 0px;">
+            <button id="videoSchedulerRefresh">Refresh</button>
+        </div>
+
+        <div class="fab-box fab-right" style="margin-left:0px">
+            <label class="fab-left">&nbsp;&nbsp;&nbsp;Date: </label>
+            <?php echo $form->textField($filterVideoSchedulerModel, 'date', array('id' => 'datepickerVideoSchedulerFilter', 'style' => 'width: 70px;', 'class' => 'fab-small-input fab-left datepicker')); ?>
+        </div>
+
+        <div class="fab-box fab-right" style="margin-left:0px">
+            <label class="fab-left">Show:</label>
+            <?php echo $form->dropDownList($filterVideoSchedulerModel, 'show', $networkShows, array('class' => 'fab-select-accept')); ?>
+
+        </div>
+
+        <?php $this->endWidget(); ?>
+
+    </span>
+    <hr/>
+</div>
+
+<div class="fab-row-fluid" style="color: #fff;">
+    <div id="videoSchedulerModalTabs">
+        <ul>
+            <li><a href="#tab-fs-scheduler"><strong>Spot Scheduler</strong></a></li>
+            <li><a href="#tab-schedule-history"><strong>History</strong></a></li>
+        </ul>
+
+        <div id="tab-fs-scheduler">
+            <table id="datatableScheduler">
+                <thead>
+                    <tr>
+                        <th>Show</th>
+                        <th>Producer</th>
+                        <th>Run Date</th>
+                        <th>Run Time</th>
+                        <th>Slots</th>
+                        <th>Time Left</th>
+                        <th>Show On</th>
+                        <th>Network Show Id</th>
+                        <th>Spot Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <hr/>
+            <div id="selectedShowInformation">
+                <strong><span id="selectedShowName"></span></strong> 
+            </div>
+            <div id="selectedVideoInformation">
+                <?php if (!is_null($video)): ?>
+                    <strong><?php echo $video->title; ?></strong>
+                    <img class="videoThumbnailScheduler" alt="video-image" src="<?php echo Yii::app()->request->baseUrl; ?>/<?php echo basename(Yii::app()->params['paths']['video']); ?>/<?php echo $video->thumbnail; ?><?php echo VIDEO_IMAGE_FILE_EXT; ?>">
+                <?php else: ?>
+                    <strong>No video selected</strong>
+                <?php endif; ?>
+            </div>
+            <hr/>
+            <table id="datatableSpotScheduler" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>File</th>
+                        <th>Producer</th>
+                        <th>Run Time</th>
+                        <th>Insert Time</th>
+                        <th>Length</th>
+                        <th>Time Left</th>
+                        <th>House #</th>
+                        <th>Save Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div id="tab-schedule-history">
+            Coming soon.
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<?php
+
+class TickerUtility {
+
+    // gets values for ticker status dropdown
+    public static function getTickerStatuses() {
+        return array('new' => 'Not Accepted',
+                     'approved' => 'Approved',
+                     'running' => 'Currently Running',
+                     'failed' => 'Failed Language Filter'
+        );
+    }
+    
+    public static function getPerPageOptions() {
+        return array('20' => '20',
+                     '50' => '50',
+                     '100' => '100',
+                     '200' => '200'
+        );
+    }
+
+}
+
+?>

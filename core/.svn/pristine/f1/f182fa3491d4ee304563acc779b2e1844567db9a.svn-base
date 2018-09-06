@@ -1,0 +1,22 @@
+<?php
+
+class SweepstakeUtility {
+    public static function saveCookie() { 
+        if (Yii::app()->user->isGuest) {
+            return false;
+        }
+        if (empty($_COOKIE['sweepstake_id'])) {
+            return false;
+        }
+        $sweepstakeuser = eSweepStakeUser::model()->findByAttributes(array('sweepstake_id'=>$_COOKIE['sweepstake_id'],'user_id'=>Yii::app()->user->getId()));
+        if(is_null($sweepstakeuser)){
+            $sweepstakeuser = new eSweepStakeUser();
+            $sweepstakeuser->sweepstake_id = $_COOKIE['sweepstake_id'];
+            $sweepstakeuser->user_id = Yii::app()->user->getId();                        
+        }
+        $sweepstakeuser->accepted = $_COOKIE['accepted'];
+        $sweepstakeuser->save();
+        return true;
+    }
+}
+?>

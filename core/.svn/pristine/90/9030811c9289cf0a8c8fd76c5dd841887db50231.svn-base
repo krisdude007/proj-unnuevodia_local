@@ -1,0 +1,127 @@
+<?php
+
+class AdminBoloroController extends Controller {
+
+    public $layout = false;
+
+    //public $user;
+
+    /**
+     * Anything required on every page should be loaded here
+     * and should also be made a class member.
+     */
+    function init() {
+        parent::init();
+//        if (!Yii::app()->user->isGuest) {
+//            $this->user = ClientUtility::getUser();
+//        }
+    }
+
+    public function accessRules() {
+        return array(
+            array('allow',
+                'actions' => array('*'),
+                'expression' => 'Yii::app()->user->isAdmin()',
+            ),
+            array('deny', // deny all users
+                'users' => array('*'),
+            ),
+        );
+    }
+
+    public function actionIndex() {
+        if (Yii::app()->user->isGuest) {
+            $this->redirect(Yii::app()->createUrl('admin/login'));
+            return;
+        }
+
+        if (isset($_POST['total'])) {
+            $total = $_POST['total'];
+            if (!is_numeric($total)) {
+                return;
+            }
+            $orderId = uniqid();
+            $url = "http://uat.boloro.net:8080/processorv3/boloroprocessor/getauthtoken?api_login_id=API-YOUTO&transaction_key=DP9YFtBRcx60TMwY19253df7e7c58422";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $json = curl_exec($ch);
+            $response = json_decode($json);
+            $token = $response->token;
+
+            $returnUrl = Yii::app()->createAbsoluteUrl(Yii::app()->request->url) . '/confirm';
+            $cancelUrl = Yii::app()->createAbsoluteUrl(Yii::app()->request->url) . '/cancel';
+
+            $this->redirect('http://uat.boloro.net:8080/processorv3/boloroprocessor/checkout?auth_token=' . urlencode($token) . '&order_id=' . urlencode($orderId) . '&total=' . $total . '&return_URL=' . urlencode($returnUrl) . '&cancel_URL=' . urlencode($cancelUrl).'&currency_code=USD');
+        }
+
+        $this->render('index', array(
+        ));
+    }
+
+    public function actionConfirm() {
+        
+        $orderId = $_POST['order_id'];
+        $transId = $_POST['txn_id'];
+        $transStatus = $_POST['txn_status'];
+        $total = $_POST['total'];
+        $transMsg = $_POST['txn_status_msg'];
+
+        if (!empty($transId) && !empty($transStatus) && !empty($total)) {
+            $transaction = new eTransaction();
+            $user = ClientUtility::getUser();
+            $transaction->user_id = isset($user->id) ? $user->id : 0;
+            $transaction->processor = 'boloro';
+            $transaction->response = $transId;
+            $transaction->description = json_encode(array('order_id' => $orderId, 'txn_status' => $transStatus));
+            $transaction->price = $total;
+            if ($transaction->validate()) {
+                $transaction->save();
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        $this->render('confirm', array(
+            'transStatus' => $transStatus,
+            'orderId' => $orderId,
+            'transMsg' => $transMsg,
+        ));
+    }
+
+    public function actionCancel() {
+
+        $orderId = $_POST['order_id'];
+        $transId = $_POST['txn_id'];
+        $transStatus = $_POST['txn_status'];
+        $total = $_POST['total'];
+        $transMsg = $_POST['txn_status_msg'];
+
+
+        if (!empty($transId)) {
+            $transaction = new eTransaction();
+            $user = ClientUtility::getUser();
+            $transaction->user_id = isset($user->id) ? $user->id : 0;
+            $transaction->processor = 'boloro';
+            $transaction->response = $transId;
+            $transaction->description = json_encode(array('order_id' => $orderId, 'txn_status' => $transStatus));
+            $transaction->price = $total;
+            if ($transaction->validate()) {
+                $transaction->save();
+            } else {
+                return;
+            }
+        }
+
+        $this->render('cancel', array(
+            'transStatus' => $transStatus,
+            'orderId' => $orderId,
+            'transMsg' => $transMsg,
+        ));
+    }
+
+}
+
+?>

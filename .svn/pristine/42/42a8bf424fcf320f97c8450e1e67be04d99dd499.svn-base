@@ -1,0 +1,107 @@
+<?php
+/* @var $this UserController */
+/* @var $user User */
+/* @var $userEmail UserEmail */
+/* @var $userLocation UserLocation */
+/* @var $userPhone UserPhone */
+/* @var $twitterUsername string (read-only) */
+/* @var $facebookUsername string (read-only) */
+/* @var $form CActiveForm */
+?>
+<div class="form">
+<?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'user-profile-form',
+        'enableAjaxValidation' => true,
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        'clientOptions' => array(
+            'validateOnSubmit' => true,
+            'validateOnChange' => true,
+            'validateOnType' => false,
+        ),
+    ));
+    echo $form->errorSummary(array($user, $userEmail, $userLocation, $userPhone));
+?>
+<table class="formProfile">
+    <tr>
+        <td>
+            Nombre<br />
+            <?php echo $form->textField($user, 'first_name'); ?><br />
+            <?php echo $form->error($user, 'first_name'); ?>
+        </td>
+        <td colspan="2">
+            Apellido<br />
+            <?php echo $form->textField($user, 'last_name'); ?><br />
+            <?php echo $form->error($user, 'last_name'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Nombre de usuario<br />
+            <?php echo $form->textField($user, 'username'); ?><br />
+            <?php echo $form->error($user, 'username'); ?>
+        </td>
+        <td colspan="2">
+            Correo electrónico
+            <?php
+                $emailActive = array('1' => 'Recibir', '0' => 'No Reciben');
+                echo $form->radioButtonList($userEmail, 'active', $emailActive, array('separator' => ' '));
+            ?>
+            <?php echo $form->textField($userEmail, 'email'); ?><br />
+            <?php echo $form->error($userEmail, 'email'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Código postal/ZIP<br />
+            <?php echo $form->textField($userLocation, 'postal_code'); ?><br />
+            <?php echo $form->error($userLocation, 'postal_code'); ?>
+        </td>
+        <td colspan="2">
+            Número de teléfono<br />
+            <?php echo $form->textField($userPhone, 'number'); ?><br />
+            <?php echo $form->error($userPhone, 'number'); ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td style="white-space:nowrap">
+            Fecha de nacimiento<br />
+            <?php echo $form->dropDownList($user, 'birthMonth',  DateTimeUtility::monthsOfYear()); ?>
+            <?php echo $form->dropDownList($user, 'birthDay', DateTimeUtility::daysOfMonth()); ?>
+            <?php echo $form->dropDownList($user, 'birthYear',  DateTimeUtility::yearsOfCentury()); ?><br />
+            <?php echo $form->error($user, 'birthday'); ?>
+        </td>
+        <td colspan="2">
+            Twitter palanca<br />
+            <?php if ($twitterUsername): echo $twitterUsername; else: ?>
+                <a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Conectar a Twitter!</a>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Sexo<br />
+            <div>
+            <?php
+                $gender = array('M' => 'Masculino', 'F' => 'Femenino');
+                echo $form->radioButtonList($user, 'gender', $gender);
+            ?>
+            <?php echo $form->error($user, 'gender'); ?>
+            </div>
+        </td>
+        <td>
+            Facebook palanca<br />
+            <?php if ($facebookUsername): echo $facebookUsername; else: ?>
+                <a href="<?php echo Yii::app()->request->baseurl;?>/you/connections">Conectar a Facebook!</a>
+            <?php endif; ?>
+        </td>
+        <td>
+            <?php echo CHtml::submitButton('GUARDAR', array('style' => 'width:120px')); ?>
+        </td>
+    </tr>
+</table>
+<?php $this->endWidget(); ?>
+</div><!-- form -->

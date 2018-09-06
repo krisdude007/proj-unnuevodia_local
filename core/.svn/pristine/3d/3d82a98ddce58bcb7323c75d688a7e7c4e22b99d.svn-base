@@ -1,0 +1,14 @@
+                    <tr<?php echo ($parameters['headerRow']) ? ' class="subtitle2"' : ''?>>
+                        <td style="width:80%"><?php echo $parameters['label']; ?></td>
+                        <td style="width:20%; text-align:right;">
+                            <?php
+                            if(isset($link) && $parameters['value'] != 0){
+                                $daysBackLink = isset($_GET['daysBack']) ? $_GET['daysBack'] : '7';
+                                $daysBackLink = isset($daysBack) ? $daysBack : $daysBackLink;
+                                echo '<a href="/adminReport/demographic/daysBack/'.$daysBackLink.'/request/'.$link.'">';
+                                echo $parameters['value'].'</a>';
+                            }else
+                                echo $parameters['value'];
+                            ?>
+                        </td>
+                    </tr>

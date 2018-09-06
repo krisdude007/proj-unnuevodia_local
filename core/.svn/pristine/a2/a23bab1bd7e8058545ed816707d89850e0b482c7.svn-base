@@ -1,0 +1,49 @@
+<?php
+
+class MailUtility {
+
+    public static function send($template,$to,$merges=Array()){     
+      
+        if(is_array($to) && count($to) > 0) {
+          foreach($to as $emailAddress) {
+            return self::deliver($template, $emailAddress, $merges);
+          }
+          
+        } else {
+          return self::deliver($template, $to, $merges);
+        }
+    }
+    
+    private static function deliver($template, $to, $merges = Array()) {
+      $userEmail = eUserEmail::model()->findByAttributes(array('email'=>$to));
+        if(!$userEmail){
+            return false;
+        }
+        $user = eUser::model()->findByPK($userEmail->user_id);
+        $merges = array_merge($merges,Array(
+            'sitename'=>Yii::app()->name,
+            'first_name'=>$user->first_name,
+            'last_name'=>$user->last_name,
+            'email'=>$to,
+            'reply'=>Yii::app()->params['contacts']['Admin Email'],
+        ));        
+        $emailTemplate = eEmailTemplate::model()->findByAttributes(Array('name'=>$template,'active'=>1));        
+        if(!is_null($emailTemplate)){
+            $headers  = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+            $headers .= 'To: {first_name} {last_name} <{email}>' . "\r\n";
+            $headers .= 'From: {reply} <{reply}>' . "\r\n";
+            $subject = $emailTemplate->subject;                        
+            $content = $emailTemplate->content;                        
+            foreach($merges as $k=>$v){
+                $headers = preg_replace("/\{$k\}/",$v,$headers);
+                $subject = preg_replace("/\{$k\}/",$v,$subject);
+                $content = preg_replace("/\{$k\}/",$v,$content);
+            }
+            return mail($to, $subject, $content, $headers);        
+        }
+        return false;
+    }
+    
+}
+?>

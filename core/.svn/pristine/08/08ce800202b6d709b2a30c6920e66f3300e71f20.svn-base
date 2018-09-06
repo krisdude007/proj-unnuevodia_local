@@ -1,0 +1,81 @@
+<?php
+// page specific css
+$cs = Yii::app()->clientScript;
+$cs->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminSocialSearch/index.css');
+$cs->registerCssFile('/core/webassets/css/jquery.dataTables_themeroller.css');
+
+// page specific js
+$cs->registerScriptFile('/core/webassets/js/jquery.dataTables.min.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->request->baseurl . '/core/webassets/js/adminSocialSearch/index.js', CClientScript::POS_END);
+$this->renderPartial('/admin/_csrfToken');
+?>
+
+
+<!-- BEGIN PAGE -->
+<div class="fab-page-content">
+    <!-- BEGIN PAGE CONTAINER-->
+    <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+    <div style="background:#4bb55a" id="fab-top">
+        <h2 style="color:white" class="fab-title"><img style="margin-right: 10px;float:left;" src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/social-image.png">Social Search</h2>
+    </div>
+    <!-- END PAGE TITLE & BREADCRUMB-->
+    <div class="fab-container-fluid">
+        <div style="padding:20px;">   
+            <h2>Social Searching (Facebook and Twitter)</h2>
+            <div>
+                <form id="search">
+                    <div style="float:left;">
+                        <label for="terms">Search Terms:</label>
+                    </div>
+                    <div style="float:left;margin-left:346px;">
+                        <label for="filters">Filtered By:</label>
+                    </div>
+                    <div style="clear:both;">
+                    </div>           
+                    <div>
+                        <input type="text" id="terms" name="terms" />
+                        <select name="boolean">
+                            <option>AND</option>
+                            <option>OR</option>
+                            <option>NOT</option>
+                        </select>
+                        <input type="text" id="filters" name="filters" />
+                        <input type="submit" />
+                    </div>
+                </form>
+            </div>
+            <div style="margin-top:20px;margin-bottom:20px">
+                <div><b>Note:</b> Facebook does not support AND/OR/NOT searching. It will search for any of the terms in the "Search Terms" box.</div>
+                <div class="rates" style="margin-top:20px;"></div>           
+                <div class="errors" style="margin-top:20px;"></div>           
+            </div>
+            <div id="ajaxSpinner" style="display:none;padding-top:150px">
+                <center>
+                    <img height="50" width="50" src="/core/webassets/images/socialSearch/ajaxSpinner.gif" />
+                </center>
+            </div>
+            <div id="resultsDiv" style="display:none">
+                <div style="margin-bottom:20px">
+                    <input class="socialFilter" id="showAll" value="" name="show" type="radio" checked="checked" /> Show All<br />
+                    <input class="socialFilter" id="showFacebook" value="facebook" name="show" type="radio" /> Show Facebook<br />
+                    <input class="socialFilter" id="showTwitter" value="twitter" name="show" type="radio" /> Show Twitter
+                </div>                       
+                <table id="resultsTable" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Download</th>
+                        <th>Source</th>
+                        <th>Avatar</th>
+                        <th>From</th>
+                        <th style="width:80px">Date</th>
+                        <th class="tleft">Content</th>
+                    </tr>
+                    </thead>
+                    <tbody id="results">               
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE -->
+</div>

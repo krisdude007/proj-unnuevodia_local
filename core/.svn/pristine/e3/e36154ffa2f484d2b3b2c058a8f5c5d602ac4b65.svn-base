@@ -1,0 +1,126 @@
+/*
+    Document   : _voting
+    Created on : Jun 18, 2013, 10:49:02 AM
+    Author     : Greg Stringer
+    Description:
+        Fine tunining of the voting page should take place here.
+*/
+
+.fab-voting-bars{
+    margin-right:20px;
+    padding-right:20px;
+    border-right:1px solid #e4e4e4;
+}
+.fab-vote-text{
+    font-size: 17px;
+    color:#525151;
+    padding-left:5px;
+    padding-right:3px;
+}
+.fab-vote-text-small{
+    font-size: 14px;
+    color:#525151;
+}
+.bars2{
+    background:url('../images/2bars-grey.png');
+    width:50px;
+    height:35px;
+}
+.bars2.fab-blue{
+    background:url('../images/2bars.png');
+    width:50px;
+    height:35px;
+}
+.bars3{
+    background:url('../images/3barsgrey.png');
+    width:46px;
+    height:49px;
+}
+.bars3.fab-blue{
+    background:url('../images/3bars.png');
+    width:46px;
+    height:49px;
+}
+.bars4{
+    background:url('../images/4barsgrey.png');
+    width:48px;
+    height:63px;
+}
+.bars4.fab-blue{
+    background:url('../images/4bars.png');
+    width:48px;
+    height:63px;
+}
+.fab-right-medium{margin-left:230px;}
+.hint{color:#ababab}
+.vote-text-big{
+    font-weight: bold;
+    font-size: 18px;
+}
+
+
+/* voting bars */
+.fab-vote-red {
+    background: red;
+    
+}
+
+.fab-vote-yellow {
+    background: yellow;
+     
+}
+
+.fab-vote-green {
+    background: green;
+     
+}
+
+.fab-vote-blue {
+    background:blue;
+    
+}
+
+.fab-vote-violet {
+    background: violet;
+     
+}
+.fab-vote-darkorange {
+    background: darkorange;
+     
+}
+fab-vote-orange {
+    background: #f17100;
+    
+}
+
+
+table{
+    border-collapse:collapse;
+}
+th {
+    padding:3px;
+    border:1px solid black;
+    color:#000;
+}
+td {
+    padding:3px;
+    border:1px solid black;
+    color:#FFF;
+}
+a{
+    color:#FFF;
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}
+.grey{color:#999}
+.active{background:#0C0 !important;}
+.active td{background:#0C0}
+.active td td{background:transparent;}
+.active a{color:#000 !important;}
+.active td a{color:#000 !important;}
+.active td.sorting_1{background:#0C0 !important}
+.errorMessage{color:red}
+.fab-voting-right{background:#CCC;padding:20px;width:500px}
+.bold{font-weight:900}

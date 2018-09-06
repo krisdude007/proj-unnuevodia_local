@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * VCI API Controller
+ *
+ * Responsible as main interface for importing schedule data.
+ *
+ * @author <greg.stringer@gmail.com>
+ */
+class VciController extends Controller {
+
+    
+    /**
+     * Initialize. Here we set a custom error handler so that we do not 
+     * output default html.
+     */
+    public function init() {
+        parent::init();
+        //Yii::app()->errorHandler->errorAction = 'vci/error';
+    }
+
+    public function filters() {
+        return array();
+    }
+
+    /**
+     * Dummy action so that we can output json/xml errors instead of html.
+     */
+    public function actionImport() {
+        //$this->throwException(404);
+        print 1;
+    }
+}

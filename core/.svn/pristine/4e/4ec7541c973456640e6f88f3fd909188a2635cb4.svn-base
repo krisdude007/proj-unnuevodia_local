@@ -1,0 +1,25 @@
+<?php
+
+class eEntityAnswer extends EntityAnswer
+{
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('poll_id, user_id, entity_id, eliminated', 'required'),
+                        array('created_on,updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'insert'),
+                        array('updated_on', 'default', 'value' => new CDbExpression('NOW()'),'setOnEmpty'=>false,'on' => 'update'),                                        
+			array('poll_id, user_id, entity_id, eliminated', 'numerical', 'integerOnly'=>true),
+			array('hashtag', 'length', 'max'=>255),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('id, poll_id, user_id, entity_id, eliminated, hashtag, created_on, updated_on', 'safe', 'on'=>'search'),
+		);
+	}
+
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+}

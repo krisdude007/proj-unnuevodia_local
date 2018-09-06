@@ -1,0 +1,16 @@
+<?php
+class AdUtility{
+    public static function createImpression($ad){
+        $adDestonation = new eAdDestination('create');
+        $adDestonation->setIsNewRecord(true);
+        $adDestonation->setPrimaryKey(NULL);
+        $adDestonation->ad_id = $ad->id;
+        $adDestonation->user_id = ClientUtility::getUser()->id;
+        $adDestonation->ip = $_SERVER['REMOTE_ADDR'];
+        $adDestonation->url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $adDestonation->type = 'impression';
+        $adDestonation->user_agent = $_SERVER['HTTP_USER_AGENT'];
+        $adDestonation->save();
+    }
+}
+?>

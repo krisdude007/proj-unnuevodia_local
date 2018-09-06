@@ -1,0 +1,64 @@
+<?php
+
+class ImageUtility {
+    // gets values for image status dropdown
+    public static function getStatuses() {
+        if(IMAGE_FILTERS_EXTENDED)
+        {
+            if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission('producerweb'))
+            {
+                $webAdmin = array('new' => 'New Web',
+                                  'accepted' => 'Accepted Web');
+            }
+
+            if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission('producertv'))
+            {
+                $tvAdmin = array('newtv' => 'New TV',
+                                 'acceptedtv' => 'Accepted TV',
+                                 'statustv' => 'Approval Status TV');
+            }
+
+            if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission('spadmin'))
+            {
+                $sup1 = array('newsup1' => 'New S&P');
+            }
+
+            if(Yii::app()->user->isSuperAdmin() || Yii::app()->user->isSiteAdmin() || Yii::app()->user->hasPermission('legaladmin'))
+            {
+                $sup2 = array('newsup2' => 'New Legal');
+            }
+
+            if(Yii::app()->user->isSuperAdmin())
+            {
+                $superAdmin = array('denied' => 'Deleted Web',
+                                    'deniedtv' => 'Deleted TV',
+                                    'all' => 'All');
+            }
+            
+            return CMap::mergeArray($webAdmin, $tvAdmin, $sup1, $sup2, $superAdmin);
+        }
+        else
+        {
+            $prodAdmin = array('new' => 'New',
+            'accepted' => 'Accepted');
+
+            if (Yii::app()->user->isSuperAdmin()) {
+                $superAdmin = array('denied' => 'Deleted',
+                    'all' => 'All');
+            }
+            
+            return CMap::mergeArray($prodAdmin, $superAdmin);
+        }
+    }
+    
+    public static function getPerPageOptions() {
+        return array('12' => '12',
+            '24' => '24',
+            '36' => '36',
+            '48' => '48'
+        );
+    }
+
+}
+
+?>

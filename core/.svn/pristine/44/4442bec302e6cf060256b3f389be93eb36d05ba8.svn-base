@@ -1,0 +1,9 @@
+<?php
+// created this for inserting network show schedule records with easter time zone 
+// instead of utc
+abstract class ActiveRecordNoTz extends CActiveRecord {
+
+    
+}
+
+?>

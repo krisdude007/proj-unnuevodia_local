@@ -1,0 +1,38 @@
+<div class="form">
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'id' => 'user-profileimage-form',
+    'enableAjaxValidation' => true,
+    'htmlOptions' => array('enctype' => 'multipart/form-data'),
+        ));
+?>
+<?php echo $form->errorSummary(Array($image)); ?>
+<table class="formProfile">
+    <tr>
+        <td>
+        Foto actual
+    </td>
+        <td colspan="2">
+    </td>
+    </tr>
+
+    <tr>
+        <td>
+            <img style="max-height:50px; max-width:50px" src="<?php echo UserUtility::getAvatar($user);?>" />
+       </td>
+        <td colspan="2">
+            Sube una nueva foto<br/>
+            <?php echo $form->fileField($image, 'image'); ?>
+            <?php echo $form->error($image, 'image'); ?>
+       </td>
+    </tr>
+     <tr>
+         <td></td>
+        <td>
+            <?php echo CHtml::submitButton('GUARDAR',array('style'=>'width:150px;')); ?>
+         </td>
+    </tr>
+    </table>
+
+<?php $this->endWidget(); ?>
+</div>

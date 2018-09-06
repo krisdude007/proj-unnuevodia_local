@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * This is the model class for table "analytics".
+ *
+ * The followings are the available columns in table 'analytics':
+ * @property string $project_id
+ * @property string $json
+ */
+class eAnalytics extends Analytics
+{
+	/**
+	 * Returns the static model of the specified AR class.
+	 * @param string $className active record class name.
+	 * @return Analytics the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'analytics';
+	}
+        
+        public static function pullGAdata($start_date, $end_date) {
+            require_once Yii::app()->request->baseurl.'/core/protected/components/GoogleAnalytics.php';
+            $gaUserId = Yii::app()->params['analytics']['username'];
+            $gaPassword = Yii::app()->params['analytics']['password'];
+            $project_id = Yii::app()->params['analytics']['projectId'];
+            $ga = new gapi($gaUserId, $gaPassword);
+
+            $results = new stdClass();
+            $results->startDate = $start_date;
+            $results->endDate = $end_date;
+            // *Example of how requestReportData method is overloaded* //
+            // requestReportData($report_id, $dimensions, $metrics, $sort_metric=null, $filter=null, $start_date=null, $end_date=null, $start_index=1, $max_results=30)
+            // *Retrieve and store data *//
+            // *Total visits and Pageviews //
+            
+            $ga->requestReportData($project_id, array('browser'), array('visits'), null, null, $start_date, $end_date, null, 500);
+            $results->browsersTotal = 0;
+            foreach ($ga->getResults() as $result){ // initialization required in case some browsers are different but have the same name was causeing % to not add up to %100
+                $results->browsers[$result->getBrowser()] = 0;
+            }
+            foreach ($ga->getResults() as $result){
+                $results->browsers[$result->getBrowser()] += $result->getVisits();
+                $results->browsersTotal += $result->getVisits();
+            }
+            $ga->requestReportData($project_id, array('operatingSystem'), array('visits'), null, null, $start_date, $end_date, null, 500);
+            $results->osTotal = 0;
+            foreach ($ga->getResults() as $result){ // initialization required in case some browsers are different but have the same name was causeing % to not add up to %100
+                $results->os[$result->getOperatingSystem()] = 0;
+            }
+            foreach ($ga->getResults() as $result){
+                $results->os[$result->getOperatingSystem()] += $result->getVisits();
+                $results->osTotal += $result->getVisits();
+            }
+            asort($results->browsers);
+            asort($results->os);
+            
+            $ga->requestReportData($project_id, null, array('visits', 'pageviews', 'timeOnSite', 'visitors', 'bounces'), null, null, $start_date, $end_date);
+            $results->visits = $ga->getVisits();
+            $results->pageviews = $ga->getPageviews();
+            $results->timeOnSite = $ga->getTimeOnSite();
+
+            // *Unique visitors* //
+            $results->uniqueVisitors = $ga->getVisitors();
+            $results->bounces = $ga->getBounces();
+
+            // *Avg. visit duration* //
+            $results->avgTimeOnSite = gmdate("H:i:s", round($results->timeOnSite / $results->visits));
+
+            // *% of new visits* //
+            $ga->requestReportData($project_id, array('visitorType'), array('visits'), null, null, $start_date, $end_date);
+            $allVisitors = $ga->getResults();
+            //var_dump($allVisitors);
+            $returningVisitors = $allVisitors[0]->getMetrics();
+            $results->returningVisitors = $returningVisitors['visits'];
+            $newVisitors = $allVisitors[1]->getMetrics();
+            $results->newVisitors = $newVisitors['visits'];
+            $percentOfNewVisits = $results->newVisitors / ($results->returningVisitors + $results->newVisitors);
+
+            // *format results*//
+            $results->pagesPerVisit = round(($results->pageviews / $results->visits), 2);
+            $results->bounceRate = round((($results->bounces / $results->visits) * 100), 2);
+            $results->percentNew = round(($percentOfNewVisits * 100), 2);
+            return $results;
+        }
+}

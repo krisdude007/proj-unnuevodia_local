@@ -1,0 +1,146 @@
+<?php
+// page specific css
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/core/webassets/css/adminCampaign/index.css');
+
+Yii::app()->clientScript->registerScriptFile('/core/webassets/js/adminCampaign/index.js', CClientScript::POS_END);
+ 
+?>
+
+<div class="fab-page-content">
+
+    <!-- flash messages -->
+    <?php $this->renderPartial('/admin/_flashMessages', array()); ?>
+    <!-- flash messages -->
+     
+    <div class="campaign_top_bar">
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/core/webassets/images/campaign/campaign_manager_icon.png" />Campaign Manager
+    </div>
+     
+    <div class="fab-container-fluid">
+    	<div class='campaign_container'>
+             <div class='campain_header'>
+             	Get Started
+             </div>
+        
+            <div class='campaign_step'>
+                <span class="campaign_step1_unselected"></span>
+                <span class="campaign_step2_unselected"></span>
+                <span class="campaign_step3_selected"></span>
+            </div> 
+             
+            
+            <div id='choose_package' class="campaign_subtitle">
+            	<span>Choose Package&nbsp;&nbsp;</span>
+            	<span id='toggle' class='<?php echo $campaign->package == 'A' ? 'toggle_up' : 'toggle_down' ;?>'>&nbsp;&nbsp;</span>
+           	</div>
+            <div class="campaign_divider"></div>
+            
+            <div id='package' class='row-fluid'>
+             	<div class='package_selected'>
+            		<div class='package_name'>
+            			Package A
+            		</div>
+            		<div class='package_price'>FREE</div>
+            		<div class='package_divider_white'></div>
+            		<div class='package_content'>
+            			<div class='package_content_row'>>  10 Weekly Posts</div>
+            			<div class='package_content_row'>>  2 Socail Platforms <br/>&nbsp;&nbsp;(1 Account Per Platform)</div>
+            			<div class='package_content_row'>>  1 administrator</div>
+            			<div class='package_content_row'>>  Basic Analytics</div>
+            			<div class='package_content_row'>>  Tracking Tags</div>
+            			<div class='package_content_row'>>  Link Shorterner</div>
+            		</div>
+            		<div class='package_button'>
+            		<?php if($campaign->package == 'A'): ?> 
+            			Selected 
+            		<?php else: ?>
+            			Downgrade
+            		<?php endif;?>
+            		</div>
+            	</div>
+            	<div class='package_unselected'>
+            		<div class='package_name'>
+            			Package B
+            		</div>
+            		<div class='package_price'>$99.95 / mo</div>
+            		<div class='package_divider_white'></div>
+            		<div class='package_content'>
+            			<div class='package_content_row'>>  20 Weekly Posts</div>
+            			<div class='package_content_row'>>  Add up to 4 Socail Platforms <br/>&nbsp;&nbsp;(5 Accounts Per Platform)</div>
+            			<div class='package_content_row'>>  10 administrator</div>
+            			<div class='package_content_row'>>  Premium Analytics</div>
+            			<div class='package_content_row'>>  Tracking Tags</div>
+            			<div class='package_content_row'>>  Link Shorterner</div>
+            			<div class='package_content_row'>>  White Labeled Posts</div>
+            		</div>
+            		<div class='package_button <?php if($campaign->package == 'A') echo 'show_cursor';?>' data-toggle="modal" data-target="#upgrade_modal_B">
+            		<?php if($campaign->package == 'B'): ?> 
+            			Selected 
+            		<?php elseif($campaign->package == 'A'): ?>
+            			Upgrade
+            		<?php else:?>
+            			Downgrade
+            		<?php endif;?>
+            		</div>
+            	</div>
+            	<div class='package_unselected'>
+            		<div class='package_name'>
+            			Package C
+            		</div>
+            		<div class='package_price'>$149.95 / mo</div>
+            		<div class='package_divider_white'></div>
+            		<div class='package_content'>
+            			<div class='package_content_row'>>  35 Weekly Posts</div>
+            			<div class='package_content_row'>>  Add up to 6 Socail Platforms <br/>&nbsp;&nbsp;(Unlimited Accounts Per Platform)</div>
+            			<div class='package_content_row'>>  Unlimited administrator</div>
+            			<div class='package_content_row'>>  Premium Analytics</div>
+            			<div class='package_content_row'>>  Tracking Tags</div>
+            			<div class='package_content_row'>>  Link Shorterner</div>
+            			<div class='package_content_row'>>  White Labeled Posts</div>
+            			<div class='package_content_row'>>  Extended Support Hours</div>
+            		</div>
+            		<div class='package_button <?php if($campaign->package != 'C') echo 'show_cursor';?>' data-toggle="modal" data-target="#upgrade_modal_C">
+            		<?php if($campaign->package == 'C'): ?> 
+            			Selected 
+            		<?php else: ?>
+            			Upgrade
+            		<?php endif;?>
+            		</div>
+            	</div>
+            
+            </div>
+            
+        </div>
+    </div>
+    <!-- END PAGE CONTAINER-->
+</div>
+<div id="upgrade_modal_B" class="modal hide fade upgrade_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header upgrade_modal_header"> 
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <div id="myModalLabel" class='text-center'>Upgrade</div>
+  </div>
+  <div class="modal-body text-center">
+    <p class='upgrade_modal_title'>You have chosen to upgrade to Package B</p>
+    <p><span class='upgrade_price'>$99.95</span><span class='upgrade_price_month'>/month</span></p>
+    <p>By clicking continue, you are authorizing Youtoo Technologies to include this charge on your monthly invoice.</p>
+    <p>A confirmation email will be sent to you.</p>
+  </div>
+  <div class="text-center">
+  	<a href='<?php echo $this->createUrl('adminCampaign/package', array('plan'=>'b', 'id'=>$campaign->id));?>' class='btn btn-primary text-center ' data-loading-text='wait, loading'>Continue</a>
+  </div>
+</div>
+<div id="upgrade_modal_C" class="modal hide fade upgrade_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header upgrade_modal_header"> 
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <div id="myModalLabel" class='text-center'>Upgrade</div>
+  </div>
+  <div class="modal-body text-center">
+    <p class='upgrade_modal_title'>You have chosen to upgrade to Package C</p>
+    <p><span class='upgrade_price'>$149.95</span><span class='upgrade_price_month'>/month</span></p>
+    <p>By clicking continue, you are authorizing Youtoo Technologies to include this charge on your monthly invoice.</p>
+    <p>A confirmation email will be sent to you.</p>
+  </div>
+  <div class="text-center">
+    <a href='<?php echo $this->createUrl('adminCampaign/package', array('plan'=>'c', 'id'=>$campaign->id));?>' class='btn btn-primary text-center continue_button' data-loading-text='wait, loading'>Continue</a>
+  </div>
+</div>

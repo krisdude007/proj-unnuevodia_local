@@ -1,0 +1,138 @@
+<?php
+
+class clientAdminVideoController extends AdminVideoController {
+
+    function init() {
+        parent::init();
+    }
+    
+    public function actionAjaxVideoFTP() {
+
+        $this->layout = false;
+        foreach ($_POST as $k => $v) {
+            $$k = $v;
+        }
+
+        $video = eVideo::model()->findByPk($id);
+
+        if (!is_null($video)) {
+
+            $videoExt = VideoUtility::getVideoFileExtention($video->processed);
+            $fileName = $video->filename . $videoExt;
+            $fileLocal = Yii::app()->params['paths']['video'] . '/' . $fileName;
+            
+            
+            
+            // get destination id
+            $destination = eDestination::model()->findByAttributes(array('destination' => 'client'));
+            if(is_null($destination)) {
+                echo json_encode(array('response' => 'Unable to locate client as a destination.'));
+                exit;
+            }
+            
+            // get latest count
+            $videoIncrementValue = eVideoDestination::model()->countByAttributes(array('destination_id' => $destination->id));
+            if(is_null($videoIncrementValue)) {
+              $videoIncrementValue = 0;
+            }
+            
+            // client specific naming convention
+            $fileName = Yii::app()->params['ftp_naming_convention_video'] . $videoIncrementValue . $videoExt;
+            
+            if (!file_exists($fileLocal)) {
+                echo json_encode(array('response' => 'Cannot find local file.'));
+            }
+
+            $ftp = FTPUtility::transfer(Yii::app()->params['ftp']['secure'], $fileLocal, $fileName);
+
+            if (!$ftp) {
+                $message = Yii::app()->user->getFlash('error');
+                echo json_encode(array('response' => $message . $fileLocal));
+            } else {
+                $message = Yii::app()->user->getFlash('success');
+                echo json_encode(array('response' => $message));
+                //$userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                //$email = $userEmail->email;
+                //$viewKey = $video->view_key;
+                /*
+                ClientMailUtility::send(
+                        'video on TV', 
+                        $email, 
+                        array(
+                            'button'=>  "<a href='http://{$_SERVER['HTTP_HOST']}/play/$viewKey'>
+                                        <button style='background-color:#f57a24;color:white;font-size:19px;padding:8px;'>WATCH YOUR VIDEO</button>
+                                        </a>",
+                            'link' => "<a href='http://{$_SERVER['HTTP_HOST']}/'>{$_SERVER['HTTP_HOST']}</a>"));*/
+            }
+            
+            // store video_destination record
+            $videoDestination = new eVideoDestination();
+            $videoDestination->video_id = $video->id;
+            $videoDestination->user_id = Yii::app()->user->id;
+            $videoDestination->destination_id = $destination->id;
+            $videoDestination->response = 'Video was successfully converted for tv and sent over to client';
+            $videoDestination->created_on = new CDbExpression('NOW()');
+            $videoDestination->save();
+
+            $message = Yii::app()->user->getFlash('success');
+            echo json_encode(array('response' => $message));
+            //$userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+            //$email = $userEmail->email;
+            //$viewKey = $video->view_key;
+            //ClientMailUtility::send('video on TV', $email, array('button'=>"<a href='http://{$_SERVER['HTTP_HOST']}/play/$viewKey'><button style='background-color:#f57a24;color:white;font-size:19px;padding:8px;'>WATCH YOUR VIDEO</button></a>",'link' => "<a href='http://{$_SERVER['HTTP_HOST']}/'>{$_SERVER['HTTP_HOST']}</a>"));
+
+        } else {
+            echo json_encode(array('response' => 'Unable to find video by id.'));
+        }
+    }
+
+    
+    public function actionAjaxVideoUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);
+        $currentStatus = trim($_POST['currentStatus']);
+        $videoId = trim($_POST['videoId']);
+
+        $video = eVideo::model()->findByPk($videoId);
+
+        if (!is_null($video)) {
+            if(VIDEO_FILTERS_EXTENDED)
+            {
+                $video->extendedStatus = Utility::updateExtendedStatus($currentStatus, $status, $video);
+            }
+            else
+            {
+                $video->status = $status;
+            }
+            $video->arbitrator_id = Yii::app()->user->id;
+            $video->status_date = new CDbExpression('NOW()');
+            $video->save();
+            if($video->status == 'accepted' || VIDEO_FILTERS_EXTENDED && $video->extendedStatus['accepted']){
+                $brightcove = eBrightcove::model()->findByAttributes(Array('video_id'=>$video->id));
+                if(is_null($brightcove)){
+                    $brightcove = new eBrightcove();
+                    $brightcove->video_id = $video->id;
+                    $brightcove->brightcove_id = 'N/A';
+                    $brightcove->status = 'new';
+                    $brightcove->save();
+                }
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $video->view_key;
+                ClientMailUtility::send('video approve',$email);
+            }
+            elseif ($video->status == 'denied') {
+            {
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $video->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $video->view_key;
+                ClientMailUtility::send('video not approved',$email);
+            }
+        }
+            
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+}

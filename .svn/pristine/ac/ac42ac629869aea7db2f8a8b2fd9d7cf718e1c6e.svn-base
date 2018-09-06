@@ -1,0 +1,43 @@
+<?php
+
+class clientAdminImageController extends AdminImageController {
+
+    function init() {
+        parent::init();
+    }
+
+    public function actionAjaxImageUpdateStatus() {
+
+        $this->layout = false;
+        $status = trim($_POST['status']);//this is button (accepted,denied) not status
+        $currentStatus = trim($_POST['currentStatus']);//status
+        $imageId = trim($_POST['imageId']);
+
+        $image = eImage::model()->findByPk($imageId);
+
+        if (!is_null($image)) {
+            if (IMAGE_FILTERS_EXTENDED) {
+                $image->extendedStatus = Utility::updateExtendedStatus($currentStatus, $status, $image);
+            } else {
+                $image->status = $status;
+            }
+            $image->arbitrator_id = Yii::app()->user->id;
+            $image->status_date = date("Y-m-d H:i:s");
+            $image->save();
+            if ($image->status == 'accepted' || IMAGE_FILTERS_EXTENDED && ($currentStatus=="new" || $currentStatus=="denied") && $status == "accepted") {//new,accepted,denied,newtv,acceptedtv,deniedtv,newsup1,newsup2
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $image->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $image->view_key;
+                MailUtility::send('photo approve', $email);
+            } elseif ($image->status == 'denied' || IMAGE_FILTERS_EXTENDED && ($currentStatus=="new" || $currentStatus=="accepted") && $status == "denied") {//new,accepted,denied,newtv,acceptedtv,deniedtv,newsup1,newsup2
+                $userEmail = eUserEmail::model()->findByAttributes(array('user_id' => $image->user_id, 'type' => 'primary'));
+                $email = $userEmail->email;
+                $viewKey = $image->view_key;
+                MailUtility::send('photo not approved', $email);
+            }
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+
+}

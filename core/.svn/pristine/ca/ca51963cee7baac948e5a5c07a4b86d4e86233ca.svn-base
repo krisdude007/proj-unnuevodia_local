@@ -1,0 +1,39 @@
+<div style="text-align: center; min-width: 800px">
+    <h1>Service Payment Summary</h1>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'invoice-form',
+        'enableAjaxValidation' => true,
+    ));
+    ?>
+    <p>Youtoo Technologies<br/>
+
+    </p>
+    <table style="padding:5px; border: 2px solid #636363; text-align: center; margin: 0 auto;min-width: 600px">
+        <tr style="background-color: grey;">
+            <th>
+                No.
+            </th>
+            <th>
+                Item Description
+            </th>
+            <th>
+                Price
+            </th>
+        </tr>
+        <tr>
+            <td>
+                1.
+            </td>
+            <td>Youtoo Web Service</td>
+            <td>
+                <?php echo CHtml::textField('total', '3.33', array('style' => 'width: 50px; text-align: right; border: 0; font-size: 14px', 'readonly'=>false)); ?>
+                 USD</td>
+        </tr>
+    </table>
+    <div>
+        <?php echo CHtml::submitButton('CONTINUE', array('style' => 'font-size:19px;')); ?>
+    </div>
+
+    <?php $this->endWidget(); ?>
+</div>

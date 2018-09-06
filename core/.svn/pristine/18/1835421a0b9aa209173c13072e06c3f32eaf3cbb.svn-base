@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Print Product Invoice</title>
+    </head>
+    <body onload='window.print()'>
+        <table width='700'>
+            <tr>
+                <td valign='top' width="350">
+                    <img src='/webassets/images/logoTmp.png'/>
+                    <h1 style='margin-bottom: 0;'>Store Invoice #<?php echo $transaction->id; ?></h1>
+                </td>
+                <td valign='top' width="350">
+                    <h1 style='margin-bottom: 0'>Al Bousalah Game</h1>
+                    <div>Dubai Media City / Building No. 7 - i 1</div>
+                    <div>Dubai / United Arab Emirates</div>
+                </td>
+            </tr>
+        </table>
+
+        <div>&nbsp;</div>
+
+        <table width='70%'>
+            <tr>
+                <td valign='top'>
+                    <h2 style='margin-bottom: 0'>Ship To:</h2>
+                    <div><strong>Date of Invoice:</strong> <?php $transaction->created_on; ?></div>
+                    <?php if ($user->first_name != '' && $user->last_name != ''): ?>
+                        <div><strong>Name:</strong> <?php echo $user->first_name; ?> <?php echo $user->last_name; ?></div>
+                    <?php endif; ?>
+                    <div><strong>User ID:</strong> <?php echo $user->id; ?></div>
+                    <div><strong>User Name:</strong> <?php echo $user->username; ?></div>
+                    <div><strong>Phone Number:</strong> <?php echo $user->username; ?></div>
+                    
+                    <div><strong>Address:</strong></div>
+                    <div style="margin: 0px 0px 0px 20px;">
+                    <div> <?php echo $user->userLocations[0]->address1; ?> </div>
+                    <div> <?php echo $user->userLocations[0]->address2; ?> </div>
+                    <div> <?php echo $user->userLocations[0]->city.", ".$user->userLocations[0]->state." ".$user->userLocations[0]->postal_code; ?> </div>
+                    <div> <?php echo $user->userLocations[0]->country; ?> </div>
+                    <div>
+                </td>
+            </tr>
+        </table>
+
+        <div>&nbsp;</div>
+
+        <table width='70%'>
+            <tr style='background-color: #DDDDDD'>
+                <th style='text-align: left'>Line Item</th>
+                <th style='text-align: left'>Store Item ID</th>
+                <th style='text-align: left'>Store Item Name</th>
+                <th style='text-align: left'>Credits</th>
+                <th style='text-align: left'>Qty Ordered</th>
+            </tr>
+            <tr>
+                <td valign='top'>
+                    1
+                </td>
+                <td valign='top'>
+                    <?php 
+                        echo $prize->id;
+                    ?>
+                </td>
+                <td valign='top'>
+                    <?php 
+                        echo $prize->name;
+                    ?>
+                </td>
+                <td valign='top'>
+                    <?php 
+                        echo $prize->credits_required;
+                    ?>
+                </td>
+                <td valign='top'>
+                    1
+                </td>
+            </tr>
+        </table>
+
+    </body>
+</html>
